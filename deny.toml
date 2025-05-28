@@ -11,11 +11,11 @@ allow = [
     "BSD-3-Clause",
     "ISC",
     "Unicode-DFS-2016",
+    "Unicode-3.0",
     "Unlicense",
 ]
 
-# Deny all other licenses by default
-copyleft = "deny"
+# Confidence threshold for matching licenses
 confidence-threshold = 0.8
 
 [[licenses.exceptions]]
