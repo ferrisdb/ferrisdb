@@ -63,6 +63,8 @@ jobs:
       actions: read
       contents: read
       security-events: write
+    env:
+      CODEQL_ENABLE_EXPERIMENTAL_FEATURES: true
     steps:
     - name: Checkout code
       uses: actions/checkout@v4

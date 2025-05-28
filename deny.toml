@@ -26,8 +26,6 @@ name = "ring"
 [bans]
 # Lint level for when multiple versions of the same crate are detected
 multiple-versions = "warn"
-# Lint level for when a crate marked as 'deny' is detected
-deny = []
 # Skip certain crates when checking for duplicates
 skip = []
 # Similarly named crates that are allowed to coexist

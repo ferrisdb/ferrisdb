@@ -23,37 +23,54 @@ fi
 # Apply branch protection rules
 echo "Applying branch protection rules..."
 
-gh api \
+# Create the JSON payload
+PROTECTION_RULES=$(cat <<'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "Quick Checks",
+      "Markdown Lint", 
+      "Spell Check",
+      "Test Suite (ubuntu-latest, stable)",
+      "Test Suite (windows-latest, stable)",
+      "Test Suite (macOS-latest, stable)",
+      "Test Suite (ubuntu-latest, beta)",
+      "Documentation",
+      "MSRV (1.81.0)",
+      "Jekyll Site Build",
+      "Security Audit",
+      "Required Checks"
+    ]
+  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": {
+    "dismiss_stale_reviews": true,
+    "require_code_owner_reviews": false,
+    "required_approving_review_count": 0,
+    "require_last_push_approval": false,
+    "bypass_pull_request_allowances": {
+      "teams": ["ferrisdb/maintainers"]
+    }
+  },
+  "restrictions": null,
+  "allow_force_pushes": false,
+  "allow_deletions": false,
+  "block_creations": false,
+  "required_conversation_resolution": true,
+  "lock_branch": false,
+  "allow_fork_syncing": true,
+  "required_linear_history": true
+}
+EOF
+)
+
+echo "$PROTECTION_RULES" | gh api \
   --method PUT \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   /repos/ferrisdb/ferrisdb/branches/main/protection \
-  -f "required_status_checks[strict]=true" \
-  -f "required_status_checks[contexts][]=Quick Checks" \
-  -f "required_status_checks[contexts][]=Markdown Lint" \
-  -f "required_status_checks[contexts][]=Spell Check" \
-  -f "required_status_checks[contexts][]=Test Suite (ubuntu-latest, stable)" \
-  -f "required_status_checks[contexts][]=Test Suite (windows-latest, stable)" \
-  -f "required_status_checks[contexts][]=Test Suite (macOS-latest, stable)" \
-  -f "required_status_checks[contexts][]=Test Suite (ubuntu-latest, beta)" \
-  -f "required_status_checks[contexts][]=Documentation" \
-  -f "required_status_checks[contexts][]=MSRV (1.81.0)" \
-  -f "required_status_checks[contexts][]=Jekyll Site Build" \
-  -f "required_status_checks[contexts][]=Security Audit" \
-  -f "required_status_checks[contexts][]=Required Checks" \
-  -f "required_pull_request_reviews[dismiss_stale_reviews]=true" \
-  -f "required_pull_request_reviews[require_code_owner_reviews]=false" \
-  -f "required_pull_request_reviews[required_approving_review_count]=0" \
-  -f "required_pull_request_reviews[require_last_push_approval]=false" \
-  -f "required_pull_request_reviews[bypass_pull_request_allowances][teams][]=maintainers" \
-  -f "enforce_admins=false" \
-  -f "restrictions=null" \
-  -f "allow_force_pushes=false" \
-  -f "allow_deletions=false" \
-  -f "required_conversation_resolution=true" \
-  -f "lock_branch=false" \
-  -f "allow_fork_syncing=true" \
-  -f "required_linear_history=true"
+  --input -
 
 echo "✅ Branch protection rules applied successfully!"
 echo ""
