@@ -15,7 +15,7 @@ Welcome to FerrisDB! This guide will help you get up and running with the projec
 
 ### Required Software
 
-- **Rust 1.75+** - Install from [rustup.rs](https://rustup.rs/)
+- **Rust 1.81+** - Install from [rustup.rs](https://rustup.rs/)
 - **Git** - For cloning the repository
 - **A code editor** - VS Code with rust-analyzer is recommended
 
