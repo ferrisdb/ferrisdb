@@ -560,6 +560,9 @@ pre {
             .lineno {
                 padding: 0 0.75rem 0 1rem;
                 display: block;
+                border: none !important;
+                border-radius: 0 !important;
+                background: none !important;
             }
         }
         

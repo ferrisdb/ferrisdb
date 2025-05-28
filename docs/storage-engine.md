@@ -14,13 +14,13 @@ FerrisDB implements a custom LSM-tree (Log-Structured Merge-tree) storage engine
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Write Path                           │
-│  Write Request → WAL → MemTable → (Flush) → SSTable    │
+│  Write Request → WAL → MemTable → (Flush) → SSTable     │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
 │                     Read Path                           │
-│  Read Request → MemTable → Immutable MemTables →       │
-│                 L0 SSTables → L1 SSTables → ...        │
+│  Read Request → MemTable → Immutable MemTables →        │
+│                 L0 SSTables → L1 SSTables → ...         │
 └─────────────────────────────────────────────────────────┘
 ```
 

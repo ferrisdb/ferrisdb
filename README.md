@@ -1,6 +1,6 @@
 # FerrisDB
 
-![FerrisDB Logo](docs/assets/images/ferrisdb_logo.svg)
+<img src="docs/assets/images/ferrisdb_logo.svg" alt="FerrisDB Logo" width="120">
 
 A distributed, transactional key-value database written in Rust, inspired by FoundationDB.
 
