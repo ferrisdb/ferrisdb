@@ -4,6 +4,15 @@
 
 A distributed, transactional key-value database written in Rust, inspired by FoundationDB.
 
+> ⚠️ **Educational Project Disclaimer**
+> 
+> This project is created for personal learning purposes:
+> - Learning Rust programming language
+> - Understanding distributed systems concepts
+> - Exploring AI-assisted development with Claude Code
+> 
+> **This is NOT recommended for production use.** The code is experimental and primarily serves as a learning exercise. If you're looking for a production-ready distributed database, consider established solutions like FoundationDB, TiKV, or CockroachDB.
+
 ## Features
 
 - **ACID Transactions**: Full ACID compliance with serializable isolation
@@ -144,4 +153,6 @@ This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/
 
 ## Status
 
-🚧 **This project is under active development and not yet ready for production use** 🚧
+🚧 **This project is under active development as a learning exercise** 🚧
+
+Current focus: Building a custom LSM-tree storage engine from scratch to understand database internals.
