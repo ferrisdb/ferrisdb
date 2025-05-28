@@ -16,7 +16,7 @@ Traditional B-tree based databases face a fundamental challenge with writes:
 ```
 B-Tree writes are expensive because:
 1. Random disk access to find the right page
-2. Read entire page into memory  
+2. Read entire page into memory
 3. Modify the page
 4. Write entire page back to disk
 5. Update index pages (more random I/O)
@@ -71,6 +71,7 @@ struct Node {
 ```
 
 **Why a Skip List?**
+
 - **O(log n) inserts/lookups** - Nearly as fast as a balanced tree
 - **Lock-free implementation** - Multiple threads can write concurrently
 - **Ordered iteration** - Essential for range queries and SSTable generation
@@ -82,10 +83,10 @@ struct Node {
 impl SkipList {
     pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
         let guard = &epoch::pin();
-        
+
         // Find insertion point
         let (preds, succs) = self.find_position(&key, guard);
-        
+
         // Create new node
         let level = self.random_level();
         let new_node = Owned::new(Node {
@@ -95,22 +96,22 @@ impl SkipList {
             next: vec![Atomic::null(); level + 1],
             level,
         });
-        
+
         // Link node into skip list (lock-free)
         self.link_node(new_node, preds, succs);
-        
+
         Ok(())
     }
-    
+
     pub fn get(&self, key: &Key, timestamp: Timestamp) -> Result<Option<Value>> {
         let guard = &epoch::pin();
         let mut current = self.head.load(Ordering::Acquire, guard);
-        
+
         // Traverse skip list levels (top to bottom)
         for level in (0..=self.max_level.load(Ordering::Relaxed)).rev() {
             while let Some(node) = unsafe { current.as_ref() } {
                 let next = node.next[level].load(Ordering::Acquire, guard);
-                
+
                 if let Some(next_node) = unsafe { next.as_ref() } {
                     match next_node.key.cmp(key) {
                         Ordering::Less => current = next,
@@ -127,13 +128,14 @@ impl SkipList {
                 }
             }
         }
-        
+
         Ok(None)
     }
 }
 ```
 
 **MVCC Support**: The skip list stores multiple versions of the same key, ordered by timestamp. This enables:
+
 - **Snapshot isolation**: Each transaction sees a consistent view
 - **Non-blocking reads**: Readers don't block writers
 - **Point-in-time queries**: "What was the value at timestamp X?"
@@ -159,7 +161,7 @@ pub struct SSTable {
 pub struct SSTableMetadata {
     /// Smallest key in this SSTable
     pub min_key: Key,
-    /// Largest key in this SSTable  
+    /// Largest key in this SSTable
     pub max_key: Key,
     /// Number of key-value pairs
     pub num_entries: u64,
@@ -208,27 +210,27 @@ impl SSTableWriter {
     pub fn add(&mut self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
         // Add to bloom filter
         self.bloom_filter.insert(&key);
-        
+
         // Check if current block is full
         if self.current_block.size() > self.block_size {
             self.finish_block()?;
         }
-        
+
         // Add entry to current block
         self.current_block.add(key, value, timestamp);
-        
+
         Ok(())
     }
-    
+
     fn finish_block(&mut self) -> Result<()> {
         if self.current_block.is_empty() {
             return Ok(());
         }
-        
+
         // Write data block to file
         let offset = self.file.seek(SeekFrom::Current(0))?;
         self.current_block.write_to(&mut self.file)?;
-        
+
         // Create index entry pointing to this block
         let index_entry = IndexBlock {
             first_key: self.current_block.first_key().clone(),
@@ -236,27 +238,27 @@ impl SSTableWriter {
             size: self.current_block.size(),
         };
         self.index_blocks.push(index_entry);
-        
+
         // Start new block
         self.current_block = DataBlock::new();
-        
+
         Ok(())
     }
-    
+
     pub fn finalize(mut self) -> Result<SSTable> {
         // Finish last block
         self.finish_block()?;
-        
+
         // Write index blocks
         let index_offset = self.file.seek(SeekFrom::Current(0))?;
         for index_block in &self.index_blocks {
             index_block.write_to(&mut self.file)?;
         }
-        
+
         // Write bloom filter
         let bloom_offset = self.file.seek(SeekFrom::Current(0))?;
         self.bloom_filter.write_to(&mut self.file)?;
-        
+
         // Write metadata
         let metadata = SSTableMetadata {
             min_key: self.index_blocks.first().unwrap().first_key.clone(),
@@ -266,9 +268,9 @@ impl SSTableWriter {
             created_at: Timestamp::now(),
         };
         metadata.write_to(&mut self.file)?;
-        
+
         self.file.sync_all()?;
-        
+
         Ok(SSTable {
             metadata,
             bloom_filter: self.bloom_filter,
@@ -282,6 +284,7 @@ impl SSTableWriter {
 ## Component 3: Compaction - Managing Multiple SSTables
 
 Over time, you accumulate many SSTables. Compaction merges them to:
+
 - **Remove deleted data** (tombstones)
 - **Merge duplicate keys** (keeping latest version)
 - **Improve read performance** (fewer files to check)
@@ -289,44 +292,46 @@ Over time, you accumulate many SSTables. Compaction merges them to:
 ### Compaction Strategies
 
 **1. Size-Tiered Compaction**
+
 ```rust
 pub fn size_tiered_compaction(&mut self) -> Result<()> {
     // Group SSTables by similar size
     let mut size_tiers: BTreeMap<u64, Vec<SSTable>> = BTreeMap::new();
-    
+
     for sstable in &self.sstables {
         let size_tier = size_tier_for_size(sstable.metadata.file_size);
         size_tiers.entry(size_tier).or_default().push(sstable.clone());
     }
-    
+
     // Compact tiers with too many SSTables
     for (tier_size, sstables) in size_tiers {
         if sstables.len() >= self.config.max_sstables_per_tier {
             self.compact_sstables(sstables)?;
         }
     }
-    
+
     Ok(())
 }
 ```
 
 **2. Leveled Compaction (more sophisticated)**
+
 ```rust
 pub fn leveled_compaction(&mut self) -> Result<()> {
     // Level 0: Direct MemTable flushes (may overlap)
     // Level 1: 10MB total, non-overlapping
-    // Level 2: 100MB total, non-overlapping  
+    // Level 2: 100MB total, non-overlapping
     // Level 3: 1GB total, non-overlapping
-    
+
     for level in 0..self.config.max_levels {
         let level_size = self.calculate_level_size(level);
         let max_level_size = self.config.max_size_for_level(level);
-        
+
         if level_size > max_level_size {
             self.compact_level(level)?;
         }
     }
-    
+
     Ok(())
 }
 ```
@@ -340,15 +345,15 @@ pub fn compact_sstables(&mut self, sstables: Vec<SSTable>) -> Result<SSTable> {
         .into_iter()
         .map(|sst| sst.iterator())
         .collect();
-    
+
     // Merge iterators using a priority queue (min-heap)
     let mut merge_iter = MergeIterator::new(iterators);
-    
+
     // Create new SSTable writer
     let mut writer = SSTableWriter::new(&self.next_sstable_path())?;
-    
+
     let mut last_key: Option<Key> = None;
-    
+
     while let Some((key, value, timestamp)) = merge_iter.next() {
         // Skip duplicate keys (keep latest timestamp)
         if let Some(ref last) = last_key {
@@ -356,28 +361,28 @@ pub fn compact_sstables(&mut self, sstables: Vec<SSTable>) -> Result<SSTable> {
                 continue; // Skip older version
             }
         }
-        
+
         // Skip tombstones if they're old enough
         if value.is_delete() && self.can_drop_tombstone(&key, timestamp) {
             continue;
         }
-        
+
         // Add to new SSTable
         writer.add(key.clone(), value, timestamp)?;
         last_key = Some(key);
     }
-    
+
     // Finalize new SSTable
     let new_sstable = writer.finalize()?;
-    
+
     // Remove old SSTables
     for old_sstable in &old_sstables {
         self.delete_sstable(old_sstable)?;
     }
-    
+
     // Add new SSTable
     self.sstables.push(new_sstable.clone());
-    
+
     Ok(new_sstable)
 }
 ```
@@ -392,29 +397,29 @@ pub fn get(&self, key: &Key, timestamp: Timestamp) -> Result<Option<Value>> {
     if let Some(value) = self.memtable.get(key, timestamp)? {
         return Ok(Some(value));
     }
-    
+
     // 2. Check SSTables from newest to oldest
     for sstable in self.sstables.iter().rev() {
         // Quick range check
         if key < &sstable.metadata.min_key || key > &sstable.metadata.max_key {
             continue;
         }
-        
+
         // Bloom filter check (fast negative lookup)
         if !sstable.bloom_filter.might_contain(key) {
             continue; // Definitely not in this SSTable
         }
-        
+
         // Binary search in index blocks
         if let Some(block_idx) = sstable.find_block_for_key(key) {
             let data_block = sstable.read_data_block(block_idx)?;
-            
+
             if let Some(value) = data_block.get(key, timestamp)? {
                 return Ok(Some(value));
             }
         }
     }
-    
+
     Ok(None) // Key not found
 }
 ```
@@ -430,6 +435,7 @@ Batched commits: Even higher throughput
 ```
 
 LSM-Trees excel at writes because:
+
 - **MemTable writes are pure in-memory operations**
 - **WAL writes are sequential** (much faster than random)
 - **No expensive B-tree rebalancing**
@@ -443,8 +449,9 @@ Range scans: Excellent (sorted data)
 ```
 
 Read optimizations:
+
 - **Bloom filters** reduce unnecessary disk I/O
-- **Block-level compression** improves I/O efficiency  
+- **Block-level compression** improves I/O efficiency
 - **Caching** keeps hot data in memory
 - **Compaction** reduces the number of files to check
 
@@ -473,14 +480,14 @@ impl BloomFilter {
     pub fn might_contain(&self, key: &Key) -> bool {
         let hash1 = self.hash1(key);
         let hash2 = self.hash2(key);
-        
+
         for i in 0..self.num_hash_functions {
             let bit_pos = (hash1 + i * hash2) % self.bit_array.len();
             if !self.bit_array[bit_pos] {
                 return false; // Definitely not present
             }
         }
-        
+
         true // Might be present (could be false positive)
     }
 }
@@ -519,12 +526,14 @@ LSM-Trees represent a fundamental shift in database design:
 **LSM approach**: Append changes and merge later (excellent for writes, optimized reads)
 
 This makes LSM-Trees perfect for:
+
 - **Modern applications** with write-heavy workloads
 - **Big data systems** that need to ingest massive amounts of data
 - **Cloud-native databases** where sequential I/O is preferred
 - **Time-series databases** where data is mostly appended
 
 Understanding LSM-Trees helps you:
+
 - **Choose the right database** for your workload
 - **Optimize performance** by understanding the underlying data structures
 - **Design better systems** by applying these principles
@@ -534,8 +543,8 @@ Understanding LSM-Trees helps you:
 ## Related Deep Dives
 
 - [Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }})
-- [MVCC and Transaction Isolation]({{ '/deep-dive/mvcc/' | relative_url }}) *(coming soon)*
-- [Distributed Consensus with Raft]({{ '/deep-dive/raft/' | relative_url }}) *(coming soon)*
+- [MVCC and Transaction Isolation]({{ '/deep-dive/mvcc/' | relative_url }}) _(coming soon)_
+- [Distributed Consensus with Raft]({{ '/deep-dive/raft/' | relative_url }}) _(coming soon)_
 
 ## Further Reading
 

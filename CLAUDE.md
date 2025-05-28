@@ -22,6 +22,8 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Add `#[doc(hidden)]` for internal implementation details
 - Generate docs with `cargo doc --all --no-deps --open`
 - Review generated documentation before submitting PRs
+- **Run markdown linting** with `markdownlint-cli2 "**/*.md"` before committing
+- Use `prettier --write "**/*.md"` to auto-fix formatting issues
 
 ### Testing
 
@@ -58,6 +60,12 @@ cargo build --all
 
 # Run with logging
 RUST_LOG=debug cargo run
+
+# Lint markdown files
+markdownlint-cli2 "**/*.md" "!target/**" "!**/target/**"
+
+# Auto-fix markdown formatting
+prettier --write "**/*.md"
 ```
 
 ### Git Workflow

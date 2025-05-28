@@ -12,7 +12,7 @@ This page documents interesting architectural patterns and advanced concepts we 
 **Concept:** Completely decouple storage nodes from compute nodes for independent scaling and cost optimization.
 
 - **Storage layer:** Pure data persistence (database-aware object storage)
-- **Compute layer:** Query processing, transactions, caching  
+- **Compute layer:** Query processing, transactions, caching
 - **Benefits:** Independent scaling, cost optimization, multi-tenant isolation
 - **Examples:** Snowflake, Amazon Aurora, CockroachDB Serverless
 
@@ -24,7 +24,7 @@ This page documents interesting architectural patterns and advanced concepts we 
 **Alternative exploration:** Shared-storage (all nodes access common storage pool)
 
 - Multiple compute nodes can read/write same data
-- Enables instant failover and load balancing  
+- Enables instant failover and load balancing
 - Storage becomes the single source of truth
 - Trade-offs in consistency, performance, and complexity
 
@@ -38,6 +38,7 @@ This page documents interesting architectural patterns and advanced concepts we 
 - **Benefits:** Perfect audit trail, simplified backup/restore, event sourcing
 
 **Research areas:**
+
 - Log compaction strategies
 - Efficient materialized view maintenance
 - Query optimization over log structures
@@ -52,6 +53,7 @@ This page documents interesting architectural patterns and advanced concepts we 
 - **Real-time analytics:** Fresh data available immediately
 
 **Implementation approaches:**
+
 - Dual storage formats with synchronization
 - Adaptive storage layouts based on access patterns
 - Vectorized execution for analytical queries
@@ -61,23 +63,27 @@ This page documents interesting architectural patterns and advanced concepts we 
 **Progressive approach:** Support multiple data models while learning optimal integration patterns.
 
 ### Phase 1: Layered Implementation
+
 ```
 Document API  →  LSM Storage Engine
-Graph API     →  LSM Storage Engine  
+Graph API     →  LSM Storage Engine
 TimeSeries    →  LSM Storage Engine
 ```
 
 ### Phase 2: Hybrid Integration
+
 - Native JSON document support in storage format
 - Specialized indexing for different models
 - Cross-model query capabilities
 
 ### Phase 3: Unified Multi-Model
+
 - Storage engine natively understands multiple data types
 - Atomic transactions across all models
 - Optimized storage layouts per data type
 
 **Models to explore:**
+
 - **Document store:** JSON/BSON with rich querying
 - **Graph database:** Relationships and graph traversals
 - **Time series:** Optimized for metrics and IoT data
@@ -97,11 +103,12 @@ TimeSeries    →  LSM Storage Engine
 **Real-time data processing:** Built-in stream processing capabilities.
 
 - **Change streams:** Real-time data change notifications
-- **Materialized views:** Continuously updated query results  
+- **Materialized views:** Continuously updated query results
 - **Event sourcing:** Store events, compute state on demand
 - **Stream integration:** Native Kafka/Pulsar compatibility
 
 **Use cases:**
+
 - Real-time analytics and dashboards
 - Event-driven microservices integration
 - Live data synchronization between systems
@@ -116,6 +123,7 @@ TimeSeries    →  LSM Storage Engine
 - **Edge caching:** Bringing data closer to users
 
 **Challenges to explore:**
+
 - Network partition handling
 - Latency-aware query routing
 - Compliance and data sovereignty
@@ -131,6 +139,7 @@ TimeSeries    →  LSM Storage Engine
 - **Anomaly detection:** Automatic performance issue detection
 
 **Research areas:**
+
 - Reinforcement learning for database tuning
 - Workload prediction and preparation
 - Automated schema optimization
@@ -146,6 +155,7 @@ TimeSeries    →  LSM Storage Engine
 - **Cost model:** Pay only for storage and actual compute used
 
 **Technical challenges:**
+
 - Warm/cold state management
 - Connection pooling and management
 - Resource scheduling and allocation
@@ -164,24 +174,27 @@ TimeSeries    →  LSM Storage Engine
 ## 📚 Research Resources
 
 **Academic Papers:**
+
 - "The Log-Structured Merge-Tree (LSM-Tree)" - O'Neil et al.
 - "Spanner: Google's Globally Distributed Database" - Corbett et al.
 - "Calvin: Fast Distributed Transactions for Partitioned Database Systems" - Thomson et al.
 
 **Industry Examples:**
+
 - **FoundationDB:** Multi-model with ACID guarantees
 - **TiDB:** HTAP with TiKV storage and TiFlash analytics
 - **CockroachDB:** Global consistency with clock synchronization
 - **Snowflake:** Separation of storage and compute
 
 **Open Source Projects:**
+
 - **Apache Pinot:** Real-time analytics database
 - **YugabyteDB:** Multi-model with PostgreSQL compatibility
 - **ClickHouse:** Columnar database with real-time capabilities
 
 ---
 
-*This document will evolve as we explore these concepts and discover new architectural patterns. Each exploration builds on the fundamental knowledge gained from implementing the core LSM-tree storage engine.*
+_This document will evolve as we explore these concepts and discover new architectural patterns. Each exploration builds on the fundamental knowledge gained from implementing the core LSM-tree storage engine._
 
 ## Navigation
 
