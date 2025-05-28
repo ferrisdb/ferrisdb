@@ -2,7 +2,7 @@
 layout: post
 title: "Building FerrisDB - Laying the Foundations"
 subtitle: "Starting the journey: architecture design, storage engine planning, and implementing WAL + MemTable with concurrent skip lists"
-date: 2025-05-28
+date: 2025-05-27
 day: 1
 tags: [Architecture, Storage Engine, WAL, MemTable, Rust, Claude Code]
 stats: ["📊 13 tests passing", "📄 3 PRs merged", "⏱️ ~6 hours of development"]
