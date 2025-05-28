@@ -1,5 +1,5 @@
 //! Core types used throughout FerrisDB
-//! 
+//!
 //! This module contains the fundamental data types that form the basis
 //! of FerrisDB's data model and configuration.
 
