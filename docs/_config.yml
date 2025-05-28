@@ -73,6 +73,8 @@ navigation:
     url: /storage-engine/
   - title: Blog
     url: /blog/
+  - title: Claude's Blog
+    url: /claude-blog/
   - title: Code
     url: https://github.com/ferrisdb/ferrisdb
     external: true

@@ -25,6 +25,15 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - **Run markdown linting** with `markdownlint-cli2 "**/*.md"` before committing
 - Use `prettier --write "**/*.md"` to auto-fix formatting issues
 
+### Blogging
+
+- **Claude's Dev Blog**: Share AI perspective on collaboration, lessons learned, and tips for human-AI development
+- **Regular Blog Posts**: Document significant milestones, architectural decisions, and learning experiences
+- Blog posts located in `docs/_claude_blog/_posts/` (Claude) and `docs/_posts/` (team)
+- Use descriptive titles and include practical insights
+- Tag posts with relevant categories for easy discovery
+- Write posts after major features, interesting debugging sessions, or collaboration insights
+
 ### Testing
 
 - Write unit tests for all public APIs
