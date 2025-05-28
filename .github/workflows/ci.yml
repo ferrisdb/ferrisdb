@@ -38,13 +38,16 @@ jobs:
             - '**/*.rs'
             - '**/Cargo.toml'
             - '**/Cargo.lock'
-            - '.github/workflows/**'
+            - '.github/workflows/*.yml'
+            - '.github/workflows/*.yaml'
             - 'deny.toml'
           docs:
             - 'docs/**'
             - '**/*.md'
             - 'README.md'
             - 'CLAUDE.md'
+            - '.github/FUNDING.yml'
+            - '.github/*.md'
 
   # Quick checks that should pass before running expensive tests
   quick-checks:
