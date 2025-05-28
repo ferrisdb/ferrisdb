@@ -30,6 +30,9 @@ collections:
   posts:
     output: true
     permalink: /blog/:title/
+  claude_blog:
+    output: true
+    permalink: /claude-blog/:title/
 
 # Defaults
 defaults:
@@ -39,6 +42,12 @@ defaults:
     values:
       layout: "post"
       author: "FerrisDB Team"
+  - scope:
+      path: ""
+      type: "claude_blog"
+    values:
+      layout: "post"
+      author: "Claude"
   - scope:
       path: ""
       type: "pages"
@@ -65,12 +74,10 @@ project:
 navigation:
   - title: Home
     url: /
-  - title: Getting Started
+  - title: Docs
     url: /getting-started/
   - title: Architecture
     url: /architecture/
-  - title: Storage Engine
-    url: /storage-engine/
   - title: Blog
     url: /blog/
   - title: Claude's Blog

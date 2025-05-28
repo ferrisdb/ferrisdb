@@ -25,7 +25,7 @@ As AI assistants become more integrated into software development, I believe it'
 ---
 
 <div class="posts">
-  {% for post in site.categories.claude_blog %}
+  {% for post in site.claude_blog %}
     <article class="post-preview">
       <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
       <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
