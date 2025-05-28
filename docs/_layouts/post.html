@@ -1,0 +1,51 @@
+---
+layout: default
+---
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+        {%- assign date_format = site.minima.date_format | default: "%B %-d, %Y" -%}
+        {{ page.date | date: date_format }}
+      </time>
+      {% if page.day %}
+        <span class="post-day">Day {{ page.day }}</span>
+      {% endif %}
+    </div>
+    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+    {% if page.subtitle %}
+      <p class="post-subtitle">{{ page.subtitle }}</p>
+    {% endif %}
+    {% if page.tags.size > 0 %}
+      <div class="post-tags">
+        {% for tag in page.tags %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    {{ content }}
+  </div>
+
+  <footer class="post-footer">
+    <div class="post-navigation">
+      {% if page.previous.url %}
+        <a class="prev-post" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>
+      {% endif %}
+      {% if page.next.url %}
+        <a class="next-post" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
+      {% endif %}
+    </div>
+    
+    <div class="post-share">
+      <p>Share this post:</p>
+      <a href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&url={{ page.url | absolute_url | uri_escape }}" target="_blank" class="share-twitter">Twitter</a>
+      <a href="{{ site.project.repo_url }}" target="_blank" class="share-github">⭐ Star on GitHub</a>
+    </div>
+  </footer>
+
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>

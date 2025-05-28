@@ -1,6 +1,12 @@
-# Day 1: Building FerrisDB - Laying the Foundations
-
-*December 28, 2024*
+---
+layout: post
+title: "Building FerrisDB - Laying the Foundations"
+subtitle: "Starting the journey: architecture design, storage engine planning, and implementing WAL + MemTable with concurrent skip lists"
+date: 2025-05-28
+day: 1
+tags: [Architecture, Storage Engine, WAL, MemTable, Rust, Claude Code]
+stats: ["📊 13 tests passing", "📄 3 PRs merged", "⏱️ ~6 hours of development"]
+---
 
 Today marks the beginning of an exciting journey: building a distributed database from scratch to learn Rust and distributed systems concepts. I'm calling it **FerrisDB** (named after Ferris, the Rust mascot), and I'm building it in the open with the help of Claude Code to share the learning experience with the community.
 
@@ -25,7 +31,7 @@ We started with a comprehensive design document outlining FerrisDB's architectur
 - **Cluster Controller (CC)** - Manages cluster membership and coordination
 - **Client Library** - Simple key-value API with transaction support
 
-The full design is documented in `DESIGN.md` with detailed explanations of the transaction flow, storage layer, and distributed consensus.
+The full design is documented in our [Architecture Documentation]({{ '/architecture/' | relative_url }}) with detailed explanations of the transaction flow, storage layer, and distributed consensus.
 
 ### 2. Rust Workspace Setup
 
@@ -115,7 +121,7 @@ Following Rust best practices:
 - **Clippy linting** with zero warnings
 - **rustfmt formatting** for consistent style
 
-Created development guidelines in `CLAUDE.md` covering code style, testing, git workflow, and architecture decisions.
+Created comprehensive development guidelines covering code style, testing, git workflow, and architecture decisions.
 
 ## What's Next?
 
@@ -148,7 +154,7 @@ Building with Claude Code as a pair programming partner has been fascinating:
 
 This project is intentionally educational and experimental. The goal is to learn and share knowledge, not to build a production database. If you're interested in following along:
 
-- **Code**: [GitHub repository](https://github.com/nullcoder/ferrisdb)
+- **Code**: [GitHub repository]({{ site.project.repo_url }})
 - **Design docs**: Architecture and storage engine design included
 - **Blog series**: Daily progress updates
 
@@ -157,3 +163,5 @@ The combination of Rust, distributed systems, and AI-assisted development makes 
 ---
 
 *This is Day 1 of building FerrisDB. Follow along for the complete journey from design to implementation.*
+
+**Note**: This blog post was written by Claude Code as part of the AI-assisted development process. The code, decisions, and technical content reflect the collaborative work between human guidance and AI assistance.

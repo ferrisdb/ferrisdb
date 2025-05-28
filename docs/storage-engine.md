@@ -1,4 +1,9 @@
-# FerrisDB Storage Engine Design
+---
+layout: page
+title: Storage Engine Design
+subtitle: Detailed design and implementation of FerrisDB's custom LSM-tree storage engine
+permalink: /storage-engine/
+---
 
 ## Overview
 
@@ -47,11 +52,11 @@ struct WALEntry {
 
 ### 2. MemTable
 
-In-memory sorted structure for recent writes. We'll implement a skip list for O(log n) operations.
+In-memory sorted structure for recent writes. We implement a concurrent skip list for O(log n) operations.
 
 **Design:**
-- Skip list implementation with configurable max height (default: 12)
-- Thread-safe with fine-grained locking
+- Lock-free skip list implementation with configurable max height (default: 12)
+- Thread-safe using epoch-based memory reclamation
 - Size limit triggers flush to SSTable (default: 4MB)
 - Supports concurrent reads during writes
 
@@ -260,25 +265,47 @@ struct StorageConfig {
 - Disk full scenarios
 - Memory pressure
 
-## Implementation Plan
+## Implementation Progress
 
-1. **Phase 1**: Basic functionality
-   - Simple WAL
-   - Hash map MemTable
-   - Basic SSTable writer/reader
-   - Manual compaction
+### ✅ Phase 1: Basic Functionality (COMPLETED)
+- [x] Simple WAL with binary encoding
+- [x] Concurrent skip list MemTable
+- [x] Basic SSTable writer/reader (skeleton)
+- [x] MVCC support with timestamps
 
-2. **Phase 2**: Performance
-   - Skip list MemTable
-   - Bloom filters
-   - Block cache
-   - Parallel compaction
+### 🚧 Phase 2: Performance (IN PROGRESS)
+- [ ] Complete SSTable implementation
+- [ ] Bloom filters
+- [ ] Block cache
+- [ ] Automatic compaction
 
-3. **Phase 3**: Advanced features
-   - Compression
-   - Column families
-   - Backup/restore
-   - Statistics collection
+### ⏳ Phase 3: Advanced Features (PLANNED)
+- [ ] Compression
+- [ ] Column families
+- [ ] Backup/restore
+- [ ] Statistics collection
+
+## Current Implementation Status
+
+As of Day 1, we have successfully implemented:
+
+**✅ Write-Ahead Log**
+- Binary format with CRC32 checksums
+- Little-endian encoding for cross-platform compatibility
+- Atomic writes with proper error handling
+- Recovery by replaying log entries
+
+**✅ MemTable with Concurrent Skip List**
+- Lock-free implementation using crossbeam
+- MVCC support with timestamp-based versioning
+- Proper key ordering: (user_key ASC, timestamp DESC)
+- Epoch-based memory reclamation for thread safety
+
+**🚧 Next Steps**
+- Complete SSTable format implementation
+- Add bloom filters for read optimization
+- Implement compaction strategy
+- Add comprehensive integration tests
 
 ## References
 
@@ -286,3 +313,10 @@ struct StorageConfig {
 - RocksDB Wiki
 - WiredTiger Architecture Guide
 - "The Log-Structured Merge-Tree" paper
+
+---
+
+**Related Documentation:**
+- [Overall Architecture]({{ '/architecture/' | relative_url }})
+- [GitHub Repository]({{ site.project.repo_url }})
+- [Development Blog]({{ '/blog/' | relative_url }})

@@ -1,0 +1,59 @@
+---
+layout: default
+---
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🦀 Educational Project</div>
+    <h1 class="hero-title">{{ site.project.name }}</h1>
+    <p class="hero-subtitle">{{ site.project.tagline }}</p>
+    <p class="hero-description">{{ site.description }}</p>
+    <div class="hero-buttons">
+      <a href="{{ '/getting-started/' | relative_url }}" class="btn btn-primary">Get Started</a>
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn-secondary">Read the Blog</a>
+    </div>
+    <div class="hero-warning">{{ site.project.warning }}</div>
+  </div>
+</div>
+
+<div class="home">
+  {{ content }}
+
+  {% if site.posts.size > 0 %}
+    <section class="latest-posts">
+      <h2>Latest Blog Posts</h2>
+      <div class="post-list">
+        {% for post in site.posts limit:3 %}
+          <article class="post-card">
+            <div class="post-card-meta">
+              <time datetime="{{ post.date | date_to_xmlschema }}">
+                {{ post.date | date: "%B %-d, %Y" }}
+              </time>
+              {% if post.day %}
+                <span class="post-day">Day {{ post.day }}</span>
+              {% endif %}
+            </div>
+            <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+            {% if post.subtitle %}
+              <p class="post-card-subtitle">{{ post.subtitle }}</p>
+            {% endif %}
+            {% if post.excerpt %}
+              <p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+            {% endif %}
+            {% if post.tags.size > 0 %}
+              <div class="post-card-tags">
+                {% for tag in post.tags limit:4 %}
+                  <span class="tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <a href="{{ post.url | relative_url }}" class="read-more">Read more →</a>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="view-all-posts">
+        <a href="{{ '/blog/' | relative_url }}" class="btn btn-primary">View All Posts</a>
+      </div>
+    </section>
+  {% endif %}
+</div>

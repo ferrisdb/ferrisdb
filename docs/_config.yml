@@ -1,0 +1,92 @@
+# Site settings
+title: FerrisDB
+description: >-
+  Educational distributed database in Rust - Learning LSM-trees, MVCC, 
+  and distributed systems with Claude Code. Inspired by FoundationDB.
+baseurl: "/ferrisdb"
+url: "https://ferrisdb.nullcoder.net"
+github_username: nullcoder
+repository: nullcoder/ferrisdb
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Kramdown settings
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "FerrisDB Team"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# Site data
+author:
+  name: FerrisDB Team
+  email: noreply@ferrisdb.dev
+
+# Social links
+social_links:
+  github: nullcoder/ferrisdb
+
+# Custom variables
+project:
+  name: FerrisDB
+  tagline: "Educational Distributed Database in Rust"
+  repo_url: https://github.com/nullcoder/ferrisdb
+  warning: "⚠️ This is an educational project - not for production use"
+  
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Getting Started
+    url: /getting-started/
+  - title: Architecture
+    url: /architecture/
+  - title: Storage Engine
+    url: /storage-engine/
+  - title: Blog
+    url: /blog/
+  - title: Code
+    url: https://github.com/nullcoder/ferrisdb
+    external: true
+
+# Blog settings
+paginate: 5
+paginate_path: "/blog/page:num/"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

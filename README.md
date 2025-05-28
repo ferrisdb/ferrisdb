@@ -79,7 +79,7 @@ FerrisDB uses a distributed architecture with the following components:
 - **Cluster Controller**: Handles cluster membership and failure detection
 - **Client Library**: Provides a simple API for applications
 
-See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
+See the [Architecture Documentation](docs/architecture.md) for detailed design documentation.
 
 ## Development
 

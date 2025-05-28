@@ -1,4 +1,9 @@
-# FerrisDB Design Document
+---
+layout: page
+title: Architecture Design
+subtitle: Comprehensive design document for FerrisDB's distributed database architecture
+permalink: /architecture/
+---
 
 ## Overview
 
@@ -176,9 +181,9 @@ async fn example() -> Result<()> {
 ## Implementation Phases
 
 ### Phase 1: Core Storage
-- [ ] Basic key-value storage engine
-- [ ] LSM-tree implementation
-- [ ] WAL for durability
+- [x] Basic key-value storage engine
+- [x] LSM-tree implementation  
+- [x] WAL for durability
 
 ### Phase 2: Transactions
 - [ ] MVCC implementation
@@ -230,3 +235,10 @@ async fn example() -> Result<()> {
 - Google Spanner Paper
 - Amazon DynamoDB Paper
 - CockroachDB Design Docs
+
+---
+
+**Related Documentation:**
+- [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
+- [GitHub Repository]({{ site.project.repo_url }})
+- [Development Blog]({{ '/blog/' | relative_url }})
