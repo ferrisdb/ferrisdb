@@ -1,3 +1,5 @@
+# Pull Request
+
 ## Description
 
 Brief description of what this PR does.
@@ -21,11 +23,12 @@ Closes #(issue number)
 ## How Has This Been Tested?
 
 Please describe the tests that you ran to verify your changes:
+
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] Manual testing
 
-## Checklist:
+## Checklist
 
 - [ ] My code follows the style guidelines of this project (`cargo fmt`)
 - [ ] I have performed a self-review of my own code
@@ -46,6 +49,7 @@ Please describe the tests that you ran to verify your changes:
 ## Breaking Changes
 
 If this PR introduces breaking changes, please describe:
+
 - What breaks?
 - Migration steps for users
 - Why this breaking change is necessary

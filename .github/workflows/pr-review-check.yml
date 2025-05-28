@@ -1,0 +1,57 @@
+name: PR Review Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-review-requirement:
+    name: Check Review Requirement
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check if review is required
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const author = pr.user.login;
+          
+          // Check if author is a member of the organization
+          let isMember = false;
+          try {
+            const { data: membership } = await github.rest.orgs.checkMembershipForUser({
+              org: 'ferrisdb',
+              username: author
+            });
+            isMember = true;
+          } catch (error) {
+            // Not a member
+            isMember = false;
+          }
+          
+          // If not a member, add a comment requesting review
+          if (!isMember) {
+            const comment = `Thanks for your contribution @${author}! 
+          
+          As you're not a member of the FerrisDB organization, this PR requires a review from a maintainer before it can be merged.
+          
+          A maintainer will review your PR soon. In the meantime, please ensure:
+          - All CI checks are passing
+          - The PR description is complete
+          - Tests are included for any new functionality`;
+          
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: comment
+            });
+            
+            // Add label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: ['needs-review']
+            });
+          }

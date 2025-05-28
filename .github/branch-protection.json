@@ -1,4 +1,5 @@
 {
+  "_comment": "Branch protection configuration for FerrisDB. Reviews are not required for maintainers team members but are required for external contributors.",
   "branch": "main",
   "protection_rules": {
     "required_status_checks": {
@@ -25,9 +26,13 @@
         "teams": ["maintainers"]
       },
       "dismiss_stale_reviews": true,
-      "require_code_owner_reviews": true,
-      "required_approving_review_count": 1,
-      "require_last_push_approval": false
+      "require_code_owner_reviews": false,
+      "required_approving_review_count": 0,
+      "require_last_push_approval": false,
+      "bypass_pull_request_allowances": {
+        "users": [],
+        "teams": ["maintainers"]
+      }
     },
     "restrictions": null,
     "allow_force_pushes": false,

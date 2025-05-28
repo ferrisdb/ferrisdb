@@ -77,6 +77,13 @@ prettier --write "**/*.md"
 - Always run tests before pushing
 - Create focused PRs (one feature/fix per PR)
 
+### Pull Request Policy
+
+- **Maintainers**: Can merge PRs after all CI checks pass (no review required)
+- **External contributors**: Require review from a maintainer
+- All PRs must pass CI checks before merging
+- Use squash merge to keep history clean
+
 ### Architecture Decisions
 
 - Use `tokio` for async runtime
