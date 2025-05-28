@@ -1,0 +1,40 @@
+# Typos configuration for spell checking
+# https://github.com/crate-ci/typos
+
+[default.extend-words]
+# Technical terms and project-specific words
+ferrisdb = "ferrisdb"
+FerrisDB = "FerrisDB"
+FoundationDB = "FoundationDB"
+SSTable = "SSTable"
+SSTables = "SSTables"
+MemTable = "MemTable"
+MemTables = "MemTables"
+WAL = "WAL"
+MVCC = "MVCC"
+LSM = "LSM"
+TiKV = "TiKV"
+CockroachDB = "CockroachDB"
+skiplist = "skiplist"
+tokio = "tokio"
+crossbeam = "crossbeam"
+rustfmt = "rustfmt"
+clippy = "clippy"
+thiserror = "thiserror"
+nullcoder = "nullcoder"
+
+[files]
+extend-exclude = [
+    "target/",
+    "**/target/",
+    "Cargo.lock",
+    "*.svg",
+    "_site/",
+    ".git/",
+]
+
+[type.rust]
+extend-glob = ["*.rs"]
+
+[type.markdown]
+extend-glob = ["*.md"]
