@@ -4,9 +4,9 @@ description: >-
   Educational distributed database in Rust - Learning LSM-trees, MVCC, 
   and distributed systems with Claude Code. Inspired by FoundationDB.
 baseurl: "/"
-url: "https://ferrisdb.nullcoder.net"
-github_username: nullcoder
-repository: nullcoder/ferrisdb
+url: "https://ferrisdb.org"
+github_username: ferrisdb
+repository: ferrisdb/ferrisdb
 
 # Build settings
 markdown: kramdown
@@ -48,17 +48,17 @@ defaults:
 # Site data
 author:
   name: FerrisDB Team
-  email: noreply@ferrisdb.dev
+  email: noreply@ferrisdb.org
 
 # Social links
 social_links:
-  github: nullcoder/ferrisdb
+  github: ferrisdb/ferrisdb
 
 # Custom variables
 project:
   name: FerrisDB
   tagline: "Educational Distributed Database in Rust"
-  repo_url: https://github.com/nullcoder/ferrisdb
+  repo_url: https://github.com/ferrisdb/ferrisdb
   warning: "⚠️ This is an educational project - not for production use"
   
 # Navigation
@@ -74,7 +74,7 @@ navigation:
   - title: Blog
     url: /blog/
   - title: Code
-    url: https://github.com/nullcoder/ferrisdb
+    url: https://github.com/ferrisdb/ferrisdb
     external: true
 
 # Blog settings

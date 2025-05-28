@@ -35,7 +35,7 @@ A distributed, transactional key-value database written in Rust, inspired by Fou
 
 ```bash
 # Clone the repository
-git clone https://github.com/nullcoder/ferrisdb.git
+git clone https://github.com/ferrisdb/ferrisdb.git
 cd ferrisdb
 
 # Build the project

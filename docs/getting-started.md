@@ -34,7 +34,7 @@ git --version
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/nullcoder/ferrisdb.git
+git clone https://github.com/ferrisdb/ferrisdb.git
 cd ferrisdb
 ```
 
