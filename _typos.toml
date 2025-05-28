@@ -23,6 +23,16 @@ clippy = "clippy"
 thiserror = "thiserror"
 nullcoder = "nullcoder"
 
+# CSS class names used in Rouge syntax highlighting
+nd = "nd"
+nc = "nc" 
+ni = "ni"
+ne = "ne"
+nf = "nf"
+nn = "nn"
+nt = "nt"
+nv = "nv"
+
 [files]
 extend-exclude = [
     "target/",
