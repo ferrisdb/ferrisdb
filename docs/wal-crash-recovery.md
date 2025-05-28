@@ -60,6 +60,7 @@ FerrisDB stores WAL entries in a compact binary format:
 ```
 
 **Why this format?**
+
 - **Length prefix**: Enables skipping corrupted entries
 - **CRC32 checksum**: Detects data corruption
 - **Timestamp**: Essential for MVCC and operation ordering
@@ -72,7 +73,7 @@ Here's what happens when you write data to FerrisDB:
 ```rust
 pub fn put(&mut self, key: Key, value: Value) -> Result<()> {
     let timestamp = self.clock.now();
-    
+
     // 1. Create WAL entry
     let entry = WALEntry {
         timestamp,
@@ -80,20 +81,21 @@ pub fn put(&mut self, key: Key, value: Value) -> Result<()> {
         key: key.clone(),
         value: value.clone(),
     };
-    
+
     // 2. Write to WAL first (CRITICAL!)
     self.wal.append(&entry)?;
     self.wal.sync()?; // Force to disk
-    
+
     // 3. Update MemTable in memory
     self.memtable.put(key, value, timestamp)?;
-    
+
     // 4. Return success to client
     Ok(())
 }
 ```
 
 **The crucial ordering:**
+
 1. **WAL write + sync** - Durably record the operation
 2. **MemTable update** - Update in-memory state
 3. **Return success** - Tell client operation succeeded
@@ -107,19 +109,19 @@ When FerrisDB starts up after a crash, it performs recovery:
 ```rust
 pub fn recover_from_wal(&mut self) -> Result<()> {
     let mut wal_reader = WALReader::new(&self.wal_path)?;
-    
+
     // Read all valid entries from WAL
     let entries = wal_reader.read_all()?;
-    
+
     println!("Recovering {} operations from WAL", entries.len());
-    
+
     // Replay each operation into MemTable
     for entry in entries {
         match entry.operation {
             Operation::Put => {
                 self.memtable.put(
-                    entry.key, 
-                    entry.value, 
+                    entry.key,
+                    entry.value,
                     entry.timestamp
                 )?;
             }
@@ -128,7 +130,7 @@ pub fn recover_from_wal(&mut self) -> Result<()> {
             }
         }
     }
-    
+
     println!("Recovery complete!");
     Ok(())
 }
@@ -146,27 +148,27 @@ pub fn read_entry(&mut self) -> Result<Option<WALEntry>> {
         Err(_) => return Ok(None), // End of file
         Ok(_) => {}
     }
-    
+
     let length = u32::from_le_bytes(length_buf);
-    
+
     // Read entry data
     let mut entry_buf = vec![0u8; length as usize];
     self.reader.read_exact(&mut entry_buf)?;
-    
+
     // Verify checksum
     let stored_checksum = u32::from_le_bytes([
-        entry_buf[0], entry_buf[1], 
+        entry_buf[0], entry_buf[1],
         entry_buf[2], entry_buf[3]
     ]);
-    
+
     let computed_checksum = crc32fast::hash(&entry_buf[4..]);
-    
+
     if stored_checksum != computed_checksum {
         // Corruption detected - skip this entry
         eprintln!("WAL corruption detected, skipping entry");
         return Ok(None);
     }
-    
+
     // Decode valid entry
     let entry = WALEntry::decode(&entry_buf[4..])?;
     Ok(Some(entry))
@@ -181,7 +183,7 @@ FerrisDB's WAL includes timestamps, which enables Multi-Version Concurrency Cont
 // Example: Multiple versions of the same key
 WAL entries:
 [Put(key="user:1", value="Alice", timestamp=100)]
-[Put(key="user:1", value="Alice Smith", timestamp=150)]  
+[Put(key="user:1", value="Alice Smith", timestamp=150)]
 [Delete(key="user:1", timestamp=200)]
 
 // After recovery, MemTable contains all versions:
@@ -195,6 +197,7 @@ MemTable: {
 ```
 
 This enables:
+
 - **Point-in-time queries**: "What was user:1 at timestamp 125?"
 - **Transaction isolation**: Each transaction sees a consistent snapshot
 - **Conflict detection**: Detecting concurrent modifications
@@ -204,19 +207,22 @@ This enables:
 Let's trace through a complete example:
 
 **Initial state:**
+
 ```
 MemTable: {}
 WAL: (empty)
 ```
 
 **Operations:**
+
 ```rust
 db.put("user:1", "Alice")?;     // timestamp=100
-db.put("user:2", "Bob")?;       // timestamp=101  
+db.put("user:2", "Bob")?;       // timestamp=101
 db.delete("user:1")?;           // timestamp=102
 ```
 
 **After operations:**
+
 ```
 MemTable: {
     "user:2" => "Bob"@101,
@@ -224,7 +230,7 @@ MemTable: {
 }
 WAL: [
     Put(user:1, Alice, 100),
-    Put(user:2, Bob, 101), 
+    Put(user:2, Bob, 101),
     Delete(user:1, 102)
 ]
 ```
@@ -232,11 +238,12 @@ WAL: [
 **💥 CRASH! System restarts...**
 
 **Recovery process:**
+
 ```
 1. Read WAL entries: 100, 101, 102
 2. Replay operations in order:
    - Put("user:1", "Alice", 100)
-   - Put("user:2", "Bob", 101)  
+   - Put("user:2", "Bob", 101)
    - Delete("user:1", 102)
 3. MemTable restored: {
      "user:2" => "Bob"@101,
@@ -264,20 +271,21 @@ pub fn batch_write(&mut self, operations: &[Operation]) -> Result<()> {
         let entry = WALEntry::from_operation(op);
         self.wal.append(&entry)?;
     }
-    
+
     // Single fsync for entire batch
     self.wal.sync()?;
-    
+
     // Update MemTable
     for op in operations {
         self.memtable.apply(op)?;
     }
-    
+
     Ok(())
 }
 ```
 
 **Batching benefits:**
+
 - Amortize sync costs across multiple operations
 - Better throughput for write-heavy workloads
 - Reduced write amplification
@@ -296,6 +304,7 @@ pub enum SyncMode {
 ```
 
 Different applications need different guarantees:
+
 - **Financial systems**: Always sync (durability critical)
 - **Analytics**: Periodic sync (some data loss acceptable)
 - **Caching**: Never sync (data is replaceable)
@@ -308,17 +317,18 @@ WAL files grow over time and need maintenance:
 pub fn checkpoint_and_rotate(&mut self) -> Result<()> {
     // 1. Flush MemTable to SSTable
     self.flush_memtable_to_sstable()?;
-    
+
     // 2. All data is now durable in SSTables
     // 3. WAL is no longer needed for recovery
     self.wal.rotate()?;
-    
+
     // 4. Start fresh WAL file
     Ok(())
 }
 ```
 
 **Why rotation matters:**
+
 - Keeps WAL files manageable size
 - Reduces recovery time after crashes
 - Enables efficient storage management
@@ -339,8 +349,8 @@ Understanding WAL helps you appreciate why databases are reliable and gives insi
 ## Related Deep Dives
 
 - [LSM-Trees and Storage Engine Design]({{ '/deep-dive/lsm-trees/' | relative_url }})
-- [MVCC and Transaction Isolation]({{ '/deep-dive/mvcc/' | relative_url }}) *(coming soon)*
-- [Distributed Consensus with Raft]({{ '/deep-dive/raft/' | relative_url }}) *(coming soon)*
+- [MVCC and Transaction Isolation]({{ '/deep-dive/mvcc/' | relative_url }}) _(coming soon)_
+- [Distributed Consensus with Raft]({{ '/deep-dive/raft/' | relative_url }}) _(coming soon)_
 
 ## Further Reading
 
