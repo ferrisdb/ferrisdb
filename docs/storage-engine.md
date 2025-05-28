@@ -47,7 +47,7 @@ struct WALEntry {
     operation: u8,        // Put = 1, Delete = 2
     key_len: u32,
     key: Vec<u8>,
-    value_len: u32,      // 0 for deletes
+    value_len: u32,       // 0 for deletes
     value: Vec<u8>,
 }
 ```

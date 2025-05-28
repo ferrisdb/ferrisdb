@@ -113,9 +113,11 @@ cargo bench
 
 ### Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please see our documentation:
 
-Development guidelines and standards are documented in [CLAUDE.md](CLAUDE.md).
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and process
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development setup and workflows
+- **[CLAUDE.md](CLAUDE.md)** - AI assistant development guidelines
 
 ## Performance
 
@@ -153,10 +155,21 @@ This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/
 
 ## Documentation
 
-- [Architecture Overview](docs/architecture.md)
-- [Getting Started Guide](docs/getting-started.md)
-- [WAL and Crash Recovery Deep Dive](docs/wal-crash-recovery.md)
-- [LSM-Trees Deep Dive](docs/lsm-trees-deep-dive.md)
+### For Users
+
+- [Getting Started Guide](docs/getting-started.md) - Quick setup and basic usage
+- [Architecture Overview](docs/architecture.md) - System design and components
+
+### For Developers
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute to the project
+- [DEVELOPMENT.md](DEVELOPMENT.md) - Development environment and workflows
+- [CLAUDE.md](CLAUDE.md) - AI-assisted development guidelines
+
+### Technical Deep Dives
+
+- [WAL and Crash Recovery](docs/wal-crash-recovery.md) - Write-ahead logging implementation
+- [LSM-Trees Deep Dive](docs/lsm-trees-deep-dive.md) - Storage engine internals
 
 ## Repository Setup
 
@@ -170,7 +183,7 @@ For maintainers setting up branch protection:
    - Allow maintainers to merge without review
    - Require review for external contributors
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
+See our [contribution documentation](CONTRIBUTING.md) for detailed guidelines.
 
 ## Status
 

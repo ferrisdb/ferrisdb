@@ -85,8 +85,8 @@ ferrisdb/
 ├── ferrisdb-client/     # Client library
 ├── ferrisdb-server/     # Server implementation
 ├── ferrisdb/            # Main binary crate
-├── CLAUDE.md           # Development guidelines
-└── docs/               # Website and documentation
+├── CLAUDE.md            # Development guidelines
+└── docs/                # Website and documentation
 ```
 
 ## Development Workflow
