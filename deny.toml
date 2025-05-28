@@ -2,29 +2,16 @@
 # https://embarkstudios.github.io/cargo-deny/
 
 [graph]
-# The graph table configures how the dependency graph is constructed and thus
-# which crates the checks are performed over
 all-features = false
 no-default-features = false
 
 [output]
-# When outputting inclusion graphs in diagnostics that include features, this
-# option can be used to specify the depth at which feature edges will be added.
 feature-depth = 1
 
 [advisories]
-# The path where the advisory databases are cloned/fetched into
 db-path = "~/.cargo/advisory-dbs"
-# The url(s) of the advisory databases to use
 db-urls = ["https://github.com/rustsec/advisory-db"]
-# The lint level for security vulnerabilities
-vulnerability = "deny"
-# The lint level for unmaintained crates
-unmaintained = "warn"
-# The lint level for crates that have been yanked from their source registry
 yanked = "warn"
-# The lint level for crates with security notices
-notice = "warn"
 
 [licenses]
 # Allow these licenses
@@ -32,45 +19,16 @@ allow = [
     "MIT",
     "Apache-2.0",
     "Apache-2.0 WITH LLVM-exception",
-    "BSD-2-Clause",
-    "BSD-3-Clause",
-    "ISC",
-    "Unicode-DFS-2016",
+    "Unicode-3.0",
 ]
-# Deny these licenses
-deny = [
-    "GPL-2.0",
-    "GPL-3.0",
-    "AGPL-1.0",
-    "AGPL-3.0",
-]
-# Lint level for when multiple versions of the same license are detected
-multiple-versions = "warn"
+# Confidence threshold for license detection
+confidence-threshold = 0.8
 
 [bans]
 # Lint level for when multiple versions of the same crate are detected
 multiple-versions = "warn"
-# The confidence threshold for detecting a license from a license text.
-# Expressed as a floating point number in the range 0.0 - 1.0
-confidence-threshold = 0.8
-# Allow multiple versions for these crates (common in Rust ecosystem)
-skip = [
-    { name = "windows-sys" },
-    { name = "windows_aarch64_gnullvm" },
-    { name = "windows_aarch64_msvc" },
-    { name = "windows_i686_gnu" },
-    { name = "windows_i686_msvc" },
-    { name = "windows_x86_64_gnu" },
-    { name = "windows_x86_64_gnullvm" },
-    { name = "windows_x86_64_msvc" },
-]
 
 [sources]
-# Lint level for what to happen when a crate from a crate registry that is
-# not in the allow list is encountered
 unknown-registry = "warn"
-# Lint level for what to happen when a crate from a git repository that is not
-# in the allow list is encountered
 unknown-git = "warn"
-# List of allowed registries
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
