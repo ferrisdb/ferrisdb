@@ -5,13 +5,15 @@
 A distributed, transactional key-value database written in Rust, inspired by FoundationDB.
 
 > ⚠️ **Educational Project Disclaimer**
-> 
+>
 > This project is created for personal learning purposes:
+>
 > - Learning Rust programming language
 > - Understanding distributed systems concepts
 > - Exploring AI-assisted development with Claude Code
-> 
-> **This is NOT recommended for production use.** The code is experimental and primarily serves as a learning exercise. If you're looking for a production-ready distributed database, consider established solutions like FoundationDB, TiKV, or CockroachDB.
+>
+> **This is NOT recommended for production use.** The code is experimental and primarily serves as a learning exercise.
+> If you're looking for a production-ready distributed database, consider established solutions like FoundationDB, TiKV, or CockroachDB.
 
 ## Features
 
@@ -52,12 +54,12 @@ use ferrisdb_client::FerrisDB;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Connect to cluster
     let db = FerrisDB::connect("ferrisdb://localhost:8080").await?;
-    
+
     // Simple key-value operations
     db.set(b"hello", b"world").await?;
     let value = db.get(b"hello").await?;
     println!("Value: {:?}", value);
-    
+
     // Transactional operations
     db.run_transaction(|txn| async move {
         let count = txn.get(b"counter").await?.unwrap_or_default();
@@ -65,7 +67,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         txn.set(b"counter", &new_count.to_le_bytes()).await?;
         Ok(())
     }).await?;
-    
+
     Ok(())
 }
 ```
@@ -140,6 +142,7 @@ FerrisDB is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 ## Acknowledgments
 
 This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/) and incorporates ideas from:
+
 - Google Spanner
 - Amazon DynamoDB
 - CockroachDB

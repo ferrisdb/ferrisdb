@@ -24,7 +24,7 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
           <span class="post-day">Day {{ post.day }}</span>
         {% endif %}
       </div>
-      
+
       <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
       
       {% if post.subtitle %}
@@ -58,6 +58,7 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
 </div>
 
 {% if site.posts.size == 0 %}
+
   <div class="no-posts">
     <h3>Coming Soon!</h3>
     <p>The first blog post will be published shortly. In the meantime, check out the project on GitHub.</p>

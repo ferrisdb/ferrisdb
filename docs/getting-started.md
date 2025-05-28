@@ -89,7 +89,7 @@ FerrisDB uses a Rust workspace with multiple crates:
 ferrisdb/
 ├── ferrisdb-core/       # Common types and traits
 ├── ferrisdb-storage/    # Storage engine (LSM-tree)
-├── ferrisdb-client/     # Client library  
+├── ferrisdb-client/     # Client library
 ├── ferrisdb-server/     # Server implementation
 ├── ferrisdb/            # Main binary crate
 ├── CLAUDE.md           # Development guidelines
@@ -144,6 +144,7 @@ cargo test -p ferrisdb-storage -- --nocapture
 ### Key Components (Current Status)
 
 #### ✅ Write-Ahead Log (WAL)
+
 - **Location**: `ferrisdb-storage/src/wal/`
 - **Status**: Complete with tests
 - **Features**: Binary encoding, CRC32 checksums, crash recovery
@@ -155,7 +156,8 @@ ls ferrisdb-storage/src/wal/
 ```
 
 #### ✅ MemTable with Skip List
-- **Location**: `ferrisdb-storage/src/memtable/`  
+
+- **Location**: `ferrisdb-storage/src/memtable/`
 - **Status**: Complete with concurrent access
 - **Features**: Lock-free skip list, MVCC support, timestamp ordering
 
@@ -166,6 +168,7 @@ ls ferrisdb-storage/src/memtable/
 ```
 
 #### 🚧 SSTable (In Progress)
+
 - **Location**: `ferrisdb-storage/src/sstable/`
 - **Status**: Basic structure, needs implementation
 - **Next**: File format, compression, bloom filters
@@ -237,6 +240,7 @@ git push origin feature/my-feature
 ### Branch Protection Rules
 
 The main branch has protection rules:
+
 - Pull requests required
 - Linear history enforced
 - Dismiss stale reviews on new commits
@@ -277,6 +281,7 @@ Current priorities for contributors:
 ### Common Issues
 
 **Build Failures:**
+
 ```bash
 # Clean and rebuild
 cargo clean
@@ -284,6 +289,7 @@ cargo build --all
 ```
 
 **Test Failures:**
+
 ```bash
 # Run tests with full output
 cargo test --all -- --nocapture
@@ -293,6 +299,7 @@ cargo test -p ferrisdb-storage test_name -- --nocapture
 ```
 
 **Clippy Warnings:**
+
 ```bash
 # Fix automatically where possible
 cargo clippy --all-targets --all-features --fix
@@ -320,16 +327,19 @@ After getting familiar with the codebase:
 ## Learning Resources
 
 ### Distributed Systems
+
 - [FoundationDB Paper](https://apple.github.io/foundationdb/)
 - [Google Spanner Paper](https://research.google/pubs/pub39966/)
 - [Designing Data-Intensive Applications](https://dataintensive.net/)
 
 ### Rust Programming
+
 - [The Rust Book](https://doc.rust-lang.org/book/)
 - [Rust by Example](https://doc.rust-lang.org/rust-by-example/)
 - [Async Rust Book](https://rust-lang.github.io/async-book/)
 
 ### Storage Engines
+
 - [Database Internals](https://www.databass.dev/)
 - [LSM-tree Paper](https://www.cs.umb.edu/~poneil/lsmtree.pdf)
 - [RocksDB Wiki](https://github.com/facebook/rocksdb/wiki)

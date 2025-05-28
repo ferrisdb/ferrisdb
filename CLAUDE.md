@@ -1,11 +1,13 @@
 # FerrisDB Development Guidelines
 
 ## Project Overview
+
 FerrisDB is a distributed, transactional key-value database inspired by FoundationDB, implemented in Rust.
 
 ## Development Standards
 
 ### Code Style
+
 - Follow Rust standard formatting with `rustfmt`
 - Use `clippy` for linting
 - Maximum line length: 100 characters
@@ -13,6 +15,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Prefer `snake_case` for functions and variables, `CamelCase` for types
 
 ### Documentation
+
 - **Always** add comprehensive doc comments for all public APIs
 - Include usage examples in doc comments
 - Use `//!` for module-level documentation
@@ -21,6 +24,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Review generated documentation before submitting PRs
 
 ### Testing
+
 - Write unit tests for all public APIs
 - Integration tests for distributed scenarios
 - Use `proptest` for property-based testing
@@ -29,6 +33,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Use `cargo test --all -- --nocapture` for debugging
 
 ### Commands
+
 ```bash
 # Format code
 cargo fmt --all
@@ -56,6 +61,7 @@ RUST_LOG=debug cargo run
 ```
 
 ### Git Workflow
+
 - Main branch: `main`
 - Feature branches: `feature/description`
 - Bug fixes: `fix/description`
@@ -64,12 +70,14 @@ RUST_LOG=debug cargo run
 - Create focused PRs (one feature/fix per PR)
 
 ### Architecture Decisions
+
 - Use `tokio` for async runtime
 - Custom LSM-tree storage engine implementation
 - gRPC (Tonic) for network protocol
 - Raft for consensus (evaluate existing libraries first)
 
 ### Storage Engine Guidelines
+
 - Binary formats should include checksums for corruption detection
 - Use little-endian byte order consistently
 - Implement proper error handling for all I/O operations
@@ -78,6 +86,7 @@ RUST_LOG=debug cargo run
 - Use epoch-based memory reclamation for lock-free data structures
 
 ### Error Handling
+
 - Use `thiserror` for error types
 - Always propagate errors with context
 - Log errors at appropriate levels
@@ -85,6 +94,7 @@ RUST_LOG=debug cargo run
 - Use custom `Result<T>` type alias for consistency
 
 ### Performance Guidelines
+
 - Profile before optimizing
 - Use `criterion` for benchmarks
 - Avoid unnecessary allocations
@@ -93,12 +103,14 @@ RUST_LOG=debug cargo run
 - Implement proper batching for I/O operations
 
 ### Memory Safety
+
 - Use `unsafe` sparingly and document safety invariants
 - Prefer safe abstractions over raw pointers
 - Use `crossbeam` for lock-free data structures
 - Document lifetime requirements clearly
 
 ### Security
+
 - Never log sensitive data
 - Use TLS for network communication
 - Validate all inputs
@@ -106,7 +118,8 @@ RUST_LOG=debug cargo run
 - Use checksums for data integrity
 
 ## Project Structure
-```
+
+```text
 ferrisdb/
 ├── ferrisdb-core/       # Common types and traits
 ├── ferrisdb-storage/    # Storage engine
@@ -122,6 +135,7 @@ ferrisdb/
 ```
 
 ## Key Invariants
+
 1. Transactions must be serializable
 2. All writes must be durable before acknowledgment
 3. Node failures must not cause data loss
@@ -130,6 +144,7 @@ ferrisdb/
 6. Timestamps must be monotonically increasing
 
 ## Storage Engine Invariants
+
 1. Keys in MemTable are sorted by (user_key, timestamp DESC)
 2. Multiple versions of same key ordered by timestamp
 3. Delete operations create tombstones (not immediate deletion)
@@ -137,6 +152,7 @@ ferrisdb/
 5. All disk writes include checksums
 
 ## Dependencies
+
 - Prefer well-maintained, popular crates
 - Minimize dependency count
 - Pin major versions in Cargo.toml
@@ -144,6 +160,7 @@ ferrisdb/
 - Document why each dependency is needed
 
 ## Debugging Tips
+
 - Use `RUST_LOG=trace` for detailed logging
 - Enable debug symbols in release builds for profiling
 - Use `tokio-console` for async runtime debugging
@@ -152,6 +169,7 @@ ferrisdb/
 - Add debug assertions for invariants
 
 ## Code Review Checklist
+
 - [ ] All public APIs have documentation
 - [ ] Examples included in doc comments
 - [ ] Unit tests cover edge cases

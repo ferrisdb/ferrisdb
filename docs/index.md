@@ -36,7 +36,7 @@ title: Home
 FerrisDB follows a layered architecture with separate components for transactions, storage, and cluster management, heavily inspired by FoundationDB:
 
 - **Transaction Coordinator** - ACID transaction management
-- **Storage Servers** - LSM-tree based data storage  
+- **Storage Servers** - LSM-tree based data storage
 - **Cluster Controller** - Membership and coordination
 - **Client Library** - Simple key-value API
 

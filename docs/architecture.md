@@ -8,6 +8,7 @@ permalink: /architecture/
 ## Overview
 
 FerrisDB is a distributed, transactional key-value database inspired by FoundationDB. It aims to provide:
+
 - ACID transactions with serializable isolation
 - Horizontal scalability
 - Fault tolerance with automatic recovery
@@ -19,18 +20,21 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ### Core Components
 
 1. **Transaction Coordinator (TC)**
+
    - Manages distributed transactions
    - Assigns transaction timestamps
    - Handles conflict resolution
    - Implements MVCC (Multi-Version Concurrency Control)
 
 2. **Storage Servers (SS)**
+
    - Store actual key-value data
    - Handle reads and writes
    - Manage local LSM-tree storage engine
    - Participate in distributed transactions
 
 3. **Cluster Controller (CC)**
+
    - Manages cluster membership
    - Handles failure detection
    - Coordinates data rebalancing
@@ -44,12 +48,14 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ## Data Model
 
 ### Key-Value Store
+
 - Keys: Variable-length byte arrays (max 10KB)
 - Values: Variable-length byte arrays (max 100KB)
 - Operations: Get, Set, Clear, GetRange
 - Atomic operations: Add, BitAnd, BitOr, BitXor, Max, Min
 
 ### Namespace Design
+
 ```
 /system/...              # System metadata
 /user/...                # User data
@@ -60,22 +66,25 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ## Transaction System
 
 ### MVCC Implementation
+
 - Each key-value pair has multiple versions
 - Versions identified by transaction commit timestamp
 - Read timestamp determines visible version
 - Garbage collection removes old versions
 
 ### Transaction Flow
+
 1. **Begin**: Client contacts TC for start timestamp
 2. **Read**: Client reads from SS at start timestamp
 3. **Write**: Client buffers writes locally
-4. **Commit**: 
+4. **Commit**:
    - Client sends write set to TC
    - TC checks conflicts
    - TC assigns commit timestamp
    - TC coordinates 2PC with involved SS
 
 ### Conflict Detection
+
 - Write-write conflicts: Two transactions modify same key
 - Optimistic concurrency control
 - First-writer-wins with retry logic
@@ -83,18 +92,21 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ## Storage Layer
 
 ### LSM-Tree Architecture
+
 - Write-ahead log (WAL) for durability
 - MemTable for recent writes
 - SSTables for persistent storage
 - Compaction strategy: Leveled compaction
 
 ### Data Distribution
+
 - Consistent hashing for key distribution
 - Virtual nodes for load balancing
 - Replication factor: 3 (configurable)
 - Quorum reads/writes: W+R > N
 
 ### Storage Format
+
 ```rust
 // Key format
 struct Key {
@@ -113,16 +125,19 @@ struct Value {
 ## Distributed Coordination
 
 ### Consensus Protocol
+
 - Raft for cluster coordination
 - Leader election for CC role
 - Configuration changes through joint consensus
 
 ### Failure Detection
+
 - Heartbeat mechanism
 - Configurable timeout (default: 5s)
 - Phi Accrual Failure Detector
 
 ### Recovery
+
 - Automatic failover for failed nodes
 - Re-replication to maintain replication factor
 - Transaction recovery from WAL
@@ -130,12 +145,14 @@ struct Value {
 ## Network Protocol
 
 ### Transport
+
 - TCP with custom framing
 - Protocol Buffers for serialization
 - Connection pooling
 - TLS support for encryption
 
 ### Message Types
+
 ```proto
 message Request {
     oneof request_type {
@@ -150,15 +167,16 @@ message Request {
 ## Client API
 
 ### Rust Client Library
+
 ```rust
 // Basic operations
 async fn example() -> Result<()> {
     let db = FerrisDB::connect("cluster://localhost:8080").await?;
-    
+
     // Simple KV operations
     db.set(b"key", b"value").await?;
     let value = db.get(b"key").await?;
-    
+
     // Transactions
     db.run_transaction(|txn| async move {
         let val = txn.get(b"counter").await?;
@@ -166,7 +184,7 @@ async fn example() -> Result<()> {
         txn.set(b"counter", new_val);
         Ok(())
     }).await?;
-    
+
     Ok(())
 }
 ```
@@ -181,26 +199,31 @@ async fn example() -> Result<()> {
 ## Implementation Phases
 
 ### Phase 1: Core Storage
+
 - [x] Basic key-value storage engine
-- [x] LSM-tree implementation  
+- [x] LSM-tree implementation
 - [x] WAL for durability
 
 ### Phase 2: Transactions
+
 - [ ] MVCC implementation
 - [ ] Transaction coordinator
 - [ ] Conflict detection
 
 ### Phase 3: Distribution
+
 - [ ] Data partitioning
 - [ ] Replication
 - [ ] Failure detection
 
 ### Phase 4: Consensus
+
 - [ ] Raft implementation
 - [ ] Cluster management
 - [ ] Configuration changes
 
 ### Phase 5: Client Libraries
+
 - [ ] Rust client
 - [ ] Transaction retry logic
 - [ ] Connection pooling
@@ -208,16 +231,19 @@ async fn example() -> Result<()> {
 ## Testing Strategy
 
 ### Unit Tests
+
 - Storage engine correctness
 - Transaction isolation
 - Network protocol
 
 ### Integration Tests
+
 - Multi-node scenarios
 - Failure injection
 - Performance benchmarks
 
 ### Chaos Testing
+
 - Network partitions
 - Node failures
 - Clock skew
@@ -239,6 +265,7 @@ async fn example() -> Result<()> {
 ---
 
 **Related Documentation:**
+
 - [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
 - [GitHub Repository]({{ site.project.repo_url }})
 - [Development Blog]({{ '/blog/' | relative_url }})

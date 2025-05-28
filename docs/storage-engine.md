@@ -31,19 +31,21 @@ FerrisDB implements a custom LSM-tree (Log-Structured Merge-tree) storage engine
 The WAL ensures durability by persisting all writes before they're applied to the MemTable.
 
 **Design:**
+
 - Append-only log file with sequential writes
 - Each entry contains: [length][checksum][key_len][key][value_len][value][timestamp]
 - Sync to disk after each write (configurable)
 - Rotation when file reaches size limit (default: 64MB)
 
 **Format:**
+
 ```rust
 struct WALEntry {
     length: u32,          // Total entry length
     checksum: u32,        // CRC32 checksum
     timestamp: u64,       // Transaction timestamp
     operation: u8,        // Put = 1, Delete = 2
-    key_len: u32,        
+    key_len: u32,
     key: Vec<u8>,
     value_len: u32,      // 0 for deletes
     value: Vec<u8>,
@@ -55,12 +57,14 @@ struct WALEntry {
 In-memory sorted structure for recent writes. We implement a concurrent skip list for O(log n) operations.
 
 **Design:**
+
 - Lock-free skip list implementation with configurable max height (default: 12)
 - Thread-safe using epoch-based memory reclamation
 - Size limit triggers flush to SSTable (default: 4MB)
 - Supports concurrent reads during writes
 
 **Skip List Structure:**
+
 ```rust
 struct SkipListNode<K, V> {
     key: K,
@@ -82,6 +86,7 @@ struct SkipList<K, V> {
 Immutable on-disk files storing sorted key-value pairs.
 
 **File Format:**
+
 ```
 ┌─────────────┐
 │   Header    │ - Magic number, version, metadata
@@ -97,11 +102,13 @@ Immutable on-disk files storing sorted key-value pairs.
 ```
 
 **Data Block Format:**
+
 - Prefix compression for keys
 - Restart points every 16 keys
 - Block compression (LZ4 or Snappy)
 
 **Index Format:**
+
 - One entry per data block
 - Contains: last key in block + block offset
 - Enables binary search across blocks
@@ -111,11 +118,13 @@ Immutable on-disk files storing sorted key-value pairs.
 Merges and organizes SSTables to maintain read performance.
 
 **Leveled Compaction Strategy:**
+
 - L0: Direct flushes from MemTable (overlapping)
 - L1-L6: Non-overlapping, exponentially larger
 - Size ratios: L0=10MB, L1=100MB, L2=1GB, etc.
 
 **Compaction Process:**
+
 1. Select candidate files based on size/age
 2. Merge overlapping key ranges
 3. Apply tombstone deletion
@@ -128,6 +137,7 @@ Merges and organizes SSTables to maintain read performance.
 Tracks the current version of the database and all live SSTable files.
 
 **Format:**
+
 ```rust
 struct Manifest {
     version: u64,
@@ -156,6 +166,7 @@ struct FileMetadata {
 LRU cache for frequently accessed SSTable blocks.
 
 **Design:**
+
 - Sharded by key hash to reduce contention
 - Configurable size (default: 128MB)
 - Tracks access patterns for adaptive caching
@@ -165,6 +176,7 @@ LRU cache for frequently accessed SSTable blocks.
 Probabilistic data structure to avoid unnecessary disk reads.
 
 **Implementation:**
+
 - Bits per key: 10 (1% false positive rate)
 - Hash functions: MurmurHash3
 - Stored in SSTable footer
@@ -172,6 +184,7 @@ Probabilistic data structure to avoid unnecessary disk reads.
 ## Operations
 
 ### Write Operation
+
 ```
 1. Append to WAL
 2. Insert into MemTable
@@ -183,6 +196,7 @@ Probabilistic data structure to avoid unnecessary disk reads.
 ```
 
 ### Read Operation
+
 ```
 1. Check MemTable
 2. Check immutable MemTables
@@ -195,6 +209,7 @@ Probabilistic data structure to avoid unnecessary disk reads.
 ```
 
 ### Delete Operation
+
 - Inserts tombstone marker
 - Actual deletion happens during compaction
 - Tombstones have timestamps for MVCC
@@ -202,17 +217,20 @@ Probabilistic data structure to avoid unnecessary disk reads.
 ## Optimizations
 
 ### 1. Write Optimizations
+
 - Group commit for WAL
 - Parallel MemTable and WAL writes
 - Write batching API
 
 ### 2. Read Optimizations
+
 - Bloom filters to skip files
 - Block cache for hot data
 - Parallel searches across levels
 - Read-ahead for sequential scans
 
 ### 3. Memory Management
+
 - Memory-mapped files for read-only SSTables
 - Direct I/O to bypass OS cache
 - Custom allocators for MemTable
@@ -225,20 +243,20 @@ struct StorageConfig {
     wal_dir: PathBuf,
     wal_sync_mode: SyncMode,
     wal_size_limit: usize,
-    
+
     // MemTable
     memtable_size: usize,
     max_immutable_memtables: usize,
-    
+
     // SSTable
     block_size: usize,
     compression: CompressionType,
-    
+
     // Compaction
     level0_file_num_compaction_trigger: i32,
     max_bytes_for_level_base: u64,
     max_bytes_for_level_multiplier: f64,
-    
+
     // Cache
     block_cache_size: usize,
     bloom_filter_bits_per_key: i32,
@@ -248,18 +266,21 @@ struct StorageConfig {
 ## Testing Strategy
 
 ### Correctness Tests
+
 - Single-threaded operations
 - Concurrent operations
 - Crash recovery
 - Compaction correctness
 
 ### Performance Tests
+
 - Write throughput
 - Read latency
 - Mixed workloads
 - Large value handling
 
 ### Stress Tests
+
 - Random operations with verification
 - Crash injection
 - Disk full scenarios
@@ -268,18 +289,21 @@ struct StorageConfig {
 ## Implementation Progress
 
 ### ✅ Phase 1: Basic Functionality (COMPLETED)
+
 - [x] Simple WAL with binary encoding
 - [x] Concurrent skip list MemTable
 - [x] Basic SSTable writer/reader (skeleton)
 - [x] MVCC support with timestamps
 
 ### 🚧 Phase 2: Performance (IN PROGRESS)
+
 - [ ] Complete SSTable implementation
 - [ ] Bloom filters
 - [ ] Block cache
 - [ ] Automatic compaction
 
 ### ⏳ Phase 3: Advanced Features (PLANNED)
+
 - [ ] Compression
 - [ ] Column families
 - [ ] Backup/restore
@@ -290,18 +314,21 @@ struct StorageConfig {
 As of Day 1, we have successfully implemented:
 
 **✅ Write-Ahead Log**
+
 - Binary format with CRC32 checksums
 - Little-endian encoding for cross-platform compatibility
 - Atomic writes with proper error handling
 - Recovery by replaying log entries
 
 **✅ MemTable with Concurrent Skip List**
+
 - Lock-free implementation using crossbeam
 - MVCC support with timestamp-based versioning
 - Proper key ordering: (user_key ASC, timestamp DESC)
 - Epoch-based memory reclamation for thread safety
 
 **🚧 Next Steps**
+
 - Complete SSTable format implementation
 - Add bloom filters for read optimization
 - Implement compaction strategy
@@ -317,6 +344,7 @@ As of Day 1, we have successfully implemented:
 ---
 
 **Related Documentation:**
+
 - [Overall Architecture]({{ '/architecture/' | relative_url }})
 - [GitHub Repository]({{ site.project.repo_url }})
 - [Development Blog]({{ '/blog/' | relative_url }})
