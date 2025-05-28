@@ -535,10 +535,76 @@ pre {
 
 // Rouge syntax highlighting with VS Code Dark+ theme colors
 .highlight {
+    background: #1e1e1e; // VS Code dark background
+    border-radius: 8px;
+    overflow: hidden; // Ensures rounded corners work with table
+    
+    // Rouge table structure styling - make it look like a single block
+    .rouge-table {
+        border-spacing: 0;
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        
+        .rouge-gutter {
+            background: #1e1e1e; // Same as main background
+            color: #858585; // VS Code line number color
+            text-align: right;
+            user-select: none;
+            width: 3em;
+            padding: 0;
+            border-right: 1px solid #3e3e3e;
+            
+            .lineno {
+                padding: 0 0.75rem 0 1rem;
+                display: block;
+            }
+        }
+        
+        .rouge-code {
+            background: #1e1e1e; // Same as main background
+            padding: 0;
+            width: 100%;
+            
+            pre {
+                background: none;
+                color: #d4d4d4;
+                margin: 0;
+                padding: 0 0 0 0.75rem;
+                border: none;
+                border-radius: 0;
+                overflow-x: auto;
+                
+                code {
+                    background: none;
+                    padding: 0;
+                    color: inherit;
+                    font-size: inherit;
+                    line-height: inherit;
+                }
+            }
+        }
+        
+        // Ensure both cells have same height and padding
+        td {
+            padding: 1.5rem 0;
+            vertical-align: top;
+            border: none;
+        }
+        
+        .rouge-gutter td {
+            padding-right: 0;
+        }
+    }
+    
+    // Fallback for non-table highlights
     pre {
-        background: #1e1e1e; // VS Code dark background
-        color: #d4d4d4; // VS Code default text
+        background: #1e1e1e;
+        color: #d4d4d4;
         padding: 1.5rem;
+        margin: 0;
         border-radius: 8px;
         overflow-x: auto;
         line-height: 1.4;
@@ -548,18 +614,6 @@ pre {
             padding: 0;
             color: inherit;
             font-size: 0.875rem;
-            
-            .lineno {
-                color: #858585; // VS Code line number color
-                margin-right: 1rem;
-                user-select: none;
-                display: inline-block;
-                min-width: 2em;
-                text-align: right;
-                border-right: 1px solid #3e3e3e;
-                padding-right: 0.75rem;
-                margin-right: 0.75rem;
-            }
         }
     }
     
