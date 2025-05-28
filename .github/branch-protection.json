@@ -8,17 +8,6 @@
     "required_status_checks": {
       "strict": true,
       "contexts": [
-        "Quick Checks",
-        "Markdown Lint",
-        "Spell Check",
-        "Test Suite (ubuntu-latest, stable)",
-        "Test Suite (windows-latest, stable)",
-        "Test Suite (macOS-latest, stable)",
-        "Test Suite (ubuntu-latest, beta)",
-        "Documentation",
-        "MSRV (1.81.0)",
-        "Jekyll Site Build",
-        "Security Audit",
         "Required Checks"
       ]
     },
