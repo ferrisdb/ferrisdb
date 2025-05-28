@@ -267,5 +267,6 @@ async fn example() -> Result<()> {
 **Related Documentation:**
 
 - [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
+- [Future Architecture Explorations]({{ '/future-architecture/' | relative_url }})
 - [GitHub Repository]({{ site.project.repo_url }})
 - [Development Blog]({{ '/blog/' | relative_url }})

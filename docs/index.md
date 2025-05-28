@@ -41,6 +41,7 @@ FerrisDB follows a layered architecture with separate components for transaction
 - **Client Library** - Simple key-value API
 
 [Read Full Design Document]({{ '/architecture/' | relative_url }}){: .btn .btn-outline}
+[Future Architecture Ideas]({{ '/future-architecture/' | relative_url }}){: .btn .btn-outline}
 
 ## Development Progress
 
