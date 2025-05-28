@@ -396,6 +396,7 @@ impl SkipList {
     /// Returns the number of entries in the skip list
     /// 
     /// Note: This counts all versions of all keys, not just unique keys.
+    #[allow(dead_code)]
     pub fn size(&self) -> usize {
         self.size.load(AtomicOrdering::Relaxed)
     }

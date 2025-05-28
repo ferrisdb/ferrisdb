@@ -8,11 +8,13 @@
 /// 
 /// # Example
 /// 
-/// ```no_run
+/// ```ignore
 /// use ferrisdb_storage::sstable::writer::SSTableWriter;
 /// 
 /// // TODO: Implement SSTableWriter
-/// let writer = SSTableWriter;
+/// // let mut writer = SSTableWriter::new("path/to/sstable.sst")?;
+/// // writer.add(b"key", b"value")?;
+/// // writer.finish()?;
 /// ```
 pub struct SSTableWriter {
     // TODO: Add fields for:

@@ -8,11 +8,12 @@
 /// 
 /// # Example
 /// 
-/// ```no_run
+/// ```ignore
 /// use ferrisdb_storage::sstable::reader::SSTableReader;
 /// 
 /// // TODO: Implement SSTableReader
-/// let reader = SSTableReader;
+/// // let reader = SSTableReader::open("path/to/sstable.sst")?;
+/// // let value = reader.get(b"key")?;
 /// ```
 pub struct SSTableReader {
     // TODO: Add fields for:
