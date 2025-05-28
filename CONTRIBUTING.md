@@ -259,6 +259,15 @@ Contributors are recognized in:
 - Release notes for feature contributions
 - Special thanks in project documentation
 
+### Show Your Support
+
+If you find FerrisDB interesting or useful for learning:
+
+- ⭐ **Star the repository** on GitHub to show your support
+- 🍴 **Fork the project** to experiment with your own ideas
+- 📢 **Share your learnings** by writing blog posts or tutorials
+- 💬 **Join discussions** to help others in the community
+
 ## Educational Focus
 
 Remember that FerrisDB is an **educational project**:

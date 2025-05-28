@@ -185,6 +185,15 @@ For maintainers setting up branch protection:
 
 See our [contribution documentation](CONTRIBUTING.md) for detailed guidelines.
 
+## Show Your Support
+
+If you find FerrisDB interesting or useful for learning distributed systems:
+
+- ⭐ **Star this repository** to show your support
+- 🍴 **Fork the project** to experiment with your own ideas  
+- 📖 **Read our blog posts** about the development journey
+- 💬 **Join discussions** to share ideas and ask questions
+
 ## Status
 
 🚧 **This project is under active development as a learning exercise** 🚧
