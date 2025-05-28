@@ -518,10 +518,11 @@ code {
 }
 
 pre {
-    background: #1e1e1e; // VS Code dark background
-    color: #d4d4d4; // VS Code default text
-    padding: 1.5rem;
+    background: #ffffff; // VS Code light background
+    color: #000000; // VS Code light text
+    padding: 1rem;
     border-radius: 8px;
+    border: 1px solid var(--border-color);
     overflow-x: auto;
     
     code {
@@ -533,9 +534,10 @@ pre {
     }
 }
 
-// Rouge syntax highlighting with VS Code Dark+ theme colors
+// Rouge syntax highlighting with VS Code Light theme colors
 .highlight {
-    background: #1e1e1e; // VS Code dark background
+    background: #ffffff; // VS Code light background
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     overflow: hidden; // Ensures rounded corners work with table
     
@@ -549,13 +551,13 @@ pre {
         line-height: 1.4;
         
         .rouge-gutter {
-            background: #1e1e1e; // Same as main background
-            color: #858585; // VS Code line number color
+            background: #ffffff; // Same as main background
+            color: #237893; // VS Code light line number color
             text-align: right;
             user-select: none;
             width: 3em;
             padding: 0;
-            border-right: 1px solid #3e3e3e;
+            border-right: 1px solid var(--border-color);
             
             .lineno {
                 padding: 0 0.75rem 0 1rem;
@@ -567,15 +569,15 @@ pre {
         }
         
         .rouge-code {
-            background: #1e1e1e; // Same as main background
+            background: #ffffff; // Same as main background
             padding: 0;
             width: 100%;
             
             pre {
                 background: none;
-                color: #d4d4d4;
+                color: #000000;
                 margin: 0;
-                padding: 0 0 0 0.75rem;
+                padding: 0 1rem 0 0.75rem;
                 border: none;
                 border-radius: 0;
                 overflow-x: auto;
@@ -590,9 +592,9 @@ pre {
             }
         }
         
-        // Ensure both cells have same height and padding
+        // Ensure both cells have same height and consistent padding
         td {
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             vertical-align: top;
             border: none;
         }
@@ -604,10 +606,11 @@ pre {
     
     // Fallback for non-table highlights
     pre {
-        background: #1e1e1e;
-        color: #d4d4d4;
-        padding: 1.5rem;
+        background: #ffffff;
+        color: #000000;
+        padding: 1rem;
         margin: 0;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
         overflow-x: auto;
         line-height: 1.4;
@@ -620,24 +623,24 @@ pre {
         }
     }
     
-    // VS Code syntax highlighting colors
-    .k, .kd, .kn, .kp, .kr, .kt { color: #569cd6; } // Keywords (blue)
-    .s, .sb, .sc, .s2, .sh, .si, .sx, .s1 { color: #ce9178; } // Strings (orange)
-    .c, .cm, .cp, .c1, .cs, .cd { color: #6a9955; font-style: italic; } // Comments (green)
-    .m, .mf, .mh, .mi, .mo, .mb, .mx { color: #b5cea8; } // Numbers (light green)
-    .n, .na, .nf, .nl, .nn, .nx, .py, .nt { color: #dcdcaa; } // Functions/names (yellow)
-    .nc, .nd, .ni, .ne { color: #4ec9b0; } // Classes/decorators (cyan)
-    .o, .ow { color: #d4d4d4; } // Operators (white)
-    .p { color: #d4d4d4; } // Punctuation (white)
-    .bp { color: #569cd6; } // Built-ins (blue)
-    .nb { color: #dcdcaa; } // Built-in functions (yellow)
-    .err { color: #f44747; background: none; } // Errors (red)
-    .w { color: #d4d4d4; } // Whitespace
+    // VS Code Light theme syntax highlighting colors
+    .k, .kd, .kn, .kp, .kr, .kt { color: #0000ff; } // Keywords (blue)
+    .s, .sb, .sc, .s2, .sh, .si, .sx, .s1 { color: #a31515; } // Strings (red)
+    .c, .cm, .cp, .c1, .cs, .cd { color: #008000; font-style: italic; } // Comments (green)
+    .m, .mf, .mh, .mi, .mo, .mb, .mx { color: #098658; } // Numbers (green)
+    .n, .na, .nf, .nl, .nn, .nx, .py, .nt { color: #795e26; } // Functions/names (brown)
+    .nc, .nd, .ni, .ne { color: #267f99; } // Classes/decorators (teal)
+    .o, .ow { color: #000000; } // Operators (black)
+    .p { color: #000000; } // Punctuation (black)
+    .bp { color: #0000ff; } // Built-ins (blue)
+    .nb { color: #795e26; } // Built-in functions (brown)
+    .err { color: #cd3131; background: none; } // Errors (red)
+    .w { color: #000000; } // Whitespace
     
     // Rust-specific tokens
-    .kc { color: #569cd6; } // Constants like true, false
-    .ss { color: #ce9178; } // Symbols/lifetime parameters
-    .sd { color: #6a9955; font-style: italic; } // Doc strings
+    .kc { color: #0000ff; } // Constants like true, false
+    .ss { color: #a31515; } // Symbols/lifetime parameters
+    .sd { color: #008000; font-style: italic; } // Doc strings
 }
 
 // Footer customizations

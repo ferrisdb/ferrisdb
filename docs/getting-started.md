@@ -13,19 +13,12 @@ Welcome to FerrisDB! This guide will help you get up and running with the projec
 
 ## Prerequisites
 
-### Required Software
+### Requirements
 
 - **Rust 1.81+** - Install from [rustup.rs](https://rustup.rs/)
 - **Git** - For cloning the repository
-- **A code editor** - VS Code with rust-analyzer is recommended
 
-### System Requirements
-
-- **Operating System**: Linux, macOS, or Windows
-- **Memory**: 4GB+ RAM recommended
-- **Disk Space**: 1GB+ for source code and build artifacts
-
-### Verify Prerequisites
+### Verify Installation
 
 ```bash
 # Check Rust installation
