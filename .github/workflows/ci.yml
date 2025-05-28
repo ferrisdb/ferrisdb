@@ -18,10 +18,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Detect what files changed to optimize CI runs
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      rust: ${{ steps.changes.outputs.rust }}
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Check for changes
+      uses: dorny/paths-filter@v3
+      id: changes
+      with:
+        filters: |
+          rust:
+            - '**/*.rs'
+            - '**/Cargo.toml'
+            - '**/Cargo.lock'
+            - '.github/workflows/**'
+            - 'deny.toml'
+          docs:
+            - 'docs/**'
+            - '**/*.md'
+            - 'README.md'
+            - 'CLAUDE.md'
+
   # Quick checks that should pass before running expensive tests
   quick-checks:
     name: Quick Checks
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -73,7 +103,8 @@ jobs:
   # Main test suite
   test:
     name: Test Suite
-    needs: quick-checks
+    needs: [changes, quick-checks]
+    if: needs.changes.outputs.rust == 'true'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -113,7 +144,8 @@ jobs:
   # Documentation build
   docs:
     name: Documentation
-    needs: quick-checks
+    needs: [changes, quick-checks]
+    if: needs.changes.outputs.rust == 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -138,7 +170,8 @@ jobs:
   # Minimum supported Rust version
   msrv:
     name: MSRV (1.81.0)
-    needs: quick-checks
+    needs: [changes, quick-checks]
+    if: needs.changes.outputs.rust == 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -190,6 +223,8 @@ jobs:
   security:
     name: Security Audit
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -203,13 +238,36 @@ jobs:
   required:
     name: Required Checks
     runs-on: ubuntu-latest
-    needs: [quick-checks, markdown, spellcheck, test, docs, msrv, jekyll, security]
+    needs: [changes, quick-checks, markdown, spellcheck, test, docs, msrv, jekyll, security]
     if: always()
     steps:
     - name: Verify all checks passed
       run: |
+        # Check if any job actually failed (not skipped)
         if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
           echo "One or more required checks failed"
           exit 1
         fi
-        echo "All required checks passed"
+        
+        # For docs-only changes, only check docs-related jobs
+        if [[ "${{ needs.changes.outputs.rust }}" == "false" ]]; then
+          # Only docs changed - check markdown, spellcheck, jekyll
+          for job in markdown spellcheck jekyll; do
+            result=$(echo '${{ toJSON(needs) }}' | jq -r ".[\"$job\"].result")
+            if [[ "$result" == "failure" ]]; then
+              echo "Docs job $job failed"
+              exit 1
+            fi
+          done
+          echo "All docs checks passed"
+        else
+          # Rust changes - all jobs should have run and passed
+          for job in quick-checks test docs msrv security markdown spellcheck jekyll; do
+            result=$(echo '${{ toJSON(needs) }}' | jq -r ".[\"$job\"].result")
+            if [[ "$result" == "failure" ]]; then
+              echo "Job $job failed"
+              exit 1
+            fi
+          done
+          echo "All checks passed"
+        fi
