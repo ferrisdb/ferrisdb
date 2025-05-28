@@ -518,8 +518,8 @@ code {
 }
 
 pre {
-    background: #2d3748;
-    color: #e2e8f0;
+    background: #1e1e1e; // VS Code dark background
+    color: #d4d4d4; // VS Code default text
     padding: 1.5rem;
     border-radius: 8px;
     overflow-x: auto;
@@ -533,11 +533,11 @@ pre {
     }
 }
 
-// Rouge syntax highlighting with inline line numbers
+// Rouge syntax highlighting with VS Code Dark+ theme colors
 .highlight {
     pre {
-        background: #2d3748;
-        color: #e2e8f0;
+        background: #1e1e1e; // VS Code dark background
+        color: #d4d4d4; // VS Code default text
         padding: 1.5rem;
         border-radius: 8px;
         overflow-x: auto;
@@ -550,18 +550,37 @@ pre {
             font-size: 0.875rem;
             
             .lineno {
-                color: #718096;
+                color: #858585; // VS Code line number color
                 margin-right: 1rem;
                 user-select: none;
                 display: inline-block;
                 min-width: 2em;
                 text-align: right;
-                border-right: 1px solid #4a5568;
+                border-right: 1px solid #3e3e3e;
                 padding-right: 0.75rem;
                 margin-right: 0.75rem;
             }
         }
     }
+    
+    // VS Code syntax highlighting colors
+    .k, .kd, .kn, .kp, .kr, .kt { color: #569cd6; } // Keywords (blue)
+    .s, .sb, .sc, .s2, .sh, .si, .sx, .s1 { color: #ce9178; } // Strings (orange)
+    .c, .cm, .cp, .c1, .cs, .cd { color: #6a9955; font-style: italic; } // Comments (green)
+    .m, .mf, .mh, .mi, .mo, .mb, .mx { color: #b5cea8; } // Numbers (light green)
+    .n, .na, .nf, .nl, .nn, .nx, .py, .nt { color: #dcdcaa; } // Functions/names (yellow)
+    .nc, .nd, .ni, .ne { color: #4ec9b0; } // Classes/decorators (cyan)
+    .o, .ow { color: #d4d4d4; } // Operators (white)
+    .p { color: #d4d4d4; } // Punctuation (white)
+    .bp { color: #569cd6; } // Built-ins (blue)
+    .nb { color: #dcdcaa; } // Built-in functions (yellow)
+    .err { color: #f44747; background: none; } // Errors (red)
+    .w { color: #d4d4d4; } // Whitespace
+    
+    // Rust-specific tokens
+    .kc { color: #569cd6; } // Constants like true, false
+    .ss { color: #ce9178; } // Symbols/lifetime parameters
+    .sd { color: #6a9955; font-style: italic; } // Doc strings
 }
 
 // Footer customizations
