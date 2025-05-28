@@ -3,7 +3,7 @@ title: FerrisDB
 description: >-
   Educational distributed database in Rust - Learning LSM-trees, MVCC, 
   and distributed systems with Claude Code. Inspired by FoundationDB.
-baseurl: "/ferrisdb"
+baseurl: "/"
 url: "https://ferrisdb.nullcoder.net"
 github_username: nullcoder
 repository: nullcoder/ferrisdb
