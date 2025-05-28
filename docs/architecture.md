@@ -268,5 +268,13 @@ async fn example() -> Result<()> {
 
 - [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
 - [Future Architecture Explorations]({{ '/future-architecture/' | relative_url }})
+
+**Technical Deep Dives:**
+
+- [Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }})
+- [LSM-Trees and Storage Engine Design]({{ '/deep-dive/lsm-trees/' | relative_url }})
+
+**Project Links:**
+
 - [GitHub Repository]({{ site.project.repo_url }})
 - [Development Blog]({{ '/blog/' | relative_url }})

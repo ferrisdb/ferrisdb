@@ -43,6 +43,13 @@ FerrisDB follows a layered architecture with separate components for transaction
 [Read Full Design Document]({{ '/architecture/' | relative_url }}){: .btn .btn-outline}
 [Future Architecture Ideas]({{ '/future-architecture/' | relative_url }}){: .btn .btn-outline}
 
+## Technical Deep Dives {#deep-dives}
+
+Learn database internals through FerrisDB's implementation:
+
+[Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }}){: .btn .btn-outline}
+[LSM-Trees and Storage Performance]({{ '/deep-dive/lsm-trees/' | relative_url }}){: .btn .btn-outline}
+
 ## Development Progress
 
 <div class="progress-list">
