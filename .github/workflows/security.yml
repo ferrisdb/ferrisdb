@@ -10,10 +10,42 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
+  # Detect what files changed to skip security checks for docs-only changes
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    # Always run for scheduled events (daily security audit)
+    if: github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'pull_request'
+    outputs:
+      rust: ${{ steps.changes.outputs.rust }}
+      should_run: ${{ github.event_name == 'schedule' || steps.changes.outputs.rust == 'true' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Check for changes
+      uses: dorny/paths-filter@v3
+      id: changes
+      # Skip path filtering for scheduled runs
+      if: github.event_name != 'schedule'
+      with:
+        filters: |
+          rust:
+            - '**/*.rs'
+            - '**/Cargo.toml'
+            - '**/Cargo.lock'
+            - '.github/workflows/*.yml'
+            - '.github/workflows/*.yaml'
+            - 'deny.toml'
+            - 'rust-toolchain'
+            - 'rust-toolchain.toml'
+
   # Security audit for known vulnerabilities
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.should_run == 'true'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -27,6 +59,8 @@ jobs:
   deny:
     name: License Check
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.should_run == 'true'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -41,7 +75,8 @@ jobs:
   supply-chain:
     name: Supply Chain Security
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: changes
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.should_run == 'true'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -59,6 +94,8 @@ jobs:
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.should_run == 'true'
     permissions:
       actions: read
       contents: read
