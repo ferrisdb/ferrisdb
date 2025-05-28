@@ -28,14 +28,14 @@ A distributed, transactional key-value database written in Rust, inspired by Fou
 
 ### Prerequisites
 
-- Rust 1.75 or higher
-- RocksDB development libraries
+- Rust 1.81 or higher
+- Git
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ferrisdb.git
+git clone https://github.com/nullcoder/ferrisdb.git
 cd ferrisdb
 
 # Build the project
@@ -128,7 +128,10 @@ FerrisDB is designed for high performance:
 ## Roadmap
 
 - [x] Design document
-- [ ] Core storage engine
+- [x] Write-Ahead Log (WAL)
+- [x] MemTable with SkipList
+- [ ] SSTable implementation (in progress)
+- [ ] Compaction system
 - [ ] Transaction system
 - [ ] Distribution layer
 - [ ] Consensus protocol
@@ -137,7 +140,7 @@ FerrisDB is designed for high performance:
 
 ## License
 
-FerrisDB is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+FerrisDB is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
@@ -148,11 +151,12 @@ This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/
 - CockroachDB
 - TiKV
 
-## Community
+## Documentation
 
-- [Discord Server](#) (Coming soon)
-- [Documentation](#) (Coming soon)
-- [Benchmarks](#) (Coming soon)
+- [Architecture Overview](docs/architecture.md)
+- [Getting Started Guide](docs/getting-started.md)
+- [WAL and Crash Recovery Deep Dive](docs/wal-crash-recovery.md)
+- [LSM-Trees Deep Dive](docs/lsm-trees-deep-dive.md)
 
 ## Status
 
