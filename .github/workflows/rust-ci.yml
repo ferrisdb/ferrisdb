@@ -129,10 +129,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Rust 1.75.0
+    - name: Install Rust 1.81.0
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: 1.75.0
+        toolchain: 1.81.0
 
     - name: Cache cargo registry
       uses: actions/cache@v4
