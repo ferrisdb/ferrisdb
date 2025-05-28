@@ -1,0 +1,24 @@
+# CODEOWNERS for FerrisDB
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+*                           @ferrisdb/maintainers
+
+# Core components
+/ferrisdb-core/            @ferrisdb/core-team
+/ferrisdb-storage/         @ferrisdb/storage-team
+/ferrisdb-client/          @ferrisdb/client-team
+/ferrisdb-server/          @ferrisdb/server-team
+
+# Documentation
+/docs/                     @ferrisdb/docs-team
+*.md                       @ferrisdb/docs-team
+
+# GitHub configuration
+/.github/                  @ferrisdb/admins
+/CLAUDE.md                 @ferrisdb/admins
+
+# Build and CI
+/Cargo.toml               @ferrisdb/maintainers
+/Cargo.lock               @ferrisdb/maintainers
+/.github/workflows/       @ferrisdb/devops

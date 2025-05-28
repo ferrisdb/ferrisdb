@@ -1,0 +1,138 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Create GitHub release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: FerrisDB ${{ github.ref }}
+        draft: true
+        prerelease: false
+        body: |
+          ## Changes in this Release
+          
+          ### Features
+          - 
+          
+          ### Bug Fixes
+          - 
+          
+          ### Breaking Changes
+          - 
+          
+          See [CHANGELOG.md](https://github.com/ferrisdb/ferrisdb/blob/main/CHANGELOG.md) for details.
+
+  # Build and upload binaries
+  build:
+    name: Build Release
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: ferrisdb
+            asset_name: ferrisdb-linux-amd64
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            artifact_name: ferrisdb
+            asset_name: ferrisdb-linux-arm64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: ferrisdb.exe
+            asset_name: ferrisdb-windows-amd64.exe
+          - os: macOS-latest
+            target: x86_64-apple-darwin
+            artifact_name: ferrisdb
+            asset_name: ferrisdb-darwin-amd64
+          - os: macOS-latest
+            target: aarch64-apple-darwin
+            artifact_name: ferrisdb
+            asset_name: ferrisdb-darwin-arm64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+
+    - name: Install cross-compilation tools
+      if: matrix.target == 'aarch64-unknown-linux-gnu'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-aarch64-linux-gnu
+
+    - name: Build release binary
+      run: |
+        if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+          export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+        fi
+        cargo build --release --target ${{ matrix.target }}
+      shell: bash
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.asset_name }}
+        asset_content_type: application/octet-stream
+
+  # Publish to crates.io
+  publish:
+    name: Publish to crates.io
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Verify publishable
+      run: |
+        cargo publish --dry-run -p ferrisdb-core
+        cargo publish --dry-run -p ferrisdb-storage
+        cargo publish --dry-run -p ferrisdb-client
+        cargo publish --dry-run -p ferrisdb-server
+
+    - name: Publish to crates.io
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+      run: |
+        # Publish in dependency order
+        cargo publish -p ferrisdb-core || true
+        sleep 30
+        cargo publish -p ferrisdb-storage || true
+        sleep 30
+        cargo publish -p ferrisdb-client || true
+        sleep 30
+        cargo publish -p ferrisdb-server || true

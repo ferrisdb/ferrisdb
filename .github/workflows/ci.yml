@@ -1,0 +1,215 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  merge_group:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: "-D warnings"
+
+# Cancel in-progress runs when a new run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Quick checks that should pass before running expensive tests
+  quick-checks:
+    name: Quick Checks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Check formatting
+      run: cargo fmt --all -- --check
+
+    - name: Clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+
+  # Markdown linting
+  markdown:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Lint markdown files
+      uses: DavidAnson/markdownlint-cli2-action@v14
+      with:
+        globs: |
+          **/*.md
+          !target/**
+          !**/target/**
+
+  # Spell check
+  spellcheck:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check spelling
+      uses: crate-ci/typos@master
+      with:
+        files: |
+          docs/
+          *.md
+          src/
+          ferrisdb-*/src/
+
+  # Main test suite
+  test:
+    name: Test Suite
+    needs: quick-checks
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        rust: [stable, beta]
+        exclude:
+          # Reduce CI load by only testing beta on Ubuntu
+          - os: windows-latest
+            rust: beta
+          - os: macOS-latest
+            rust: beta
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ matrix.rust }}
+
+    - name: Cache cargo
+      uses: Swatinem/rust-cache@v2
+      with:
+        key: ${{ matrix.os }}-${{ matrix.rust }}
+
+    - name: Build workspace
+      run: cargo build --all --verbose
+
+    - name: Run tests
+      run: cargo test --all --verbose
+
+    - name: Build release
+      if: matrix.rust == 'stable'
+      run: cargo build --all --release --verbose
+
+  # Documentation build
+  docs:
+    name: Documentation
+    needs: quick-checks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache cargo
+      uses: Swatinem/rust-cache@v2
+
+    - name: Build documentation
+      run: cargo doc --all --no-deps
+      env:
+        RUSTDOCFLAGS: "-D warnings"
+
+    - name: Check documentation links
+      run: cargo doc --all --no-deps --document-private-items
+      env:
+        RUSTDOCFLAGS: "-D warnings -D rustdoc::broken_intra_doc_links"
+
+  # Minimum supported Rust version
+  msrv:
+    name: MSRV (1.81.0)
+    needs: quick-checks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust 1.81.0
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: 1.81.0
+
+    - name: Cache cargo
+      uses: Swatinem/rust-cache@v2
+
+    - name: Build with MSRV
+      run: cargo build --all
+
+    - name: Test with MSRV
+      run: cargo test --all
+
+  # Jekyll site build
+  jekyll:
+    name: Jekyll Site Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        bundler-cache: true
+        working-directory: docs
+
+    - name: Build Jekyll site
+      run: |
+        cd docs
+        bundle install
+        bundle exec jekyll build --strict_front_matter
+      env:
+        JEKYLL_ENV: production
+
+    - name: Test HTML
+      run: |
+        cd docs
+        bundle exec htmlproofer ./_site --disable-external
+
+  # Security audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run security audit
+      uses: rustsec/audit-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  # All required checks must pass
+  required:
+    name: Required Checks
+    runs-on: ubuntu-latest
+    needs: [quick-checks, markdown, spellcheck, test, docs, msrv, jekyll, security]
+    if: always()
+    steps:
+    - name: Verify all checks passed
+      run: |
+        if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+          echo "One or more required checks failed"
+          exit 1
+        fi
+        echo "All required checks passed"
