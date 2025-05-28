@@ -103,7 +103,7 @@ jobs:
   # Main test suite
   test:
     name: Test Suite
-    needs: [changes, quick-checks]
+    needs: changes
     if: needs.changes.outputs.rust == 'true'
     runs-on: ${{ matrix.os }}
     strategy:
@@ -144,7 +144,7 @@ jobs:
   # Documentation build
   docs:
     name: Documentation
-    needs: [changes, quick-checks]
+    needs: changes
     if: needs.changes.outputs.rust == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -170,7 +170,7 @@ jobs:
   # Minimum supported Rust version
   msrv:
     name: MSRV (1.81.0)
-    needs: [changes, quick-checks]
+    needs: changes
     if: needs.changes.outputs.rust == 'true'
     runs-on: ubuntu-latest
     steps:
