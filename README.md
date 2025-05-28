@@ -158,6 +158,20 @@ This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/
 - [WAL and Crash Recovery Deep Dive](docs/wal-crash-recovery.md)
 - [LSM-Trees Deep Dive](docs/lsm-trees-deep-dive.md)
 
+## Repository Setup
+
+For maintainers setting up branch protection:
+
+1. Go to **Settings → Branches → Add rule**
+2. Apply settings from `.github/branch-protection.json`
+3. Key settings:
+   - Require status checks (all CI must pass)
+   - Require linear history (squash merge only)
+   - Allow maintainers to merge without review
+   - Require review for external contributors
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
+
 ## Status
 
 🚧 **This project is under active development as a learning exercise** 🚧

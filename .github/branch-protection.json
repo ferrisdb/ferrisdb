@@ -1,5 +1,8 @@
 {
-  "_comment": "Branch protection configuration for FerrisDB. Reviews are not required for maintainers team members but are required for external contributors.",
+  "_description": "Branch protection rules reference for FerrisDB main branch",
+  "_note": "This file documents the recommended settings but must be manually applied in GitHub Settings > Branches",
+  "_last_updated": "2025-05-28",
+  "_apply_instructions": "Go to Settings > Branches > Add rule, then configure according to this file",
   "branch": "main",
   "protection_rules": {
     "required_status_checks": {
