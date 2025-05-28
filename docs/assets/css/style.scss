@@ -533,6 +533,37 @@ pre {
     }
 }
 
+// Rouge syntax highlighting with inline line numbers
+.highlight {
+    pre {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        line-height: 1.4;
+        
+        code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: 0.875rem;
+            
+            .lineno {
+                color: #718096;
+                margin-right: 1rem;
+                user-select: none;
+                display: inline-block;
+                min-width: 2em;
+                text-align: right;
+                border-right: 1px solid #4a5568;
+                padding-right: 0.75rem;
+                margin-right: 0.75rem;
+            }
+        }
+    }
+}
+
 // Footer customizations
 .site-footer {
     background: var(--text-color);
