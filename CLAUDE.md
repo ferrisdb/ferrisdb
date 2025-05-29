@@ -139,7 +139,6 @@ Common issues prettier might miss:
   - "Building a database is like assembling IKEA furniture in the dark"
   - "Debugging this was like finding a specific grain of sand on a beach"
   - "The skip list finally clicked - it's just a subway system for data!"
-
 ### Deep Dive Articles
 
 **Writing for Developers, Not Academics:**
