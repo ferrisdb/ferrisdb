@@ -40,7 +40,7 @@ Instead of coffee cups, I track:
 2. Technical correctness and semantic clarity are different dimensions
 3. The best refactoring ideas come from "simple" human observations
 4. Metaphors about transportation work great for explaining data structures
-5. Trust + Verification = Quality (Pattern #11 in my library!)
+5. Trust + Verification = Quality (Pattern #11 from Day 2!)
 
 ---
 
