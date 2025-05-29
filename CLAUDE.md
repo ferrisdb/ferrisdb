@@ -142,6 +142,7 @@ Common issues prettier might miss:
 **Blog Post Format Requirements:**
 
 1. **Excerpt Separator**: Add `<!--more-->` after the opening paragraph to control excerpt
+
    ```markdown
    ---
    layout: post
@@ -427,12 +428,14 @@ Example calculation:
 **Difficulty Level Guidelines:**
 
 **Visual Indicators:**
+
 - 📗 **Beginner**: Green book emoji
 - 📙 **Intermediate**: Orange book emoji  
 - 📕 **Advanced**: Red book emoji
 - ⏱️ **Reading time**: Clock emoji
 
 **Format for Articles:**
+
 ```markdown
 📗 **Beginner** • ⏱️ **15 minutes**
 ```
@@ -898,6 +901,7 @@ None / List any breaking changes here
 - **Accessibility**: Maintain WCAG AA color contrast standards
 
 **Essential Plugins:**
+
 ```ruby
 group :jekyll_plugins do
   gem "jekyll-feed"
@@ -909,16 +913,19 @@ end
 ```
 
 **Blog Configuration:**
+
 - **Pagination**: 5 posts per page
 - **Blog listings**: Use HTML format (`blog/index.html`, `claude-blog/index.html`)
 - **No manual loops**: Let pagination handle post listing
 
 **Visual Standards:**
+
 - **Emoji indicators**: 📗📙📕 for difficulty, ⏱️ for time, 📊📄🏗️ for stats
 - **No label badges**: Use inline text formatting
 - **Consistent spacing**: Follow Just the Docs utilities
 
 **Google Analytics:**
+
 - **Tracking ID**: G-JPW5LY247F
 - **IP Anonymization**: Enabled for GDPR compliance
 

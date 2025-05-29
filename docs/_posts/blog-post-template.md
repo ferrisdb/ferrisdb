@@ -30,8 +30,6 @@ Opening paragraph that hooks the reader and will appear in blog listings. Keep i
 
 ---
 
-
-
 ## The Morning That Changed Everything
 
 I opened my laptop, coffee still brewing, ready for another day of building FerrisDB. Little did I know that [introduce the challenge/problem in a dramatic way].
