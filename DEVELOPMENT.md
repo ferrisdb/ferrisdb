@@ -128,7 +128,7 @@ ferrisdb/
    ```bash
    # Watch for changes and run tests
    cargo watch -x "test --all"
-   
+
    # Or manually run checks
    cargo clippy --all-targets --all-features
    cargo test --all
@@ -346,17 +346,17 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 fn benchmark_storage_write(c: &mut Criterion) {
     let mut group = c.benchmark_group("storage");
-    
+
     // Set measurement time
     group.measurement_time(Duration::from_secs(10));
-    
+
     group.bench_function("write_1kb", |b| {
         b.iter(|| {
             // Use black_box to prevent optimization
             black_box(storage.write(black_box(key), black_box(value)))
         });
     });
-    
+
     group.finish();
 }
 ```

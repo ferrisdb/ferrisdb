@@ -16,7 +16,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 
 ### Idiomatic Rust Guidelines
 
-- **Module Organization**: 
+- **Module Organization**:
   - Use snake_case file names that match struct names (e.g., `MemTable` → `mem_table.rs`)
   - Keep public API types in separate files, not in `mod.rs`
   - Only re-export types that should be part of the public API

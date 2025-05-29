@@ -26,15 +26,15 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
       </div>
 
       <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-      
+
       {% if post.subtitle %}
         <p class="post-card-subtitle">{{ post.subtitle }}</p>
       {% endif %}
-      
+
       {% if post.excerpt %}
         <p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 40 }}</p>
       {% endif %}
-      
+
       {% if post.tags.size > 0 %}
         <div class="post-card-tags">
           {% for tag in post.tags %}
@@ -42,7 +42,7 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
           {% endfor %}
         </div>
       {% endif %}
-      
+
       <div class="post-card-footer">
         <a href="{{ post.url | relative_url }}" class="read-more">Read full post →</a>
         {% if post.stats %}
@@ -54,7 +54,9 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
         {% endif %}
       </div>
     </article>
-  {% endfor %}
+
+{% endfor %}
+
 </div>
 
 {% if site.posts.size == 0 %}
