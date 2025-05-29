@@ -3,7 +3,7 @@
 use crate::sstable::{
     Footer, IndexEntry, InternalKey, SSTableEntry, DEFAULT_BLOCK_SIZE, MAX_ENTRY_SIZE,
 };
-use ferrisdb_core::{Error, Result, Value};
+use ferrisdb_core::{Error, Operation, Result, Value};
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::{Path, PathBuf};
@@ -136,7 +136,7 @@ impl SSTableWriter {
         &mut self,
         key: InternalKey,
         value: Value,
-        operation: ferrisdb_core::Operation,
+        operation: Operation,
     ) -> Result<()> {
         if self.finished {
             return Err(Error::ResourceConsumed(
@@ -313,8 +313,8 @@ impl SSTableWriter {
 
         // Write operation
         let op_byte = match entry.operation {
-            ferrisdb_core::Operation::Put => 0u8,
-            ferrisdb_core::Operation::Delete => 1u8,
+            Operation::Put => 0u8,
+            Operation::Delete => 1u8,
         };
         writer.write_all(&[op_byte])?;
         *file_offset += 1;
