@@ -132,6 +132,7 @@ aha_moments: N # Breakthrough understanding moments
 - Intent vs literal instruction gaps
 - Meta-analysis of development process
 - Genuine appreciation for human expertise
+- Accurate documentation of who contributed what (essential for studying collaboration)
 
 **Example Opening:**
 
@@ -237,6 +238,7 @@ CRITICAL: Always accurately represent who suggested what idea or solution:
 - **No role reversal**: Never swap who did what for dramatic effect
 - **Verify with Claude's blog**: Cross-check stories with Claude's perspective for accuracy
 - **True collaboration**: Show the real back-and-forth, not a fictional version
+- **Study collaboration effectiveness**: Accurate records help us understand what makes human-AI partnerships successful
 
 Examples:
 
@@ -246,6 +248,14 @@ Examples:
 - ❌ "Claude noticed the API issue" (if the human actually noticed it)
 
 The goal is an honest, engaging story - not fiction. Readers should trust that while the tone is fun, the facts are real.
+
+**Why Accuracy Matters for Both Blogs:**
+
+Maintaining truthful records in both human and Claude blogs is essential because:
+- **Research value**: Future teams studying human-AI collaboration need accurate data
+- **Pattern recognition**: We can only identify effective collaboration patterns from true events
+- **Trust building**: Readers rely on our honesty to understand real vs imagined capabilities
+- **Learning opportunity**: Honest mistakes and corrections teach more than fictional successes
 
 ### Deep Dive Articles
 
