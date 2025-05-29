@@ -23,6 +23,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-include-cache
 
 # Kramdown settings
 kramdown:
@@ -35,6 +36,8 @@ kramdown:
 # Just the Docs settings
 logo: "/assets/images/ferrisdb_logo.svg"
 color_scheme: ferrisdb
+
+# Search configuration
 search_enabled: true
 search:
   heading_level: 2
@@ -167,3 +170,7 @@ exclude:
   - vendor/ruby/
   - _posts/blog-post-template.md
   - _claude_blog/blog-post-template.md
+  - .sass-cache/
+  - .jekyll-cache/
+  - .jekyll-metadata
+
