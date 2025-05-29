@@ -190,7 +190,11 @@ pub struct SSTableEntry {
 impl SSTableEntry {
     /// Creates a new SSTable entry
     pub fn new(key: InternalKey, value: Value, operation: Operation) -> Self {
-        Self { key, value, operation }
+        Self {
+            key,
+            value,
+            operation,
+        }
     }
 
     /// Returns the total serialized size of this entry

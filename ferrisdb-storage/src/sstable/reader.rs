@@ -515,7 +515,11 @@ mod tests {
     use crate::sstable::writer::SSTableWriter;
     use tempfile::TempDir;
 
-    fn create_test_sstable() -> (TempDir, std::path::PathBuf, Vec<(InternalKey, Value, Operation)>) {
+    fn create_test_sstable() -> (
+        TempDir,
+        std::path::PathBuf,
+        Vec<(InternalKey, Value, Operation)>,
+    ) {
         let temp_dir = TempDir::new().unwrap();
         let path = temp_dir.path().join("test.sst");
 
@@ -706,10 +710,7 @@ mod tests {
 
         // Add many entries to create larger blocks for testing binary search efficiency
         for i in 0..200 {
-            let key = InternalKey::new(
-                format!("key_{:06}", i).into_bytes(),
-                i as u64,
-            );
+            let key = InternalKey::new(format!("key_{:06}", i).into_bytes(), i as u64);
             let value = format!("value_{}", i).into_bytes();
             writer.add(key, value, Operation::Put).unwrap();
         }

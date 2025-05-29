@@ -132,7 +132,12 @@ impl SSTableWriter {
     /// - The key or value exceeds maximum size limits
     /// - Keys are not in sorted order
     /// - An I/O error occurs
-    pub fn add(&mut self, key: InternalKey, value: Value, operation: ferrisdb_core::Operation) -> Result<()> {
+    pub fn add(
+        &mut self,
+        key: InternalKey,
+        value: Value,
+        operation: ferrisdb_core::Operation,
+    ) -> Result<()> {
         if self.finished {
             return Err(Error::ResourceConsumed(
                 "SSTable writer already finished".to_string(),
@@ -398,13 +403,19 @@ mod tests {
 
         // Add some entries
         let key1 = InternalKey::new(b"key1".to_vec(), 100);
-        writer.add(key1.clone(), b"value1".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(key1.clone(), b"value1".to_vec(), Operation::Put)
+            .unwrap();
 
         let key2 = InternalKey::new(b"key2".to_vec(), 200);
-        writer.add(key2.clone(), b"value2".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(key2.clone(), b"value2".to_vec(), Operation::Put)
+            .unwrap();
 
         let key3 = InternalKey::new(b"key3".to_vec(), 300);
-        writer.add(key3.clone(), Vec::new(), Operation::Delete).unwrap();
+        writer
+            .add(key3.clone(), Vec::new(), Operation::Delete)
+            .unwrap();
 
         // Finish writing
         let info = writer.finish().unwrap();
@@ -443,10 +454,7 @@ mod tests {
 
         // Add entries that will span multiple blocks
         for i in 0..20 {
-            let key = InternalKey::new(
-                format!("key_{:04}", i).into_bytes(),
-                i as u64,
-            );
+            let key = InternalKey::new(format!("key_{:04}", i).into_bytes(), i as u64);
             let value = format!("value_{}", i).into_bytes();
             writer.add(key, value, Operation::Put).unwrap();
         }
@@ -542,13 +550,17 @@ mod tests {
 
         // Add mix of puts and deletes
         let put1 = InternalKey::new(b"key1".to_vec(), 100);
-        writer.add(put1, b"value1".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(put1, b"value1".to_vec(), Operation::Put)
+            .unwrap();
 
         let del1 = InternalKey::new(b"key2".to_vec(), 200);
         writer.add(del1, Vec::new(), Operation::Delete).unwrap();
 
         let put2 = InternalKey::new(b"key3".to_vec(), 300);
-        writer.add(put2, b"value3".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(put2, b"value3".to_vec(), Operation::Put)
+            .unwrap();
 
         let info = writer.finish().unwrap();
         assert_eq!(info.entry_count, 3);
@@ -564,13 +576,19 @@ mod tests {
         // Add same key with different timestamps (MVCC)
         // Note: timestamps must be in descending order for the same key
         let key1 = InternalKey::new(b"key".to_vec(), 300);
-        writer.add(key1.clone(), Vec::new(), Operation::Delete).unwrap();
+        writer
+            .add(key1.clone(), Vec::new(), Operation::Delete)
+            .unwrap();
 
         let key2 = InternalKey::new(b"key".to_vec(), 200);
-        writer.add(key2, b"value2".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(key2, b"value2".to_vec(), Operation::Put)
+            .unwrap();
 
         let key3 = InternalKey::new(b"key".to_vec(), 100);
-        writer.add(key3.clone(), b"value1".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(key3.clone(), b"value1".to_vec(), Operation::Put)
+            .unwrap();
 
         let info = writer.finish().unwrap();
         assert_eq!(info.entry_count, 3);
@@ -587,7 +605,9 @@ mod tests {
 
         // Add first key
         let key1 = InternalKey::new(b"key2".to_vec(), 100);
-        writer.add(key1, b"value1".to_vec(), Operation::Put).unwrap();
+        writer
+            .add(key1, b"value1".to_vec(), Operation::Put)
+            .unwrap();
 
         // Try to add key that violates ordering (key1 < key2)
         let key2 = InternalKey::new(b"key1".to_vec(), 100);
@@ -628,10 +648,7 @@ mod tests {
 
         while total_size < block_size - 100 {
             // Leave some room
-            let key = InternalKey::new(
-                format!("key_{:04}", count).into_bytes(),
-                count as u64,
-            );
+            let key = InternalKey::new(format!("key_{:04}", count).into_bytes(), count as u64);
             let value = b"val".to_vec();
             let entry = SSTableEntry::new(key.clone(), value.clone(), Operation::Put);
 
