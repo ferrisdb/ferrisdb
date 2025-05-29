@@ -169,6 +169,11 @@ pub fn read_entry(&mut self) -> Result<Option<WALEntry>> {
         return Ok(None);
     }
 
+    // Why skip instead of panic?
+    // - Partial write during crash (normal)
+    // - Disk corruption (unfortunate but happens)
+    // - Better to lose one entry than crash on startup
+
     // Decode valid entry
     let entry = WALEntry::decode(&entry_buf[4..])?;
     Ok(Some(entry))

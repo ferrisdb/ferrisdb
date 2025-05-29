@@ -7,6 +7,14 @@ permalink: /deep-dive/
 
 Welcome to FerrisDB's technical deep dives! These articles explore fundamental database concepts through our actual implementation, providing both theoretical understanding and practical code examples.
 
+**Who are these articles for?**
+
+- Developers curious about how databases work internally
+- Engineers building data-intensive applications
+- Anyone who's wondered "but how does it actually work?"
+
+No PhD required! We explain complex concepts in plain English with real-world analogies.
+
 ## Storage Engine Fundamentals
 
 <div class="article-grid">
@@ -70,13 +78,13 @@ Welcome to FerrisDB's technical deep dives! These articles explore fundamental d
 
 Each deep dive article:
 
-- **Explains the problem** the technology solves
-- **Shows real code** from FerrisDB's implementation
-- **Compares approaches** used by other databases
-- **Includes performance analysis** where applicable
-- **Provides hands-on examples** you can run
+- **Explains the problem** the technology solves (why should you care?)
+- **Shows real code** from FerrisDB's implementation (not pseudocode!)
+- **Compares approaches** used by other databases (learn from the giants)
+- **Includes performance analysis** where applicable (with actual numbers)
+- **Provides hands-on examples** you can run (try it yourself!)
 
-These aren't just theoretical explanations - they're based on actual code we've written and lessons we've learned building FerrisDB.
+These aren't just theoretical explanations - they're based on actual code we've written and lessons we've learned building FerrisDB. We share our mistakes and "aha!" moments so you can learn alongside us.
 
 ## Contributing
 

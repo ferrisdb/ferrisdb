@@ -35,6 +35,12 @@ Problems with this approach:
 
 Skip lists are probabilistic data structures that provide O(log n) operations like balanced trees, but with a simpler implementation that's more amenable to lock-free algorithms.
 
+**What does this mean in plain English?**
+
+- **Probabilistic**: Uses randomness to decide structure (like flipping a coin)
+- **O(log n)**: Performance scales well - doubling data size adds only one more step
+- **Lock-free friendly**: Multiple threads can work without waiting for each other
+
 ### Skip List Structure
 
 ```text
@@ -45,6 +51,13 @@ Level 0: HEAD -> 5 -> 10 -> 20-> 30 -> 40 -> 50 -> 60 -> 70  NULL
 ```
 
 Each node has a random height, creating "express lanes" for faster traversal.
+
+**Think of it like a subway system:**
+
+- Level 0 is the local train that stops at every station
+- Level 1 is the express that skips some stops
+- Level 2 is the super-express that skips even more
+- To find your stop, take the fastest train and switch down when needed
 
 ## FerrisDB's Implementation
 
@@ -102,9 +115,12 @@ impl<K: Ord, V> SkipList<K, V> {
 
 Key insights:
 
-- **No locks needed** - Just atomic loads
+- **No locks needed** - Just atomic loads (reading a value that might be changing)
 - **Consistent snapshots** - Guard ensures nodes aren't freed while reading
-- **Wait-free** - Readers never block
+- **Wait-free** - Readers never block (they always make progress)
+
+**What's an atomic load?**
+An atomic load is a read operation that's guaranteed to see a complete value, not a partially-written one. It's like taking a photo - you get the whole picture at one instant, not a blurry mix of two states.
 
 ### Memory Management with Epochs
 
@@ -132,6 +148,16 @@ The epoch-based reclamation ensures:
 - Nodes are only freed when no thread can access them
 - No ABA problems
 - No use-after-free bugs
+
+**What's the ABA Problem?**
+
+The ABA problem is a classic concurrency bug. Imagine this scenario:
+
+1. Thread 1 reads a pointer to memory location A
+2. Thread 2 frees A and allocates new memory B at the same address
+3. Thread 1's pointer still looks valid (same address) but now points to completely different data!
+
+It's called "ABA" because the value changed from A to B and back to A (same address), but it's actually different data. Epoch-based reclamation prevents this by ensuring memory isn't reused while any thread might still have a reference to it.
 
 ### Insertion with Compare-and-Swap
 
@@ -286,17 +312,28 @@ Solution: Epoch-based reclamation ensures nodes aren't reused while any thread m
 
 ### 2. Memory Ordering
 
+**What's Memory Ordering?**
+
+Modern CPUs can reorder instructions for performance. Memory ordering tells the CPU what reorderings are allowed. Think of it like traffic rules:
+
+- **Relaxed**: "Go whenever you want" - fastest but can see weird states
+- **Acquire/Release**: "Wait for the green light" - ensures proper sequencing
+- **SeqCst**: "Stop at every intersection" - safest but slowest
+
 Choosing the right memory ordering is crucial:
 
 ```rust
 // Too weak - might see inconsistent state
 node.next.load(Ordering::Relaxed)
+// Problem: Might read new pointer but old data!
 
 // Just right - ensures happens-before relationship
 node.next.load(Ordering::Acquire)
+// Guarantees: If we see a new pointer, we also see all its data
 
 // Overkill for reads - unnecessary synchronization
 node.next.load(Ordering::SeqCst)
+// Downside: Forces all CPUs to synchronize (slow!)
 ```
 
 ### 3. Height Distribution
@@ -326,18 +363,35 @@ This gives each node:
 
 Lock-free algorithms are complex. The skip list implementation is ~500 lines vs ~50 for a locked BTree wrapper. The performance gain must justify the complexity.
 
+**When is the complexity worth it?**
+
+- High-contention scenarios (many threads accessing data)
+- Read-heavy workloads (readers don't block each other)
+- Low-latency requirements (no unpredictable lock waits)
+- Systems where one slow thread shouldn't block others
+
 ### 2. Memory Reclamation is Hard
 
 Manual memory management in concurrent code is error-prone. Using battle-tested libraries like `crossbeam-epoch` is essential.
+
+**Why is concurrent memory management hard?**
+
+In single-threaded code, you know when you're done with memory. In concurrent code:
+
+- Thread A might free memory while Thread B is still reading it
+- You can't use reference counting (too much contention)
+- You need to know when ALL threads are done with a piece of memory
+
+`crossbeam-epoch` solves this by dividing time into "epochs" and only freeing memory from old epochs that no thread can be accessing.
 
 ### 3. Benchmarking is Critical
 
 Lock-free doesn't automatically mean faster. Always benchmark with realistic workloads:
 
-- Read/write ratio
-- Key distribution
-- Contention level
-- Thread count
+- **Read/write ratio** - 90% reads vs 50/50 mix behaves very differently
+- **Key distribution** - Sequential keys vs random affects cache performance
+- **Contention level** - Are threads accessing the same keys?
+- **Thread count** - Diminishing returns beyond CPU core count
 
 ### 4. Document Invariants
 

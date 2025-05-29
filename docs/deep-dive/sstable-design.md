@@ -7,13 +7,22 @@ permalink: /deep-dive/sstable-design/
 
 On Day 2 of FerrisDB development, we designed and implemented SSTables (Sorted String Tables) from scratch. This deep dive explores the design decisions, binary format, and optimizations that make SSTables the backbone of LSM-tree storage engines.
 
+**What's an SSTable?**
+
+An SSTable is like a read-only phone book for your data:
+
+- **Sorted**: Entries are in order (like alphabetical in a phone book)
+- **String**: Originally designed for strings, but works for any data
+- **Table**: Structured format on disk
+- **Immutable**: Once written, never changed (like a printed book)
+
 ## What Problem Do SSTables Solve?
 
 MemTables are fast but have limitations:
 
-- **Limited by RAM** - Can't store more data than available memory
-- **Volatile** - Data lost on crash (even with WAL, recovery is slow)
-- **No compression** - In-memory data structures can't be compressed
+- **Limited by RAM** - Can't store more data than available memory (like your desk can only hold so many papers)
+- **Volatile** - Data lost on crash (even with WAL, recovery is slow for large datasets)
+- **No compression** - In-memory data structures can't be compressed (need quick access)
 
 SSTables solve these by providing:
 
@@ -42,6 +51,12 @@ SSTables solve these by providing:
 └─────────────────┘
 ```
 
+**Reading this diagram**:
+
+- Start at the bottom (Footer) to find where the Index is
+- Use the Index to find which Data Block might have your key
+- Read only that Data Block (not the whole file!)
+
 ### Binary Format Details
 
 #### Data Block Structure
@@ -55,6 +70,13 @@ Each data block contains entries in this format:
 │ (4 bytes)  │ (4 bytes)  │ (1 byte)  │ (8 bytes)│ (variable)│     │ (var) │           │
 └────────────┴────────────┴───────────┴──────────┴───────────┴─────┴───────┴───────────┘
 ```
+
+**Why this layout?**
+
+- **Length prefixes**: Know how much to read without scanning for delimiters
+- **Fixed-size headers**: Can calculate offsets quickly
+- **Operation byte**: Distinguishes puts from deletes (tombstones)
+- **Timestamp**: Enables time-travel queries and MVCC
 
 Our implementation:
 
@@ -115,9 +137,11 @@ pub struct Footer {
 const TARGET_BLOCK_SIZE: usize = 4096; // 4KB
 ```
 
-- **OS Page Size**: Most systems use 4KB pages, making this I/O efficient
-- **Cache Friendly**: Fits well in CPU caches
-- **Balance**: Large enough to amortize seek costs, small enough for fast scans
+- **OS Page Size**: Most systems use 4KB pages, making this I/O efficient (the OS reads 4KB chunks anyway)
+- **Cache Friendly**: Fits well in CPU caches (L3 cache is typically 8-32MB)
+- **Balance**: Large enough to amortize seek costs (don't waste time for tiny reads), small enough for fast scans (don't read unnecessary data)
+
+**Think of it like book chapters**: Too short and you're constantly flipping pages. Too long and finding specific content is hard.
 
 #### 2. Why Include Operation in SSTable?
 
@@ -172,9 +196,11 @@ pub struct BlockHeader {
 
 This enables:
 
-- **Corruption detection** during reads
-- **Selective retry** of corrupted blocks
-- **Background verification** without impacting reads
+- **Corruption detection** during reads (know if disk/network corrupted data)
+- **Selective retry** of corrupted blocks (don't throw away the whole file)
+- **Background verification** without impacting reads (health checks)
+
+**Real-world example**: Like each page of a book having a small code that verifies the text hasn't been altered or smudged.
 
 ## Binary Search Optimization
 
@@ -191,6 +217,8 @@ for entry in block.entries {
     }
 }
 ```
+
+**The problem**: With 100 entries per block, we'd check 50 entries on average. That's like reading half a phone book page to find one name!
 
 ### The Solution
 
@@ -217,6 +245,8 @@ impl DataBlock {
 | 100 entries  | 50 comparisons (avg)  | 7 comparisons (max)  | ~7x         |
 | 1000 entries | 500 comparisons (avg) | 10 comparisons (max) | ~50x        |
 
+**In practice**: The difference between checking 7 items vs 50 items can mean microseconds vs milliseconds - crucial when serving thousands of requests per second!
+
 ## Two-Level Lookup
 
 FerrisDB uses a two-level lookup strategy:
@@ -236,6 +266,13 @@ Total complexity: **O(log B + log E)** where:
 
 - B = number of blocks
 - E = entries per block
+
+**Example with 1 million keys**:
+
+- 10,000 blocks of 100 entries each
+- Finding the right block: log₂(10,000) ≈ 13 comparisons
+- Finding entry in block: log₂(100) ≈ 7 comparisons
+- Total: ~20 comparisons to find any key among 1 million!
 
 ## Implementation Insights
 
@@ -310,13 +347,22 @@ For sorted data, binary search provides dramatic performance improvements. The i
 
 4KB works well for our use case, but this should be configurable based on:
 
-- Workload characteristics (key/value sizes)
-- Storage medium (SSD vs HDD)
-- Available memory for caching
+- **Workload characteristics**: Large values? Use bigger blocks. Tiny values? Use smaller blocks.
+- **Storage medium**: SSDs handle random reads better than HDDs (might use smaller blocks on SSD)
+- **Available memory for caching**: More RAM = can afford bigger blocks in cache
 
 ### 4. Checksums are Non-Negotiable
 
 Data corruption happens. Checksums let us detect it early and fail gracefully rather than returning bad data.
+
+**Why corruption happens**:
+
+- Bit flips in RAM or on disk
+- Network transmission errors
+- Software bugs
+- Hardware failures
+
+Without checksums, you might serve corrupted data and never know!
 
 ## What's Next?
 
