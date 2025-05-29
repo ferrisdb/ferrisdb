@@ -69,7 +69,14 @@
 //! └─────────────────┴─────────────────┴─────────────┘
 //! ```
 //!
-//! ## Footer Format (32 bytes)
+//! ## Footer Format (40 bytes)
+//!
+//! The SSTable footer contains metadata about the file's structure and is written
+//! last during SSTable creation. This design enables single-pass sequential writes
+//! during MemTable flush - we can build the index and bloom filter as we write
+//! data blocks, then write the footer with their final positions. Reading an
+//! SSTable requires only two I/O operations: seek to end minus 40 bytes, then
+//! read the footer to locate all other components.
 //!
 //! ```text
 //! ┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
@@ -77,6 +84,10 @@
 //! │  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │
 //! └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
 //! ```
+//!
+//! The fixed-size footer (40 bytes) can be located with a simple calculation,
+//! and the magic number validates file integrity - incomplete writes leave no
+//! valid footer, making corruption detection straightforward.
 //!
 //! # Key Invariants
 //!
