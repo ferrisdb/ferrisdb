@@ -188,7 +188,7 @@ body {
     // Content wrapper
     .hero-content {
         position: relative;
-        max-width: 1000px;
+        max-width: 1200px;
         margin: 0 auto;
     }
     
@@ -205,30 +205,36 @@ body {
     }
     
     .hero-title {
-        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-size: clamp(2.25rem, 4vw, 3.25rem);
         font-weight: 700;
         margin-bottom: 1.5rem;
         line-height: 1.2;
         letter-spacing: -0.02em;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .hero-subtitle {
-        font-size: clamp(1.125rem, 2vw, 1.5rem);
+        font-size: clamp(1.125rem, 1.75vw, 1.375rem);
         margin-bottom: 3rem;
         opacity: 0.95;
-        max-width: 800px;
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
-        line-height: 1.6;
+        line-height: 1.7;
         font-weight: 400;
     }
     
     .hero-stats {
         display: flex;
         justify-content: center;
-        gap: 1.5rem;
+        gap: 2rem;
         margin-bottom: 3rem;
         flex-wrap: wrap;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
         
         .hero-stat {
             display: flex;
@@ -236,9 +242,9 @@ body {
             gap: 0.5rem;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            padding: 0.875rem 1.75rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 50px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             
@@ -293,11 +299,11 @@ body {
         margin: -20px -20px 3rem -20px;
         
         .hero-title {
-            font-size: 2rem;
+            font-size: 1.875rem;
         }
         
         .hero-subtitle {
-            font-size: 1.125rem;
+            font-size: 1.0625rem;
         }
         
         .hero-stats {
