@@ -51,6 +51,10 @@ pub enum Error {
     #[error("Operation has no data: {0}")]
     EmptyOperation(String),
 
+    /// Keys are not in the required sorted order
+    #[error("Key ordering violation: expected key > {last_key}, got {new_key}")]
+    KeyOrderingViolation { last_key: String, new_key: String },
+
     /// A transaction error occurred
     #[error("Transaction error: {0}")]
     Transaction(String),

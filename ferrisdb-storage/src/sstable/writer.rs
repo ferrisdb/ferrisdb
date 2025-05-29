@@ -64,6 +64,8 @@ pub struct SSTableWriter {
     smallest_key: Option<InternalKey>,
     /// Largest key seen (for metadata)
     largest_key: Option<InternalKey>,
+    /// Last key written (for ordering verification)
+    last_key: Option<InternalKey>,
     /// Whether finish() has been called
     finished: bool,
 }
@@ -94,6 +96,7 @@ impl SSTableWriter {
             entry_count: 0,
             smallest_key: None,
             largest_key: None,
+            last_key: None,
             finished: false,
         })
     }
@@ -112,9 +115,9 @@ impl SSTableWriter {
 
     /// Adds a key-value pair to the SSTable
     ///
-    /// Keys must be added in sorted order according to InternalKey ordering.
-    /// The writer does not verify ordering - incorrect order will result in
-    /// an invalid SSTable.
+    /// Keys must be added in sorted order according to InternalKey ordering
+    /// (user_key ascending, then timestamp descending). The writer verifies
+    /// ordering to prevent creating invalid SSTables.
     ///
     /// # Arguments
     ///
@@ -126,6 +129,7 @@ impl SSTableWriter {
     /// Returns an error if:
     /// - The writer has already been finished
     /// - The key or value exceeds maximum size limits
+    /// - Keys are not in sorted order
     /// - An I/O error occurs
     pub fn add(&mut self, key: InternalKey, value: Value) -> Result<()> {
         if self.finished {
@@ -150,11 +154,22 @@ impl SSTableWriter {
             });
         }
 
+        // Verify ordering
+        if let Some(ref last) = self.last_key {
+            if key <= *last {
+                return Err(Error::KeyOrderingViolation {
+                    last_key: last.to_string(),
+                    new_key: key.to_string(),
+                });
+            }
+        }
+
         // Update metadata
         if self.smallest_key.is_none() {
             self.smallest_key = Some(key.clone());
         }
         self.largest_key = Some(key.clone());
+        self.last_key = Some(key.clone());
 
         // Create entry
         let entry = SSTableEntry::new(key, value);
@@ -545,19 +560,55 @@ mod tests {
         let mut writer = SSTableWriter::new(&path).unwrap();
 
         // Add same key with different timestamps (MVCC)
-        let key1 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
-        writer.add(key1.clone(), b"value1".to_vec()).unwrap();
+        // Note: timestamps must be in descending order for the same key
+        let key1 = InternalKey::new(b"key".to_vec(), 300, Operation::Delete);
+        writer.add(key1.clone(), Vec::new()).unwrap();
 
         let key2 = InternalKey::new(b"key".to_vec(), 200, Operation::Put);
         writer.add(key2, b"value2".to_vec()).unwrap();
 
-        let key3 = InternalKey::new(b"key".to_vec(), 300, Operation::Delete);
-        writer.add(key3.clone(), Vec::new()).unwrap();
+        let key3 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
+        writer.add(key3.clone(), b"value1".to_vec()).unwrap();
 
         let info = writer.finish().unwrap();
         assert_eq!(info.entry_count, 3);
         assert_eq!(info.smallest_key, key1);
         assert_eq!(info.largest_key, key3);
+    }
+
+    #[test]
+    fn test_sstable_writer_ordering_error() {
+        let temp_dir = TempDir::new().unwrap();
+        let path = temp_dir.path().join("bad_order.sst");
+
+        let mut writer = SSTableWriter::new(&path).unwrap();
+
+        // Add first key
+        let key1 = InternalKey::new(b"key2".to_vec(), 100, Operation::Put);
+        writer.add(key1, b"value1".to_vec()).unwrap();
+
+        // Try to add key that violates ordering (key1 < key2)
+        let key2 = InternalKey::new(b"key1".to_vec(), 100, Operation::Put);
+        let result = writer.add(key2, b"value2".to_vec());
+
+        assert!(result.is_err());
+        match result.unwrap_err() {
+            Error::KeyOrderingViolation { last_key, new_key } => {
+                assert!(last_key.contains("key2@100"));
+                assert!(new_key.contains("key1@100"));
+            }
+            _ => panic!("Expected KeyOrderingViolation error"),
+        }
+
+        // Also test same key with newer timestamp (should fail)
+        let key3 = InternalKey::new(b"key2".to_vec(), 200, Operation::Put);
+        let result = writer.add(key3, b"value3".to_vec());
+
+        assert!(result.is_err());
+        assert!(matches!(
+            result.unwrap_err(),
+            Error::KeyOrderingViolation { .. }
+        ));
     }
 
     #[test]
