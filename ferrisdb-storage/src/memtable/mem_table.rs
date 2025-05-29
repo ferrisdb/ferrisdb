@@ -17,12 +17,23 @@ use std::sync::Arc;
 /// MemTable is designed to be shared across multiple threads safely.
 /// It uses a lock-free skip list internally for optimal performance.
 ///
-/// # Memory Management
+/// # Memory Management & LSM-Tree Integration
 ///
-/// When the MemTable reaches its size limit, it should be marked as
-/// immutable and flushed to disk as an SSTable.
+/// When the MemTable reaches its size limit, it becomes immutable and a new
+/// MemTable is created for writes. The immutable MemTable is shared between:
+/// - The storage engine (for ongoing reads)
+/// - Background flush threads (to write SSTable to disk)
+/// - Iterators (that may outlive the original method calls)
+///
+/// This sharing pattern requires `Arc<SkipList>` for zero-copy access across
+/// multiple components without expensive cloning of the entire data structure.
 pub struct MemTable {
     /// The underlying skip list data structure
+    /// 
+    /// Uses Arc for shared ownership in LSM-tree scenarios:
+    /// - Storage engine keeps immutable MemTables for reads during flush
+    /// - Background threads flush MemTable to SSTable
+    /// - Iterators need concurrent access without blocking writes
     skiplist: Arc<SkipList>,
     /// Current memory usage in bytes (approximate)
     memory_usage: AtomicUsize,

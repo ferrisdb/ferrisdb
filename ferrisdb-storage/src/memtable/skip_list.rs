@@ -418,9 +418,18 @@ impl SkipList {
 }
 
 // SkipList automatically implements Send + Sync because:
-// - Atomic<Node> is Send + Sync
-// - AtomicUsize is Send + Sync  
+// - Atomic<Node> is Send + Sync (crossbeam atomics)
+// - AtomicUsize is Send + Sync (standard library)
 // - Mutex<StdRng> is Send + Sync (StdRng implements Send + Sync)
+//
+// Send + Sync are required because SkipList is used within Arc<SkipList>
+// for sharing between storage engine components:
+// - Multiple threads reading from immutable MemTables during flush
+// - Background flush threads writing MemTable contents to SSTables
+// - Iterator support that outlives individual method calls
+//
+// Using StdRng instead of ThreadRng avoids unsafe impl and leverages
+// Rust's type system to automatically prove thread safety.
 
 impl Drop for SkipList {
     fn drop(&mut self) {
