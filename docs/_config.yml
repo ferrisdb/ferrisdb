@@ -140,6 +140,9 @@ nav_sort: case_sensitive # or case_insensitive
 # Expand/collapse navigation sections
 nav_fold: true
 
+# Show table of contents for child pages on parent pages
+nav_child_link: true
+
 # Enable "Edit this page on GitHub" link
 gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub"
@@ -148,35 +151,12 @@ gh_edit_branch: "main"
 gh_edit_source: docs
 gh_edit_view_mode: "edit"
 
-# Old navigation (kept for reference)
-navigation:
-  - title: Home
-    url: /
-  - title: Learn
-    dropdown: true
-    items:
-      - title: Getting Started
-        url: /getting-started/
-      - title: Deep Dives
-        url: /deep-dive/
-      - title: Rust by Example
-        url: /rust-by-example/
-      - title: Storage Engine
-        url: /storage-engine/
-  - title: Architecture
-    url: /architecture/
-  - title: FAQ
-    url: /faq/
-  - title: Blog
-    dropdown: true
-    items:
-      - title: Development Blog
-        url: /blog/
-      - title: Claude's AI Blog
-        url: /claude-blog/
-  - title: GitHub
-    url: https://github.com/ferrisdb/ferrisdb
-    external: true
+# Just the Docs uses front matter for navigation structure
+# Pages define their hierarchy using:
+# - nav_order: numeric ordering
+# - parent: parent page title
+# - has_children: true/false
+# - nav_exclude: true to hide from nav
 
 # Blog settings
 paginate: 5

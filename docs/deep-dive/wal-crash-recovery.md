@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "WAL and Crash Recovery"
-parent: Deep Dives
+parent: Technical Deep Dives
 nav_order: 1
 permalink: /deep-dive/wal-crash-recovery/
 ---

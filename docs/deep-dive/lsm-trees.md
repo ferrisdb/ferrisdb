@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "LSM-Trees Explained"
-parent: Deep Dives
+parent: Technical Deep Dives
 nav_order: 2
 permalink: /deep-dive/lsm-trees/
 ---

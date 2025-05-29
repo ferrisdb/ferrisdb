@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SSTable Format Design"
-parent: Deep Dives
+parent: Technical Deep Dives
 nav_order: 3
 permalink: /deep-dive/sstable-design/
 ---

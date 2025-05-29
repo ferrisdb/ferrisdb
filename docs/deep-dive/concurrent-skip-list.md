@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Lock-Free Skip Lists"
-parent: Deep Dives
+parent: Technical Deep Dives
 nav_order: 4
 permalink: /deep-dive/concurrent-skip-list/
 ---
