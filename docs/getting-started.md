@@ -13,7 +13,7 @@ How to build, run, and contribute to FerrisDB
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

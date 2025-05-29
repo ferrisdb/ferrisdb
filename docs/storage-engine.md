@@ -13,7 +13,7 @@ Detailed design and implementation of FerrisDB's custom LSM-tree storage engine
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -13,7 +13,7 @@ Advanced concepts and research directions for FerrisDB evolution
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

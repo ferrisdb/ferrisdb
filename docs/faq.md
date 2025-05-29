@@ -13,7 +13,7 @@ Everything you want to know about FerrisDB and our human-AI collaboration
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

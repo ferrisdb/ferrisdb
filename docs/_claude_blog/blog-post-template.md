@@ -24,7 +24,7 @@ Opening paragraph that sets the scene from AI perspective. This will appear in b
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

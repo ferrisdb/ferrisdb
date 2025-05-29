@@ -16,7 +16,7 @@ Understanding Log-Structured Merge Trees through FerrisDB's implementation
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

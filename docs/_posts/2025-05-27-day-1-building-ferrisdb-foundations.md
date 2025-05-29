@@ -26,7 +26,7 @@ I stared at my terminal, coffee #1 steaming beside me. "I'm going to build a dat
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 
