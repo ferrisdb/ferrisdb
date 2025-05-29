@@ -44,10 +44,10 @@ Skip lists are probabilistic data structures that provide O(log n) operations li
 ### Skip List Structure
 
 ```text
-Level 3: HEAD -----------------> 30 -----------------------> NULL
-Level 2: HEAD ------> 10 ------> 30 --------> 50 ----------> NULL
-Level 1: HEAD -> 5 -> 10 -> 20-> 30 -> 40 -> 50 -> 60 -----> NULL
-Level 0: HEAD -> 5 -> 10 -> 20-> 30 -> 40 -> 50 -> 60 -> 70  NULL
+Level 3: HEAD ------------------> 30 -------------------------> NULL
+Level 2: HEAD ------> 10 -------> 30 -------> 50 -------------> NULL
+Level 1: HEAD -> 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> 60 -------> NULL
+Level 0: HEAD -> 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> 60 -> 70 -> NULL
 ```
 
 Each node has a random height, creating "express lanes" for faster traversal.
