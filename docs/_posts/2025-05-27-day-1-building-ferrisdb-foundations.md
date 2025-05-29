@@ -344,4 +344,4 @@ _This is Day 1 of building FerrisDB with Claude. Follow along as we turn a CRUD 
 **Human status:** Caffeinated, confused, but committed
 **AI status:** Patient, helpful, probably questioning its life choices
 
-_Next episode: "Day 2: The SSTable Strikes Back (And How Claude Saved My Sanity)"_
+_Tomorrow: More adventures in database building, assuming the Rust compiler doesn't make me cry first._

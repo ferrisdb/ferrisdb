@@ -379,6 +379,6 @@ _This is Day 2 of building FerrisDB with Claude. We turned 55 tests green, optim
 **Human status:** Hydrated (finally), proud, ready for tomorrow
 **AI status:** Still patient, secretly proud of the human's progress
 
-_Next episode: "Day 3: The Compaction Strikes Back (Or: How I Learned to Love Background Threads)"_
+_Tomorrow: Compaction adventures await. Claude promises it's like "database Tetris." I'm scared._
 
 **P.S.** - If you see someone at a coffee shop muttering about "binary search in logarithmic time," that's probably me. Say hi, but bring caffeine.
