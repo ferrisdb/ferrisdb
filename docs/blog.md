@@ -1,17 +1,23 @@
 ---
 layout: page
-title: Development Blog
-subtitle: Follow along with the daily progress of building FerrisDB from scratch
+title: The FerrisDB Development Journey
+subtitle: Watch a CRUD developer learn database internals (with an AI assistant and too much coffee)
 permalink: /blog/
 ---
 
-Welcome to the FerrisDB development blog! Here you'll find daily updates on our journey building a distributed database from scratch in Rust.
+Welcome to the most honest database development blog on the internet! This is where I document my journey from "I know SQL" to "I built a distributed database" (spoiler: it involves a lot of coffee and patient explanations from Claude).
 
 <div class="blog-intro">
-  <p>This blog documents the complete process of building FerrisDB - from initial architecture design to implementation details, challenges faced, and lessons learned along the way.</p>
+  <h3>What Makes This Blog Different?</h3>
+  <ul>
+    <li><strong>Real struggles, real solutions</strong> - Every compilation error, every "aha!" moment</li>
+    <li><strong>Human + AI collaboration</strong> - See how Claude helps me understand complex concepts</li>
+    <li><strong>Zero pretense</strong> - I start not knowing what an LSM-tree is (hint: not a Christmas tree)</li>
+    <li><strong>Daily progress</strong> - Follow along as FerrisDB grows from nothing to something</li>
+  </ul>
 </div>
 
-## All Posts
+## The Journey So Far
 
 <div class="post-list">
   {% for post in site.posts %}
@@ -23,12 +29,24 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
         {% if post.day %}
           <span class="post-day">Day {{ post.day }}</span>
         {% endif %}
+        {% if post.confidence %}
+          <span class="confidence-meter" title="Confidence level">{{ post.confidence }}</span>
+        {% endif %}
       </div>
 
       <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
 
       {% if post.subtitle %}
         <p class="post-card-subtitle">{{ post.subtitle }}</p>
+      {% endif %}
+
+      {% if post.compilation_attempts %}
+        <div class="post-card-attempts">
+          <span class="compilation-attempts">💻 {{ post.compilation_attempts }}</span>
+          {% if post.coffee_consumed %}
+            <span class="coffee-consumed">☕ {{ post.coffee_consumed }}</span>
+          {% endif %}
+        </div>
       {% endif %}
 
       {% if post.excerpt %}
@@ -44,7 +62,7 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
       {% endif %}
 
       <div class="post-card-footer">
-        <a href="{{ post.url | relative_url }}" class="read-more">Read full post →</a>
+        <a href="{{ post.url | relative_url }}" class="read-more">Read the adventure →</a>
         {% if post.stats %}
           <div class="post-stats">
             {% for stat in post.stats %}
@@ -68,8 +86,38 @@ Welcome to the FerrisDB development blog! Here you'll find daily updates on our 
   </div>
 {% endif %}
 
-## Subscribe for Updates
+## Why Follow This Blog?
 
-⭐ **Star the repository** on GitHub to get notified when new blog posts are published!
+**For Developers:**
+
+- Learn database internals without the academic jargon
+- See real-world Rust struggles and solutions
+- Understand how AI can accelerate your learning
+
+**For Database Enthusiasts:**
+
+- Watch a storage engine being built from scratch
+- See design decisions being made in real-time
+- Learn about LSM-trees, WAL, compaction, and more
+
+**For Everyone:**
+
+- Enjoy the honest, humorous take on complex topics
+- Get inspired to tackle your own ambitious projects
+- See that everyone starts as a beginner
+
+## Follow the Journey
+
+Want to see how this story unfolds? Here's how to stay connected:
+
+⭐ **Star the repository** on GitHub to show support and keep track of progress!
 
 [⭐ Star FerrisDB on GitHub]({{ site.project.repo_url }}){: .btn .btn-primary}
+
+📖 **Bookmark this blog** to check back for new posts (we publish daily during active development)
+
+💬 **Join the conversation** by opening issues or discussions on GitHub
+
+---
+
+_"Building a database is like assembling IKEA furniture, except the instructions are in academic papers and the allen wrench is the Rust compiler."_ - A caffeinated developer, probably
