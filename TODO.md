@@ -23,6 +23,9 @@
 - [x] Design SSTable binary format specification
 - [x] Implement SSTable writer
 - [x] Implement SSTable reader and index
+- [x] Refactor Operation from InternalKey to SSTableEntry (Day 2)
+- [x] Optimize SSTable reader with binary search (Day 2)
+- [x] Improve SSTable API for better usability (Day 2)
 - [ ] Implement compaction strategy
 - [ ] Implement bloom filters for optimization
 - [ ] Add block cache for frequently accessed data
