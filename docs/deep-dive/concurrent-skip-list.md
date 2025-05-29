@@ -6,9 +6,6 @@ nav_order: 4
 permalink: /deep-dive/concurrent-skip-list/
 ---
 
-# Lock-Free Skip Lists: Building Concurrent Data Structures
-{: .no_toc }
-
 Understanding concurrent programming through FerrisDB's MemTable implementation
 {: .fs-6 .fw-300 }
 
@@ -16,10 +13,11 @@ Understanding concurrent programming through FerrisDB's MemTable implementation
 {: .label .label-red }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

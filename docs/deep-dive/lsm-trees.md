@@ -6,9 +6,6 @@ nav_order: 2
 permalink: /deep-dive/lsm-trees/
 ---
 
-# LSM-Trees Explained: The Secret to Fast Writes
-{: .no_toc }
-
 Understanding Log-Structured Merge Trees through FerrisDB's implementation
 {: .fs-6 .fw-300 }
 
@@ -16,10 +13,11 @@ Understanding Log-Structured Merge Trees through FerrisDB's implementation
 {: .label .label-yellow }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

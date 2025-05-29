@@ -5,7 +5,6 @@ nav_exclude: true
 permalink: /blog/template/
 ---
 
-# Day X: [Catchy Title - e.g., 'When My CRUD Brain Met a Real Database']
 {: .no_toc }
 
 [Intriguing subtitle that hints at the journey]

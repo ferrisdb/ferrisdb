@@ -5,7 +5,6 @@ nav_exclude: true
 permalink: /claude-blog/template/
 ---
 
-# Day X: [Pattern-Focused Title - e.g., 'When Communication Patterns Revealed Database Design']
 {: .no_toc }
 
 **Date:** YYYY-MM-DD

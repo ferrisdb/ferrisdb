@@ -6,7 +6,6 @@ has_children: true
 permalink: /rust-by-example/
 ---
 
-# Rust by Example: Database Edition
 {: .no_toc }
 
 Learn Rust through real database code - explained for CRUD developers

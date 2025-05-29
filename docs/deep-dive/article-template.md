@@ -6,9 +6,6 @@ nav_exclude: true
 permalink: /deep-dive/article-template/
 ---
 
-# [Topic]: [Brief Descriptive Title]
-{: .no_toc }
-
 [One-line explanation of what this covers and why it matters]
 {: .fs-6 .fw-300 }
 
@@ -16,10 +13,11 @@ permalink: /deep-dive/article-template/
 {: .label .label-[green|yellow|red] }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

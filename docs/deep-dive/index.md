@@ -1,12 +1,11 @@
 ---
 layout: default
-title: Deep Dives
+title: Technical Deep Dives
 nav_order: 3
 has_children: true
 permalink: /deep-dive/
 ---
 
-# Technical Deep Dives
 {: .no_toc }
 
 In-depth exploration of database internals through FerrisDB's implementation

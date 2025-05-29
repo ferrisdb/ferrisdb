@@ -6,7 +6,6 @@ nav_exclude: true
 permalink: /rust-by-example/article-template/
 ---
 
-# [Rust Concept]: [Brief Description]
 {: .no_toc }
 
 Understanding [concept] through FerrisDB examples, compared with JavaScript, Python, Java, and Go
@@ -16,10 +15,11 @@ Understanding [concept] through FerrisDB examples, compared with JavaScript, Pyt
 {: .label .label-[green|yellow|red] }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

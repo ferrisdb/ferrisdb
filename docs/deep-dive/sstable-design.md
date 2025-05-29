@@ -6,9 +6,6 @@ nav_order: 3
 permalink: /deep-dive/sstable-design/
 ---
 
-# SSTable Format Design: Efficient On-Disk Storage
-{: .no_toc }
-
 How databases organize and access data on disk for optimal performance
 {: .fs-6 .fw-300 }
 
@@ -16,10 +13,11 @@ How databases organize and access data on disk for optimal performance
 {: .label .label-yellow }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

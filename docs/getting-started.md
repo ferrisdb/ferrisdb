@@ -5,17 +5,17 @@ nav_order: 2
 permalink: /getting-started/
 ---
 
-# Getting Started
 {: .no_toc }
 
 How to build, run, and contribute to FerrisDB
 {: .fs-6 .fw-300 }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

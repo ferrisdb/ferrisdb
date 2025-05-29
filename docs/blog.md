@@ -1,11 +1,10 @@
 ---
 layout: default
-title: Development Blog
+title: "The FerrisDB Development Journey"
 nav_order: 5
 permalink: /blog/
 ---
 
-# The FerrisDB Development Journey
 {: .no_toc }
 
 Watch a CRUD developer learn database internals (with an AI assistant and too much coffee)
@@ -13,7 +12,7 @@ Watch a CRUD developer learn database internals (with an AI assistant and too mu
 
 Welcome to the most honest database development blog on the internet! This is where I document my journey from "I know SQL" to "I built a distributed database" (spoiler: it involves a lot of coffee and patient explanations from Claude).
 
-### What Makes This Blog Different?
+## What Makes This Blog Different?
 
 **Real struggles, real solutions** - Every compilation error, every "aha!" moment
 
@@ -26,7 +25,9 @@ Welcome to the most honest database development blog on the internet! This is wh
 ## The Journey So Far
 
 {% for post in site.posts %}
+
 ### [{{ post.title }}]({{ post.url | relative_url }})
+
 {: .text-purple-300 }
 
 {{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• Day {{ post.day }}{% endif %}
@@ -51,7 +52,9 @@ Welcome to the most honest database development blog on the internet! This is wh
 {% endfor %}
 
 {% if site.posts.size == 0 %}
-### Coming Soon!
+
+### Coming Soon
+
 {: .text-center }
 
 The first blog post will be published shortly. In the meantime, check out the project on GitHub.
@@ -63,17 +66,20 @@ The first blog post will be published shortly. In the meantime, check out the pr
 
 ## Why Follow This Blog?
 
-### For Developers:
+### For Developers
+
 - Learn database internals without the academic jargon
 - See real-world Rust struggles and solutions
 - Understand how AI can accelerate your learning
 
-### For Database Enthusiasts:
+### For Database Enthusiasts
+
 - Watch a storage engine being built from scratch
 - See design decisions being made in real-time
 - Learn about LSM-trees, WAL, compaction, and more
 
-### For Everyone:
+### For Everyone
+
 - Enjoy the honest, humorous take on complex topics
 - Get inspired to tackle your own ambitious projects
 - See that everyone starts as a beginner
@@ -93,5 +99,5 @@ Want to see how this story unfolds? Here's how to stay connected:
 ---
 
 > "Building a database is like assembling IKEA furniture, except the instructions are in academic papers and the allen wrench is the Rust compiler."
-> 
+>
 > — A caffeinated developer, probably

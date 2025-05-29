@@ -6,9 +6,6 @@ nav_order: 1
 permalink: /deep-dive/wal-crash-recovery/
 ---
 
-# Understanding WAL and Crash Recovery
-{: .no_toc }
-
 How Write-Ahead Logs ensure data durability and enable crash recovery in database systems
 {: .fs-6 .fw-300 }
 
@@ -16,10 +13,11 @@ How Write-Ahead Logs ensure data durability and enable crash recovery in databas
 {: .label .label-green }
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

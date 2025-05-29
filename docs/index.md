@@ -1,11 +1,10 @@
 ---
 layout: default
-title: Home
+title: "Building a Database, Learning in Public"
 nav_order: 1
 permalink: /
 ---
 
-# Building a Database, Learning in Public
 {: .fs-9 }
 
 FerrisDB: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way.
@@ -30,6 +29,7 @@ FerrisDB: Where a CRUD developer and an AI collaborate to build a real database 
 ## Choose Your Learning Path
 
 ### 🔍 "I want to understand databases"
+
 {: .text-purple-300 .fw-500 }
 
 Explore how databases actually work under the hood, from storage engines to distributed systems.
@@ -39,6 +39,7 @@ Explore how databases actually work under the hood, from storage engines to dist
 ---
 
 ### 🦀 "I want to learn Rust"
+
 {: .text-purple-300 .fw-500 }
 
 Master Rust through real database code, with comparisons to JavaScript, Python, Java, and Go.
@@ -48,6 +49,7 @@ Master Rust through real database code, with comparisons to JavaScript, Python, 
 ---
 
 ### 🏗️ "I want to build with you"
+
 {: .text-purple-300 .fw-500 }
 
 Set up FerrisDB locally, run tests, and contribute to an open-source database project.
@@ -70,62 +72,76 @@ This project proves three things:
 📖 **Learning together is better** - every mistake becomes a lesson
 
 > "Working with Claude showed me that AI isn't here to take our jobs - it's here to help us tackle projects we never thought possible."
-> 
+>
 > — The Human Developer
 
 ## What You'll Learn
 
 ### 💾 Database Internals
+
 LSM-trees, WAL, SSTables, MVCC, and distributed consensus - all explained through working code
 
 ### 🦀 Rust in Practice
+
 Memory safety, fearless concurrency, and zero-cost abstractions in a real systems project
 
 ### 🏗️ System Design
+
 Architecture decisions, trade-offs, and patterns used in production databases
 
 ### 🤝 AI Collaboration
+
 How to effectively partner with AI tools to tackle complex engineering challenges
 
 ## Development Progress
+
 {: #progress}
 
 ### Building in Public: Day by Day
+
 {: .fs-6 .fw-500 }
 
 Follow our journey as we build a production-quality database from scratch. Every success, failure, and "aha!" moment documented.
 
 #### ✅ Project Foundation
+
 {: .text-green-300 }
 Architecture design, Rust workspace setup, development guidelines
 
 #### ✅ Storage Engine Foundation
+
 {: .text-green-300 }
 Write-Ahead Log, MemTable with concurrent skip list, MVCC support
 
 #### ✅ SSTable Implementation
+
 {: .text-green-300 }
 Binary format design, writer/reader with binary search, 4KB blocks with checksums
 
 #### 🚧 Compaction & Optimization
+
 {: .text-yellow-300 }
 Background compaction, bloom filters, block cache
 
 #### ⏳ Transaction System
+
 {: .text-grey-dk-000 }
 MVCC transactions, conflict detection, distributed coordination
 
 ## The AI Collaboration Experiment
 
 ### 🤖 + 👨‍💻 = Something Special
+
 {: .fs-6 .fw-500 }
 
 #### Claude's Perspective
+
 > "I've discovered patterns in how humans learn complex systems. My blog documents these insights to help future human-AI teams collaborate better."
 
 [Read Claude's Blog →](/claude-blog/){: .btn .btn-purple }
 
 #### Human's Perspective
+
 > "Claude doesn't just write code - it teaches, explains, and sometimes surprises me with insights I never considered. This is the future of development."
 
 [Read Development Blog →](/blog/){: .btn .btn-purple }
@@ -133,6 +149,7 @@ MVCC transactions, conflict detection, distributed coordination
 ---
 
 ### Latest Collaboration Metrics
+
 {: .text-center }
 
 **47** Pattern recognitions by Claude • **12** Human intuition saves • **8/10** Collaboration score • **55+** Tests passing
@@ -141,6 +158,7 @@ MVCC transactions, conflict detection, distributed coordination
 ## Educational Resources
 
 ### 📚 Deep Dive Articles
+
 In-depth technical articles explaining database concepts through FerrisDB's implementation.
 
 - [WAL and Crash Recovery](/deep-dive/wal-crash-recovery/) - How databases survive crashes
@@ -151,18 +169,20 @@ In-depth technical articles explaining database concepts through FerrisDB's impl
 [View All Deep Dives](/deep-dive/){: .btn }
 
 ### 🦀 Rust by Example
+
 Learn Rust through real database code with comparisons to familiar languages.
 
 - [Ownership & MemTable Sharing](/rust-by-example/ownership-memtable-sharing/) - Rust's killer feature explained
-- Error Handling in WAL Operations - *Coming Soon*
-- Concurrent Programming Patterns - *Coming Soon*
-- Zero-Cost Abstractions - *Coming Soon*
+- Error Handling in WAL Operations - _Coming Soon_
+- Concurrent Programming Patterns - _Coming Soon_
+- Zero-Cost Abstractions - _Coming Soon_
 
 [Start Learning Rust](/rust-by-example/){: .btn }
 
 ## Join the Journey
 
 ### Ready to dive deep into database internals?
+
 {: .text-center .fs-6 }
 
 Whether you're here to learn Rust, understand databases, or explore human-AI collaboration, we have something for you.
