@@ -29,17 +29,20 @@ Watch a CRUD developer learn database internals (with an AI assistant and too mu
 
 <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
 
-<p class="text-purple-300">
-{{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• Day {{ post.day }}{% endif %}
+<p class="text-grey-dk-100 fs-3">
+📅 {{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• 🏗️ Day {{ post.day }}{% endif %}
 </p>
-<p class="text-grey-dk-000 fs-3"></p>
 
 {% if post.subtitle %}
 <p class="text-grey-dk-100">{{ post.subtitle }}</p>
 {% endif %}
 
 {% if post.stats %}
-<p class="label label-blue">{{ post.stats | join: " • " }}</p>
+<p class="text-grey-dk-000">{{ post.stats | join: " • " }}</p>
+{% endif %}
+
+{% if post.confidence %}
+<p class="text-grey-dk-100">☕ <strong>Confidence:</strong> {{ post.confidence }}</p>
 {% endif %}
 
 <p>{{ post.excerpt | strip_html | truncatewords: 40 }}</p>
