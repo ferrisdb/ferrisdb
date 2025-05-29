@@ -30,6 +30,12 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - **Type Aliases**: Use meaningful type aliases for complex generic types
 - **Pattern Matching**: Use exhaustive pattern matching and avoid catch-all `_` patterns when possible
 - **Encapsulation**: Internal implementation details should not be exposed via `pub` or `pub(crate)` unless necessary
+- **Import Organization**: Organize imports in logical groups with blank lines between:
+  1. Local crate imports (`crate::`, `ferrisdb_*::`)
+  2. External crate imports (third-party dependencies)
+  3. Standard library imports (`std::`)
+  4. Test-only imports with `#[cfg(test)]` at the bottom
+  - Use conditional imports `#[cfg(test)]` for symbols only used in tests to avoid unused import warnings
 
 ### Documentation
 
