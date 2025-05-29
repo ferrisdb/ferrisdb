@@ -97,9 +97,9 @@ impl SSTableReader {
     ///
     /// # Performance
     ///
-    /// Uses binary search to locate the user key range within blocks (O(log n)),
-    /// then linear search within that range for the exact timestamp. This is
-    /// significantly faster than linear search for blocks with many entries.
+    /// Uses binary search based on InternalKey ordering (user_key ASC, timestamp DESC)
+    /// to directly locate the exact key-timestamp combination in O(log n) time.
+    /// This is significantly faster than linear search for blocks with many entries.
     ///
     /// # Arguments
     ///
@@ -119,25 +119,20 @@ impl SSTableReader {
         // Load the block (from cache or disk)
         let entries = self.load_block(block_offset)?;
 
-        // Use binary search to find the range of entries with matching user_key
-        let start_index = entries.partition_point(|entry| entry.key.user_key < *user_key);
+        // Create target key for binary search (Operation doesn't affect ordering)
+        let target_key = InternalKey::new(user_key.clone(), timestamp, ferrisdb_core::Operation::Put);
         
-        // Linear search within the range for exact timestamp match
-        for i in start_index..entries.len() {
-            let entry = &entries[i];
-            
-            // If we've moved past our user_key, stop searching
-            if entry.key.user_key != *user_key {
-                break;
+        // Use binary search to find exact key match
+        match entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
+            Ok(index) => {
+                // Found exact match
+                Ok(Some(entries[index].value.clone()))
             }
-            
-            // Check for exact timestamp match
-            if entry.key.timestamp == timestamp {
-                return Ok(Some(entry.value.clone()));
+            Err(_) => {
+                // No exact match found
+                Ok(None)
             }
         }
-        
-        Ok(None)
     }
 
     /// Finds the latest version of a user key
@@ -147,9 +142,9 @@ impl SSTableReader {
     ///
     /// # Performance
     ///
-    /// Uses binary search to locate the user key range within blocks (O(log n)),
-    /// then linear search within that range to find the latest valid version.
-    /// This hybrid approach is optimal for MVCC workloads.
+    /// Uses binary search to locate the first entry for the user key, then linear
+    /// search through versions (ordered by timestamp DESC) to find the latest
+    /// version within the timestamp limit. This is optimal for MVCC workloads.
     ///
     /// # Arguments
     ///
@@ -173,10 +168,10 @@ impl SSTableReader {
         // Load the block
         let entries = self.load_block(block_offset)?;
 
-        // Use binary search to find the range of entries with matching user_key
+        // Use binary search to find the first entry with matching user_key
         let start_index = entries.partition_point(|entry| entry.key.user_key < *user_key);
         
-        // Linear search within the range for the latest version within timestamp limit
+        // Linear search through versions (timestamp DESC) for the latest valid version
         for i in start_index..entries.len() {
             let entry = &entries[i];
             
