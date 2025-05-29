@@ -164,16 +164,16 @@ impl SSTableWriter {
             }
         }
 
-        // Update metadata
+        // Create entry first to take ownership
+        let entry = SSTableEntry::new(key.clone(), value);
+        let entry_size = entry.serialized_size();
+
+        // Update metadata (only clone when necessary)
         if self.smallest_key.is_none() {
             self.smallest_key = Some(key.clone());
         }
         self.largest_key = Some(key.clone());
-        self.last_key = Some(key.clone());
-
-        // Create entry
-        let entry = SSTableEntry::new(key, value);
-        let entry_size = entry.serialized_size();
+        self.last_key = Some(key);
 
         // Check if we need to flush the current block
         if !self.current_block.is_empty() && self.current_block_size + entry_size > self.block_size
@@ -648,5 +648,25 @@ mod tests {
         let info = writer.finish().unwrap();
         assert_eq!(info.entry_count, count + 1);
         assert!(info.file_size > block_size as u64); // Should have multiple blocks
+    }
+}
+
+#[cfg(test)]
+mod bench_utils {
+    use super::*;
+    use ferrisdb_core::Operation;
+    
+    pub fn create_test_keys(count: usize) -> Vec<(InternalKey, Value)> {
+        (0..count)
+            .map(|i| {
+                let key = InternalKey::new(
+                    format!("key_{:08}", i).into_bytes(),
+                    i as u64,
+                    Operation::Put,
+                );
+                let value = format!("value_{}", i).into_bytes();
+                (key, value)
+            })
+            .collect()
     }
 }
