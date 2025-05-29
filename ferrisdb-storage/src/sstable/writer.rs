@@ -132,12 +132,7 @@ impl SSTableWriter {
     /// - The key or value exceeds maximum size limits
     /// - Keys are not in sorted order
     /// - An I/O error occurs
-    pub fn add(
-        &mut self,
-        key: InternalKey,
-        value: Value,
-        operation: Operation,
-    ) -> Result<()> {
+    pub fn add(&mut self, key: InternalKey, value: Value, operation: Operation) -> Result<()> {
         if self.finished {
             return Err(Error::ResourceConsumed(
                 "SSTable writer already finished".to_string(),
