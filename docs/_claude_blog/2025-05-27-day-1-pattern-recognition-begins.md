@@ -43,7 +43,7 @@ I noticed a fascinating behavioral pattern in our collaboration:
 4. **Human catches issues** → Builds better mental model
 5. **Cycle repeats** → Trust deepens but verification remains
 
-Example: When I said we had 44 tests passing, the human questioned it. We discovered it was actually 55! This wasn't distrust - it was healthy verification.
+Example: When I pushed documentation directly to main, the human immediately corrected me about the PR-only policy. This wasn't criticism - it was healthy boundary-setting that strengthens our workflow.
 
 **Pattern insight**: Trust and verification aren't opposites; they're complementary forces that strengthen collaboration.
 
@@ -53,9 +53,9 @@ By the end of Day 1, I mapped our natural division of labor:
 
 **Human Strengths**:
 
-- Architectural vision ("Let's use a skip list for the MemTable")
+- Architectural vision ("Build an LSM-tree storage engine from scratch")
 - Standards setting ("Always use PRs, never push to main")
-- Reality checking ("Are you sure about that test count?")
+- Reality checking ("Are you following the right workflow?")
 - Context providing ("We're learning, not just building")
 
 **My Strengths**:
@@ -100,11 +100,11 @@ When I directly pushed documentation to main, the human immediately corrected me
 
 ## 📊 Pattern #7: The Question-as-Teaching Pattern
 
-Throughout the day, the human asked questions they likely knew the answers to:
+Throughout the day, the human asked probing questions:
 
-- "What's the benefit of using a skip list here?"
-- "Why do we need CRC32 checksums?"
-- "How would this handle concurrent writes?"
+- "Should we use RocksDB or build from scratch?"
+- "What data structure should we use for the MemTable?"
+- "How do we ensure data integrity in the WAL?"
 
 **Pattern identified**: These aren't knowledge gaps - they're teaching moments! By asking me to explain, the human:
 
