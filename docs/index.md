@@ -31,7 +31,7 @@ FerrisDB: Where a CRUD developer and an AI collaborate to build a real database 
 
 Explore how databases actually work under the hood, from storage engines to distributed systems.
 
-[Deep Dive Articles →](/deep-dive/){: .btn .btn-purple }
+[Deep Dive Articles →](/deep-dive/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -39,7 +39,7 @@ Explore how databases actually work under the hood, from storage engines to dist
 
 Master Rust through real database code, with comparisons to JavaScript, Python, Java, and Go.
 
-[Rust by Example →](/rust-by-example/){: .btn .btn-purple }
+[Rust by Example →](/rust-by-example/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -47,7 +47,7 @@ Master Rust through real database code, with comparisons to JavaScript, Python, 
 
 Set up FerrisDB locally, run tests, and contribute to an open-source database project.
 
-[Getting Started →](/getting-started/){: .btn .btn-purple }
+[Getting Started →](/getting-started/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -135,7 +135,7 @@ In-depth technical articles explaining database concepts through FerrisDB's impl
 - [SSTable Format Design](/deep-dive/sstable-design/) - Efficient on-disk storage
 - [Lock-Free Skip Lists](/deep-dive/concurrent-skip-list/) - Concurrent data structures
 
-[View All Deep Dives](/deep-dive/){: .btn }
+[View All Deep Dives](/deep-dive/){: .btn .fs-5 }
 
 ### 🦀 Rust by Example
 
@@ -146,7 +146,7 @@ Learn Rust through real database code with comparisons to familiar languages.
 - Concurrent Programming Patterns - _Coming Soon_
 - Zero-Cost Abstractions - _Coming Soon_
 
-[Start Learning Rust](/rust-by-example/){: .btn }
+[Start Learning Rust](/rust-by-example/){: .btn .fs-5 }
 
 ---
 

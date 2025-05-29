@@ -357,5 +357,5 @@ After getting familiar with the codebase:
 
 **Ready to start?** Clone the repository and run `cargo test --all` to see everything in action!
 
-[🚀 Clone FerrisDB]({{ site.project.repo_url }}){: .btn .btn-primary}
-[📖 Read Architecture]({{ '/architecture/' | relative_url }}){: .btn .btn-outline}
+[🚀 Clone FerrisDB]({{ site.project.repo_url }}){: .btn .btn-primary .fs-5}
+[📖 Read Architecture]({{ '/architecture/' | relative_url }}){: .btn .btn-outline .fs-5}

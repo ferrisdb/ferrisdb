@@ -45,7 +45,7 @@ Welcome to the most honest database development blog on the internet! This is wh
 
 {{ post.excerpt | strip_html | truncatewords: 40 }}
 
-[Read the adventure →]({{ post.url | relative_url }}){: .btn .btn-sm .btn-purple }
+[Read the adventure →]({{ post.url | relative_url }}){: .btn .btn-purple }
 
 ---
 

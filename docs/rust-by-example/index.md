@@ -62,7 +62,7 @@ Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScri
 
 **Topics:** Ownership, Arc, Memory Management
 
-[Read Article →](/rust-by-example/ownership-memtable-sharing/){: .btn .btn-purple }
+[Read Article →](/rust-by-example/ownership-memtable-sharing/){: .btn .btn-purple .fs-5 }
 
 **Coming Soon:**
 

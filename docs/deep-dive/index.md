@@ -38,7 +38,7 @@ Understand how Write-Ahead Logs ensure data durability and enable crash recovery
 
 **Topics:** Durability, Recovery, WAL
 
-[Read Article →](/deep-dive/wal-crash-recovery/){: .btn .btn-purple }
+[Read Article →](/deep-dive/wal-crash-recovery/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -51,7 +51,7 @@ Discover why LSM-trees revolutionized write performance in modern databases. Exp
 
 **Topics:** LSM-Trees, MemTable, Compaction
 
-[Read Article →](/deep-dive/lsm-trees/){: .btn .btn-purple }
+[Read Article →](/deep-dive/lsm-trees/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -64,7 +64,7 @@ Deep dive into efficient on-disk storage formats. Learn how FerrisDB organizes d
 
 **Topics:** Storage Format, Binary Search, Checksums
 
-[Read Article →](/deep-dive/sstable-design/){: .btn .btn-purple }
+[Read Article →](/deep-dive/sstable-design/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -77,7 +77,7 @@ Explore concurrent data structures that power FerrisDB's MemTable. Understanding
 
 **Topics:** Concurrency, Skip Lists, Lock-Free
 
-[Read Article →](/deep-dive/concurrent-skip-list/){: .btn .btn-purple }
+[Read Article →](/deep-dive/concurrent-skip-list/){: .btn .btn-purple .fs-5 }
 
 ---
 
