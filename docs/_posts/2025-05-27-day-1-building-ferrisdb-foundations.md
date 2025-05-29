@@ -24,13 +24,14 @@ The duck said nothing. It knew what was coming.
 
 Look, I've been a CRUD developer for years. `SELECT * FROM users WHERE id = ?` is basically my native language. But last week, I read about LSM-trees and thought, "How hard could it be?"
 
-*Narrator: It was, in fact, quite hard.*
+_Narrator: It was, in fact, quite hard._
 
 ## The Brilliant Plan (Coffee #2)
 
 "I'll build a distributed database from scratch!" I told myself. "Learn Rust and distributed systems at the same time! What could go wrong?"
 
 **My qualifications:**
+
 - Can write SQL queries ✅
 - Once successfully used Redis ✅
 - Watched a YouTube video about Raft consensus ✅
@@ -42,19 +43,19 @@ I decided to call it **FerrisDB** (after Ferris, the Rust crab, who would soon b
 
 ## Enter Claude: My AI Pair Programming Buddy
 
-*Me:* "Hey Claude, I want to build a distributed database. From scratch. In Rust. Which I've never used."
+_Me:_ "Hey Claude, I want to build a distributed database. From scratch. In Rust. Which I've never used."
 
-*Claude:* "..."
+_Claude:_ "..."
 
-*Me:* "Claude?"
+_Me:_ "Claude?"
 
-*Claude:* "Let's start with architecture design. Have you considered—"
+_Claude:_ "Let's start with architecture design. Have you considered—"
 
-*Me:* "WAIT. I already drew a diagram!" *shares napkin sketch*
+_Me:_ "WAIT. I already drew a diagram!" _shares napkin sketch_
 
-*Claude:* "That's... a box labeled 'database magic happens here'."
+_Claude:_ "That's... a box labeled 'database magic happens here'."
 
-*Me:* "Yes! The architecture!"
+_Me:_ "Yes! The architecture!"
 
 ## The Real Architecture (Coffee #3-5)
 
@@ -67,9 +68,9 @@ After Claude gently suggested we might need more than one box, we designed a pro
 
 ## The Rust Workspace Adventure
 
-*Me:* "I'll just create a simple Rust project..."
+_Me:_ "I'll just create a simple Rust project..."
 
-*Rust:* "Best I can do is 5 crates, a workspace, and 73 lifetime errors."
+_Rust:_ "Best I can do is 5 crates, a workspace, and 73 lifetime errors."
 
 ```
 ferrisdb/
@@ -80,27 +81,27 @@ ferrisdb/
 └── ferrisdb/            # I honestly forgot what this one does
 ```
 
-*Compilation attempt #1:* 126 errors
+_Compilation attempt #1:_ 126 errors
 
-*Me:* "Claude, why does Rust hate me?"
+_Me:_ "Claude, why does Rust hate me?"
 
-*Claude:* "It's not hate. It's tough love. Let's talk about borrowing..."
+_Claude:_ "It's not hate. It's tough love. Let's talk about borrowing..."
 
 ## Building a Storage Engine (Coffee #6-8)
 
-*Me:* "Let's use RocksDB!"
+_Me:_ "Let's use RocksDB!"
 
-*Claude:* "That would be sensible. But don't you want to understand how it works?"
+_Claude:_ "That would be sensible. But don't you want to understand how it works?"
 
-*Me:* "..."
+_Me:_ "..."
 
-*Claude:* "Let's build an LSM-tree from scratch!"
+_Claude:_ "Let's build an LSM-tree from scratch!"
 
-*Me:* "LSM? Like... Least Squares Method?"
+_Me:_ "LSM? Like... Least Squares Method?"
 
-*Claude:* "Log-Structured Merge-tree."
+_Claude:_ "Log-Structured Merge-tree."
 
-*Me:* "Right. That's what I meant."
+_Me:_ "Right. That's what I meant."
 
 ### The Grand Design (As Explained by Claude While I Nodded)
 
@@ -113,6 +114,7 @@ Read Path:  Read Request → MemTable → SSTable (L0 → L1 → L2...)
 ```
 
 **The Components I Pretended to Understand:**
+
 - **WAL** - "Write-Ahead Log" (not "Wow, Another Log")
 - **MemTable** - The speedy in-memory thing
 - **SSTables** - Files that sound like database tables but aren't
@@ -120,11 +122,11 @@ Read Path:  Read Request → MemTable → SSTable (L0 → L1 → L2...)
 
 ## WAL: My First Victory (Coffee #9)
 
-*Compilation attempt #23:* "Cannot borrow `self` as mutable because it is also borrowed as immutable"
+_Compilation attempt #23:_ "Cannot borrow `self` as mutable because it is also borrowed as immutable"
 
-*Me:* "Claude, I'm borrowing myself. Is this an existential crisis?"
+_Me:_ "Claude, I'm borrowing myself. Is this an existential crisis?"
 
-*Claude:* "Let's focus on the Write-Ahead Log first."
+_Claude:_ "Let's focus on the Write-Ahead Log first."
 
 After Claude explained that WAL wasn't a misspelling of WALL, we built this:
 
@@ -137,34 +139,35 @@ pub struct WALEntry {
 }
 ```
 
-*Me:* "Why do we need a log before writing data?"
+_Me:_ "Why do we need a log before writing data?"
 
-*Claude:* "What happens if the power goes out mid-write?"
+_Claude:_ "What happens if the power goes out mid-write?"
 
-*Me:* "The user gets angry?"
+_Me:_ "The user gets angry?"
 
-*Claude:* "Yes, but also data corruption."
+_Claude:_ "Yes, but also data corruption."
 
-*Me:* "Oh. OH. The log is like a safety net!"
+_Me:_ "Oh. OH. The log is like a safety net!"
 
 **Features I Actually Understood:**
+
 - Binary encoding (computers like binary, apparently)
 - CRC32 checksums (magic corruption-detection numbers)
 - Atomic writes (all-or-nothing, like my cooking)
 
 ## The Skip List Saga (Coffee #10-12)
 
-*Me:* "What's a skip list?"
+_Me:_ "What's a skip list?"
 
-*Claude:* "Imagine a linked list with express lanes."
+_Claude:_ "Imagine a linked list with express lanes."
 
-*Me:* "Like a highway?"
+_Me:_ "Like a highway?"
 
-*Claude:* "More like a subway with express stops."
+_Claude:_ "More like a subway with express stops."
 
-*Me:* "So... a skipway?"
+_Me:_ "So... a skipway?"
 
-*Claude:* "Let's just implement it."
+_Claude:_ "Let's just implement it."
 
 ```rust
 pub struct MemTable {
@@ -174,13 +177,13 @@ pub struct MemTable {
 }
 ```
 
-*Compilation attempt #38:* Success!
+_Compilation attempt #38:_ Success!
 
-*Me:* "IT COMPILED! I'M A SYSTEMS PROGRAMMER!"
+_Me:_ "IT COMPILED! I'M A SYSTEMS PROGRAMMER!"
 
-*Claude:* "Now let's make it concurrent."
+_Claude:_ "Now let's make it concurrent."
 
-*Me:* "The what now?"
+_Me:_ "The what now?"
 
 ### Making It Thread-Safe (Coffee #13-15)
 
@@ -194,65 +197,66 @@ Turns out "lock-free" doesn't mean "free locks at the hardware store." Claude pa
 
 ### The Endianness Incident (Coffee #16)
 
-*Test failure:* "Expected 42, got 704643072"
+_Test failure:_ "Expected 42, got 704643072"
 
-*Me:* "Claude, my database is doing math wrong."
+_Me:_ "Claude, my database is doing math wrong."
 
-*Claude:* "That's 42 in big-endian read as little-endian."
+_Claude:_ "That's 42 in big-endian read as little-endian."
 
-*Me:* "English, please?"
+_Me:_ "English, please?"
 
-*Claude:* "You're reading the number backwards."
+_Claude:_ "You're reading the number backwards."
 
-*Me:* "OH. Like reading manga?"
+_Me:_ "OH. Like reading manga?"
 
-*Claude:* "...sure. Like reading manga."
+_Claude:_ "...sure. Like reading manga."
 
 ### The MVCC Mystery (Coffee #17-18)
 
-*Me:* "Why do we need timestamps on everything?"
+_Me:_ "Why do we need timestamps on everything?"
 
-*Claude:* "So we can have multiple versions of the same key."
+_Claude:_ "So we can have multiple versions of the same key."
 
-*Me:* "Why would we want that?"
+_Me:_ "Why would we want that?"
 
-*Claude:* "What if two people update the same record?"
+_Claude:_ "What if two people update the same record?"
 
-*Me:* "The last one wins?"
+_Me:_ "The last one wins?"
 
-*Claude:* "What if they need to see different versions?"
+_Claude:_ "What if they need to see different versions?"
 
-*My brain:* *dial-up modem noises*
+_My brain:_ _dial-up modem noises_
 
 ### Lock-Free Programming (Coffee #19-20)
 
-*Me:* "I removed all the locks! It's lock-free now!"
+_Me:_ "I removed all the locks! It's lock-free now!"
 
-*Claude:* "That's not what lock-free means."
+_Claude:_ "That's not what lock-free means."
 
-*Test output:* "Segmentation fault"
+_Test output:_ "Segmentation fault"
 
-*Me:* "Why is it segfaulting?"
+_Me:_ "Why is it segfaulting?"
 
-*Claude:* "Remember when you removed all the locks?"
+_Claude:_ "Remember when you removed all the locks?"
 
-*Me:* "...oh."
+_Me:_ "...oh."
 
 ## Making It Production-Ready™ (Coffee #21)
 
-*Claude:* "Let's add documentation."
+_Claude:_ "Let's add documentation."
 
-*Me:* "The code is self-documenting!"
+_Me:_ "The code is self-documenting!"
 
-*Claude:* "What does `xlmr_2` mean?"
+_Claude:_ "What does `xlmr_2` mean?"
 
-*Me:* "eXtra... Large... Memory... Region... 2?"
+_Me:_ "eXtra... Large... Memory... Region... 2?"
 
-*Claude:* "..."
+_Claude:_ "..."
 
-*Me:* "Okay, we'll add docs."
+_Me:_ "Okay, we'll add docs."
 
 **The Quality Checklist:**
+
 - ✅ Documentation (Claude made me)
 - ✅ 13 tests passing (only took 47 tries)
 - ✅ Error handling (no more `unwrap()` everywhere)
@@ -262,11 +266,13 @@ Turns out "lock-free" doesn't mean "free locks at the hardware store." Claude pa
 ## What's Next? (Coffee #22, switching to tea)
 
 We have a working WAL and MemTable! I can:
+
 - Write data (it goes somewhere!)
 - Read data (it comes back!)
 - Not crash (mostly!)
 
 **Tomorrow's adventures:**
+
 1. **SSTable Implementation** - Claude says these are "Super Saiyan Tables" (I think he's lying)
 2. **Compaction** - Apparently we need to squish our data sometimes
 3. **Bloom Filters** - Not a coffee filter, sadly
@@ -275,32 +281,34 @@ We have a working WAL and MemTable! I can:
 
 ## Day 1 Lessons: What I Learned (Besides Humility)
 
-### On AI Pair Programming:
+### On AI Pair Programming
 
 **What I expected:** "Claude, build me a database!"
 
-**What actually happened:** 
+**What actually happened:**
+
 - Claude: "Let's understand what we're building first."
 - Me: "But I want to code NOW!"
 - Claude: "What's your data consistency model?"
 - Me: "The... consistent one?"
-- Claude: *patiently explains distributed systems*
-- Me: *takes notes furiously*
+- Claude: _patiently explains distributed systems_
+- Me: _takes notes furiously_
 
-### On Rust:
+### On Rust
 
 **Before:** "How hard can systems programming be?"
 
 **After:** "The borrow checker is both my greatest enemy and my best friend."
 
 **Real conversation:**
+
 - Me: "Why can't I just use the variable?"
 - Claude: "Because you moved it."
 - Me: "I didn't touch my keyboard!"
 - Claude: "...'move' has a specific meaning in Rust."
 - Me: "Oh."
 
-### The Actual Learnings:
+### The Actual Learnings
 
 1. **Rust's ownership model** is like a strict parent - annoying but keeps you safe
 2. **Type systems** catch bugs I didn't even know I was writing
@@ -310,6 +318,7 @@ We have a working WAL and MemTable! I can:
 ## The Unexpected Win
 
 At the end of Day 1, I have:
+
 - A working WAL (still not sure that's the right acronym)
 - A MemTable with a skip list (the subway thing)
 - 13 passing tests (ignore the 34 that didn't pass)
@@ -335,4 +344,4 @@ _This is Day 1 of building FerrisDB with Claude. Follow along as we turn a CRUD 
 **Human status:** Caffeinated, confused, but committed
 **AI status:** Patient, helpful, probably questioning its life choices
 
-*Next episode: "Day 2: The SSTable Strikes Back (And How Claude Saved My Sanity)"*
+_Next episode: "Day 2: The SSTable Strikes Back (And How Claude Saved My Sanity)"_
