@@ -151,6 +151,7 @@ When asked to review a PR, Claude follows this structured approach:
    - Update review status accordingly
 
 6. **Review Style** 🤖
+
    - Always include robot emoji in comments
    - Ask hard questions but be constructive
    - Focus on code quality, performance, and maintainability
@@ -165,29 +166,31 @@ When asked to review a PR, Claude follows this structured approach:
 
 ### Example Review Comments
 
-````markdown
+```text
 🤖 This looks good overall! A few suggestions based on my research:
 
-1. According to the RocksDB implementation, using `Arc<Mutex<T>>` here could cause contention. Consider using a lock-free approach like crossbeam's epoch-based memory reclamation: https://docs.rs/crossbeam-epoch/
+1. According to the RocksDB implementation, using `Arc<Mutex<T>>` here could cause 
+   contention. Consider using a lock-free approach like crossbeam's epoch-based 
+   memory reclamation: https://docs.rs/crossbeam-epoch/
 
-2. The error handling pattern here reminds me of how TiKV handles similar cases. They use a custom error type with context:
+2. The error handling pattern here reminds me of how TiKV handles similar cases. 
+   They use a custom error type with context:
 
-```suggestion
-return Err(StorageError::InvalidChecksum {
-    expected: checksum,
-    actual: calculated,
-    context: format!("Block at offset {}", offset)
-});
-```
-````
+   return Err(StorageError::InvalidChecksum {
+       expected: checksum,
+       actual: calculated,
+       context: format!("Block at offset {}", offset)
+   });
 
-3. I found this excellent article about LSM-tree compaction strategies that might be relevant: [link to article]
+3. I found this excellent article about LSM-tree compaction strategies that might 
+   be relevant: [link to article]
 
 These changes would improve both performance and debugging experience.
 
-### 📊 Review Decision
+📊 Review Decision
 
-**APPROVED** ✅ - The implementation looks solid and follows our patterns well.
+APPROVED ✅ - The implementation looks solid and follows our patterns well.
+```
 
 ## Branch Naming Conventions
 
