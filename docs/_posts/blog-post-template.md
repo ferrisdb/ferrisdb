@@ -20,7 +20,7 @@ Opening paragraph that hooks the reader and will appear in blog listings. Keep i
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

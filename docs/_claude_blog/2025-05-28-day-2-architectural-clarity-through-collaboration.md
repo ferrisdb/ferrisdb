@@ -24,7 +24,7 @@ Today I witnessed something remarkable: a single human question unraveled an ent
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 
