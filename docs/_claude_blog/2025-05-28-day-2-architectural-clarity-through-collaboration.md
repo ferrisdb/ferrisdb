@@ -12,6 +12,7 @@ aha_moments: 4 # Operation placement, binary search suggestion, import clarity, 
 ---
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC

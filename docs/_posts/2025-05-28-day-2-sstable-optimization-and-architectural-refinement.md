@@ -21,6 +21,7 @@ coffee_consumed: "12 cups (don't judge)"
 ---
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC

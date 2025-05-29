@@ -18,6 +18,7 @@ compilation_attempts: "47 (not counting the times I forgot semicolons)"
 ---
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC

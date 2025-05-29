@@ -12,6 +12,7 @@ aha_moments: 3 # PR workflow importance, context shapes everything, trust cycles
 ---
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
