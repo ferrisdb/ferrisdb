@@ -86,6 +86,31 @@ stats: ["📊 X tests passing", "📄 Y PRs merged", "⏱️ Key achievement"]
 ---
 ```
 
+**Gathering Statistics for Blog Posts:**
+
+Before writing a daily blog post, gather accurate statistics:
+
+```bash
+# Count total tests across all crates
+cargo test --all --quiet 2>&1 | grep -E "test result:" | grep -oE "[0-9]+ passed" | awk '{sum += $1} END {print "Total tests: " sum}'
+
+# List technical PRs merged on the day (adjust dates)
+gh pr list --state merged --limit 50 --json number,title,mergedAt | jq -r '.[] | select(.mergedAt >= "2025-05-28T00:00:00Z" and .mergedAt < "2025-05-29T00:00:00Z") | "\(.number) - \(.title)"' | grep -E "(feat:|fix:|refactor:|perf:|test:)"
+
+# Check current branch for recent commits
+git log --oneline --since="1 day ago" --until="now"
+
+# Verify feature completeness
+grep -E "\[x\].*\(Day [0-9]+\)" TODO.md
+```
+
+**Stats Line Format:**
+
+- First stat: Always include test count (e.g., "📊 55 tests passing")
+- Second stat: Number of technical PRs merged (exclude docs-only PRs)
+- Remaining stats: Key technical achievements of the day
+- Be specific with numbers and achievements, not generic
+
 **When to Write Blog Posts:**
 
 - End of each development day (summarizing progress)
