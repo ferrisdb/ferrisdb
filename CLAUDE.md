@@ -79,6 +79,7 @@ Common issues prettier might miss:
 - Use descriptive titles and include practical insights
 - Tag posts with relevant categories for easy discovery
 - Write posts after major features, interesting debugging sessions, or collaboration insights
+- **Templates**: Use `docs/_posts/blog-post-template.md` for human posts, `docs/_claude_blog/blog-post-template.md` for Claude posts
 
 ### Claude's Blog Voice & Guidelines
 
@@ -143,6 +144,13 @@ Metaphor Attempts: 5 ("It's like IKEA furniture!" - still processing this one)
 
 Today I discovered something fascinating about human-AI collaboration: humans don't always say what they mean, and that's actually a feature, not a bug.
 ```
+
+**Using Blog Templates:**
+
+- **Human blog template** (`docs/_posts/blog-post-template.md`): For daily development posts from the human perspective
+- **Claude blog template** (`docs/_claude_blog/blog-post-template.md`): For Claude's pattern-recognition focused posts
+- Templates ensure consistency in structure, metrics, and personality
+- Modify templates as needed but maintain the core personality traits
 
 **Making Blog Posts Engaging (Page-Turner Style):**
 
