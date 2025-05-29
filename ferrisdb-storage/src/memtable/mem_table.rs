@@ -29,7 +29,7 @@ use std::sync::Arc;
 /// multiple components without expensive cloning of the entire data structure.
 pub struct MemTable {
     /// The underlying skip list data structure
-    /// 
+    ///
     /// Uses Arc for shared ownership in LSM-tree scenarios:
     /// - Storage engine keeps immutable MemTables for reads during flush
     /// - Background threads flush MemTable to SSTable
@@ -81,10 +81,11 @@ impl MemTable {
     pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
         let size_estimate = key.len() + value.len() + 64; // 64 bytes overhead estimate
 
-        self.skiplist
-            .insert(key, value, timestamp, Operation::Put);
+        self.skiplist.insert(key, value, timestamp, Operation::Put);
 
-        let new_usage = self.memory_usage.fetch_add(size_estimate, Ordering::Relaxed);
+        let new_usage = self
+            .memory_usage
+            .fetch_add(size_estimate, Ordering::Relaxed);
 
         if new_usage + size_estimate > self.max_size {
             return Err(Error::MemTableFull);
@@ -108,7 +109,9 @@ impl MemTable {
         self.skiplist
             .insert(key, Vec::new(), timestamp, Operation::Delete);
 
-        let new_usage = self.memory_usage.fetch_add(size_estimate, Ordering::Relaxed);
+        let new_usage = self
+            .memory_usage
+            .fetch_add(size_estimate, Ordering::Relaxed);
 
         if new_usage + size_estimate > self.max_size {
             return Err(Error::MemTableFull);
@@ -193,8 +196,12 @@ mod tests {
     fn test_memtable_basic() {
         let memtable = MemTable::new(1024);
 
-        memtable.put(b"key1".to_vec(), b"value1".to_vec(), 1).unwrap();
-        memtable.put(b"key2".to_vec(), b"value2".to_vec(), 2).unwrap();
+        memtable
+            .put(b"key1".to_vec(), b"value1".to_vec(), 1)
+            .unwrap();
+        memtable
+            .put(b"key2".to_vec(), b"value2".to_vec(), 2)
+            .unwrap();
 
         let result = memtable.get(b"key1", 10);
         assert!(result.is_some());
@@ -213,9 +220,15 @@ mod tests {
     fn test_memtable_scan() {
         let memtable = MemTable::new(1024);
 
-        memtable.put(b"key1".to_vec(), b"value1".to_vec(), 1).unwrap();
-        memtable.put(b"key2".to_vec(), b"value2".to_vec(), 2).unwrap();
-        memtable.put(b"key3".to_vec(), b"value3".to_vec(), 3).unwrap();
+        memtable
+            .put(b"key1".to_vec(), b"value1".to_vec(), 1)
+            .unwrap();
+        memtable
+            .put(b"key2".to_vec(), b"value2".to_vec(), 2)
+            .unwrap();
+        memtable
+            .put(b"key3".to_vec(), b"value3".to_vec(), 3)
+            .unwrap();
 
         let results = memtable.scan(b"key1", b"key3", 10);
         assert_eq!(results.len(), 2);
@@ -228,7 +241,9 @@ mod tests {
         let memtable = MemTable::new(100); // Very small limit
 
         // First insert should succeed
-        memtable.put(b"key1".to_vec(), b"value1".to_vec(), 1).unwrap();
+        memtable
+            .put(b"key1".to_vec(), b"value1".to_vec(), 1)
+            .unwrap();
 
         // Eventually we should hit the limit
         let mut insert_count = 1;
