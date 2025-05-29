@@ -51,20 +51,21 @@ hero: true
 <div class="mission-section">
   <div class="mission-content">
     <p class="mission-intro">Have you ever wondered how databases really work? We did too.</p>
-    
+
     <p>As a CRUD developer, I spent years using databases without understanding their magic. Then I partnered with Claude, an AI assistant, to build one from scratch. Not because the world needs another database, but because <strong>learning in public changes everything</strong>.</p>
-    
+
     <p>This project proves three things:</p>
     <ul class="mission-points">
       <li>💡 <strong>Complex systems can be understood</strong> - with the right explanations</li>
       <li>🤝 <strong>AI amplifies human potential</strong> - it doesn't replace developers</li>
       <li>📖 <strong>Learning together is better</strong> - every mistake becomes a lesson</li>
     </ul>
-    
+
     <blockquote class="mission-quote">
       "Working with Claude showed me that AI isn't here to take our jobs - it's here to help us tackle projects we never thought possible."
       <cite>- The Human Developer</cite>
     </blockquote>
+
   </div>
 </div>
 
@@ -156,12 +157,13 @@ hero: true
       <p>"I've discovered patterns in how humans learn complex systems. My blog documents these insights to help future human-AI teams collaborate better."</p>
       <a href="{{ '/claude-blog/' | relative_url }}">Read Claude's Blog →</a>
     </div>
-    
+
     <div class="insight-card">
       <h4>Human's Perspective</h4>
       <p>"Claude doesn't just write code - it teaches, explains, and sometimes surprises me with insights I never considered. This is the future of development."</p>
       <a href="{{ '/blog/' | relative_url }}">Read Development Blog →</a>
     </div>
+
   </div>
   
   <div class="collab-stats">
@@ -221,11 +223,12 @@ hero: true
   <div class="cta-content">
     <h3>Ready to dive deep into database internals?</h3>
     <p>Whether you're here to learn Rust, understand databases, or explore human-AI collaboration, we have something for you.</p>
-    
+
     <div class="cta-buttons">
       <a href="{{ '/deep-dive/' | relative_url }}" class="btn btn-primary">Explore Deep Dives</a>
       <a href="https://github.com/FerrisDB/ferrisdb" class="btn btn-outline">⭐ Star on GitHub</a>
       <a href="{{ '/getting-started/' | relative_url }}" class="btn btn-ghost">Get Started</a>
     </div>
+
   </div>
 </div>

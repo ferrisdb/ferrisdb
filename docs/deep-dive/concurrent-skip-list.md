@@ -17,6 +17,7 @@ Imagine your web application suddenly goes viral. Thousands of users are simulta
 This is the concurrency challenge every modern database faces. In traditional systems, when multiple users try to write data:
 
 **Real-world problems CRUD developers face:**
+
 - **Lock contention**: Users wait in a virtual queue, like a single bathroom at a party
 - **Deadlocks**: Two users waiting for each other, like two cars at a narrow bridge
 - **Slow response times**: Your API endpoints timeout during traffic spikes
@@ -43,17 +44,20 @@ This is like having a single cashier at a busy store - no matter how many custom
 Skip lists are like a subway system for your data:
 
 **Regular linked list** (local train):
+
 ```
 Station1 → Station2 → Station3 → Station4 → Station5
 ```
 
 **Skip list** (express system):
+
 ```
 Express:    Station1 -----------→ Station3 -----------→ Station5
 Local:      Station1 → Station2 → Station3 → Station4 → Station5
 ```
 
 To find Station4:
+
 1. Take express to Station3 (skip Station2)
 2. Switch to local for one stop
 
@@ -63,7 +67,7 @@ This makes finding data much faster - O(log n) instead of O(n).
 
 ```text
 Level 3: HEAD ------------------> 30 -------------------------> NULL
-Level 2: HEAD ------> 10 -------> 30 -------> 50 -------------> NULL  
+Level 2: HEAD ------> 10 -------> 30 -------> 50 -------------> NULL
 Level 1: HEAD -> 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> 60 -------> NULL
 Level 0: HEAD -> 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> 60 -> 70 -> NULL
            ↑                          ↑                      ↑
@@ -71,6 +75,7 @@ Level 0: HEAD -> 5 -> 10 -> 20 -> 30 -> 40 -> 50 -> 60 -> 70 -> NULL
 ```
 
 **Key principles:**
+
 1. **Multiple levels**: Express lanes for faster traversal
 2. **Probabilistic structure**: Randomly decide how many levels each node gets
 3. **Lock-free reads**: Multiple threads can search simultaneously
@@ -86,7 +91,7 @@ Let's examine FerrisDB's concurrent skip list implementation:
 pub struct SkipList {
     /// Sentinel head node
     head: Atomic<Node>,
-    /// Current height of the skip list  
+    /// Current height of the skip list
     height: AtomicUsize,
     /// Number of entries in the skip list
     size: AtomicUsize,
@@ -104,6 +109,7 @@ struct Node {
 ```
 
 **Key design decisions:**
+
 1. **Atomic pointers**: Enable lock-free operations using atomic CPU instructions
 2. **Epoch-based reclamation**: Safely free memory without locks
 3. **Height randomization**: Maintains balance probabilistically (no rebalancing needed)
@@ -118,16 +124,16 @@ The beauty of skip lists is that searches never need locks:
 // ferrisdb-storage/src/memtable/skip_list.rs:326-354
 pub fn get(&self, user_key: &[u8], timestamp: Timestamp) -> Option<(Value, Operation)> {
     let guard = &epoch::pin();  // Memory safety guard
-    
+
     // Start from highest level and work down
     let mut current = self.head.load(Ordering::Acquire, guard);
-    
+
     // Search each level from top to bottom
     for level in (0..self.height.load(Ordering::Acquire)).rev() {
         // Move forward on current level while key is smaller
         while let Some(node) = unsafe { current.as_ref() } {
             let next = node.next[level].load(Ordering::Acquire, guard);
-            
+
             if let Some(next_node) = unsafe { next.as_ref() } {
                 if next_node.key.user_key < user_key {
                     current = next;  // Keep going on this level
@@ -137,18 +143,20 @@ pub fn get(&self, user_key: &[u8], timestamp: Timestamp) -> Option<(Value, Opera
             }
         }
     }
-    
+
     // Now we're at the right position - check for exact match
     // ... (version checking logic)
 }
 ```
 
 **How it works:**
+
 1. **No locks needed**: Just reading pointers atomically
 2. **Top-down search**: Like taking express trains first
 3. **Multiple readers**: Thousands of threads can search simultaneously
 
 **Performance characteristics:**
+
 - **Time complexity**: O(log n) average case for all operations
 - **Space complexity**: O(n) with small constant factor (~1.33)
 - **Concurrency**: Lock-free reads, fine-grained locking for writes
@@ -162,26 +170,26 @@ Insertions are more complex but still allow high concurrency:
 pub fn insert(&self, user_key: Key, value: Value, timestamp: Timestamp, operation: Operation) {
     let guard = &epoch::pin();
     let key = InternalKey::new(user_key, timestamp, operation);
-    
+
     // 1. Randomly determine height (like flipping coins)
     let height = self.random_height();
-    
+
     // 2. Find insertion position at each level
     let mut preds: Vec<Shared<Node>> = vec![Shared::null(); height];
     let mut succs: Vec<Shared<Node>> = vec![Shared::null(); height];
-    
+
     self.find(&key, &mut preds, &mut succs, guard);
-    
+
     // 3. Create new node
     let new_node = Owned::new(Node::new(key, value, height));
-    
+
     // 4. Link the node (bottom-up for correctness)
     // First link at level 0, then work up
     let new_node_shared = new_node.into_shared(guard);
-    
+
     // Compare-and-swap at level 0
     match preds[0].next[0].compare_exchange(
-        succs[0], 
+        succs[0],
         new_node_shared,
         Ordering::Release,
         guard
@@ -200,6 +208,7 @@ pub fn insert(&self, user_key: Key, value: Value, timestamp: Timestamp, operatio
 ```
 
 **Why this works well:**
+
 1. **Optimistic concurrency**: Try to insert, retry only on conflict
 2. **Bottom-up linking**: Ensures consistency even with concurrent operations
 3. **Compare-and-swap**: Atomic operation prevents race conditions
@@ -209,11 +218,13 @@ pub fn insert(&self, user_key: Key, value: Value, timestamp: Timestamp, operatio
 ### Mathematical Analysis
 
 **Skip List Properties:**
+
 - **Average height**: 1/(1-p) where p = probability of going up (typically 0.25)
 - **Expected search time**: O(log n) with high probability
 - **Space overhead**: Average 1.33 pointers per node (vs 2 for balanced trees)
 
 **Concurrency Benefits:**
+
 - **Read parallelism**: Unlimited concurrent readers
 - **Write parallelism**: Conflicts only for same key insertions
 - **No global locks**: Fine-grained synchronization
@@ -221,18 +232,21 @@ pub fn insert(&self, user_key: Key, value: Value, timestamp: Timestamp, operatio
 ### Trade-off Analysis
 
 **Advantages:**
+
 - ✅ **Lock-free reads**: Perfect scaling for read-heavy workloads
 - ✅ **Simple implementation**: Easier than lock-free B-trees
 - ✅ **No rebalancing**: Probabilistic balance means no complex rotations
 - ✅ **Cache-friendly**: Sequential memory access patterns
 
 **Disadvantages:**
+
 - ⚠️ **Probabilistic guarantees**: Worst case O(n) is possible (but extremely rare)
 - ⚠️ **Memory overhead**: Extra pointers for skip list levels
 - ⚠️ **Complex memory management**: Epoch-based reclamation adds complexity
 - ⚠️ **Non-deterministic**: Random heights mean unpredictable structure
 
 **When to use alternatives:**
+
 - **Deterministic performance needed**: Use B-trees or AVL trees
 - **Memory constrained**: Simple sorted arrays might be better
 - **Single-threaded**: No need for concurrency complexity
@@ -257,6 +271,7 @@ unsafe { guard.defer_destroy(old_node); }
 ```
 
 **How epochs work:**
+
 1. **Global epoch counter**: Advances periodically
 2. **Thread pinning**: Each thread declares which epoch it's in
 3. **Safe deletion**: Memory freed only when all threads advance
@@ -277,6 +292,7 @@ next[0].compare_exchange(old, new, Ordering::Release, Ordering::Acquire, guard)
 ```
 
 **Why ordering matters:**
+
 - **Prevents reordering**: CPU can't optimize away safety
 - **Establishes happens-before**: Ensures correct visibility across threads
 - **Minimal overhead**: Only as strong as necessary
@@ -286,6 +302,7 @@ next[0].compare_exchange(old, new, Ordering::Release, Ordering::Acquire, guard)
 ### Try It Yourself
 
 **Exercise 1**: Benchmark concurrent performance
+
 ```rust
 use std::sync::Arc;
 use std::thread;
@@ -294,7 +311,7 @@ use std::time::Instant;
 fn benchmark_concurrent_writes(num_threads: usize) {
     let skiplist = Arc::new(SkipList::new());
     let start = Instant::now();
-    
+
     let handles: Vec<_> = (0..num_threads)
         .map(|thread_id| {
             let skiplist = skiplist.clone();
@@ -311,11 +328,11 @@ fn benchmark_concurrent_writes(num_threads: usize) {
             })
         })
         .collect();
-    
+
     for handle in handles {
         handle.join().unwrap();
     }
-    
+
     println!("Time with {} threads: {:?}", num_threads, start.elapsed());
     println!("Total entries: {}", skiplist.size());
 }
@@ -324,6 +341,7 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ```
 
 **Exercise 2**: Observe memory ordering effects
+
 ```rust
 // Try changing Ordering::Acquire to Ordering::Relaxed
 // What happens? Why?
@@ -332,11 +350,13 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ### Debugging & Observability
 
 **Key metrics to watch:**
+
 - **Skip list height**: Average and maximum heights
 - **Operation latency**: p50, p95, p99 percentiles
 - **Conflict rate**: How often compare-and-swap fails
 
 **Debugging techniques:**
+
 - **Linearizability testing**: Verify operations appear atomic
 - **Thread sanitizer**: Detect data races
 - **Performance profiling**: Find contention hotspots
@@ -346,6 +366,7 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ### Industry Comparison
 
 **How other databases handle concurrent data structures:**
+
 - **Redis**: Single-threaded, no concurrency issues
 - **PostgreSQL**: MVCC with row-level locking
 - **CockroachDB**: Lock-free B-trees with epoch reclamation
@@ -354,6 +375,7 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ### Historical Evolution
 
 **Timeline:**
+
 - **1990**: Skip lists invented by William Pugh
 - **2001**: First lock-free skip list algorithms
 - **2011**: Java's ConcurrentSkipListMap mainstream adoption
@@ -364,10 +386,12 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ### Implementation Pitfalls
 
 1. **ABA problem**:
+
    - **Problem**: Pointer changes from A→B→A, appears unchanged
    - **Solution**: Epoch-based reclamation prevents reuse
 
 2. **Memory ordering bugs**:
+
    - **Problem**: Using Relaxed ordering incorrectly
    - **Solution**: Start with SeqCst, optimize carefully
 
@@ -378,6 +402,7 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ### Production Considerations
 
 **Operational concerns:**
+
 - **Memory usage monitoring**: Track skip list height distribution
 - **Performance variance**: Monitor p99 latencies for outliers
 - **Memory reclamation**: Ensure epochs advance regularly
@@ -400,18 +425,22 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 ## Further Reading & References
 
 ### Related FerrisDB Articles
+
 - [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): Where skip lists fit in the architecture
 - [Ownership & Sharing: MemTable Lifecycle](/rust-by-example/ownership-memtable-sharing/): Rust's memory model in practice
 
 ### Academic Papers
+
 - "Skip Lists: A Probabilistic Alternative to Balanced Trees" (Pugh, 1990): Original skip list paper
 - "A Pragmatic Implementation of Non-Blocking Linked-Lists" (Harris, 2001): Lock-free techniques
 
 ### Industry Resources
+
 - [Java ConcurrentSkipListMap](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentSkipListMap.html): Production implementation
 - [Crossbeam Epoch](https://docs.rs/crossbeam-epoch/): Rust's epoch-based reclamation
 
 ### FerrisDB Code Exploration
+
 - **Skip list implementation**: `ferrisdb-storage/src/memtable/skip_list.rs` - Complete implementation
 - **MemTable wrapper**: `ferrisdb-storage/src/memtable/mod.rs` - How skip list is used
 - **Tests**: `ferrisdb-storage/src/memtable/skip_list.rs#[cfg(test)]` - Usage examples
@@ -433,6 +462,6 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 ---
 
-*Last updated: May 29, 2025*
-*Estimated reading time: 20 minutes*
-*Difficulty: Intermediate*
+_Last updated: May 29, 2025_
+_Estimated reading time: 20 minutes_
+_Difficulty: Intermediate_

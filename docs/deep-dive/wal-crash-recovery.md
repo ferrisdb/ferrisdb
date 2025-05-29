@@ -17,12 +17,14 @@ Imagine you're running an e-commerce website. A customer completes their order, 
 This is the fundamental durability problem that every database must solve. Without proper crash recovery, you risk:
 
 **Real-world nightmares for CRUD developers:**
+
 - **Lost transactions**: Customer paid but order disappeared
 - **Inconsistent data**: Half-completed updates that corrupt your database
 - **Angry users**: "I know I updated my profile, where did my changes go?"
 - **Business impact**: Lost sales, refunds, and damaged reputation
 
 The problem is that computers use two types of storage:
+
 1. **RAM (Memory)**: Super fast but disappears when power is lost
 2. **Disk (Storage)**: Slower but survives power loss
 
@@ -53,6 +55,7 @@ User Request → WAL (Disk) → MemTable (RAM) → SSTable (Disk)
 ```
 
 **Key principles:**
+
 1. **Write-ahead**: Log first, update data structures second
 2. **Sequential writes**: Appending to log is fast (like writing in a journal)
 3. **Recovery guarantee**: Can rebuild state from log after crash
@@ -89,6 +92,7 @@ impl WALEntry {
 ```
 
 **Key design decisions:**
+
 1. **Self-contained entries**: Each entry has all information needed to replay the operation
 2. **Timestamp tracking**: Essential for maintaining operation order during recovery
 3. **Operation types**: Distinguish between insertions and deletions
@@ -108,12 +112,14 @@ FerrisDB stores WAL entries in a compact binary format:
 ```
 
 **How it works:**
+
 1. **Length prefix**: Allows skipping corrupted entries during recovery
 2. **CRC32 checksum**: Detects corruption from partial writes or disk errors
 3. **Fixed-size headers**: Enables efficient parsing without scanning entire entry
 4. **Variable-length data**: Space-efficient for different key/value sizes
 
 **Why this matters:**
+
 - **Corruption detection**: CRC32 catches 99.99% of random bit flips
 - **Partial write handling**: Length prefix lets us skip incomplete entries
 - **Fast recovery**: Can quickly scan through log without parsing every byte
@@ -129,23 +135,24 @@ pub fn write_entry(&mut self, entry: &WALEntry) -> Result<()> {
     let encoded = entry.encode()?;
     let length = encoded.len() as u32;
     let crc = crc32::checksum(&encoded);
-    
+
     // 2. Write to OS buffer
     self.file.write_all(&length.to_le_bytes())?;
     self.file.write_all(&crc.to_le_bytes())?;
     self.file.write_all(&encoded)?;
-    
+
     // 3. Force to disk (this is the critical step!)
     self.file.sync_all()?;
-    
+
     // 4. Update position for next write
     self.position += HEADER_SIZE + encoded.len();
-    
+
     Ok(())
 }
 ```
 
 **Performance characteristics:**
+
 - **Time complexity**: O(1) - just appending to end of file
 - **I/O pattern**: Sequential writes (100x faster than random writes on HDD)
 - **Sync overhead**: `sync_all()` ensures durability but adds latency
@@ -155,11 +162,13 @@ pub fn write_entry(&mut self, entry: &WALEntry) -> Result<()> {
 ### Mathematical Analysis
 
 **Write performance comparison:**
+
 - **Without WAL**: Random I/O to update data = O(log n) disk seeks
 - **With WAL**: Sequential append = O(1) disk operation
 - **Recovery time**: O(n) where n = number of operations since last checkpoint
 
 **Durability vs Performance trade-off:**
+
 - **Full sync mode**: Every operation calls `fsync()` - slowest but safest
 - **Periodic sync**: Batch multiple operations - faster but small data loss window
 - **No sync**: OS handles flushing - fastest but risky
@@ -167,18 +176,21 @@ pub fn write_entry(&mut self, entry: &WALEntry) -> Result<()> {
 ### Trade-off Analysis
 
 **Advantages:**
+
 - ✅ **Guaranteed durability**: Data survives crashes once written to WAL
 - ✅ **Fast writes**: Sequential I/O is much faster than random I/O
 - ✅ **Simple recovery**: Just replay the log from last checkpoint
 - ✅ **Corruption detection**: CRC checksums catch disk errors
 
 **Disadvantages:**
+
 - ⚠️ **Write amplification**: Data written twice (WAL + actual storage)
 - ⚠️ **Recovery time**: Large logs take time to replay
 - ⚠️ **Disk space**: Need space for both WAL and data files
 - ⚠️ **Sync overhead**: `fsync()` calls can limit throughput
 
 **When to use alternatives:**
+
 - **In-memory only**: If data loss is acceptable (caches, sessions)
 - **Batch processing**: Can reconstruct from source data
 - **Read-only systems**: No writes means no need for WAL
@@ -194,18 +206,19 @@ WAL files can't grow forever. FerrisDB implements truncation:
 pub fn checkpoint(&mut self) -> Result<()> {
     // 1. Ensure all MemTable data is flushed to SSTables
     self.storage_engine.flush_all_memtables()?;
-    
+
     // 2. Record checkpoint position
     let checkpoint_pos = self.current_position;
-    
+
     // 3. Truncate WAL up to checkpoint
     self.truncate_before(checkpoint_pos)?;
-    
+
     Ok(())
 }
 ```
 
 **Checkpoint strategies:**
+
 - **Size-based**: Checkpoint when WAL reaches certain size
 - **Time-based**: Checkpoint every N minutes
 - **Operation-based**: Checkpoint every N operations
@@ -221,10 +234,10 @@ pub fn group_commit(&mut self, entries: Vec<WALEntry>) -> Result<()> {
     for entry in entries {
         self.write_to_buffer(entry)?;
     }
-    
+
     // Single fsync for entire batch
     self.file.sync_all()?;
-    
+
     Ok(())
 }
 ```
@@ -236,6 +249,7 @@ This reduces the number of expensive `fsync()` calls while maintaining durabilit
 ### Try It Yourself
 
 **Exercise 1**: Understanding fsync impact
+
 ```rust
 // Compare performance with and without fsync
 use std::fs::OpenOptions;
@@ -248,7 +262,7 @@ fn benchmark_wal_writes() {
         .write(true)
         .open("test.wal")
         .unwrap();
-    
+
     // Test with fsync
     let start = Instant::now();
     for i in 0..100 {
@@ -256,7 +270,7 @@ fn benchmark_wal_writes() {
         file.sync_all().unwrap(); // Force to disk
     }
     println!("With fsync: {:?}", start.elapsed());
-    
+
     // Test without fsync
     let start = Instant::now();
     for i in 0..100 {
@@ -268,6 +282,7 @@ fn benchmark_wal_writes() {
 ```
 
 **Exercise 2**: Crash recovery simulation
+
 ```bash
 # Start a write workload
 cargo run --example wal_writer -- --entries 1000 &
@@ -282,11 +297,13 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ### Debugging & Observability
 
 **Key metrics to watch:**
+
 - **WAL size**: Monitor growth rate and truncation frequency
 - **Sync latency**: Time spent in `fsync()` calls
 - **Recovery duration**: Time to replay WAL after crash
 
 **Debugging techniques:**
+
 - **WAL inspection**: `cargo run --bin wal-dump` to examine entries
 - **Corruption detection**: Look for CRC mismatches in logs
 - **Performance profiling**: Measure time spent in WAL operations
@@ -296,6 +313,7 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ### Industry Comparison
 
 **How other databases handle WAL:**
+
 - **PostgreSQL**: Uses WAL with configurable sync levels
 - **MySQL (InnoDB)**: Redo log with group commit optimization
 - **SQLite**: Rollback journal or WAL mode options
@@ -304,6 +322,7 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ### Historical Evolution
 
 **Timeline:**
+
 - **1992**: ARIES paper establishes WAL principles
 - **2004**: SQLite adds WAL mode for better concurrency
 - **2010**: NoSQL databases adopt WAL for durability
@@ -314,10 +333,12 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ### Implementation Pitfalls
 
 1. **Forgetting to sync**:
+
    - **Problem**: Data in OS buffer not on disk
    - **Solution**: Always call `fsync()` for durability
 
 2. **Corrupted WAL handling**:
+
    - **Problem**: Single bit flip makes entry unreadable
    - **Solution**: CRC checksums and length prefixes
 
@@ -328,6 +349,7 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ### Production Considerations
 
 **Operational concerns:**
+
 - **Disk monitoring**: WAL can fill disk quickly under high load
 - **Sync tuning**: Balance durability vs performance for your use case
 - **Backup strategy**: Include WAL in backups for point-in-time recovery
@@ -350,18 +372,22 @@ cargo run --example wal_recovery -- --recover-from test.wal
 ## Further Reading & References
 
 ### Related FerrisDB Articles
+
 - [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): How WAL fits into the larger storage architecture
 - [SSTable Format Design](/deep-dive/sstable-design/): Where flushed WAL data eventually lands
 
 ### Academic Papers
+
 - "ARIES: A Transaction Recovery Method" (Mohan et al., 1992): Foundational WAL concepts
 - "aLSM: Redesigning LSMs for Nonvolatile Memory" (Eisenman et al., 2018): Modern WAL adaptations
 
 ### Industry Resources
+
 - [PostgreSQL WAL Documentation](https://www.postgresql.org/docs/current/wal-intro.html): Production WAL implementation
 - [etcd WAL Package](https://github.com/etcd-io/etcd/tree/main/server/wal): Go implementation example
 
 ### FerrisDB Code Exploration
+
 - **WAL Writer**: `ferrisdb-storage/src/wal/writer.rs` - Core write logic
 - **WAL Reader**: `ferrisdb-storage/src/wal/reader.rs` - Recovery implementation
 - **Binary Format**: `ferrisdb-storage/src/wal/log_entry.rs` - Entry encoding/decoding
@@ -384,6 +410,6 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 ---
 
-*Last updated: May 29, 2025*
-*Estimated reading time: 15 minutes*
-*Difficulty: Beginner*
+_Last updated: May 29, 2025_
+_Estimated reading time: 15 minutes_
+_Difficulty: Beginner_

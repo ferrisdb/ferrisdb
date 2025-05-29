@@ -11,7 +11,7 @@ rust_concepts: [ownership, borrowing, traits, error-handling, etc]
 target_languages: [javascript, python, java, go]
 ---
 
-<!-- 
+<!--
 ARTICLE TEMPLATE: Rust by Example - Database Edition
 
 This template ensures consistency across all comparison articles.
@@ -23,12 +23,12 @@ GOAL: Help them understand Rust through real FerrisDB code examples
 
 ## The Problem We're Solving
 
-<!-- 
+<!--
 Explain WHAT we're trying to accomplish in FerrisDB with this code.
 Use simple, concrete terms that any programmer would understand.
 Focus on the business/technical requirement, not the implementation.
 
-Example: "We need to store key-value pairs in memory and ensure multiple threads 
+Example: "We need to store key-value pairs in memory and ensure multiple threads
 can read and write safely without corrupting data."
 -->
 
@@ -36,7 +36,7 @@ can read and write safely without corrupting data."
 
 ## The Rust Solution
 
-<!-- 
+<!--
 Show the actual Rust code from FerrisDB with clear explanations.
 Break down each part for someone who's never seen Rust.
 Explain WHY Rust does things this way.
@@ -58,6 +58,7 @@ Let's look at how FerrisDB handles this in Rust:
 3. **[Concept 3]**: [Connect to the business problem]
 
 **Key Rust Concepts:**
+
 - **[Feature]**: [Simple explanation]
 - **[Feature]**: [Why it matters for this use case]
 
@@ -71,6 +72,7 @@ Let's look at how FerrisDB handles this in Rust:
 ```
 
 **Key Differences:**
+
 - ✅ **Simpler syntax**: [Explain what's easier]
 - ⚠️ **Runtime safety**: [Explain what can go wrong]
 - 🤔 **Performance**: [Memory usage, garbage collection, etc]
@@ -83,6 +85,7 @@ Let's look at how FerrisDB handles this in Rust:
 ```
 
 **Key Differences:**
+
 - ✅ **Readability**: [What makes Python more readable]
 - ⚠️ **Performance**: [Speed/memory concerns]
 - 🤔 **Concurrency**: [GIL limitations, threading issues]
@@ -95,6 +98,7 @@ Let's look at how FerrisDB handles this in Rust:
 ```
 
 **Key Differences:**
+
 - ✅ **Familiar patterns**: [OOP, interfaces, etc]
 - ⚠️ **Verbosity**: [Boilerplate code]
 - 🤔 **Memory management**: [GC pauses, object overhead]
@@ -107,6 +111,7 @@ Let's look at how FerrisDB handles this in Rust:
 ```
 
 **Key Differences:**
+
 - ✅ **Simplicity**: [Easier concurrency, simpler syntax]
 - ⚠️ **Safety**: [Nil pointer risks, data races]
 - 🤔 **Performance**: [GC overhead, interface costs]
@@ -116,6 +121,7 @@ Let's look at how FerrisDB handles this in Rust:
 ### 🚀 Where Rust Excels
 
 1. **[Benefit 1]**: [Concrete example from the code]
+
    - In our case: [Specific advantage in FerrisDB]
 
 2. **[Benefit 2]**: [Another advantage]
@@ -124,6 +130,7 @@ Let's look at how FerrisDB handles this in Rust:
 ### 😤 Where Rust is Harder
 
 1. **[Challenge 1]**: [What makes this difficult]
+
    - Learning curve: [Specific concepts that are hard]
 
 2. **[Challenge 2]**: [Development complexity]
@@ -137,22 +144,24 @@ Let's look at how FerrisDB handles this in Rust:
 
 ## Real-World Impact in FerrisDB
 
-<!-- 
+<!--
 Show concrete measurements, benchmarks, or benefits.
 Make it tangible - how does this Rust approach help FerrisDB?
 -->
 
 **Performance Benefits:**
-- [Specific metric]: [Measurement]
-- [Memory usage]: [Comparison]
+
+- Specific metric: [Measurement]
+- Memory usage: [Comparison]
 
 **Safety Benefits:**
+
 - [Bug category]: [How Rust prevents it]
 - [Concurrency issue]: [How ownership rules help]
 
 ## Try It Yourself
 
-<!-- 
+<!--
 Provide a simple exercise for readers to experiment with.
 Keep it focused on the concept being taught.
 -->
@@ -165,6 +174,7 @@ Keep it focused on the concept being taught.
 ```
 
 **Bonus**: Try implementing the same logic in your preferred language and compare:
+
 - How many lines of code?
 - What safety guarantees do you get/lose?
 - How would you handle the concurrency aspects?
@@ -172,10 +182,12 @@ Keep it focused on the concept being taught.
 ## What's Next?
 
 **Related Articles:**
+
 - [Link to related Rust by Example article]
 - [Link to deep dive article if applicable]
 
 **In FerrisDB:**
+
 - See this concept used in: `[file-path]`
 - Next we'll explore: [Related concept]
 
@@ -196,6 +208,6 @@ This article is part of "Rust by Example: Database Edition" - a series that teac
 
 ---
 
-*Last updated: [Month DD, YYYY] <!-- Manually update when content changes -->*
-*Estimated reading time: [X] minutes*
-*Difficulty: [Level]*
+_Last updated: [Month DD, YYYY] <!-- Manually update when content changes -->_
+_Estimated reading time: [X] minutes_
+_Difficulty: [Level]_

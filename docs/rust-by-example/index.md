@@ -22,8 +22,9 @@ If you've built web apps, REST APIs, or worked with databases in JavaScript, Pyt
 ## Why Database Code?
 
 Database systems showcase Rust's strengths perfectly:
+
 - **Memory safety** matters when handling user data
-- **Performance** is critical for high-throughput systems  
+- **Performance** is critical for high-throughput systems
 - **Concurrency** is essential for multi-user databases
 - **System programming** concepts are practical, not academic
 
@@ -43,6 +44,7 @@ Every article follows the same structure:
 ## Article Categories
 
 ### 🏗️ Memory Management & Ownership
+
 Learn Rust's ownership system through data structure examples.
 
 <div class="article-grid">
@@ -62,17 +64,20 @@ Learn Rust's ownership system through data structure examples.
 </div>
 
 **Coming Soon:**
+
 - Borrowing & Lifetimes: MemTable Iterator Design
 - Smart Pointers: Advanced Arc Patterns
 
 ### 🛡️ Safety & Error Handling
+
 See how Rust prevents bugs that plague other languages.
 
 - **[Coming Soon]** Result Types: WAL Error Handling
-- **[Coming Soon]** Option Types: SSTable Key Lookups  
+- **[Coming Soon]** Option Types: SSTable Key Lookups
 - **[Coming Soon]** Pattern Matching: Operation Type Handling
 
 ### ⚡ Performance & Zero-Cost Abstractions
+
 Understand how Rust achieves C-level performance with high-level abstractions.
 
 - **[Coming Soon]** Zero-Cost Abstractions: Generic Storage Traits
@@ -80,6 +85,7 @@ Understand how Rust achieves C-level performance with high-level abstractions.
 - **[Coming Soon]** Memory Layout: Struct Design for Cache Performance
 
 ### 🔄 Concurrency & Parallelism
+
 Learn Rust's approach to safe concurrent programming.
 
 - **[Coming Soon]** Lock-Free Programming: Skip List Implementation
@@ -87,6 +93,7 @@ Learn Rust's approach to safe concurrent programming.
 - **[Coming Soon]** Shared State: Atomic Operations in MemTable
 
 ### 🎯 Type System & Traits
+
 Master Rust's powerful type system through practical examples.
 
 - **[Coming Soon]** Trait System: Storage Engine Abstractions
@@ -94,6 +101,7 @@ Master Rust's powerful type system through practical examples.
 - **[Coming Soon]** Associated Types: Iterator Patterns
 
 ### 🏭 Systems Programming
+
 See how Rust handles low-level concerns safely.
 
 - **[Coming Soon]** Binary Formats: SSTable File Layout
@@ -103,43 +111,50 @@ See how Rust handles low-level concerns safely.
 ## Quick Start Guide
 
 **New to systems programming?** Start with:
+
 1. [Ownership & Sharing: MemTable Lifecycle Management]({{ '/rust-by-example/ownership-memtable-sharing/' | relative_url }})
 2. [Result Types: WAL Error Handling](#) (Coming Soon)
 3. [Lock-Free Programming: Skip List Implementation](#) (Coming Soon)
 
 **Coming from garbage-collected languages?** Focus on:
-1. [Memory Management & Ownership](#memory-management--ownership) section
-2. [Performance & Zero-Cost Abstractions](#performance--zero-cost-abstractions) section
+
+1. Memory Management & Ownership section below
+2. Performance & Zero-Cost Abstractions section
 
 **Experienced systems programmer?** Jump to:
-1. [Concurrency & Parallelism](#concurrency--parallelism) section
-2. [Type System & Traits](#type-system--traits) section
+
+1. Concurrency & Parallelism section
+2. Type System & Traits section
 
 ## Language Experience Guide
 
 ### Coming from JavaScript/TypeScript?
+
 - Focus on ownership and memory management concepts
 - Pay attention to compile-time vs runtime safety
 - Note performance implications of garbage collection vs manual memory management
 
 ### Coming from Python?
+
 - Emphasize type safety and compile-time checks
 - Compare performance characteristics
 - Understand the trade-offs between developer productivity and runtime performance
 
 ### Coming from Java?
+
 - Compare trait system with interfaces
 - Understand stack vs heap allocation differences
 - See how Rust achieves memory safety without garbage collection
 
 ### Coming from Go?
+
 - Compare concurrency models (goroutines vs Rust ownership)
 - Understand interface{} vs Rust generics
 - See different approaches to error handling
 
 ## Contributing
 
-This series is open source! Found an error? Want to suggest a topic? 
+This series is open source! Found an error? Want to suggest a topic?
 
 - **Suggest topics**: [Open an issue]({{ site.project.repo_url }}/issues) with the "rust-by-example" label
 - **Fix content**: [Submit a PR]({{ site.project.repo_url }}/pulls) with your improvements
@@ -167,4 +182,4 @@ We're actively writing new articles! Here's what's coming next:
 
 ---
 
-*Last updated: January 29, 2025*
+_Last updated: January 29, 2025_

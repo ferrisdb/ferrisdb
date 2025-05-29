@@ -18,6 +18,7 @@ FerrisDB is an educational distributed database project built in Rust. It's insp
 ### Why build another database?
 
 We're not trying to compete with PostgreSQL, MySQL, or any production database. FerrisDB exists to:
+
 - Demystify how databases actually work
 - Show that complex systems can be understood by anyone
 - Demonstrate effective human-AI collaboration
@@ -35,6 +36,7 @@ We're not trying to compete with PostgreSQL, MySQL, or any production database. 
 ### Who is building FerrisDB?
 
 FerrisDB is being built by:
+
 - **The Human**: A CRUD developer who spent years using databases without understanding them
 - **Claude**: An AI assistant providing knowledge, implementation help, and pattern recognition
 - **The Community**: Contributors who help improve code, documentation, and learning materials
@@ -42,6 +44,7 @@ FerrisDB is being built by:
 ### What's Claude's role exactly?
 
 Claude serves multiple roles:
+
 - **Knowledge base**: Explains complex database concepts in understandable terms
 - **Implementation partner**: Helps write actual Rust code and debug issues
 - **Pattern recognizer**: Identifies common mistakes and learning opportunities
@@ -51,6 +54,7 @@ Claude serves multiple roles:
 ### Does AI replace human developers?
 
 Absolutely not! This project proves the opposite. The human provides:
+
 - Creative vision and project direction
 - Domain context and real-world experience
 - Decision-making about what to build
@@ -62,6 +66,7 @@ Claude amplifies human capabilities but can't replace human judgment, creativity
 ### How do you handle attribution?
 
 We're meticulous about attribution:
+
 - Both blogs document who contributed what
 - Git commits clearly show implementation details
 - We never swap credit for dramatic effect
@@ -72,6 +77,7 @@ We're meticulous about attribution:
 ### Who is the target audience?
 
 FerrisDB is perfect for:
+
 - **CRUD developers** curious about database internals
 - **Rust learners** who want real-world examples
 - **Students** studying database systems
@@ -80,6 +86,7 @@ FerrisDB is perfect for:
 ### Do I need to know Rust?
 
 Not necessarily! We offer multiple learning paths:
+
 - **Deep Dives**: Focus on database concepts (language-agnostic)
 - **Rust by Example**: Learn Rust through database code with comparisons to JavaScript, Python, Java, and Go
 - **Development Blog**: Follow the journey without diving into code
@@ -95,6 +102,7 @@ Not necessarily! We offer multiple learning paths:
 ### What will I learn?
 
 Database concepts:
+
 - How LSM-trees provide fast writes
 - Why Write-Ahead Logs ensure durability
 - How SSTables organize data on disk
@@ -103,6 +111,7 @@ Database concepts:
 - Distributed consensus (coming soon)
 
 Rust concepts:
+
 - Ownership and borrowing in practice
 - Safe concurrency patterns
 - Error handling without exceptions
@@ -114,6 +123,7 @@ Rust concepts:
 ### Why Rust?
 
 Rust is perfect for databases because:
+
 - **Memory safety** without garbage collection
 - **Concurrency** without data races
 - **Performance** comparable to C/C++
@@ -123,6 +133,7 @@ Rust is perfect for databases because:
 ### Why not fork an existing database?
 
 Starting from scratch means:
+
 - Every line of code is understood and documented
 - No legacy decisions to work around
 - Clear learning progression from simple to complex
@@ -131,6 +142,7 @@ Starting from scratch means:
 ### What's the architecture?
 
 FerrisDB follows a layered architecture inspired by FoundationDB:
+
 - **Storage Engine**: LSM-tree with MemTable and SSTables
 - **Transaction Layer**: MVCC for isolation (in progress)
 - **Distribution Layer**: Consensus and sharding (planned)
@@ -160,6 +172,7 @@ See our [Getting Started guide](/getting-started/) for detailed instructions.
 ### Can I contribute?
 
 Yes! We welcome contributions:
+
 - **Code improvements**: Performance, safety, clarity
 - **Documentation**: Explanations, examples, corrections
 - **Bug reports**: Help us improve
@@ -189,6 +202,7 @@ Yes! Check our [TODO.md](https://github.com/ferrisdb/ferrisdb/blob/main/TODO.md)
 ### What's next for FerrisDB?
 
 Immediate priorities:
+
 1. Complete compaction implementation
 2. Add bloom filters for read optimization
 3. Implement MVCC transactions
@@ -198,6 +212,7 @@ Immediate priorities:
 ### Will FerrisDB ever be production-ready?
 
 That's not the goal. FerrisDB succeeds if:
+
 - People understand databases better
 - Developers feel empowered to tackle complex projects
 - Human-AI collaboration patterns improve
@@ -212,6 +227,7 @@ As long as there's something valuable to learn and teach! We're documenting not 
 ## Have another question?
 
 If your question isn't answered here, please:
+
 1. Check our [documentation](/getting-started/)
 2. Read the [deep dive articles](/deep-dive/)
 3. [Open an issue](https://github.com/ferrisdb/ferrisdb/issues) on GitHub

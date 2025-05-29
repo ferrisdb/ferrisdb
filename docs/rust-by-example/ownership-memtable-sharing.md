@@ -53,13 +53,13 @@ impl MemTable {
 fn flush_memtable_to_disk(memtable: Arc<MemTable>) {
     // Clone the Arc (not the data!) to pass to background thread
     let memtable_for_flush = Arc::clone(&memtable);
-    
+
     thread::spawn(move || {
         // Background thread owns this Arc reference
         // MemTable data stays alive until this thread finishes
         write_sstable_from_memtable(memtable_for_flush);
     });
-    
+
     // Original thread can continue using memtable
     // Data is shared, not copied
 }
@@ -73,6 +73,7 @@ fn flush_memtable_to_disk(memtable: Arc<MemTable>) {
 4. **Automatic cleanup**: When the last `Arc` is dropped, the data is automatically freed
 
 **Key Rust Concepts:**
+
 - **Ownership**: Each value has exactly one owner, but `Arc` allows shared ownership
 - **Move semantics**: Data is transferred, not copied, preventing use-after-free bugs
 - **Reference counting**: Safe shared access with automatic memory management
@@ -84,25 +85,25 @@ fn flush_memtable_to_disk(memtable: Arc<MemTable>) {
 ```javascript
 // JavaScript approach - shared references with garbage collection
 class MemTable {
-    constructor(maxSize) {
-        this.skiplist = new SkipList();
-        this.memoryUsage = 0;
-        this.maxSize = maxSize;
-    }
+  constructor(maxSize) {
+    this.skiplist = new SkipList();
+    this.memoryUsage = 0;
+    this.maxSize = maxSize;
+  }
 }
 
 function flushMemTableToDisk(memtable) {
-    // JavaScript passes object references
-    // Garbage collector handles memory management
-    
-    // Simulate background processing
-    setTimeout(() => {
-        // Still has access to memtable - GC keeps it alive
-        writeSSTableFromMemTable(memtable);
-    }, 0);
-    
-    // Can continue using memtable immediately
-    // No explicit memory management needed
+  // JavaScript passes object references
+  // Garbage collector handles memory management
+
+  // Simulate background processing
+  setTimeout(() => {
+    // Still has access to memtable - GC keeps it alive
+    writeSSTableFromMemTable(memtable);
+  }, 0);
+
+  // Can continue using memtable immediately
+  // No explicit memory management needed
 }
 
 // Usage
@@ -112,6 +113,7 @@ flushMemTableToDisk(memtable);
 ```
 
 **Key Differences:**
+
 - ✅ **Simpler syntax**: No explicit memory management or ownership annotations
 - ⚠️ **Runtime safety**: No compile-time guarantees about memory access
 - 🤔 **Performance**: Garbage collection can cause unpredictable pauses
@@ -131,16 +133,16 @@ class MemTable:
 def flush_memtable_to_disk(memtable: MemTable) -> None:
     # Python uses reference counting + cycle detection
     # Object stays alive as long as someone references it
-    
+
     def background_flush():
         # This closure captures memtable reference
         # Python's GC handles the lifetime
         write_sstable_from_memtable(memtable)
-    
+
     # Start background thread
     thread = threading.Thread(target=background_flush)
     thread.start()
-    
+
     # Can continue using memtable
     # GC determines when to free memory
 
@@ -151,6 +153,7 @@ flush_memtable_to_disk(memtable)
 ```
 
 **Key Differences:**
+
 - ✅ **Readability**: Very clean, minimal syntax
 - ⚠️ **Performance**: Reference counting overhead, GIL limits true concurrency
 - 🤔 **Concurrency**: GIL prevents parallel CPU-bound work in pure Python
@@ -163,7 +166,7 @@ public class MemTable {
     private final SkipList skiplist;
     private final AtomicInteger memoryUsage;
     private final int maxSize;
-    
+
     public MemTable(int maxSize) {
         this.skiplist = new SkipList();
         this.memoryUsage = new AtomicInteger(0);
@@ -175,13 +178,13 @@ public class StorageEngine {
     public void flushMemTableToDisk(MemTable memtable) {
         // Java passes object references - GC manages lifetime
         // Multiple threads can hold references to same object
-        
+
         CompletableFuture.runAsync(() -> {
             // Background thread has reference to memtable
             // GC keeps object alive while referenced
             writeSSTableFromMemTable(memtable);
         });
-        
+
         // Main thread continues with memtable
         // GC handles cleanup when no more references exist
     }
@@ -194,7 +197,8 @@ storageEngine.flushMemTableToDisk(memtable);
 ```
 
 **Key Differences:**
-- ✅ **Familiar patterns**: Standard OOP with automatic memory management  
+
+- ✅ **Familiar patterns**: Standard OOP with automatic memory management
 - ⚠️ **Verbosity**: More boilerplate compared to Rust or other languages
 - 🤔 **Memory management**: GC can cause pause times, more memory overhead
 
@@ -219,13 +223,13 @@ func NewMemTable(maxSize int) *MemTable {
 func FlushMemTableToDisk(memtable *MemTable) {
     // Go passes pointers - GC manages lifetime
     // Goroutines can share data via pointers
-    
+
     go func() {
         // Goroutine captures memtable pointer
         // GC keeps data alive while goroutine runs
         WriteSSTableFromMemTable(memtable)
     }()
-    
+
     // Main goroutine continues using memtable
     // GC handles cleanup automatically
 }
@@ -237,6 +241,7 @@ FlushMemTableToDisk(memtable)
 ```
 
 **Key Differences:**
+
 - ✅ **Simplicity**: Clean syntax, easy goroutines
 - ⚠️ **Safety**: Possible data races without explicit synchronization
 - 🤔 **Performance**: GC overhead, interface{} boxing costs
@@ -246,10 +251,12 @@ FlushMemTableToDisk(memtable)
 ### 🚀 Where Rust Excels
 
 1. **Compile-time memory safety**: No use-after-free, double-free, or memory leaks
+
    - In our case: Impossible to access MemTable after it's been freed
    - Real impact: Zero segfaults in production FerrisDB
 
 2. **Zero-cost abstractions**: `Arc` has no runtime overhead beyond reference counting
+
    - Real impact: Same performance as manual C++ reference counting, but safe
 
 3. **Thread safety**: Compiler prevents data races at compile time
@@ -258,6 +265,7 @@ FlushMemTableToDisk(memtable)
 ### 😤 Where Rust is Harder
 
 1. **Learning curve**: Ownership concepts are unfamiliar to most developers
+
    - Trade-off: Upfront complexity for long-term safety and performance
 
 2. **Development complexity**: More thinking required about data lifetimes
@@ -272,14 +280,17 @@ FlushMemTableToDisk(memtable)
 ## Real-World Impact in FerrisDB
 
 **Performance Benefits:**
+
 - **Memory usage**: 40% less memory than Java equivalent (no GC overhead)
 - **Latency**: Predictable performance - no GC pause spikes
 
 **Safety Benefits:**
+
 - **Memory bugs**: Zero memory-related crashes in 6 months of development
 - **Concurrency issues**: Compiler catches data race attempts before they become bugs
 
 **Development Benefits:**
+
 - **Refactoring confidence**: Ownership system catches breaking changes at compile time
 - **Documentation**: Types encode sharing contracts, making code self-documenting
 
@@ -302,11 +313,11 @@ impl SharedCounter {
             value: AtomicUsize::new(0),
         }
     }
-    
+
     fn increment(&self) {
         // TODO: Implement atomic increment
     }
-    
+
     fn get(&self) -> usize {
         // TODO: Implement atomic read
     }
@@ -314,9 +325,9 @@ impl SharedCounter {
 
 fn main() {
     let counter = Arc::new(SharedCounter::new());
-    
+
     let mut handles = vec![];
-    
+
     // Spawn 10 threads that each increment 1000 times
     for _ in 0..10 {
         let counter_clone = Arc::clone(&counter);
@@ -327,17 +338,18 @@ fn main() {
         });
         handles.push(handle);
     }
-    
+
     // Wait for all threads
     for handle in handles {
         handle.join().unwrap();
     }
-    
+
     println!("Final count: {}", counter.get()); // Should be 10,000
 }
 ```
 
 **Bonus**: Try implementing the same logic in your preferred language and compare:
+
 - How many lines of code?
 - What happens if you forget synchronization?
 - How do you ensure all threads finish before reading the final value?
@@ -345,10 +357,12 @@ fn main() {
 ## What's Next?
 
 **Related Articles:**
+
 - [Result Types: WAL Error Handling](/rust-by-example/result-types/) _(coming soon)_
 - [Lock-Free Programming: Skip List Implementation](/rust-by-example/lock-free-skiplist/) _(coming soon)_
 
 **In FerrisDB:**
+
 - See this concept used in: `ferrisdb-storage/src/memtable/mod.rs`
 - Next we'll explore: How Rust's type system prevents entire categories of errors
 
@@ -369,6 +383,6 @@ This article is part of "Rust by Example: Database Edition" - a series that teac
 
 ---
 
-*Last updated: May 29, 2025*
-*Estimated reading time: 10 minutes*
-*Difficulty: Beginner*
+_Last updated: May 29, 2025_
+_Estimated reading time: 10 minutes_
+_Difficulty: Beginner_
