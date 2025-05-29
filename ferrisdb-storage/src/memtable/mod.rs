@@ -26,7 +26,7 @@
 //! # Ok::<(), ferrisdb_core::Error>(())
 //! ```
 
-mod memtable;
-mod skiplist;
+mod mem_table;
+mod skip_list;
 
-pub use memtable::MemTable;
+pub use mem_table::MemTable;

@@ -9,7 +9,7 @@
 use crossbeam::epoch::{self, Atomic, Guard, Owned, Shared};
 use ferrisdb_core::{Key, Operation, Timestamp, Value};
 use parking_lot::Mutex;
-use rand::Rng;
+use rand::{Rng, SeedableRng};
 use std::cmp::Ordering;
 use std::ops::Deref;
 use std::sync::atomic::{AtomicUsize, Ordering as AtomicOrdering};
@@ -129,7 +129,7 @@ pub struct SkipList {
     /// Number of entries in the skip list
     size: AtomicUsize,
     /// Random number generator for determining node heights
-    rng: Mutex<rand::rngs::ThreadRng>,
+    rng: Mutex<rand::rngs::StdRng>,
 }
 
 impl SkipList {
@@ -141,7 +141,7 @@ impl SkipList {
             head: Atomic::new(head),
             height: AtomicUsize::new(1),
             size: AtomicUsize::new(0),
-            rng: Mutex::new(rand::thread_rng()),
+            rng: Mutex::new(rand::rngs::StdRng::from_entropy()),
         }
     }
 
@@ -211,8 +211,8 @@ impl SkipList {
             let new_node = Owned::new(Node::new(key.clone(), value.clone(), height));
 
             // Set next pointers of new node
-            for i in 0..height {
-                new_node.deref().next[i].store(succs[i], AtomicOrdering::Relaxed);
+            for (i, &succ) in succs.iter().enumerate().take(height) {
+                new_node.deref().next[i].store(succ, AtomicOrdering::Relaxed);
             }
 
             let new_node_shared = new_node.into_shared(guard);
@@ -416,6 +416,11 @@ impl SkipList {
         self.size.load(AtomicOrdering::Relaxed)
     }
 }
+
+// SkipList automatically implements Send + Sync because:
+// - Atomic<Node> is Send + Sync
+// - AtomicUsize is Send + Sync  
+// - Mutex<StdRng> is Send + Sync (StdRng implements Send + Sync)
 
 impl Drop for SkipList {
     fn drop(&mut self) {

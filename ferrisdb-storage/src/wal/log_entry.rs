@@ -123,7 +123,7 @@ impl WALEntry {
             return Err(Error::Corruption("WAL entry too small".to_string()));
         }
 
-        let mut cursor = &data[..];
+        let mut cursor = data;
 
         // Read and verify length
         let length = cursor.get_u32_le() as usize;

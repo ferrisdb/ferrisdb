@@ -31,6 +31,10 @@ pub enum Error {
     #[error("Storage engine error: {0}")]
     StorageEngine(String),
 
+    /// MemTable is full and needs to be flushed
+    #[error("MemTable is full")]
+    MemTableFull,
+
     /// A transaction error occurred
     #[error("Transaction error: {0}")]
     Transaction(String),

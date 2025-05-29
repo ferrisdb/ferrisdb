@@ -14,6 +14,23 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Use descriptive variable names
 - Prefer `snake_case` for functions and variables, `CamelCase` for types
 
+### Idiomatic Rust Guidelines
+
+- **Module Organization**: 
+  - Use snake_case file names that match struct names (e.g., `MemTable` → `mem_table.rs`)
+  - Keep public API types in separate files, not in `mod.rs`
+  - Only re-export types that should be part of the public API
+  - Keep implementation details private (use `super::module::Type` imports for internal types)
+  - Avoid module inception (module name ≠ file name in same directory)
+- **Error Handling**: Always use `Result<T>` for fallible operations, never panic in library code
+- **Trait Bounds**: Use `Send + Sync` where appropriate for types used across threads
+- **Ownership**: Prefer owned types in public APIs, use references only when necessary
+- **Iterator Patterns**: Use `.iter().enumerate()` instead of manual indexing where possible
+- **Memory Safety**: Document safety invariants clearly for any `unsafe` code
+- **Type Aliases**: Use meaningful type aliases for complex generic types
+- **Pattern Matching**: Use exhaustive pattern matching and avoid catch-all `_` patterns when possible
+- **Encapsulation**: Internal implementation details should not be exposed via `pub` or `pub(crate)` unless necessary
+
 ### Documentation
 
 - **Always** add comprehensive doc comments for all public APIs
