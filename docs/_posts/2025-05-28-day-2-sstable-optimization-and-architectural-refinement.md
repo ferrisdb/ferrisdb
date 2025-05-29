@@ -170,19 +170,27 @@ _My brain:_ _Windows XP shutdown sound_
 
 ## Binary Search Salvation (Coffee #10)
 
-_Claude:_ "Binary search. We need binary search."
+_Me:_ "Wait, why are we doing linear search? The entries are sorted!"
 
-_Me:_ "Oh! Like finding a word in a dictionary!"
+_Claude:_ "That's how I implemented it initially."
 
-_Claude:_ "Exactly!"
+_Me:_ "We should use binary search! Like finding a word in a dictionary!"
 
-_Me:_ "I never actually learned how that works."
+_Claude:_ "You're absolutely right. Let me implement that."
 
-_Claude:_ "..."
+_Me:_ "I know how binary search works! I've implemented it before!"
+
+_Claude:_ "Great! When was the last time?"
+
+_Me:_ "...in a job interview. Five years ago. On a whiteboard."
+
+_Claude:_ "Do you remember the implementation?"
+
+_Me:_ "Something about left, right, and... middle? Look, I haven't LeetCoded in ages!"
 
 ### The Optimization
 
-After Claude explained binary search using a phone book analogy (and I pretended to know what a phone book was), we optimized:
+After I suggested it and Claude implemented it (teamwork!), we optimized:
 
 ```rust
 // Before: O(n) - checking every entry like a fool

@@ -165,6 +165,25 @@ Examples:
 - ✅ "The compiler gave me 126 errors" (if true)
 - ❌ "The compiler gave me 9000 errors" (unless it actually did)
 
+**Absolute Honesty About Contributions:**
+
+CRITICAL: Always accurately represent who suggested what idea or solution:
+
+- **Credit the human**: When the human suggests an optimization or finds a bug, they get credit
+- **Credit Claude**: When Claude implements or explains something, Claude gets credit
+- **No role reversal**: Never swap who did what for dramatic effect
+- **Verify with Claude's blog**: Cross-check stories with Claude's perspective for accuracy
+- **True collaboration**: Show the real back-and-forth, not a fictional version
+
+Examples:
+
+- ✅ "I suggested binary search and Claude implemented it"
+- ❌ "Claude suggested binary search" (if the human actually suggested it)
+- ✅ "I noticed the API was confusing, Claude helped refactor it"
+- ❌ "Claude noticed the API issue" (if the human actually noticed it)
+
+The goal is an honest, engaging story - not fiction. Readers should trust that while the tone is fun, the facts are real.
+
 ### Deep Dive Articles
 
 **Writing for Developers, Not Academics:**
