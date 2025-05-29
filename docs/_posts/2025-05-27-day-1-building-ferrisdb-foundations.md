@@ -247,9 +247,9 @@ _Claude:_ "Let's add documentation."
 
 _Me:_ "The code is self-documenting!"
 
-_Claude:_ "What does `xlmr_2` mean?"
+_Claude:_ "What does `buf` mean?"
 
-_Me:_ "eXtra... Large... Memory... Region... 2?"
+_Me:_ "Buffer? Buffering? Buffy the Vampire Slayer?"
 
 _Claude:_ "..."
 
