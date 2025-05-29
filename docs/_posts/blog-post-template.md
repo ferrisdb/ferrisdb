@@ -1,12 +1,25 @@
 ---
-layout: post
-title: "Day X: [Catchy Title - e.g., 'When My CRUD Brain Met a Real Database']"
-subtitle: "[Intriguing subtitle that hints at the journey]"
-date: YYYY-MM-DD
-day: X
-tags: [tag1, tag2, tag3]
-stats: ["📊 X tests passing", "📄 Y PRs merged", "☕ Z cups consumed"]
-confidence: "Start: 2/10 ☕ | End: 7/10 ☕☕☕"
+layout: default
+title: "Blog Post Template"
+nav_exclude: true
+permalink: /blog/template/
+---
+
+# Day X: [Catchy Title - e.g., 'When My CRUD Brain Met a Real Database']
+{: .no_toc }
+
+[Intriguing subtitle that hints at the journey]
+{: .fs-6 .fw-300 }
+
+**Date:** YYYY-MM-DD • **Day:** X
+{: .label .label-blue }
+
+📊 X tests passing • 📄 Y PRs merged • ☕ Z cups consumed
+{: .text-delta }
+
+**Confidence:** Start: 2/10 ☕ | End: 7/10 ☕☕☕
+{: .text-gamma }
+
 ---
 
 ## The Morning That Changed Everything

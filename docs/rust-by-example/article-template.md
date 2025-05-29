@@ -1,14 +1,26 @@
 ---
-layout: page
-title: "[Rust Concept]: [Brief Description]"
-subtitle: "Understanding [concept] through FerrisDB examples, compared with JavaScript, Python, Java, and Go"
-permalink: /rust-by-example/[topic-slug]/
-tags: [rust, comparison, [specific-concept], [language-comparisons]]
-difficulty: [beginner|intermediate|advanced]
-estimated_reading: "[X] minutes"
-ferrisdb_component: [memtable|sstable|wal|storage-engine|etc]
-rust_concepts: [ownership, borrowing, traits, error-handling, etc]
-target_languages: [javascript, python, java, go]
+layout: default
+title: "Article Template"
+parent: "Rust by Example"
+nav_exclude: true
+permalink: /rust-by-example/article-template/
+---
+
+# [Rust Concept]: [Brief Description]
+{: .no_toc }
+
+Understanding [concept] through FerrisDB examples, compared with JavaScript, Python, Java, and Go
+{: .fs-6 .fw-300 }
+
+**Difficulty:** [Beginner|Intermediate|Advanced] • **Reading time:** [X] minutes
+{: .label .label-[green|yellow|red] }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 <!--

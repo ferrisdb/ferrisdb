@@ -1,13 +1,26 @@
 ---
-layout: page
-title: "[Topic]: [Brief Descriptive Title]"
-subtitle: "[One-line explanation of what this covers and why it matters]"
-permalink: /deep-dive/[topic-slug]/
-tags: [database, [specific-topic], [related-concepts]]
-difficulty: [beginner|intermediate|advanced]
-estimated_reading: "[X] minutes"
-ferrisdb_components: [list, of, related, components]
-prerequisites: [links, to, prerequisite, articles]
+layout: default
+title: "Article Template"
+parent: Deep Dives
+nav_exclude: true
+permalink: /deep-dive/article-template/
+---
+
+# [Topic]: [Brief Descriptive Title]
+{: .no_toc }
+
+[One-line explanation of what this covers and why it matters]
+{: .fs-6 .fw-300 }
+
+**Difficulty:** [Beginner|Intermediate|Advanced] • **Reading time:** [X] minutes
+{: .label .label-[green|yellow|red] }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 <!--
