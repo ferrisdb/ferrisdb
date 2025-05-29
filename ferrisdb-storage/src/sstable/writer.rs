@@ -129,16 +129,25 @@ impl SSTableWriter {
     /// - An I/O error occurs
     pub fn add(&mut self, key: InternalKey, value: Value) -> Result<()> {
         if self.finished {
-            return Err(Error::InvalidOperation(
-                "SSTable already finished".to_string(),
+            return Err(Error::ResourceConsumed(
+                "SSTable writer already finished".to_string(),
             ));
         }
 
         // Validate sizes
-        if key.user_key.len() > MAX_ENTRY_SIZE || value.len() > MAX_ENTRY_SIZE {
-            return Err(Error::InvalidOperation(
-                "Entry size exceeds maximum".to_string(),
-            ));
+        let key_size = key.user_key.len();
+        let value_size = value.len();
+        if key_size > MAX_ENTRY_SIZE {
+            return Err(Error::EntrySizeExceeded {
+                size: key_size,
+                max_size: MAX_ENTRY_SIZE,
+            });
+        }
+        if value_size > MAX_ENTRY_SIZE {
+            return Err(Error::EntrySizeExceeded {
+                size: value_size,
+                max_size: MAX_ENTRY_SIZE,
+            });
         }
 
         // Update metadata
@@ -177,8 +186,8 @@ impl SSTableWriter {
     /// After calling finish(), the writer cannot be used again.
     pub fn finish(mut self) -> Result<SSTableInfo> {
         if self.finished {
-            return Err(Error::InvalidOperation(
-                "SSTable already finished".to_string(),
+            return Err(Error::ResourceConsumed(
+                "SSTable writer already finished".to_string(),
             ));
         }
 
@@ -215,10 +224,10 @@ impl SSTableWriter {
             file_size: self.file_offset,
             entry_count: self.entry_count,
             smallest_key: self.smallest_key.ok_or_else(|| {
-                Error::InvalidOperation("No entries written to SSTable".to_string())
+                Error::EmptyOperation("Cannot finish SSTable with no entries".to_string())
             })?,
             largest_key: self.largest_key.ok_or_else(|| {
-                Error::InvalidOperation("No entries written to SSTable".to_string())
+                Error::EmptyOperation("Cannot finish SSTable with no entries".to_string())
             })?,
         })
     }
@@ -403,10 +412,7 @@ mod tests {
         // Try to finish without adding any entries
         let result = writer.finish();
         assert!(result.is_err());
-        assert!(result
-            .unwrap_err()
-            .to_string()
-            .contains("No entries written"));
+        assert!(matches!(result.unwrap_err(), Error::EmptyOperation(_)));
     }
 
     #[test]
@@ -479,7 +485,35 @@ mod tests {
         let result = writer.add(huge_key, b"value".to_vec());
 
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("exceeds maximum"));
+        match result.unwrap_err() {
+            Error::EntrySizeExceeded { size, max_size } => {
+                assert_eq!(size, MAX_ENTRY_SIZE + 1);
+                assert_eq!(max_size, MAX_ENTRY_SIZE);
+            }
+            _ => panic!("Expected EntrySizeExceeded error"),
+        }
+    }
+
+    #[test]
+    fn test_sstable_writer_value_too_large() {
+        let temp_dir = TempDir::new().unwrap();
+        let path = temp_dir.path().join("value_too_large.sst");
+
+        let mut writer = SSTableWriter::new(&path).unwrap();
+
+        // Try to add entry with value that exceeds MAX_ENTRY_SIZE
+        let key = InternalKey::new(b"normal_key".to_vec(), 100, Operation::Put);
+        let huge_value = vec![b'v'; MAX_ENTRY_SIZE + 1];
+        let result = writer.add(key, huge_value);
+
+        assert!(result.is_err());
+        match result.unwrap_err() {
+            Error::EntrySizeExceeded { size, max_size } => {
+                assert_eq!(size, MAX_ENTRY_SIZE + 1);
+                assert_eq!(max_size, MAX_ENTRY_SIZE);
+            }
+            _ => panic!("Expected EntrySizeExceeded error"),
+        }
     }
 
     #[test]

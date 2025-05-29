@@ -39,6 +39,18 @@ pub enum Error {
     #[error("Invalid format: {0}")]
     InvalidFormat(String),
 
+    /// Entry size exceeds the maximum allowed limit
+    #[error("Entry size exceeds maximum: {size} > {max_size}")]
+    EntrySizeExceeded { size: usize, max_size: usize },
+
+    /// Attempted to use a resource that has already been consumed or finished
+    #[error("Resource already consumed: {0}")]
+    ResourceConsumed(String),
+
+    /// Attempted to finish an operation with no data
+    #[error("Operation has no data: {0}")]
+    EmptyOperation(String),
+
     /// A transaction error occurred
     #[error("Transaction error: {0}")]
     Transaction(String),
