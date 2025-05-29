@@ -248,6 +248,7 @@ fn bench_concurrent_reads(b: &mut Bencher) {
 _Note: Actual benchmarks are pending implementation. The following shows expected performance characteristics based on lock-free data structure theory:_
 
 Expected results on 8-core machine:
+
 - **Single-threaded**: Baseline performance
 - **8 threads**: Near-linear scaling for reads
 - **Write contention**: Moderate scaling due to CAS retries
@@ -261,6 +262,7 @@ Expected results on 8-core machine:
 | Lock-free Skip List | Excellent    | Good          | Complex                   |
 
 The actual performance will depend on:
+
 - Key distribution and size
 - Value size
 - Read/write ratio
