@@ -7,10 +7,17 @@ layout: default
     <div class="hero-badge">🦀 Educational Project</div>
     <h1 class="hero-title">{{ site.project.name }}</h1>
     <p class="hero-subtitle">{{ site.project.tagline }}</p>
-    <p class="hero-description">{{ site.description }}</p>
+    
+    <div class="hero-stats">
+      <span class="hero-stat">🎯 <strong>Mission:</strong> Prove that anyone can understand database internals</span>
+      <span class="hero-stat">🤝 <strong>Approach:</strong> Human creativity + AI knowledge = Better learning</span>
+      <span class="hero-stat">📚 <strong>Result:</strong> The most transparent database development ever attempted</span>
+    </div>
+    
     <div class="hero-buttons">
-      <a href="{{ '/getting-started/' | relative_url }}" class="btn btn-primary">Get Started</a>
-      <a href="{{ '/blog/' | relative_url }}" class="btn btn-secondary">Read the Blog</a>
+      <a href="{{ '/deep-dive/' | relative_url }}" class="btn btn-primary">Start Learning</a>
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn-secondary">Read Our Story</a>
+      <a href="#progress" class="btn btn-ghost">View Progress</a>
     </div>
     <div class="hero-warning">{{ site.project.warning }}</div>
   </div>

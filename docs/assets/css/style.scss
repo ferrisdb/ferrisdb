@@ -153,181 +153,6 @@ body {
     }
 }
 
-// Hero section for homepage (new design)
-.hero-section {
-    background: var(--gradient);
-    color: white;
-    padding: 7rem 2rem 6rem;
-    margin: -30px -30px 4rem -30px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    
-    // Add subtle animated background pattern
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: 
-            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-        pointer-events: none;
-        animation: float 20s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        33% { transform: translateY(-10px) rotate(1deg); }
-        66% { transform: translateY(5px) rotate(-1deg); }
-    }
-    
-    // Content wrapper
-    .hero-content {
-        position: relative;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .hero-badge {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    
-    .hero-title {
-        font-size: clamp(2.25rem, 4vw, 3.25rem);
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        max-width: 1100px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .hero-subtitle {
-        font-size: clamp(1.125rem, 1.75vw, 1.375rem);
-        margin-bottom: 3rem;
-        opacity: 0.95;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-        line-height: 1.7;
-        font-weight: 400;
-    }
-    
-    .hero-stats {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin-bottom: 3rem;
-        flex-wrap: wrap;
-        max-width: 1100px;
-        margin-left: auto;
-        margin-right: auto;
-        
-        .hero-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            
-            &:hover {
-                background: rgba(255, 255, 255, 0.15);
-                transform: translateY(-2px);
-            }
-        }
-    }
-    
-    .hero-cta {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-        
-        .btn-lg {
-            padding: 1rem 2rem;
-            font-size: 1.125rem;
-        }
-        
-        .btn-primary {
-            background: white;
-            color: var(--primary-color);
-            font-weight: 600;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-            
-            &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            }
-        }
-        
-        .btn-ghost {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            font-weight: 600;
-            
-            &:hover {
-                background: rgba(255, 255, 255, 0.25);
-                border-color: white;
-                transform: translateY(-2px);
-            }
-        }
-    }
-    
-    // Mobile responsiveness
-    @media (max-width: 768px) {
-        padding: 5rem 1.5rem 4rem;
-        margin: -20px -20px 3rem -20px;
-        
-        .hero-title {
-            font-size: 1.875rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.0625rem;
-        }
-        
-        .hero-stats {
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            
-            .hero-stat {
-                width: 100%;
-                max-width: 400px;
-                justify-content: center;
-                text-align: center;
-                padding: 1rem 1.5rem;
-            }
-        }
-        
-        .hero-cta {
-            .btn-lg {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-    }
-}
 
 // Learning paths section
 .learning-paths {
@@ -678,49 +503,106 @@ body {
     }
 }
 
-// Hero section for homepage (old design, keeping for compatibility)
+// Hero section for homepage
 .hero {
     background: var(--gradient);
     color: white;
-    padding: 4rem 0;
-    margin: -30px -30px 3rem -30px;
+    padding: 7rem 2rem 6rem;
+    margin: -30px -30px 4rem -30px;
+    position: relative;
+    overflow: hidden;
+    
+    // Add subtle animated background pattern
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        33% { transform: translateY(-10px) rotate(1deg); }
+        66% { transform: translateY(5px) rotate(-1deg); }
+    }
     
     .hero-content {
         text-align: center;
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 0 2rem;
+        position: relative;
     }
     
     .hero-badge {
         display: inline-block;
         background: rgba(255, 255, 255, 0.2);
-        padding: 0.5rem 1rem;
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1.25rem;
         border-radius: 50px;
         font-size: 0.875rem;
-        font-weight: 500;
-        margin-bottom: 1rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
     .hero-title {
-        font-size: 3.5rem;
+        font-size: clamp(2.25rem, 4vw, 3.25rem);
         font-weight: 700;
-        margin-bottom: 1rem;
-        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .hero-subtitle {
-        font-size: 1.5rem;
-        font-weight: 500;
-        margin-bottom: 1rem;
-        opacity: 0.9;
+        font-size: clamp(1.125rem, 1.75vw, 1.375rem);
+        margin-bottom: 3rem;
+        opacity: 0.95;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.7;
+        font-weight: 400;
     }
     
-    .hero-description {
-        font-size: 1.125rem;
-        margin-bottom: 2rem;
-        opacity: 0.8;
-        line-height: 1.7;
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+        
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-2px);
+            }
+        }
     }
     
     .hero-buttons {
@@ -732,13 +614,70 @@ body {
     }
     
     .hero-warning {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid var(--accent-color);
+        margin-top: 2rem;
         font-size: 0.875rem;
-        margin: 0 auto;
-        max-width: 600px;
+        opacity: 0.8;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        display: inline-block;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    // Ghost button style for hero
+    .btn-ghost {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        font-weight: 600;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: white;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+    }
+    
+    // Mobile responsiveness
+    @media (max-width: 768px) {
+        padding: 5rem 1.5rem 4rem;
+        margin: -20px -20px 3rem -20px;
+        
+        .hero-title {
+            font-size: 1.875rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.0625rem;
+        }
+        
+        .hero-stats {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            
+            .hero-stat {
+                width: 100%;
+                max-width: 400px;
+                justify-content: center;
+                text-align: center;
+                padding: 1rem 1.5rem;
+            }
+        }
+        
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
     }
 }
 
@@ -793,7 +732,7 @@ body {
 }
 
 // Dark background button variants (for better contrast)
-.hero-section .btn-outline,
+.hero .btn-outline,
 .cta-section .btn-outline {
     background: rgba(255, 255, 255, 0.95);
     color: var(--primary-color);

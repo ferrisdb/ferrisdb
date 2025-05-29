@@ -72,8 +72,8 @@ social_links:
 
 # Custom variables
 project:
-  name: FerrisDB
-  tagline: "Educational Distributed Database in Rust"
+  name: Building a Database, Learning in Public
+  tagline: "FerrisDB: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way."
   repo_url: https://github.com/ferrisdb/ferrisdb
   warning: "⚠️ This is an educational project - not for production use"
   
