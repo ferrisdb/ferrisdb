@@ -93,44 +93,52 @@ Common issues prettier might miss:
 **Story Elements to Include:**
 
 1. **The Hook**: Start with drama or a relatable problem
+
    - ❌ "Today we implemented SSTables"
    - ✅ "I stared at the failing tests, coffee cold, wondering if I'd bitten off more than I could chew..."
 
 2. **The Struggle**: Show real challenges
+
    - "For three hours, I fought with Rust's borrow checker like it was my nemesis"
    - "The segfault appeared out of nowhere - my old CRUD reflexes were useless here"
 
 3. **The AI Save**: Give Claude credit when deserved
+
    - "Then Claude dropped a knowledge bomb that changed everything"
    - "I was ready to give up when Claude suggested something I'd never considered"
 
 4. **The Insight**: Share what you learned
+
    - "That's when it clicked - databases aren't magic, they're just really clever file management!"
    - "Who knew that 'eventual consistency' meant 'eventually I'd understand this'?"
 
 5. **The Human Touch**: Address AI replacement fears
    - "Working with Claude proved my job is safe - AI amplifies developers, it doesn't replace them"
-   - "Claude can write code, but only I can decide what code *should* be written"
+   - "Claude can write code, but only I can decide what code _should_ be written"
 
 **Engagement Techniques:**
 
 - **Running Jokes**: Develop recurring themes
+
   - "My CRUD brain vs database reality"
   - "Coffee count: 7 cups and counting..."
   - "Rust compiler: 1, Me: 0 (but I'm learning!)"
 
 - **Pop Culture References**: Make it relatable
+
   - "I felt like Neo seeing the Matrix for the first time"
   - "This bug was my white whale"
   - "Claude became my Yoda in the database arts"
 
 - **Visual Breaks**: Use emojis and formatting
+
   - 🎉 for victories
   - 😱 for shocking discoveries
   - 💡 for "aha!" moments
   - 🤦 for facepalm mistakes
 
 - **Mini-Cliffhangers**: Keep readers scrolling
+
   - "Little did I know, this simple change would cascade into..."
   - "The solution was right there, but I wouldn't see it for another hour"
   - "And that's when everything went sideways..."
@@ -139,6 +147,7 @@ Common issues prettier might miss:
   - "Building a database is like assembling IKEA furniture in the dark"
   - "Debugging this was like finding a specific grain of sand on a beach"
   - "The skip list finally clicked - it's just a subway system for data!"
+
 ### Deep Dive Articles
 
 **Writing for Developers, Not Academics:**

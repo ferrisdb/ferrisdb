@@ -6,7 +6,14 @@ date: 2025-05-28
 day: 2
 categories: [development, database, sstable, optimization]
 tags: [ferrisdb, rust, lsm-tree, binary-search, architecture]
-stats: ["📊 55 tests passing", "📄 5 technical PRs merged", "⏱️ Binary search optimization", "🔧 Major architectural refactor", "🏗️ SSTable writer & reader"]
+stats:
+  [
+    "📊 55 tests passing",
+    "📄 5 technical PRs merged",
+    "⏱️ Binary search optimization",
+    "🔧 Major architectural refactor",
+    "🏗️ SSTable writer & reader",
+  ]
 ---
 
 ## Day 2: SSTable Implementation, Optimization, and Architectural Refinement
@@ -24,7 +31,7 @@ Welcome back to the FerrisDB development journey! Day 2 was packed with technica
 ```rust
 // File structure:
 // [Data Block 1][Data Block 2]...[Data Block N][Index Block][Footer]
-// 
+//
 // Each data block contains:
 // - Header: block_size(u32), entry_count(u32), checksum(u32)
 // - Entries: sorted by InternalKey
@@ -55,7 +62,7 @@ impl SSTableWriter {
         // Maintains sort order, flushes blocks at 4KB
         // Builds index incrementally
     }
-    
+
     pub fn finish(mut self) -> Result<()> {
         // Writes final block, index, and footer
         // Ensures all data is synced to disk
@@ -213,14 +220,14 @@ This provides `O(log B + log E)` complexity where B = blocks, E = entries per bl
 
 ### Implementation Achievements
 
-| Component       | Achievement                    | Impact                                 |
-| --------------- | ------------------------------ | -------------------------------------- |
-| SSTable Format  | Block-based with checksums     | Data integrity + efficient I/O         |
-| Write Path      | Streaming with auto-flush      | Memory-efficient large file creation   |
-| Read Path       | Two-level binary search        | O(log B + log E) lookup complexity     |
-| Block lookup    | O(n) → O(log n)                | ~10x improvement for 1000 entries      |
-| API Design      | Separated key from operation   | Cleaner, more intuitive interfaces     |
-| Architecture    | Clear separation of concerns   | Better maintainability & extensibility |
+| Component      | Achievement                  | Impact                                 |
+| -------------- | ---------------------------- | -------------------------------------- |
+| SSTable Format | Block-based with checksums   | Data integrity + efficient I/O         |
+| Write Path     | Streaming with auto-flush    | Memory-efficient large file creation   |
+| Read Path      | Two-level binary search      | O(log B + log E) lookup complexity     |
+| Block lookup   | O(n) → O(log n)              | ~10x improvement for 1000 entries      |
+| API Design     | Separated key from operation | Cleaner, more intuitive interfaces     |
+| Architecture   | Clear separation of concerns | Better maintainability & extensibility |
 
 ### Industry Alignment
 
