@@ -112,11 +112,13 @@ prettier --write "**/*.md"
 ### Pull Request Policy
 
 - **All changes must go through PRs** - Even maintainers should not push directly to main
+- **CRITICAL**: Never push directly to main branch - always use PRs even for small fixes
 - **Maintainers**: Can merge PRs after all CI checks pass (no review required)
 - **External contributors**: Require review from a maintainer
 - All PRs must pass CI checks before merging
 - Use squash merge to keep history clean
 - **No direct pushes to main** - Use admin privileges only for emergency fixes
+- **Reminder**: If you accidentally push to main, create a revert PR immediately
 
 ### Architecture Decisions
 
