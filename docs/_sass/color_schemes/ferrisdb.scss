@@ -21,3 +21,17 @@ $btn-primary-color: $ferris-orange;  // 4.5:1 contrast ratio
 // Code styling (GitHub inspired for familiarity)
 $code-background-color: #f6f8fa;
 $code-text-color: #24292e;
+
+// Pagination styling
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  
+  .page_number {
+    color: $body-text-color;
+    font-size: 0.875rem;
+  }
+}

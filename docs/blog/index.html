@@ -1,0 +1,129 @@
+---
+layout: default
+title: "The FerrisDB Development Journey"
+nav_order: 5
+permalink: /blog/
+---
+
+<div class="no_toc"></div>
+
+<p class="fs-6 fw-300">
+Watch a CRUD developer learn database internals (with an AI assistant and too much coffee)
+</p>
+
+<p>Welcome to the most honest database development blog on the internet! This is where I document my journey from "I know SQL" to "I built a distributed database" (spoiler: it involves a lot of coffee and patient explanations from Claude).</p>
+
+<h2>What Makes This Blog Different?</h2>
+
+<p><strong>Real struggles, real solutions</strong> - Every compilation error, every "aha!" moment</p>
+
+<p><strong>Human + AI collaboration</strong> - See how Claude helps me understand complex concepts</p>
+
+<p><strong>Zero pretense</strong> - I start not knowing what an LSM-tree is (hint: not a Christmas tree)</p>
+
+<p><strong>Daily progress</strong> - Follow along as FerrisDB grows from nothing to something</p>
+
+<h2>The Journey So Far</h2>
+
+{% for post in paginator.posts %}
+
+<h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+
+<p class="text-purple-300">
+{{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• Day {{ post.day }}{% endif %}
+</p>
+<p class="text-grey-dk-000 fs-3"></p>
+
+{% if post.subtitle %}
+<p class="text-grey-dk-100">{{ post.subtitle }}</p>
+{% endif %}
+
+{% if post.stats %}
+<p class="label label-blue">{{ post.stats | join: " • " }}</p>
+{% endif %}
+
+<p>{{ post.excerpt | strip_html | truncatewords: 40 }}</p>
+
+<p><a href="{{ post.url | relative_url }}" class="btn btn-purple">Read the adventure →</a></p>
+
+<hr>
+
+{% endfor %}
+
+<!-- Pagination -->
+{% if paginator.total_pages > 1 %}
+<div class="pagination">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}" class="btn">← Previous</a>
+  {% else %}
+    <span class="btn btn-outline">← Previous</span>
+  {% endif %}
+  
+  <span class="page_number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}" class="btn">Next →</a>
+  {% else %}
+    <span class="btn btn-outline">Next →</span>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if paginator.posts.size == 0 %}
+
+<h3 class="text-center">Coming Soon</h3>
+
+<p class="text-center">
+The first blog post will be published shortly. In the meantime, check out the project on GitHub.
+</p>
+
+<p class="text-center">
+<a href="{{ site.project.repo_url }}" class="btn btn-primary">View Repository</a>
+</p>
+
+{% endif %}
+
+<h2>Why Follow This Blog?</h2>
+
+<h3>For Developers</h3>
+
+<ul>
+<li>Learn database internals without the academic jargon</li>
+<li>See real-world Rust struggles and solutions</li>
+<li>Understand how AI can accelerate your learning</li>
+</ul>
+
+<h3>For Database Enthusiasts</h3>
+
+<ul>
+<li>Watch a storage engine being built from scratch</li>
+<li>See design decisions being made in real-time</li>
+<li>Learn about LSM-trees, WAL, compaction, and more</li>
+</ul>
+
+<h3>For Everyone</h3>
+
+<ul>
+<li>Enjoy the honest, humorous take on complex topics</li>
+<li>Get inspired to tackle your own ambitious projects</li>
+<li>See that everyone starts as a beginner</li>
+</ul>
+
+<h2>Follow the Journey</h2>
+
+<p>Want to see how this story unfolds? Here's how to stay connected:</p>
+
+<p>⭐ <strong>Star the repository</strong> on GitHub to show support and keep track of progress!</p>
+
+<p><a href="{{ site.project.repo_url }}" class="btn btn-primary fs-5">⭐ Star FerrisDB on GitHub</a></p>
+
+<p>📖 <strong>Bookmark this blog</strong> to check back for new posts (we publish daily during active development)</p>
+
+<p>💬 <strong>Join the conversation</strong> by opening issues or discussions on GitHub</p>
+
+<hr>
+
+<blockquote>
+<p>"Building a database is like assembling IKEA furniture, except the instructions are in academic papers and the allen wrench is the Rust compiler."</p>
+<p>— A caffeinated developer, probably</p>
+</blockquote>
