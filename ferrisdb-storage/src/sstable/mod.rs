@@ -364,7 +364,7 @@ mod tests {
         let key1 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
         let key2 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
         let key3 = InternalKey::new(b"key".to_vec(), 101, Operation::Put);
-        
+
         assert_eq!(key1, key2);
         assert_ne!(key1, key3);
     }
