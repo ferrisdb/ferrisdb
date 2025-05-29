@@ -252,6 +252,7 @@ The goal is an honest, engaging story - not fiction. Readers should trust that w
 **Why Accuracy Matters for Both Blogs:**
 
 Maintaining truthful records in both human and Claude blogs is essential because:
+
 - **Research value**: Future teams studying human-AI collaboration need accurate data
 - **Pattern recognition**: We can only identify effective collaboration patterns from true events
 - **Trust building**: Readers rely on our honesty to understand real vs imagined capabilities
