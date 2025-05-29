@@ -1,8 +1,22 @@
 ---
-layout: page
-title: Frequently Asked Questions
-subtitle: Everything you want to know about FerrisDB and our human-AI collaboration
+layout: default
+title: FAQ
+nav_order: 6
 permalink: /faq/
+---
+
+# Frequently Asked Questions
+{: .no_toc }
+
+Everything you want to know about FerrisDB and our human-AI collaboration
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## About FerrisDB

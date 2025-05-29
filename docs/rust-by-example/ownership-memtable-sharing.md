@@ -1,14 +1,26 @@
 ---
-layout: page
-title: "Ownership & Sharing: MemTable Lifecycle Management"
-subtitle: "Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go"
+layout: default
+title: "Ownership & Sharing"
+parent: "Rust by Example"
+nav_order: 1
 permalink: /rust-by-example/ownership-memtable-sharing/
-tags: [rust, comparison, ownership, memory-management, memtable]
-difficulty: beginner
-estimated_reading: "10 minutes"
-ferrisdb_component: memtable
-rust_concepts: [ownership, arc, clone, lifetime]
-target_languages: [javascript, python, java, go]
+---
+
+# Ownership & Sharing: MemTable Lifecycle Management
+{: .no_toc }
+
+Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go
+{: .fs-6 .fw-300 }
+
+**Difficulty:** Beginner • **Reading time:** 10 minutes
+{: .label .label-green }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Problem We're Solving

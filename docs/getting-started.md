@@ -1,8 +1,22 @@
 ---
-layout: page
+layout: default
 title: Getting Started
-subtitle: How to build, run, and contribute to FerrisDB
+nav_order: 2
 permalink: /getting-started/
+---
+
+# Getting Started
+{: .no_toc }
+
+How to build, run, and contribute to FerrisDB
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 Welcome to FerrisDB! This guide will help you get up and running with the project, whether you're interested in following along with development or contributing to the codebase.

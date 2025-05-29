@@ -1,13 +1,26 @@
 ---
-layout: page
-title: "Lock-Free Skip Lists: Building a Concurrent MemTable"
-subtitle: "How FerrisDB implements a thread-safe in-memory storage with lock-free reads"
+layout: default
+title: "Lock-Free Skip Lists"
+parent: Deep Dives
+nav_order: 4
 permalink: /deep-dive/concurrent-skip-list/
-tags: [database, concurrency, skip-list, lock-free, memtable]
-difficulty: intermediate
-estimated_reading: "20 minutes"
-ferrisdb_components: [memtable, skiplist]
-prerequisites: [/deep-dive/lsm-trees/]
+---
+
+# Lock-Free Skip Lists: Building Concurrent Data Structures
+{: .no_toc }
+
+Understanding concurrent programming through FerrisDB's MemTable implementation
+{: .fs-6 .fw-300 }
+
+**Difficulty:** Advanced • **Reading time:** 35 minutes
+{: .label .label-red }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Problem & Why It Matters

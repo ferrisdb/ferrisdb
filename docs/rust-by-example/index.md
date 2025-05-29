@@ -1,9 +1,16 @@
 ---
-layout: page
-title: "Rust by Example: Database Edition"
-subtitle: "Learn Rust through real database code - explained for CRUD developers"
+layout: default
+title: "Rust by Example"
+nav_order: 4
+has_children: true
 permalink: /rust-by-example/
 ---
+
+# Rust by Example: Database Edition
+{: .no_toc }
+
+Learn Rust through real database code - explained for CRUD developers
+{: .fs-6 .fw-300 }
 
 Welcome to **Rust by Example: Database Edition** - a comprehensive guide to understanding Rust through real, production-quality database code from FerrisDB.
 

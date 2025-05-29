@@ -1,13 +1,26 @@
 ---
-layout: page
-title: "LSM-Trees: The Secret Behind Modern Database Performance"
-subtitle: "Understanding Log-Structured Merge Trees and how they power high-performance storage engines"
+layout: default
+title: "LSM-Trees Explained"
+parent: Deep Dives
+nav_order: 2
 permalink: /deep-dive/lsm-trees/
-tags: [database, lsm-tree, storage-engine, performance]
-difficulty: beginner
-estimated_reading: "15 minutes"
-ferrisdb_components: [memtable, sstable, wal, compaction]
-prerequisites: []
+---
+
+# LSM-Trees Explained: The Secret to Fast Writes
+{: .no_toc }
+
+Understanding Log-Structured Merge Trees through FerrisDB's implementation
+{: .fs-6 .fw-300 }
+
+**Difficulty:** Intermediate • **Reading time:** 25 minutes
+{: .label .label-yellow }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Problem & Why It Matters

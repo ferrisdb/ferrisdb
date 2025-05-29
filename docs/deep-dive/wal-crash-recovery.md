@@ -1,13 +1,26 @@
 ---
-layout: page
-title: "Understanding WAL and Crash Recovery"
-subtitle: "How Write-Ahead Logs ensure data durability and enable crash recovery in database systems"
+layout: default
+title: "WAL and Crash Recovery"
+parent: Deep Dives
+nav_order: 1
 permalink: /deep-dive/wal-crash-recovery/
-tags: [database, wal, crash-recovery, durability, storage-engine]
-difficulty: beginner
-estimated_reading: "15 minutes"
-ferrisdb_components: [wal, storage-engine]
-prerequisites: []
+---
+
+# Understanding WAL and Crash Recovery
+{: .no_toc }
+
+How Write-Ahead Logs ensure data durability and enable crash recovery in database systems
+{: .fs-6 .fw-300 }
+
+**Difficulty:** Beginner • **Reading time:** 15 minutes
+{: .label .label-green }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Problem & Why It Matters

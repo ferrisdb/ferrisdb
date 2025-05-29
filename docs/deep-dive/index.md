@@ -1,9 +1,16 @@
 ---
-layout: page
-title: Technical Deep Dives
-subtitle: In-depth exploration of database internals through FerrisDB's implementation
+layout: default
+title: Deep Dives
+nav_order: 3
+has_children: true
 permalink: /deep-dive/
 ---
+
+# Technical Deep Dives
+{: .no_toc }
+
+In-depth exploration of database internals through FerrisDB's implementation
+{: .fs-6 .fw-300 }
 
 Welcome to FerrisDB's technical deep dives! These articles explore fundamental database concepts through our actual implementation, providing both theoretical understanding and practical code examples.
 

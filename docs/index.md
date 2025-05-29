@@ -1,6 +1,30 @@
 ---
-layout: home
+layout: default
 title: Home
+nav_order: 1
+permalink: /
+---
+
+# Building a Database, Learning in Public
+{: .fs-9 }
+
+FerrisDB: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way.
+{: .fs-6 .fw-300 }
+
+[Start Learning](/deep-dive/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[Read Our Story](/blog/){: .btn .fs-5 .mb-4 .mb-md-0 }
+
+---
+
+🎯 **Mission:** Prove that anyone can understand database internals
+{: .label .label-blue }
+
+🤝 **Approach:** Human creativity + AI knowledge = Better learning
+{: .label .label-green }
+
+📚 **Result:** The most transparent database development ever attempted
+{: .label .label-purple }
+
 ---
 
 ## Choose Your Learning Path

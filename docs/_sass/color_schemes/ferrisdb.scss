@@ -1,0 +1,47 @@
+// FerrisDB color scheme for Just the Docs
+
+// Colors
+$body-background-color: #ffffff;
+$sidebar-color: #f5f6fa;
+$search-background-color: #fff;
+$table-background-color: #fff;
+$code-background-color: #f5f6fa;
+$feedback-color: darken($sidebar-color, 7%);
+
+// Typography
+$body-text-color: #2c3e50;
+$body-heading-color: #27374d;
+$search-result-preview-color: #777;
+$nav-child-link-color: #516b8b;
+$link-color: #ff6b6b;
+$btn-primary-color: #ff6b6b;
+$base-button-color: #f7f7f7;
+
+// Code
+$code-background-color: #f8f9fa;
+$code-text-color: #e83e8c;
+
+// Borders
+$border-color: #eeebee;
+$search-input-focus-border-color: #ff6b6b;
+
+// Overrides
+$body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$mono-font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Monospace;
+
+// Custom gradients
+$gradient-primary: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+$gradient-secondary: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+
+// Spacing
+$gutter-spacing: $sp-6;
+$gutter-spacing-sm: $sp-4;
+$nav-width: 264px;
+$nav-width-md: 248px;
+$nav-list-expander-right: true;
+$content-width: 1000px;
+$header-height: 80px;
+$search-results-width: $content-width - $nav-width;
+$transition-duration: 200ms;
+
+@import "./vendor/OneDarkJekyll/syntax";

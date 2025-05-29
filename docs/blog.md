@@ -1,9 +1,15 @@
 ---
-layout: page
-title: The FerrisDB Development Journey
-subtitle: Watch a CRUD developer learn database internals (with an AI assistant and too much coffee)
+layout: default
+title: Development Blog
+nav_order: 5
 permalink: /blog/
 ---
+
+# The FerrisDB Development Journey
+{: .no_toc }
+
+Watch a CRUD developer learn database internals (with an AI assistant and too much coffee)
+{: .fs-6 .fw-300 }
 
 Welcome to the most honest database development blog on the internet! This is where I document my journey from "I know SQL" to "I built a distributed database" (spoiler: it involves a lot of coffee and patient explanations from Claude).
 

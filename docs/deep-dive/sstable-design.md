@@ -1,13 +1,26 @@
 ---
-layout: page
-title: "SSTable Format Design: Building Efficient Persistent Storage"
-subtitle: "How FerrisDB implements sorted string tables with binary search optimization"
+layout: default
+title: "SSTable Format Design"
+parent: Deep Dives
+nav_order: 3
 permalink: /deep-dive/sstable-design/
-tags: [database, sstable, storage-format, binary-format, optimization]
-difficulty: intermediate
-estimated_reading: "20 minutes"
-ferrisdb_components: [sstable, storage-engine]
-prerequisites: [/deep-dive/lsm-trees/]
+---
+
+# SSTable Format Design: Efficient On-Disk Storage
+{: .no_toc }
+
+How databases organize and access data on disk for optimal performance
+{: .fs-6 .fw-300 }
+
+**Difficulty:** Intermediate • **Reading time:** 30 minutes
+{: .label .label-yellow }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Problem & Why It Matters
