@@ -43,7 +43,7 @@ Every article follows the same structure:
 
 ## Article Categories
 
-### 🏗️ Memory Management & Ownership
+### 🏗️ Memory Management & Ownership {#memory-management-ownership}
 
 Learn Rust's ownership system through data structure examples.
 
@@ -68,7 +68,7 @@ Learn Rust's ownership system through data structure examples.
 - Borrowing & Lifetimes: MemTable Iterator Design
 - Smart Pointers: Advanced Arc Patterns
 
-### 🛡️ Safety & Error Handling
+### 🛡️ Safety & Error Handling {#safety-error-handling}
 
 See how Rust prevents bugs that plague other languages.
 
@@ -76,7 +76,7 @@ See how Rust prevents bugs that plague other languages.
 - **[Coming Soon]** Option Types: SSTable Key Lookups
 - **[Coming Soon]** Pattern Matching: Operation Type Handling
 
-### ⚡ Performance & Zero-Cost Abstractions
+### ⚡ Performance & Zero-Cost Abstractions {#performance-zero-cost-abstractions}
 
 Understand how Rust achieves C-level performance with high-level abstractions.
 
@@ -84,7 +84,7 @@ Understand how Rust achieves C-level performance with high-level abstractions.
 - **[Coming Soon]** Compile-Time Optimizations: Binary Format Serialization
 - **[Coming Soon]** Memory Layout: Struct Design for Cache Performance
 
-### 🔄 Concurrency & Parallelism
+### 🔄 Concurrency & Parallelism {#concurrency-parallelism}
 
 Learn Rust's approach to safe concurrent programming.
 
@@ -92,7 +92,7 @@ Learn Rust's approach to safe concurrent programming.
 - **[Coming Soon]** Message Passing: Background Flush Threads
 - **[Coming Soon]** Shared State: Atomic Operations in MemTable
 
-### 🎯 Type System & Traits
+### 🎯 Type System & Traits {#type-system-traits}
 
 Master Rust's powerful type system through practical examples.
 
@@ -100,7 +100,7 @@ Master Rust's powerful type system through practical examples.
 - **[Coming Soon]** Generics: Type-Safe Binary Serialization
 - **[Coming Soon]** Associated Types: Iterator Patterns
 
-### 🏭 Systems Programming
+### 🏭 Systems Programming {#systems-programming}
 
 See how Rust handles low-level concerns safely.
 
@@ -118,13 +118,13 @@ See how Rust handles low-level concerns safely.
 
 **Coming from garbage-collected languages?** Focus on:
 
-1. Memory Management & Ownership section below
-2. Performance & Zero-Cost Abstractions section
+1. [Memory Management & Ownership](#memory-management-ownership) section
+2. [Performance & Zero-Cost Abstractions](#performance-zero-cost-abstractions) section
 
 **Experienced systems programmer?** Jump to:
 
-1. Concurrency & Parallelism section
-2. Type System & Traits section
+1. [Concurrency & Parallelism](#concurrency-parallelism) section
+2. [Type System & Traits](#type-system-traits) section
 
 ## Language Experience Guide
 
