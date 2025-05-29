@@ -160,7 +160,7 @@ gh pr merge <PR-number> --squash
 - All PRs must pass CI checks before merging
 - Use squash merge to keep history clean
 - **No direct pushes to main** - Admin privileges are for emergencies only
-- **If you accidentally push to main**: Create a revert PR immediately
+- **If you accidentally push to main**: Leave it as is, but be more careful in the future
 
 ### Architecture Decisions
 
