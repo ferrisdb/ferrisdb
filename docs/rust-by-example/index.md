@@ -62,8 +62,11 @@ Learn Rust's ownership system through data structure examples.
 
 #### [Ownership & Sharing: MemTable Lifecycle Management](/rust-by-example/ownership-memtable-sharing/)
 
-{: .label .label-green } Beginner
-{: .label .label-blue } 10 min read
+Beginner
+{: .label .label-green }
+
+10 min read
+{: .label .label-blue }
 
 Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go.
 

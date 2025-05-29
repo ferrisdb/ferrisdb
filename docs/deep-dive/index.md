@@ -31,8 +31,11 @@ Welcome to FerrisDB's technical deep dives! These articles explore fundamental d
 
 ### WAL and Crash Recovery
 
-{: .label .label-green } Beginner
-{: .label .label-blue } 15 min read
+Beginner
+{: .label .label-green }
+
+15 min read
+{: .label .label-blue }
 
 Understand how Write-Ahead Logs ensure data durability and enable crash recovery. Learn about FerrisDB's WAL format, checksums, and recovery process.
 
@@ -44,8 +47,11 @@ Understand how Write-Ahead Logs ensure data durability and enable crash recovery
 
 ### LSM-Trees Explained
 
-{: .label .label-yellow } Intermediate
-{: .label .label-blue } 20 min read
+Intermediate
+{: .label .label-yellow }
+
+20 min read
+{: .label .label-blue }
 
 Discover why LSM-trees revolutionized write performance in modern databases. Explore FerrisDB's implementation from MemTables to compaction.
 
@@ -57,8 +63,11 @@ Discover why LSM-trees revolutionized write performance in modern databases. Exp
 
 ### SSTable Format Design
 
-{: .label .label-yellow } Intermediate
-{: .label .label-blue } 18 min read
+Intermediate
+{: .label .label-yellow }
+
+18 min read
+{: .label .label-blue }
 
 Deep dive into efficient on-disk storage formats. Learn how FerrisDB organizes data for fast reads and space efficiency.
 
@@ -70,8 +79,11 @@ Deep dive into efficient on-disk storage formats. Learn how FerrisDB organizes d
 
 ### Lock-Free Skip Lists
 
-{: .label .label-red } Advanced
-{: .label .label-blue } 25 min read
+Advanced
+{: .label .label-red }
+
+25 min read
+{: .label .label-blue }
 
 Explore concurrent data structures that power FerrisDB's MemTable. Understanding lock-free programming through practical implementation.
 
