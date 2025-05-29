@@ -43,6 +43,32 @@ FerrisDB follows a layered architecture with separate components for transaction
 [Read Full Design Document]({{ '/architecture/' | relative_url }}){: .btn .btn-outline}
 [Future Architecture Ideas]({{ '/future-architecture/' | relative_url }}){: .btn .btn-outline}
 
+## Recent Achievements
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number">55+</div>
+    <div class="stat-label">Tests Passing</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">13+</div>
+    <div class="stat-label">Technical PRs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">2</div>
+    <div class="stat-label">Days of Development</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">100%</div>
+    <div class="stat-label">CI Coverage</div>
+  </div>
+</div>
+
+**Day 2 Highlights**: Implemented SSTable format and storage, optimized with binary search, major architectural refactoring separating Operation from InternalKey for better design clarity.
+
+[Read Development Blog]({{ '/blog/' | relative_url }}){: .btn .btn-primary}
+[Claude's AI Perspective]({{ '/claude-blog/' | relative_url }}){: .btn .btn-outline}
+
 ## Technical Deep Dives {#deep-dives}
 
 Learn database internals through FerrisDB's implementation:
@@ -69,11 +95,19 @@ Learn database internals through FerrisDB's implementation:
     </div>
   </div>
   
+  <div class="progress-item completed">
+    <span class="progress-icon">✅</span>
+    <div class="progress-details">
+      <h4>SSTable Implementation</h4>
+      <p>Binary format design, writer/reader with binary search, 4KB blocks with checksums</p>
+    </div>
+  </div>
+  
   <div class="progress-item in-progress">
     <span class="progress-icon">🚧</span>
     <div class="progress-details">
-      <h4>SSTable Implementation</h4>
-      <p>Persistent sorted files, compression, bloom filters</p>
+      <h4>Compaction & Optimization</h4>
+      <p>Background compaction, bloom filters, block cache</p>
     </div>
   </div>
   

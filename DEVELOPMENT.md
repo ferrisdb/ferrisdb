@@ -179,7 +179,7 @@ cargo check --all
 ### Testing
 
 ```bash
-# Run all tests
+# Run all tests (currently 55+ tests passing)
 cargo test --all
 
 # Run tests with output

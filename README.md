@@ -41,7 +41,7 @@ cd ferrisdb
 # Build the project
 cargo build --release
 
-# Run tests
+# Run tests (currently 55+ tests passing)
 cargo test --all
 ```
 
@@ -121,18 +121,19 @@ We welcome contributions! Please see our documentation:
 
 ## Performance
 
-FerrisDB is designed for high performance:
+FerrisDB targets high performance through careful design:
 
-- **Latency**: <10ms p99 for single-key operations
-- **Throughput**: 100K+ operations per second per node
-- **Scalability**: Linear scaling up to 100 nodes
+- **Storage**: Binary search in SSTables for O(log n) lookups
+- **Concurrency**: Lock-free skip list for MemTable operations
+- **I/O Efficiency**: 4KB block-based storage with checksums
+- **Architecture**: Clean separation of concerns for maintainability
 
 ## Roadmap
 
 - [x] Design document
 - [x] Write-Ahead Log (WAL)
 - [x] MemTable with SkipList
-- [ ] SSTable implementation (in progress)
+- [x] SSTable implementation (Day 2)
 - [ ] Compaction system
 - [ ] Transaction system
 - [ ] Distribution layer
