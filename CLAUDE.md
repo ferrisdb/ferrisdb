@@ -49,12 +49,14 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Review generated documentation before submitting PRs
 
 **Markdown Quality (REQUIRED before commit):**
+
 1. **Format first**: `prettier --write "**/*.md"`
 2. **Lint second**: `markdownlint-cli2 "**/*.md"`
 3. **Fix any remaining issues manually** - prettier doesn't catch everything
 4. **Verify clean**: Run linter again to ensure no errors
 
 Common issues prettier might miss:
+
 - Lists need blank lines before and after
 - Code blocks need blank lines before and after
 - Headers need blank lines before and after
@@ -178,7 +180,7 @@ prettier --write "**/*.md"
 
 1. **Create feature branch**: `git checkout -b <branch-type>/<description>`
 2. **Make changes**: Edit files, add tests, update documentation
-3. **Lint and format**: 
+3. **Lint and format**:
    - Rust: `cargo fmt --all && cargo clippy --all-targets --all-features -- -D warnings`
    - Markdown: `prettier --write "**/*.md" && markdownlint-cli2 "**/*.md"`
 4. **Commit changes**: Use conventional commit messages
