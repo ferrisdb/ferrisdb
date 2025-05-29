@@ -4,244 +4,158 @@
 
 A distributed, transactional key-value database written in Rust, inspired by FoundationDB.
 
-> ⚠️ **Educational Project Disclaimer**
+> 📚 **Educational Project**
 >
-> This project is created for personal learning purposes:
+> FerrisDB is an educational project where humans and AI collaborate to:
 >
-> - Learning Rust programming language
-> - Understanding distributed systems concepts
-> - Exploring AI-assisted development with Claude Code
+> - Learn distributed systems by building one
+> - Implement a real database from scratch in Rust
+> - Pioneer human-AI collaborative development
 >
-> **This is NOT recommended for production use.** The code is experimental and primarily serves as a learning exercise.
-> If you're looking for a production-ready distributed database, consider established solutions like FoundationDB, TiKV, or CockroachDB.
+> **Not recommended for production use** - this is a learning journey!
 
-## Features
+## Vision
 
-- **ACID Transactions**: Full ACID compliance with serializable isolation
-- **Distributed**: Horizontally scalable across multiple nodes
-- **Fault Tolerant**: Automatic failover and recovery
-- **High Performance**: Optimized for both reads and writes
-- **Simple API**: Clean key-value interface with range queries
-- **Strong Consistency**: Linearizable consistency guarantees
+We're building a distributed database inspired by FoundationDB's architecture. Like any ambitious project, we're starting with the foundation (storage engine) and building up to the full distributed system.
+
+## Current Progress
+
+### ✅ What's Working Now
+
+The storage engine foundation:
+- **Write-Ahead Log (WAL)** - Durability and crash recovery
+- **MemTable** - Lock-free concurrent skip list for in-memory operations
+- **SSTable** - Persistent sorted string tables with binary search
+- **MVCC Timestamps** - Multi-version concurrency control preparation
+
+### 🚧 What We're Building
+
+Active development on:
+- **Compaction** - Background merging of SSTables
+- **Transaction Layer** - ACID transaction support
+- **Distribution Layer** - Data partitioning and replication
+- **Consensus Protocol** - Likely Raft for coordination
+
+### 🎯 The End Goal
+
+A fully functional distributed database with:
+- **ACID Transactions** - True serializable isolation
+- **Horizontal Scalability** - Add nodes to scale out
+- **Fault Tolerance** - Automatic failover and recovery
+- **Strong Consistency** - Linearizable operations
+- **Simple API** - Clean key-value interface
 
 ## Quick Start
 
-### Prerequisites
-
-- Rust 1.81 or higher
-- Git
-
-### Installation
-
 ```bash
-# Clone the repository
+# Clone and build
 git clone https://github.com/ferrisdb/ferrisdb.git
 cd ferrisdb
+cargo build --all
 
-# Build the project
-cargo build --release
-
-# Run tests (currently 55+ tests passing)
+# Run tests
 cargo test --all
-```
 
-### Basic Usage
-
-```rust
-use ferrisdb_client::FerrisDB;
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Connect to cluster
-    let db = FerrisDB::connect("ferrisdb://localhost:8080").await?;
-
-    // Simple key-value operations
-    db.set(b"hello", b"world").await?;
-    let value = db.get(b"hello").await?;
-    println!("Value: {:?}", value);
-
-    // Transactional operations
-    db.run_transaction(|txn| async move {
-        let count = txn.get(b"counter").await?.unwrap_or_default();
-        let new_count = u64::from_le_bytes(count.try_into().unwrap()) + 1;
-        txn.set(b"counter", &new_count.to_le_bytes()).await?;
-        Ok(())
-    }).await?;
-
-    Ok(())
-}
+# Explore the code
+cargo doc --all --open
 ```
 
 ## Architecture
 
-FerrisDB uses a distributed architecture with the following components:
+FerrisDB follows FoundationDB's layered architecture:
 
-- **Transaction Coordinator**: Manages distributed transactions and ensures ACID properties
-- **Storage Servers**: Store data using an LSM-tree based storage engine
-- **Cluster Controller**: Handles cluster membership and failure detection
-- **Client Library**: Provides a simple API for applications
-
-See the [Architecture Documentation](docs/architecture.md) for detailed design documentation.
-
-## Development
-
-### Building from Source
-
-```bash
-# Development build
-cargo build --all
-
-# Release build with optimizations
-cargo build --release --all
-
-# Run with debug logging
-RUST_LOG=debug cargo run --bin ferrisdb-server
+```
+┌─────────────────────────────────────┐
+│         Client Library              │
+├─────────────────────────────────────┤
+│     Transaction Coordinator         │  ← In Development
+├─────────────────────────────────────┤
+│      Storage Servers                │  ← Working on this!
+├─────────────────────────────────────┤
+│    Cluster Controller & Consensus   │  ← Planned
+└─────────────────────────────────────┘
 ```
 
-### Running Tests
+Currently implementing the Storage Server layer with an LSM-tree engine.
 
-```bash
-# Unit tests
-cargo test --all
+## The Human-AI Collaboration Experiment
 
-# Integration tests
-cargo test --all --test '*' -- --test-threads=1
+FerrisDB is unique: it's being built through genuine collaboration between human developers and AI. This isn't about AI generating code - it's about two different types of intelligence working together, each bringing their strengths:
 
-# Benchmarks
-cargo bench
-```
+- **Human**: Architecture vision, design decisions, "this feels wrong" intuition
+- **AI**: Implementation details, edge case handling, systematic analysis
 
-### Contributing
-
-We welcome contributions! Please see our documentation:
-
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and process
-- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development setup and workflows
-- **[CLAUDE.md](CLAUDE.md)** - AI assistant development guidelines
-
-## Performance
-
-FerrisDB targets high performance through careful design:
-
-- **Storage**: Binary search in SSTables for O(log n) lookups
-- **Concurrency**: Lock-free skip list for MemTable operations
-- **I/O Efficiency**: 4KB block-based storage with checksums
-- **Architecture**: Clean separation of concerns for maintainability
-
-## Project Status & Roadmap
-
-🚧 **This project is under active development as a learning exercise** 🚧
-
-### Completed ✅
-
-- [x] Design document
-- [x] Write-Ahead Log (WAL)
-- [x] MemTable with SkipList
-- [x] SSTable implementation (Day 2)
-- [x] Documentation site with blogs
-
-### In Progress 🔨
-
-- [ ] Compaction system
-- [ ] Transaction system
-- [ ] Distribution layer
-
-### Future Plans 🚀
-
-- [ ] Consensus protocol (Raft)
-- [ ] Client libraries (multiple languages)
-- [ ] Operational tools
-- [ ] Performance benchmarks
-
-## License - Plain English Version 📜
-
-FerrisDB is licensed under the **Apache License 2.0** - here's what that means in human terms:
-
-### ✅ You CAN
-
-- **Use it** - For any purpose, even commercially!
-- **Modify it** - Make changes to suit your needs
-- **Distribute it** - Share the original or modified versions
-- **Patent it** - The license includes patent grants
-- **Keep it private** - No obligation to share your modifications
-
-### 📋 You MUST
-
-- **Include the license** - Keep the LICENSE file and notices
-- **State changes** - Document what you modified (if you distribute)
-- **Include NOTICE** - If we had one (we don't yet!)
-
-### ❌ You CANNOT
-
-- **Blame us** - Software is "AS IS" with no warranty
-- **Use our trademarks** - The FerrisDB name/logo aren't included
-
-### 🤝 In Simple Terms
-
-"Do whatever you want with this code, just don't blame us if something breaks, and mention where you got it from!"
-
-See [LICENSE](LICENSE) for the full legal text (warning: written by lawyers, not humans 😄).
-
-## Acknowledgments
-
-This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/) and incorporates ideas from:
-
-- Google Spanner - Distributed transactions
-- Amazon DynamoDB - Scalability patterns
-- CockroachDB - SQL layer design
-- TiKV - Rust implementation patterns
-
-Special thanks to:
-
-- The Rust community for excellent documentation and crates
-- Claude (that's me! 🤖) for helping maintain this README and assisting with development
-- You, for reading this far!
+Read our [development blogs](https://ferrisdb.org/blog/) to see this collaboration in action!
 
 ## Documentation
 
-Visit our [documentation site](https://ferrisdb.org/) for comprehensive guides:
+- **[Getting Started](docs/getting-started.md)** - Build and run FerrisDB
+- **[Architecture](docs/architecture.md)** - System design inspired by FoundationDB
+- **[Storage Engine](docs/storage-engine.md)** - Current LSM-tree implementation
 
-### For Users
+### For Contributors
 
-- [Getting Started Guide](docs/getting-started.md) - Quick setup and basic usage
-- [Architecture Overview](docs/architecture.md) - System design and components
-- [FAQ](https://ferrisdb.org/faq/) - Common questions answered
-
-### For Developers
-
-- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute to the project
-- [DEVELOPMENT.md](DEVELOPMENT.md) - Development environment and workflows
-- [CLAUDE.md](CLAUDE.md) - AI-assisted development guidelines
-
-### Technical Deep Dives
-
-- [LSM-Trees Explained](docs/deep-dive/lsm-trees.md) - Storage engine internals
-- [WAL and Crash Recovery](docs/deep-dive/wal-crash-recovery.md) - Write-ahead logging implementation
-- [Concurrent Skip Lists](docs/deep-dive/concurrent-skip-list.md) - Lock-free data structures
-- [SSTable Design](docs/deep-dive/sstable-design.md) - On-disk storage format
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute (humans & AI welcome!)
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Technical development guide
+- **[CLAUDE.md](CLAUDE.md)** - Guidelines for AI contributors
 
 ### Learning Resources
 
-- [Human Development Blog](https://ferrisdb.org/blog/) - Daily progress from a CRUD developer's perspective
-- [Claude's Dev Blog](https://ferrisdb.org/claude-blog/) - AI insights on patterns and collaboration
-- [Rust by Example: Database Edition](https://ferrisdb.org/rust-by-example/) - Learn Rust through real database code
+- **[Human Dev Blog](https://ferrisdb.org/blog/)** - A developer's journey building a database
+- **[Claude's Blog](https://ferrisdb.org/claude-blog/)** - AI perspectives on patterns and development
+- **[Rust by Example](https://ferrisdb.org/rust-by-example/)** - Learn Rust through real database code
 
-## Show Your Support
+## Roadmap
 
-If you find FerrisDB interesting or useful for learning distributed systems:
+### Phase 1: Storage Engine ✅ (Mostly Complete)
+- [x] Write-Ahead Log
+- [x] MemTable with SkipList
+- [x] SSTable implementation
+- [ ] Compaction (in progress)
+- [ ] Bloom filters
 
-- ⭐ **Star this repository** to show your support
-- 🍴 **Fork the project** to experiment with your own ideas
-- 📖 **Read our blog posts** about the development journey
-- 💬 **Join discussions** to share ideas and ask questions
-- 🤖 **Learn from Claude** - See how AI assists in real development
+### Phase 2: Transaction System 🚧 (Starting Soon)
+- [ ] MVCC implementation
+- [ ] Transaction coordinator
+- [ ] Snapshot isolation
+- [ ] Serializable transactions
 
-## Questions?
+### Phase 3: Distribution Layer 📋 (Planned)
+- [ ] Data partitioning
+- [ ] Replication protocol
+- [ ] Failure detection
+- [ ] Automatic recovery
 
-- 📧 Open an issue for questions or bug reports
-- 💬 Start a discussion for ideas and feedback
-- 📚 Check the [FAQ](https://ferrisdb.org/faq/) for common questions
+### Phase 4: Consensus & Coordination 🔮 (Future)
+- [ ] Raft consensus
+- [ ] Cluster controller
+- [ ] Configuration management
+- [ ] Client routing
+
+## Why Another Database?
+
+Good question! We're not trying to compete with production databases. FerrisDB exists to:
+
+1. **Learn by Doing** - The best way to understand databases is to build one
+2. **Explore Human-AI Collaboration** - Can humans and AI build complex systems together?
+3. **Teach Others** - Our blogs and code help others learn distributed systems
+4. **Have Fun** - Building databases is surprisingly enjoyable!
+
+## License
+
+Apache License 2.0 - see [LICENSE](LICENSE) for details.
+
+**TL;DR**: Use it for learning, experimentation, or anything else - just don't blame us if it breaks! 😄
+
+## Acknowledgments
+
+Standing on the shoulders of giants:
+- [FoundationDB](https://apple.github.io/foundationdb/) - Architectural inspiration
+- [RocksDB](http://rocksdb.org/) - LSM-tree wisdom
+- The Rust community - Incredible ecosystem and support
+
+Special thanks to all contributors - both human and AI - who are making this experiment possible! 🦀🤖
 
 ---
 
-_Built with ❤️ and 🦀 by humans and AI working together_
+_Join us in building the future of collaborative software development!_
