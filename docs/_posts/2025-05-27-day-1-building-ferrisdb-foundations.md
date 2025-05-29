@@ -2,6 +2,7 @@
 layout: post
 title: "Day 1: When a CRUD Developer Decided to Build a Database"
 subtitle: "Or: How I learned to stop worrying and love the Rust compiler's 126 error messages"
+description: "Follow a CRUD developer's journey into database internals with Claude AI. Day 1 covers building the foundation: WAL, MemTable, and surviving 126 Rust compiler errors."
 date: 2025-05-27
 day: 1
 tags: [Architecture, Storage Engine, WAL, MemTable, Rust, Claude Code]
@@ -14,6 +15,14 @@ stats:
   ]
 confidence: "Start: 3/10 ☕ | End: 6/10 ☕☕☕"
 compilation_attempts: "47 (not counting the times I forgot semicolons)"
+---
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## The Morning That Changed Everything

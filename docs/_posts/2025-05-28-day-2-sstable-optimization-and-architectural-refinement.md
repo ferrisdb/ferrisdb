@@ -2,6 +2,7 @@
 layout: post
 title: "Day 2: The SSTable Strikes Back (And How Claude Saved My Sanity)"
 subtitle: "Building persistent storage, optimizing with binary search, and why Operation doesn't belong in InternalKey"
+description: "Follow a CRUD developer's journey building SSTables in Rust with AI assistance. Learn about binary search optimization, API design refactoring, and database engineering."
 date: 2025-05-28
 day: 2
 categories: [development, database, sstable, optimization]
@@ -17,6 +18,14 @@ stats:
 confidence: "Start: 6/10 ☕☕☕ | End: 8/10 ☕☕☕☕"
 compilation_attempts: "34 (I'm getting better!)"
 coffee_consumed: "12 cups (don't judge)"
+---
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## Day 2: When Tables Aren't Tables

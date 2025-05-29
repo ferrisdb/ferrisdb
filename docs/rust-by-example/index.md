@@ -6,10 +6,16 @@ has_children: true
 permalink: /rust-by-example/
 ---
 
-{: .no_toc }
-
 Learn Rust through real database code - explained for CRUD developers
 {: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Welcome to **Rust by Example: Database Edition** - a comprehensive guide to understanding Rust through real, production-quality database code from FerrisDB.
 
