@@ -80,6 +80,36 @@ Common issues prettier might miss:
 - Tag posts with relevant categories for easy discovery
 - Write posts after major features, interesting debugging sessions, or collaboration insights
 
+### Deep Dive Articles
+
+**Writing for Developers, Not Academics:**
+
+- **Target audience**: Typical developers, not PhD students or researchers
+- **Explain jargon**: Always define technical terms when first used (e.g., "ABA problem" needs explanation)
+- **Use analogies**: Complex concepts benefit from real-world comparisons
+- **Show don't tell**: Use concrete examples instead of abstract descriptions
+- **Progressive complexity**: Start simple, build up to advanced concepts
+- **Avoid assumptions**: Don't assume readers know advanced CS topics
+- **Conversational tone**: Write like you're explaining to a colleague, not lecturing
+
+**Deep Dive Structure:**
+
+1. **Hook**: Start with a relatable problem or question
+2. **Context**: Why should developers care about this topic?
+3. **Fundamentals**: Explain basic concepts before diving deep
+4. **Implementation**: Show real code with clear explanations
+5. **Trade-offs**: Discuss pros, cons, and when to use
+6. **Practical tips**: Give actionable advice
+7. **Resources**: Link to further reading for those who want more
+
+**Examples of Good Explanations:**
+
+- ❌ "Uses epoch-based reclamation to avoid ABA problems"
+- ✅ "Uses epoch-based reclamation to avoid the ABA problem - a concurrency issue where a memory location is changed from A to B and back to A, making it appear unchanged when it actually was modified"
+
+- ❌ "O(log n) complexity"
+- ✅ "O(log n) complexity - meaning if you have 1,000 items, you only need ~10 comparisons instead of 1,000"
+
 **Blog Post Format (for main blog):**
 
 ```yaml
