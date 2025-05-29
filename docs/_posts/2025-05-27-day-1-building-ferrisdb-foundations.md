@@ -5,7 +5,7 @@ subtitle: "Starting the journey: architecture design, storage engine planning, a
 date: 2025-05-27
 day: 1
 tags: [Architecture, Storage Engine, WAL, MemTable, Rust, Claude Code]
-stats: ["📊 13 tests passing", "📄 3 PRs merged", "⏱️ ~6 hours of development"]
+stats: ["📊 13 tests passing", "📄 8 technical PRs merged", "🏗️ WAL + MemTable implementation", "📖 Complete documentation site"]
 ---
 
 Today marks the beginning of an exciting journey: building a distributed database from scratch to learn Rust and distributed systems concepts. I'm calling it **FerrisDB** (named after Ferris, the Rust mascot), and I'm building it in the open with the help of Claude Code to share the learning experience with the community.
