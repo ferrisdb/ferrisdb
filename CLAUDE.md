@@ -48,6 +48,14 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Generate docs with `cargo doc --all --no-deps --open`
 - Review generated documentation before submitting PRs
 
+**Documentation Honesty:**
+
+- **Be transparent about implementation status** - Clearly indicate what's implemented vs planned
+- **Don't claim features that don't exist** - Use "will" or "planned" for future features
+- **Acknowledge limitations** - Be upfront about what the system can't do yet
+- **Mark hypothetical examples** - Label code examples that show expected behavior vs actual
+- **Update docs when features land** - Keep documentation in sync with actual capabilities
+
 **Markdown Quality (REQUIRED before commit):**
 
 1. **Format first**: `prettier --write "**/*.md"`
@@ -335,6 +343,14 @@ None / List any breaking changes here
 - Prefer zero-copy operations where possible
 - Use `bytes` crate for efficient buffer management
 - Implement proper batching for I/O operations
+
+**Benchmark Honesty:**
+
+- **Never claim benchmark results without running them** - Be transparent about theoretical vs actual performance
+- **Clearly label expected performance** - Use phrases like "expected", "theoretical", or "should achieve"
+- **Document benchmark methodology** - When you do run benchmarks, document the setup and conditions
+- **Avoid misleading claims** - Don't present example numbers as if they were measured results
+- **Update when benchmarks are run** - Replace theoretical numbers with actual measurements once available
 
 ### Memory Safety
 
