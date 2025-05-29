@@ -1,8 +1,20 @@
 ---
-layout: page
+layout: default
 title: Storage Engine Design
-subtitle: Detailed design and implementation of FerrisDB's custom LSM-tree storage engine
+nav_exclude: true
 permalink: /storage-engine/
+---
+
+Detailed design and implementation of FerrisDB's custom LSM-tree storage engine
+{: .fs-6 .fw-300 }
+
+## Table of contents
+
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 ## Overview

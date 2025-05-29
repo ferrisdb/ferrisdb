@@ -5,8 +5,6 @@ nav_order: 6
 permalink: /faq/
 ---
 
-{: .no_toc }
-
 Everything you want to know about FerrisDB and our human-AI collaboration
 {: .fs-6 .fw-300 }
 
@@ -15,7 +13,7 @@ Everything you want to know about FerrisDB and our human-AI collaboration
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

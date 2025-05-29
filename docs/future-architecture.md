@@ -1,8 +1,20 @@
 ---
-layout: page
+layout: default
 title: Future Architecture Explorations
-subtitle: Advanced concepts and research directions for FerrisDB evolution
+nav_exclude: true
 permalink: /future-architecture/
+---
+
+Advanced concepts and research directions for FerrisDB evolution
+{: .fs-6 .fw-300 }
+
+## Table of contents
+
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ---
 
 This page documents interesting architectural patterns and advanced concepts we might explore as FerrisDB evolves from an educational project toward production-ready capabilities.

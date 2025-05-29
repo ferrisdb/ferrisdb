@@ -17,7 +17,7 @@ How databases organize and access data on disk for optimal performance
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -6,8 +6,6 @@ nav_order: 1
 permalink: /rust-by-example/ownership-memtable-sharing/
 ---
 
-{: .no_toc }
-
 Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go
 {: .fs-6 .fw-300 }
 
@@ -19,7 +17,7 @@ Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScri
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 
