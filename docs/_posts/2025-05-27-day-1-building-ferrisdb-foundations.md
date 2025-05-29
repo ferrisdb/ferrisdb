@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Building FerrisDB - Laying the Foundations"
-subtitle: "Starting the journey: architecture design, storage engine planning, and implementing WAL + MemTable with concurrent skip lists"
+title: "Day 1: When a CRUD Developer Decided to Build a Database"
+subtitle: "Spoiler: The Rust compiler had other plans"
 date: 2025-05-27
 day: 1
 tags: [Architecture, Storage Engine, WAL, MemTable, Rust, Claude Code]
@@ -9,69 +9,80 @@ stats:
   [
     "📊 13 tests passing",
     "📄 8 technical PRs merged",
-    "🏗️ WAL + MemTable implementation",
-    "📖 Complete documentation site",
+    "☕ 5 cups consumed",
+    "🤯 3 existential crises",
   ]
+confidence: "Start: 3/10 ☕ | End: 6/10 ☕☕☕"
 ---
 
-Today marks the beginning of an exciting journey: building a distributed database from scratch to learn Rust and distributed systems concepts. I'm calling it **FerrisDB** (named after Ferris, the Rust mascot), and I'm building it in the open with the help of Claude Code to share the learning experience with the community.
+## The Morning That Started It All
 
-## Why Build a Database?
+I stared at my terminal, coffee #1 steaming beside me, and typed the most ambitious command of my career:
 
-Building a database is one of the best ways to learn about:
-
-- **Rust systems programming** - Memory management, concurrency, performance
-- **Distributed systems** - Consensus, replication, fault tolerance
-- **Storage engines** - Data structures, persistence, performance optimization
-- **AI-assisted development** - Using Claude Code as a coding partner
-
-I decided to build my own storage engine from scratch rather than using RocksDB to really understand the internals.
-
-## What We Accomplished Today
-
-### 1. Project Architecture & Design
-
-We started with a comprehensive design document outlining FerrisDB's architecture, heavily inspired by FoundationDB:
-
-- **Transaction Coordinator (TC)** - Manages distributed ACID transactions
-- **Storage Servers (SS)** - Handle data storage and retrieval
-- **Cluster Controller (CC)** - Manages cluster membership and coordination
-- **Client Library** - Simple key-value API with transaction support
-
-The full design is documented in our [Architecture Documentation]({{ '/architecture/' | relative_url }}) with detailed explanations of the transaction flow, storage layer, and distributed consensus.
-
-### 2. Rust Workspace Setup
-
-Created a proper Rust workspace structure:
-
-```
-ferrisdb/
-├── ferrisdb-core/       # Common types and traits
-├── ferrisdb-storage/    # Storage engine (our custom LSM-tree)
-├── ferrisdb-client/     # Client library
-├── ferrisdb-server/     # Server implementation
-└── ferrisdb/            # Main binary crate
+```bash
+cargo new ferrisdb
 ```
 
-### 3. Storage Engine Design
+"How hard could it be?" I thought. "I've built CRUD apps. I know databases. I use them every day!"
 
-Instead of using an existing storage engine, we designed our own **LSM-tree (Log-Structured Merge-tree)** implementation:
+**Narrator**: He did not, in fact, know databases.
 
+**Confidence Level: 3/10** ☕
+
+## When Ambition Met Reality
+
+My grand plan: Build a distributed database from scratch. Learn Rust. Understand distributed systems. What could possibly go wrong?
+
+Claude watched silently as I confidently wrote:
+
+```rust
+// This should work, right?
+let database = Database::new();
+database.put("key", "value");
 ```
+
+**Compilation Attempts:** |||| |||| |||| |
+
+The Rust compiler laughed. Not a gentle chuckle, but a full-blown, error-message-filled cackle that scrolled past my terminal like credits in a Star Wars movie.
+
+## The Struggle Is Real
+
+For two hours, I battled with:
+
+- 🤦 "What do you mean I can't just store a HashMap on disk?"
+- 😤 "Why does everything need to be Send + Sync + 'static + Clone + Debug?"
+- 😱 "Expected type `Result<T, E>`, found type `panic!`"
+
+My CRUD brain kept screaming: "In Node.js, this would be ONE LINE!"
+
+**Times I Googled "rust lifetime tutorial":** 11
+
+## Enter Claude, Stage Left
+
+Just when I was about to `rm -rf` the whole project and go back to building todo apps, I asked Claude for help...
+
+💭 **Claude Says:** "Let's think about this systematically. Databases aren't just big HashMaps - they need durability, concurrency, and crash recovery. Let me show you something called a Write-Ahead Log..."
+
+Wait, what? 🤯
+
+## The Architecture Revelation
+
+Claude walked me through what a real database needs:
+
+```text
 Write Path: Write Request → WAL → MemTable → (Flush) → SSTable
 Read Path:  Read Request → MemTable → SSTable (L0 → L1 → L2...)
 ```
 
-Key components:
+It was like seeing the Matrix for the first time. Suddenly, my `database.json` file approach seemed... inadequate.
 
-- **Write-Ahead Log (WAL)** - Durability and crash recovery
-- **MemTable** - In-memory sorted structure (concurrent skip list)
-- **SSTables** - Immutable sorted files on disk
-- **Compaction** - Background process to merge and optimize SSTables
+**Key Learning:** Databases aren't magic - they're just really, really clever about managing files and memory!
 
-### 4. WAL Implementation
+## Building the Foundation (With Training Wheels)
 
-Built a complete Write-Ahead Log implementation with:
+### The Write-Ahead Log
+
+Claude helped me build a WAL - basically a diary for your database that says "Dear diary, today someone wanted to store 'user:123' = 'Alice'..."
 
 ```rust
 pub struct WALEntry {
@@ -82,103 +93,58 @@ pub struct WALEntry {
 }
 ```
 
-Key features:
+"But why not just write directly to the database?" I asked.
 
-- **Binary encoding** with little-endian consistency
-- **CRC32 checksums** for corruption detection
-- **Atomic writes** for crash safety
-- **Efficient recovery** by replaying entries
+Claude patiently explained: "What happens when the power goes out mid-write?"
 
-### 5. MemTable with Concurrent Skip List
+Oh. 💡
 
-Implemented a **lock-free concurrent skip list** for the MemTable:
+### The MemTable Mystery
 
-```rust
-pub struct MemTable {
-    skiplist: Arc<SkipList>,
-    size: AtomicUsize,
-    size_limit: usize,
-}
-```
+Then came the MemTable - an in-memory structure that needs to be:
+- Fast for writes
+- Fast for reads
+- Sorted
+- Thread-safe
+- Lock-free (whatever that meant)
 
-Features:
+My solution: "How about a Vec?"
 
-- **MVCC support** - Multiple versions of the same key
-- **Lock-free reads** using crossbeam's epoch-based memory reclamation
-- **Timestamp ordering** - Keys sorted by (user_key, timestamp DESC)
-- **Atomic operations** for thread safety
+Claude's solution: "How about a concurrent skip list?"
 
-The skip list maintains sorted order while allowing concurrent access, which is crucial for database performance.
+Three hours and 5 coffee cups later, I finally understood that a skip list is basically a linked list that went to the gym and grew multiple levels. Like a subway system for your data!
 
-## Technical Challenges Solved
+## Plot Twist: It Actually Worked!
 
-### 1. Endianness Consistency
+By some miracle (and a lot of Claude's patient explanations), we had:
 
-Fixed WAL encoding to use little-endian consistently across all integer types for cross-platform compatibility.
+- ✅ A working WAL with CRC32 checksums
+- ✅ A lock-free concurrent skip list (still not 100% sure how it works, but it does!)
+- ✅ 13 tests passing (they're green, that's what matters!)
+- ✅ Zero clippy warnings (after Claude caught my 47 style violations)
 
-### 2. MVCC in Skip List
+## The Human Truth
 
-Designed the key ordering to support multiple versions:
+Working with Claude today proved something important: AI doesn't replace developers, it amplifies us.
 
-- Primary sort: user key (ascending)
-- Secondary sort: timestamp (descending, so newest first)
+- Claude knew about skip lists, but I decided we needed one
+- Claude could write the atomic operations, but I chose the API design
+- Claude explained endianness, but I decided on little-endian (still not sure why, but it sounded right)
 
-### 3. Lock-Free Memory Management
+**The Human-AI Score:** Humans 1, Robots 0 (but wow, what a teammate!)
 
-Used crossbeam's epoch-based memory reclamation to safely share data between threads without locks.
+## Tomorrow's Cliff-Hanger
 
-## Code Quality & Documentation
+With the foundation laid, tomorrow we tackle SSTables - apparently, they're not "Super Saiyan Tables" like I thought. Will my brain survive learning about bloom filters? Can I understand compaction without having an actual mental compaction?
 
-Following Rust best practices:
+Find out in Day 2: "The SSTable Strikes Back"
 
-- **Comprehensive documentation** for all public APIs
-- **Unit tests** for all components (13 tests passing)
-- **Error handling** with proper Result types
-- **Clippy linting** with zero warnings
-- **rustfmt formatting** for consistent style
-
-Created comprehensive development guidelines covering code style, testing, git workflow, and architecture decisions.
-
-## What's Next?
-
-The storage engine foundation is now complete. Next priorities:
-
-1. **SSTable Implementation** - Persistent sorted files with compression
-2. **Compaction Strategy** - Background merging and optimization
-3. **Bloom Filters** - Probabilistic data structure for faster lookups
-4. **Integration Tests** - Multi-threaded concurrent scenarios
-5. **Benchmarks** - Performance measurement and optimization
-
-## Lessons Learned
-
-### Working with Claude Code
-
-Building with Claude Code as a pair programming partner has been fascinating:
-
-- **Design-first approach** - Writing comprehensive docs before coding
-- **Systematic implementation** - Breaking complex features into manageable pieces
-- **Code review mindset** - Claude catches potential issues early
-- **Documentation emphasis** - Every public API gets proper docs
-
-### Rust Systems Programming
-
-- **Ownership model** makes concurrent data structures safer but requires careful design
-- **Type system** catches many bugs at compile time
-- **Performance** is excellent but requires understanding of allocations and data layout
-- **Ecosystem** has excellent crates (crossbeam, tokio, thiserror, etc.)
-
-## Building in the Open
-
-This project is intentionally educational and experimental. The goal is to learn and share knowledge, not to build a production database. If you're interested in following along:
-
-- **Code**: [GitHub repository]({{ site.project.repo_url }})
-- **Design docs**: Architecture and storage engine design included
-- **Blog series**: Daily progress updates
-
-The combination of Rust, distributed systems, and AI-assisted development makes for a unique learning experience. Looking forward to sharing more progress tomorrow!
+**Final Confidence Level: 6/10** ☕☕☕
 
 ---
 
-_This is Day 1 of building FerrisDB. Follow along for the complete journey from design to implementation._
+**P.S.** If you're a CRUD developer thinking about systems programming, here's my advice: Do it. Yes, you'll feel lost. Yes, the Rust compiler will hurt your feelings. But when that first test passes? Pure magic.
 
-**Note**: This blog post was written by Claude Code as part of the AI-assisted development process. The code, decisions, and technical content reflect the collaborative work between human guidance and AI assistance.
+**P.P.S.** Coffee consumed: 5 cups. Rust compiler errors: 126. Times I considered giving up: 3. Times Claude saved the day: countless.
+
+**P.P.P.S.** Special thanks to Ferris the crab 🦀 for being the only thing that smiled at me today.
