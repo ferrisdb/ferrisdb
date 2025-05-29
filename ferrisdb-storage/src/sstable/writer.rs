@@ -164,16 +164,15 @@ impl SSTableWriter {
             }
         }
 
-        // Create entry first to take ownership
+        // Create entry first 
         let entry = SSTableEntry::new(key.clone(), value);
         let entry_size = entry.serialized_size();
 
-        // Update metadata (only clone when necessary)
+        // Update metadata (clone where we need the key again)
         if self.smallest_key.is_none() {
             self.smallest_key = Some(key.clone());
         }
         self.largest_key = Some(key.clone());
-        self.last_key = Some(key);
 
         // Check if we need to flush the current block
         if !self.current_block.is_empty() && self.current_block_size + entry_size > self.block_size
@@ -185,6 +184,9 @@ impl SSTableWriter {
         self.current_block.push(entry);
         self.current_block_size += entry_size;
         self.entry_count += 1;
+
+        // Update last_key last to take ownership (no clone needed)
+        self.last_key = Some(key);
 
         Ok(())
     }
