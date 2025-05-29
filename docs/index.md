@@ -14,14 +14,17 @@ FerrisDB: Where a CRUD developer and an AI collaborate to build a real database 
 
 ---
 
-**Mission:** Prove that anyone can understand database internals
-{: .label .label-blue }
+### 🎯 Our Mission
 
-**Approach:** Human creativity + AI knowledge = Better learning
-{: .label .label-green }
+**Prove that anyone can understand database internals** - No PhD required, just curiosity and coffee.
 
-**Result:** The most transparent database development ever attempted
-{: .label .label-purple }
+### 🤝 Our Approach  
+
+**Human creativity + AI knowledge = Better learning** - Combining the best of both worlds.
+
+### 🚀 The Result
+
+**The most transparent database development ever attempted** - Every decision, mistake, and victory documented.
 
 ---
 
