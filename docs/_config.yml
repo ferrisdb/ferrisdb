@@ -8,6 +8,13 @@ url: "https://ferrisdb.org"
 github_username: ferrisdb
 repository: ferrisdb/ferrisdb
 
+# Open Graph / Social Media
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/ferrisdb_logo.svg
+
 # Build settings
 markdown: kramdown
 highlighter: rouge
@@ -74,15 +81,29 @@ project:
 navigation:
   - title: Home
     url: /
-  - title: Docs
-    url: /getting-started/
+  - title: Learn
+    dropdown: true
+    items:
+      - title: Getting Started
+        url: /getting-started/
+      - title: Deep Dives
+        url: /deep-dive/
+      - title: Rust by Example
+        url: /rust-by-example/
+      - title: Storage Engine
+        url: /storage-engine/
   - title: Architecture
     url: /architecture/
+  - title: FAQ
+    url: /faq/
   - title: Blog
-    url: /blog/
-  - title: Claude's Blog
-    url: /claude-blog/
-  - title: Code
+    dropdown: true
+    items:
+      - title: Development Blog
+        url: /blog/
+      - title: Claude's AI Blog
+        url: /claude-blog/
+  - title: GitHub
     url: https://github.com/ferrisdb/ferrisdb
     external: true
 

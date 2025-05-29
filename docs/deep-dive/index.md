@@ -15,12 +15,22 @@ Welcome to FerrisDB's technical deep dives! These articles explore fundamental d
 
 No PhD required! We explain complex concepts in plain English with real-world analogies.
 
+## Article Difficulty Levels
+
+- **Beginner**: Assumes only CRUD development experience. Concepts explained with everyday analogies.
+- **Intermediate**: Some familiarity with Rust and concurrent programming helpful. Includes more complex code examples.
+- **Advanced**: Solid understanding of systems programming concepts required. Discusses low-level implementation details.
+
 ## Storage Engine Fundamentals
 
 <div class="article-grid">
   <div class="article-card">
     <h3><a href="{{ '/deep-dive/wal-crash-recovery/' | relative_url }}">WAL and Crash Recovery</a></h3>
     <p>Understand how Write-Ahead Logs ensure data durability and enable crash recovery. Learn about FerrisDB's WAL format, checksums, and recovery process.</p>
+    <div class="article-meta">
+      <span class="difficulty beginner">Beginner</span>
+      <span class="reading-time">15 min read</span>
+    </div>
     <div class="article-tags">
       <span class="tag">Durability</span>
       <span class="tag">Recovery</span>
@@ -31,6 +41,10 @@ No PhD required! We explain complex concepts in plain English with real-world an
   <div class="article-card">
     <h3><a href="{{ '/deep-dive/lsm-trees/' | relative_url }}">LSM-Trees Explained</a></h3>
     <p>Discover why LSM-trees revolutionized write performance in modern databases. Explore FerrisDB's implementation from MemTables to compaction.</p>
+    <div class="article-meta">
+      <span class="difficulty beginner">Beginner</span>
+      <span class="reading-time">15 min read</span>
+    </div>
     <div class="article-tags">
       <span class="tag">LSM-Tree</span>
       <span class="tag">Performance</span>
@@ -41,10 +55,14 @@ No PhD required! We explain complex concepts in plain English with real-world an
   <div class="article-card">
     <h3><a href="{{ '/deep-dive/sstable-design/' | relative_url }}">SSTable Format Design</a></h3>
     <p>Deep dive into FerrisDB's SSTable binary format, block structure, and how we achieve efficient lookups with binary search.</p>
+    <div class="article-meta">
+      <span class="difficulty intermediate">Intermediate</span>
+      <span class="reading-time">20 min read</span>
+    </div>
     <div class="article-tags">
       <span class="tag">SSTable</span>
       <span class="tag">Binary Format</span>
-      <span class="tag">Day 2</span>
+      <span class="tag">Performance</span>
     </div>
   </div>
 </div>
@@ -55,6 +73,10 @@ No PhD required! We explain complex concepts in plain English with real-world an
   <div class="article-card">
     <h3><a href="{{ '/deep-dive/concurrent-skip-list/' | relative_url }}">Lock-Free Skip Lists</a></h3>
     <p>Learn how FerrisDB uses concurrent skip lists for the MemTable, enabling lock-free reads while maintaining consistency.</p>
+    <div class="article-meta">
+      <span class="difficulty intermediate">Intermediate</span>
+      <span class="reading-time">20 min read</span>
+    </div>
     <div class="article-tags">
       <span class="tag">Concurrency</span>
       <span class="tag">Skip List</span>

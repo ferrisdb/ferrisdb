@@ -3,48 +3,54 @@ layout: page
 title: "LSM-Trees: The Secret Behind Modern Database Performance"
 subtitle: "Understanding Log-Structured Merge Trees and how they power high-performance storage engines"
 permalink: /deep-dive/lsm-trees/
+tags: [database, lsm-tree, storage-engine, performance]
+difficulty: beginner
+estimated_reading: "15 minutes"
+ferrisdb_components: [memtable, sstable, wal, compaction]
+prerequisites: []
 ---
 
-Have you ever wondered how databases like Cassandra, LevelDB, and RocksDB can handle millions of writes per second? The secret is **LSM-Trees** (Log-Structured Merge Trees) - a data structure that revolutionized database storage engines.
+## The Problem & Why It Matters
 
-**What's an LSM-Tree?**
+Have you ever wondered why your web application slows down when lots of users start writing data at the same time? Or why some databases can handle millions of writes per second while others struggle with thousands?
 
-Think of an LSM-Tree like a multi-stage inbox system:
+The problem lies in how traditional databases handle writes. Imagine you're managing a customer database for an e-commerce site. Every time someone places an order, updates their profile, or adds items to their cart, your database needs to write that information to disk.
 
-1. New mail (writes) goes to your desk (MemTable in RAM)
-2. When your desk fills up, you file papers in a cabinet (flush to SSTable)
-3. Periodically, you reorganize cabinets to merge similar items (compaction)
+**Traditional B-tree databases face a fundamental challenge:**
 
-This approach makes writes incredibly fast because you're just appending to memory, not searching for the right place to insert.
+When you write data, the database has to:
+1. Find the exact right spot on disk (like finding a specific page in a massive filing cabinet)
+2. Read the entire page into memory
+3. Modify just one small part
+4. Write the entire page back to disk
+5. Update multiple index pages
 
-This deep-dive explores LSM-Trees through FerrisDB's implementation and explains why they're perfect for modern workloads.
+**Real-world analogy**: It's like having to find the exact right spot in a filing cabinet, pull out the entire folder, add your single document, and put it back - for every single document. If the cabinet is across the building (representing disk storage), this gets incredibly slow!
 
-## The Write Problem in Traditional Databases
+**Why this matters for CRUD developers:**
+- **Slow write performance**: Your API endpoints that create/update data become bottlenecks
+- **Lock contention**: Multiple users trying to write at once wait in line
+- **Poor scalability**: Adding more users makes the problem exponentially worse
 
-Traditional B-tree based databases face a fundamental challenge with writes:
+LSM-Trees solve this by completely rethinking how databases handle writes.
 
-```
-B-Tree writes are expensive because:
-1. Random disk access to find the right page
-2. Read entire page into memory
-3. Modify the page
-4. Write entire page back to disk
-5. Update index pages (more random I/O)
-```
+## Conceptual Overview
 
-**Real-world analogy**: It's like having to find the exact right spot in a filing cabinet, pull out the entire folder, add your document, and put it back - for every single document. If the cabinet is across the building (disk), this gets slow!
+### The Core Idea
 
-For write-heavy workloads, this becomes a bottleneck. LSM-Trees solve this with a completely different approach.
-
-## LSM-Tree Philosophy: Make Writes Fast
-
-The core insight of LSM-Trees is:
+LSM-Trees (Log-Structured Merge Trees) solve the write performance problem with a simple but revolutionary idea:
 
 > **"Instead of updating data in place, append all changes and merge them later"**
 
-This transforms expensive random writes into fast sequential writes.
+**Think of it like a restaurant's order system:**
 
-### FerrisDB's LSM-Tree Architecture
+1. **Taking orders** (writes): Waiters don't run to the kitchen after each order. They write orders on a notepad and collect multiple orders first
+2. **Batching to kitchen** (flush): When the notepad is full, they give all orders to the kitchen at once
+3. **Kitchen organization** (compaction): The kitchen organizes orders by table and cooking time for efficiency
+
+This transforms expensive random writes (finding the exact spot) into fast sequential writes (just append to the end).
+
+### Visual Architecture
 
 ```text
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐
@@ -57,259 +63,141 @@ This transforms expensive random writes into fast sequential writes.
    Durability         Fast Writes         Fast Reads
 ```
 
-Let's dive into each component:
+**Key principles:**
+1. **Sequential writes**: Like writing in a journal - always append, never erase
+2. **Memory buffering**: Collect writes in RAM before going to disk (like the notepad)
+3. **Background merging**: Clean up and organize data when the system isn't busy
 
-## Component 1: MemTable - Fast In-Memory Writes
+## FerrisDB Implementation Deep Dive
 
-The MemTable is where all writes initially go:
+### Core Data Structures
+
+Let's see how FerrisDB implements each component of the LSM-Tree:
 
 ```rust
-use crossbeam::epoch::{self, Atomic, Guard, Owned, Shared};
-use std::sync::atomic::{AtomicUsize, Ordering};
-
-/// Concurrent skip list for the MemTable
-pub struct SkipList {
-    head: Atomic<Node>,
-    max_level: AtomicUsize,
+// ferrisdb-storage/src/memtable/mod.rs:49-67
+pub struct MemTable {
+    /// Uses Arc for shared ownership in LSM-tree scenarios:
+    /// - Storage engine keeps immutable MemTables for reads during flush
+    /// - Background threads flush MemTable to SSTable
+    /// - Iterators need concurrent access without blocking writes
+    skiplist: Arc<SkipList>,
+    memory_usage: AtomicUsize,
+    max_size: usize,
 }
 
-struct Node {
-    key: Key,
-    value: Value,
-    timestamp: Timestamp,
-    next: Vec<Atomic<Node>>,
-    level: usize,
+impl MemTable {
+    pub fn new(max_size: usize) -> Self {
+        Self {
+            skiplist: Arc::new(SkipList::new()),
+            memory_usage: AtomicUsize::new(0),
+            max_size,
+        }
+    }
 }
 ```
+
+**Key design decisions:**
+1. **Skip List choice**: Provides O(log n) performance with lock-free reads (better than B-trees for concurrent access)
+2. **Arc wrapping**: Allows safe sharing between read operations and background flush threads
+3. **Memory tracking**: Knows when to flush to disk before running out of RAM
+
+### Implementation Details
+
+#### Component 1: MemTable - Fast In-Memory Writes
+
+The MemTable is where all writes initially go - think of it as the "notepad" in our restaurant analogy:
+
+```rust
+// ferrisdb-storage/src/memtable/mod.rs:81-95
+pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
+    let size_estimate = key.len() + value.len() + 64; // 64 bytes overhead estimate
+
+    self.skiplist.insert(key, value, timestamp, Operation::Put);
+
+    let new_usage = self
+        .memory_usage
+        .fetch_add(size_estimate, Ordering::Relaxed);
+
+    if new_usage + size_estimate > self.max_size {
+        return Err(Error::MemTableFull);
+    }
+
+    Ok(())
+}
+```
+
+**How it works:**
+1. **Immediate write**: Data goes straight into memory (like writing on the notepad)
+2. **Size tracking**: Keeps track of how much memory is used
+3. **Full detection**: Signals when it's time to "give orders to the kitchen" (flush to disk)
 
 **Why a Skip List?**
+- **O(log n) operations**: Finding items in a million-entry list takes only ~20 steps
+- **Lock-free reads**: Multiple threads can read without blocking each other
+- **Ordered iteration**: Essential for creating sorted files and range queries
 
-- **O(log n) inserts/lookups** - Nearly as fast as a balanced tree (finding items in a million-entry list takes only ~20 steps)
-- **Lock-free implementation** - Multiple threads can write concurrently without waiting
-- **Ordered iteration** - Essential for range queries ("find all users between A-M") and SSTable generation
-- **Memory efficient** - No tree rebalancing overhead (no need to reorganize when adding items)
-
-### MemTable Operations
-
-```rust
-impl SkipList {
-    pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
-        let guard = &epoch::pin();
-
-        // Find insertion point
-        let (preds, succs) = self.find_position(&key, guard);
-
-        // Create new node
-        let level = self.random_level();
-        let new_node = Owned::new(Node {
-            key,
-            value,
-            timestamp,
-            next: vec![Atomic::null(); level + 1],
-            level,
-        });
-
-        // Link node into skip list (lock-free)
-        self.link_node(new_node, preds, succs);
-
-        Ok(())
-    }
-
-    pub fn get(&self, key: &Key, timestamp: Timestamp) -> Result<Option<Value>> {
-        let guard = &epoch::pin();
-        let mut current = self.head.load(Ordering::Acquire, guard);
-
-        // Traverse skip list levels (top to bottom)
-        for level in (0..=self.max_level.load(Ordering::Relaxed)).rev() {
-            while let Some(node) = unsafe { current.as_ref() } {
-                let next = node.next[level].load(Ordering::Acquire, guard);
-
-                if let Some(next_node) = unsafe { next.as_ref() } {
-                    match next_node.key.cmp(key) {
-                        Ordering::Less => current = next,
-                        Ordering::Equal => {
-                            // Found key, check timestamp for MVCC
-                            if next_node.timestamp <= timestamp {
-                                return Ok(Some(next_node.value.clone()));
-                            }
-                        }
-                        Ordering::Greater => break,
-                    }
-                } else {
-                    break;
-                }
-            }
-        }
-
-        Ok(None)
-    }
-}
-```
-
-**MVCC Support**: The skip list stores multiple versions of the same key, ordered by timestamp. This enables:
-
-- **Snapshot isolation**: Each transaction sees a consistent view (like each person having their own "frozen in time" view of the data)
-- **Non-blocking reads**: Readers don't block writers (multiple people can read while someone else writes)
-- **Point-in-time queries**: "What was the value at timestamp X?" (time travel for your data!)
-
-**Why MVCC matters**: Imagine editing a Google Doc - multiple people can read while you type, and everyone sees a consistent version. That's MVCC in action!
-
-## Component 2: SSTables - Immutable Sorted Files
+#### Component 2: SSTables - Immutable Sorted Files
 
 When the MemTable gets full, it's flushed to an SSTable (Sorted String Table):
 
 ```rust
-/// SSTable file format
-pub struct SSTable {
-    /// Metadata about the SSTable
-    metadata: SSTableMetadata,
-    /// Bloom filter for fast negative lookups
-    bloom_filter: BloomFilter,
-    /// Index blocks for binary search
-    index_blocks: Vec<IndexBlock>,
-    /// Data blocks containing key-value pairs
-    data_blocks: Vec<DataBlock>,
-}
-
-#[derive(Debug)]
-pub struct SSTableMetadata {
-    /// Smallest key in this SSTable
-    pub min_key: Key,
-    /// Largest key in this SSTable
-    pub max_key: Key,
-    /// Number of key-value pairs
-    pub num_entries: u64,
-    /// File size in bytes
-    pub file_size: u64,
-    /// Creation timestamp
-    pub created_at: Timestamp,
+// ferrisdb-storage/src/sstable/mod.rs:179-188
+pub struct SSTableEntry {
+    /// The internal key (user_key + timestamp)
+    pub key: InternalKey,
+    /// The value associated with this key version
+    pub value: Value,
+    /// The operation type (Put/Delete) for this entry
+    pub operation: Operation,
 }
 ```
 
-### SSTable File Layout
+**Performance characteristics:**
+- **Time complexity**: O(log n) lookups using binary search within blocks
+- **Space complexity**: Compressed storage on disk with block-based organization
+- **I/O patterns**: Only reads necessary blocks, not entire files
 
-```text
-┌─────────────────────────────────────────────────────┐
-│                   SSTable File                      │
-├─────────────────────────────────────────────────────┤
-│ Data Block 0    │ Data Block 1    │ Data Block N    │
-│ [key1,val1,ts1] │ [key4,val4,ts4] │ [keyN,valN,tsN] │
-│ [key2,val2,ts2] │ [key5,val5,ts5] │                 │
-│ [key3,val3,ts3] │ [key6,val6,ts6] │                 │
-├─────────────────────────────────────────────────────┤
-│ Index Block 0   │ Index Block 1   │ Index Block N   │
-│ [key1 -> offset]│ [key4 -> offset]│ [keyN -> offset]│
-├─────────────────────────────────────────────────────┤
-│                 Bloom Filter                        │
-│ [bit array for fast negative lookups]               │
-├─────────────────────────────────────────────────────┤
-│                   Metadata                          │
-│ [min_key, max_key, num_entries, file_size]          │
-└─────────────────────────────────────────────────────┘
-```
+## Performance Analysis
 
-### SSTable Writer Implementation
+### Mathematical Analysis
 
-```rust
-pub struct SSTableWriter {
-    file: File,
-    data_blocks: Vec<DataBlock>,
-    index_blocks: Vec<IndexBlock>,
-    bloom_filter: BloomFilter,
-    current_block: DataBlock,
-    block_size: usize,
-}
+**Write Performance Improvement:**
+- **Traditional B-tree**: O(log n) random I/O operations per write
+- **LSM-Tree MemTable**: O(1) memory operation per write (sequential log append)
+- **Algorithmic improvement**: Converts random I/O to sequential I/O, which is ~100x faster on traditional drives
 
-impl SSTableWriter {
-    pub fn add(&mut self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
-        // Add to bloom filter
-        self.bloom_filter.insert(&key);
+**Read Performance Trade-off:**
+- **Best case** (data in MemTable): O(log n) memory operation
+- **Worst case** (data in oldest SSTable): O(k × log n) where k = number of levels
+- **Range queries**: O(n) scan across sorted data (very efficient)
 
-        // Check if current block is full
-        if self.current_block.size() > self.block_size {
-            self.finish_block()?;
-        }
+### Trade-off Analysis
 
-        // Add entry to current block
-        self.current_block.add(key, value, timestamp);
+**Advantages:**
+- ✅ **Excellent write performance**: Sequential writes are much faster than random writes
+- ✅ **High write throughput**: Can batch multiple operations efficiently
+- ✅ **Good compression**: Sequential data on disk compresses well
+- ✅ **Crash recovery**: WAL ensures no data loss on system failures
 
-        Ok(())
-    }
+**Disadvantages:**
+- ⚠️ **Read amplification**: May need to check multiple SSTables for recent writes
+- ⚠️ **Write amplification**: Data gets written multiple times during compaction
+- ⚠️ **Space amplification**: Multiple versions of data exist until compaction
 
-    fn finish_block(&mut self) -> Result<()> {
-        if self.current_block.is_empty() {
-            return Ok(());
-        }
+**When to use alternatives:**
+- **Read-heavy workloads**: Consider B-tree databases if reads far exceed writes
+- **Small datasets**: Simple data structures might be more appropriate
+- **Strong consistency needs**: Some LSM implementations sacrifice consistency for performance
 
-        // Write data block to file
-        let offset = self.file.seek(SeekFrom::Current(0))?;
-        self.current_block.write_to(&mut self.file)?;
-
-        // Create index entry pointing to this block
-        let index_entry = IndexBlock {
-            first_key: self.current_block.first_key().clone(),
-            offset,
-            size: self.current_block.size(),
-        };
-        self.index_blocks.push(index_entry);
-
-        // Start new block
-        self.current_block = DataBlock::new();
-
-        Ok(())
-    }
-
-    pub fn finalize(mut self) -> Result<SSTable> {
-        // Finish last block
-        self.finish_block()?;
-
-        // Write index blocks
-        let index_offset = self.file.seek(SeekFrom::Current(0))?;
-        for index_block in &self.index_blocks {
-            index_block.write_to(&mut self.file)?;
-        }
-
-        // Write bloom filter
-        let bloom_offset = self.file.seek(SeekFrom::Current(0))?;
-        self.bloom_filter.write_to(&mut self.file)?;
-
-        // Write metadata
-        let metadata = SSTableMetadata {
-            min_key: self.index_blocks.first().unwrap().first_key.clone(),
-            max_key: self.index_blocks.last().unwrap().first_key.clone(),
-            num_entries: self.count_entries(),
-            file_size: self.file.seek(SeekFrom::Current(0))?,
-            created_at: Timestamp::now(),
-        };
-        metadata.write_to(&mut self.file)?;
-
-        self.file.sync_all()?;
-
-        Ok(SSTable {
-            metadata,
-            bloom_filter: self.bloom_filter,
-            index_blocks: self.index_blocks,
-            data_blocks: self.data_blocks,
-        })
-    }
-}
-```
-
-## Component 3: Compaction - Managing Multiple SSTables
-
-Over time, you accumulate many SSTables. Compaction merges them to:
-
-- **Remove deleted data** (tombstones)
-- **Merge duplicate keys** (keeping latest version)
-- **Improve read performance** (fewer files to check)
+## Advanced Topics
 
 ### Compaction Strategies
 
-**1. Size-Tiered Compaction**
-
-**How it works**: Like organizing your closet by grouping similar-sized items together. When you have too many small boxes, you combine them into a medium box. Too many medium boxes? Make a large box.
+FerrisDB implements size-tiered compaction:
 
 ```rust
+// ferrisdb-storage/src/storage_engine.rs (conceptual)
 pub fn size_tiered_compaction(&mut self) -> Result<()> {
     // Group SSTables by similar size
     let mut size_tiers: BTreeMap<u64, Vec<SSTable>> = BTreeMap::new();
@@ -330,279 +218,147 @@ pub fn size_tiered_compaction(&mut self) -> Result<()> {
 }
 ```
 
-**2. Leveled Compaction (more sophisticated)**
+**How compaction works:**
+- **Background process**: Runs when system isn't busy serving requests
+- **Merge operation**: Combines multiple sorted files into one larger sorted file
+- **Garbage collection**: Removes outdated versions and deleted entries
 
-**How it works**: Like organizing a library with strict rules:
+### Future Improvements
 
-- New books go on the "new arrivals" shelf (Level 0)
-- When that fills, books move to organized shelves (Level 1, 2, 3...)
-- Each level has a size limit (10MB, 100MB, 1GB...)
-- Books on higher levels never overlap (each book appears in only one place)
+**Planned optimizations:**
+- **Leveled compaction**: More sophisticated merging strategy for better read performance
+- **Bloom filters**: Skip reading SSTables that definitely don't contain a key
 
+**Research directions:**
+- **Universal compaction**: Hybrid approach balancing read and write performance
+- **Partitioned compaction**: Parallel compaction for better resource utilization
+
+## Hands-On Exploration
+
+### Try It Yourself
+
+**Exercise 1**: Understanding Write Patterns
 ```rust
-pub fn leveled_compaction(&mut self) -> Result<()> {
-    // Level 0: Direct MemTable flushes (may overlap)
-    // Level 1: 10MB total, non-overlapping
-    // Level 2: 100MB total, non-overlapping
-    // Level 3: 1GB total, non-overlapping
+// Compare sequential vs random writes
+let mut memtable = MemTable::new(1024 * 1024);
 
-    for level in 0..self.config.max_levels {
-        let level_size = self.calculate_level_size(level);
-        let max_level_size = self.config.max_size_for_level(level);
+// Sequential writes (fast)
+for i in 0..1000 {
+    let key = format!("key_{:06}", i);
+    memtable.put(key.into_bytes(), b"value".to_vec(), i)?;
+}
 
-        if level_size > max_level_size {
-            self.compact_level(level)?;
-        }
-    }
-
-    Ok(())
+// Random writes (still fast in MemTable!)
+for i in 0..1000 {
+    let key = format!("key_{:06}", rand::random::<u32>());
+    memtable.put(key.into_bytes(), b"value".to_vec(), i)?;
 }
 ```
 
-### Compaction Implementation
-
-```rust
-pub fn compact_sstables(&mut self, sstables: Vec<SSTable>) -> Result<SSTable> {
-    // Create iterators for each SSTable
-    let mut iterators: Vec<SSTableIterator> = sstables
-        .into_iter()
-        .map(|sst| sst.iterator())
-        .collect();
-
-    // Merge iterators using a priority queue (min-heap)
-    let mut merge_iter = MergeIterator::new(iterators);
-
-    // Create new SSTable writer
-    let mut writer = SSTableWriter::new(&self.next_sstable_path())?;
-
-    let mut last_key: Option<Key> = None;
-
-    while let Some((key, value, timestamp)) = merge_iter.next() {
-        // Skip duplicate keys (keep latest timestamp)
-        if let Some(ref last) = last_key {
-            if *last == key {
-                continue; // Skip older version
-            }
-        }
-
-        // Skip tombstones if they're old enough
-        if value.is_delete() && self.can_drop_tombstone(&key, timestamp) {
-            continue;
-        }
-
-        // Add to new SSTable
-        writer.add(key.clone(), value, timestamp)?;
-        last_key = Some(key);
-    }
-
-    // Finalize new SSTable
-    let new_sstable = writer.finalize()?;
-
-    // Remove old SSTables
-    for old_sstable in &old_sstables {
-        self.delete_sstable(old_sstable)?;
-    }
-
-    // Add new SSTable
-    self.sstables.push(new_sstable.clone());
-
-    Ok(new_sstable)
-}
+**Exercise 2**: Observing Memory Usage
+```bash
+# Watch memory usage during bulk writes
+cargo run --example bulk_insert -- --count 100000 --observe-memory
 ```
 
-## Read Path: Finding Data Efficiently
+### Debugging & Observability
 
-Reading from an LSM-Tree requires checking multiple places:
+**Key metrics to watch:**
+- **MemTable memory usage**: How close to flush threshold
+- **SSTable count per level**: Indicates compaction health
+- **Write amplification ratio**: How much extra work compaction is doing
 
-```rust
-pub fn get(&self, key: &Key, timestamp: Timestamp) -> Result<Option<Value>> {
-    // 1. Check MemTable first (most recent data)
-    if let Some(value) = self.memtable.get(key, timestamp)? {
-        return Ok(Some(value));
-    }
+**Debugging techniques:**
+- **WAL inspection**: Use `cargo run --bin wal-reader` to examine write patterns
+- **SSTable analysis**: Check key distributions and overlaps between files
 
-    // 2. Check SSTables from newest to oldest
-    for sstable in self.sstables.iter().rev() {
-        // Quick range check
-        if key < &sstable.metadata.min_key || key > &sstable.metadata.max_key {
-            continue;
-        }
+## Real-World Context
 
-        // Bloom filter check (fast negative lookup)
-        if !sstable.bloom_filter.might_contain(key) {
-            continue; // Definitely not in this SSTable
-        }
+### Industry Comparison
 
-        // Binary search in index blocks
-        if let Some(block_idx) = sstable.find_block_for_key(key) {
-            let data_block = sstable.read_data_block(block_idx)?;
+**How other databases handle this:**
+- **Cassandra**: Uses size-tiered compaction similar to FerrisDB
+- **LevelDB/RocksDB**: Implements leveled compaction for better read performance
+- **ScyllaDB**: C++ implementation with per-core LSM trees for better parallelism
 
-            if let Some(value) = data_block.get(key, timestamp)? {
-                return Ok(Some(value));
-            }
-        }
-    }
+### Historical Evolution
 
-    Ok(None) // Key not found
-}
-```
+**Timeline:**
+- **1996**: Log-Structured File System paper introduces core concepts
+- **2006**: Google's BigTable popularizes LSM-trees for large-scale systems
+- **2011**: LevelDB makes LSM-trees accessible to application developers
+- **2023**: Modern implementations focus on NVMe optimization and cloud storage
 
-## Performance Characteristics
+## Common Pitfalls & Best Practices
 
-### Write Performance: Excellent ✅
+### Implementation Pitfalls
 
-```
-Sequential writes to MemTable: ~500,000 ops/sec
-WAL append (sequential): ~50,000 IOPS on SSD
-Batched commits: Even higher throughput
-```
+1. **Forgetting WAL durability**: 
+   - **Problem**: Losing data on crash because WAL isn't synced to disk
+   - **Solution**: Always call `fsync()` on WAL before acknowledging writes
 
-**Why so fast?**
+2. **Poor compaction scheduling**: 
+   - **Problem**: Running compaction during peak traffic
+   - **Solution**: Monitor write patterns and schedule compaction during low-traffic periods
 
-- **Sequential > Random**: Like writing in a notebook vs. inserting pages in random spots
-- **Memory first**: RAM is ~100,000x faster than disk
-- **Batch friendly**: Can group many writes together
+### Production Considerations
 
-LSM-Trees excel at writes because:
+**Operational concerns:**
+- **Disk space monitoring**: LSM-trees can temporarily use 2x space during compaction
+- **Compaction throttling**: Avoid overloading I/O during peak hours
+- **Backup strategies**: Consider SSTable-level backups for faster recovery
 
-- **MemTable writes are pure in-memory operations**
-- **WAL writes are sequential** (much faster than random)
-- **No expensive B-tree rebalancing**
+## Summary & Key Takeaways
 
-### Read Performance: Good with Optimizations ⚡
+### Core Concepts Learned
 
-```
-Hot data (in MemTable): ~200,000 ops/sec
-Cold data (in SSTables): ~10,000 ops/sec (with bloom filters)
-Range scans: Excellent (sorted data)
-```
+1. **Sequential writes are much faster than random writes**: LSM-trees exploit this by deferring organization
+2. **Memory buffering enables write batching**: MemTables collect writes before expensive disk operations
+3. **Background compaction trades write amplification for read performance**: System does extra work later to maintain good read speeds
 
-**The challenge**: Unlike writes (always go to MemTable), reads might need to check multiple places:
+### When to Apply This Knowledge
 
-1. MemTable (fast - it's in RAM)
-2. Recent SSTables (medium - might be cached)
-3. Old SSTables (slower - probably on disk)
+- **Use LSM-trees when**: Your application has write-heavy workloads (logging, analytics, time-series data)
+- **Consider alternatives when**: Read performance is more critical than write performance
+- **Implementation complexity**: Moderate - requires careful coordination between components
 
-Read optimizations:
+## Further Reading & References
 
-- **Bloom filters** reduce unnecessary disk I/O
-- **Block-level compression** improves I/O efficiency
-- **Caching** keeps hot data in memory
-- **Compaction** reduces the number of files to check
+### Related FerrisDB Articles
+- [Understanding WAL and Crash Recovery](/deep-dive/wal-crash-recovery/): How durability works in LSM systems
+- [Lock-Free Skip Lists](/deep-dive/concurrent-skip-list/): Deep dive into MemTable implementation
 
-## Real-World Trade-offs
+### Academic Papers
+- "The Log-Structured Merge-Tree" (O'Neil et al., 1996): Original LSM-tree paper
+- "Bigtable: A Distributed Storage System for Structured Data" (Chang et al., 2008): Google's LSM implementation
 
-### When LSM-Trees Excel 🚀
+### Industry Resources
+- [RocksDB Wiki](https://github.com/facebook/rocksdb/wiki): Extensive documentation on LSM optimizations
+- [Cassandra Documentation](https://cassandra.apache.org/doc/): Production LSM-tree system
 
-- **Write-heavy workloads**: Logs, time-series data, analytics
-- **Large datasets**: Multi-TB databases with infrequent updates
-- **Append-mostly data**: Event streams, audit logs
-- **Cloud storage**: Where sequential I/O is much cheaper
-
-### When LSM-Trees Struggle ⚠️
-
-- **Read-heavy workloads** with random access patterns
-- **Small datasets** that fit entirely in memory
-- **Heavy update workloads** (lots of overwrites)
-- **Strong consistency requirements** across multiple keys
-
-## Optimizations and Variants
-
-### Bloom Filters for Faster Negative Lookups
-
-**What's a Bloom Filter?**
-
-A Bloom filter is like a bouncer with a guest list that only remembers who's NOT invited:
-
-- "Is Alice here?" → "Maybe" (need to check inside)
-- "Is Bob here?" → "Definitely not" (skip this SSTable)
-
-It uses very little memory but saves tons of disk reads by quickly ruling out SSTables that definitely don't contain your key.
-
-```rust
-impl BloomFilter {
-    pub fn might_contain(&self, key: &Key) -> bool {
-        let hash1 = self.hash1(key);
-        let hash2 = self.hash2(key);
-
-        for i in 0..self.num_hash_functions {
-            let bit_pos = (hash1 + i * hash2) % self.bit_array.len();
-            if !self.bit_array[bit_pos] {
-                return false; // Definitely not present
-            }
-        }
-
-        true // Might be present (could be false positive)
-    }
-}
-```
-
-### Block Compression
-
-**Why compression works well with LSM-Trees**:
-
-- Data is written sequentially (similar keys often near each other)
-- Immutable files (compress once, read many times)
-- Block-level compression (decompress only what you need)
-
-```rust
-impl DataBlock {
-    pub fn compress(&mut self) -> Result<()> {
-        let compressed = lz4::compress(&self.data)?;
-        if compressed.len() < self.data.len() {
-            self.data = compressed;
-            self.compression = CompressionType::LZ4;
-        }
-        Ok(())
-    }
-}
-```
-
-### Partitioned Indexes
-
-```rust
-// Split large index blocks for better cache performance
-pub struct PartitionedIndex {
-    partitions: Vec<IndexPartition>,
-    partition_index: Vec<Key>, // First key of each partition
-}
-```
-
-## Conclusion: Why LSM-Trees Matter
-
-LSM-Trees represent a fundamental shift in database design:
-
-**Traditional approach**: Update data in place (good for reads, bad for writes)
-
-- Like a perfectly organized library where every book must go in its exact spot
-
-**LSM approach**: Append changes and merge later (excellent for writes, optimized reads)
-
-- Like having an "inbox" where new books go quickly, then organizing them during quiet hours
-
-This makes LSM-Trees perfect for:
-
-- **Modern applications** with write-heavy workloads
-- **Big data systems** that need to ingest massive amounts of data
-- **Cloud-native databases** where sequential I/O is preferred
-- **Time-series databases** where data is mostly appended
-
-Understanding LSM-Trees helps you:
-
-- **Choose the right database** for your workload
-- **Optimize performance** by understanding the underlying data structures
-- **Design better systems** by applying these principles
+### FerrisDB Code Exploration
+- **Primary implementation**: `ferrisdb-storage/src/` - Complete LSM-tree implementation
+- **MemTable**: `ferrisdb-storage/src/memtable/mod.rs` - In-memory buffer
+- **SSTable**: `ferrisdb-storage/src/sstable/` - Persistent storage format
+- **Tests**: `ferrisdb-storage/src/storage_engine.rs` - Integration test examples
 
 ---
 
-## Related Deep Dives
+## About This Series
 
-- [Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }})
-- [MVCC and Transaction Isolation]({{ '/deep-dive/mvcc/' | relative_url }}) _(coming soon)_
-- [Distributed Consensus with Raft]({{ '/deep-dive/raft/' | relative_url }}) _(coming soon)_
+This article is part of FerrisDB's technical deep dive series. Each article provides comprehensive coverage of database internals through practical implementation:
 
-## Further Reading
+- ✅ **Real implementation details** from FerrisDB source code
+- ✅ **Mathematical analysis** with concrete complexity bounds
+- ✅ **Practical exercises** for hands-on learning
+- ✅ **Industry context** and alternative approaches
 
-- [Architecture Overview]({{ '/architecture/' | relative_url }})
-- [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
-- [Future Architecture Explorations]({{ '/future-architecture/' | relative_url }})
+**Target audience**: CRUD developers who want to understand database systems deeply.
+
+[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+
+---
+
+*Last updated: May 29, 2025*
+*Estimated reading time: 15 minutes*
+*Difficulty: Beginner*

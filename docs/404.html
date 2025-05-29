@@ -1,0 +1,34 @@
+---
+layout: page
+title: "404: Page Not Found"
+permalink: /404.html
+---
+
+<div style="text-align: center; padding: 3rem 0;">
+  <h1 style="font-size: 5rem; margin-bottom: 1rem;">404</h1>
+  <h2 style="font-size: 2rem; margin-bottom: 2rem;">Oops! Page Not Found</h2>
+  
+  <p style="font-size: 1.25rem; margin-bottom: 2rem;">
+    Looks like this page got lost during compaction... 🦀
+  </p>
+  
+  <p style="margin-bottom: 3rem;">
+    The page you're looking for doesn't exist. It might have been moved, renamed, or it's still on our TODO list!
+  </p>
+  
+  <div class="error-suggestions" style="background: #f7fafc; padding: 2rem; border-radius: 12px; max-width: 600px; margin: 0 auto 3rem;">
+    <h3 style="margin-bottom: 1rem;">Try these instead:</h3>
+    <ul style="list-style: none; padding: 0; line-height: 2;">
+      <li>📚 <a href="{{ '/deep-dive/' | relative_url }}">Deep Dive Articles</a> - Learn database internals</li>
+      <li>🦀 <a href="{{ '/rust-by-example/' | relative_url }}">Rust by Example</a> - Learn Rust through database code</li>
+      <li>🏠 <a href="{{ '/' | relative_url }}">Homepage</a> - Start from the beginning</li>
+      <li>❓ <a href="{{ '/faq/' | relative_url }}">FAQ</a> - Common questions answered</li>
+      <li>📖 <a href="{{ '/blog/' | relative_url }}">Blog</a> - Follow our development journey</li>
+    </ul>
+  </div>
+  
+  <div class="error-cta">
+    <a href="{{ '/' | relative_url }}" class="btn btn-primary">Go to Homepage</a>
+    <a href="https://github.com/ferrisdb/ferrisdb/issues" class="btn btn-outline">Report an Issue</a>
+  </div>
+</div>

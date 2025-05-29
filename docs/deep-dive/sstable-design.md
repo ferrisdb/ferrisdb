@@ -3,388 +3,478 @@ layout: page
 title: "SSTable Format Design: Building Efficient Persistent Storage"
 subtitle: "How FerrisDB implements sorted string tables with binary search optimization"
 permalink: /deep-dive/sstable-design/
+tags: [database, sstable, storage-format, binary-format, optimization]
+difficulty: intermediate
+estimated_reading: "20 minutes"
+ferrisdb_components: [sstable, storage-engine]
+prerequisites: [/deep-dive/lsm-trees/]
 ---
 
-On Day 2 of FerrisDB development, we designed and implemented SSTables (Sorted String Tables) from scratch. This deep dive explores the design decisions, binary format, and optimizations that make SSTables the backbone of LSM-tree storage engines.
+## The Problem & Why It Matters
 
-**What's an SSTable?**
+Imagine you're building a web application that needs to store millions of user profiles, product listings, or transaction records. Your in-memory cache (MemTable) is getting full, and you need to save this data to disk. But here's the challenge:
 
-An SSTable is like a read-only phone book for your data:
+**Real-world problems CRUD developers face:**
+- **Slow queries**: Finding one record among millions takes forever
+- **Huge files**: Loading entire datasets into memory crashes your server
+- **Disk costs**: Storing uncompressed data gets expensive fast
+- **Recovery time**: Restarting your app takes hours to reload data
 
-- **Sorted**: Entries are in order (like alphabetical in a phone book)
-- **String**: Originally designed for strings, but works for any data
-- **Table**: Structured format on disk
-- **Immutable**: Once written, never changed (like a printed book)
+Traditional approaches have painful trade-offs:
+1. **CSV/JSON files**: Easy to debug but terribly slow to search
+2. **Binary dumps**: Fast to write but impossible to query without loading everything
+3. **Regular databases**: Add complexity and another point of failure
 
-## What Problem Do SSTables Solve?
+SSTable (Sorted String Table) solves these problems elegantly. Think of it as a phone book for your data - organized, indexed, and easy to search without reading every page.
 
-MemTables are fast but have limitations:
+## Conceptual Overview
 
-- **Limited by RAM** - Can't store more data than available memory (like your desk can only hold so many papers)
-- **Volatile** - Data lost on crash (even with WAL, recovery is slow for large datasets)
-- **No compression** - In-memory data structures can't be compressed (need quick access)
+### The Core Idea
 
-SSTables solve these by providing:
+SSTables are like a well-organized library:
 
-- **Persistent storage** on disk
-- **Immutability** - Once written, never modified (enables caching)
-- **Compression-friendly** - Sequential data compresses well
-- **Fast lookups** - Sorted structure enables binary search
+**Without SSTables** (pile of books):
+- To find a book, check every single one
+- Moving books around is a nightmare
+- No way to know if a book exists without searching
 
-## FerrisDB's SSTable Format
+**With SSTables** (organized library):
+- Books sorted alphabetically on shelves (data blocks)
+- Card catalog tells you which shelf (index)
+- Quick reference list of all books (bloom filter)
+- Information desk with library stats (footer)
 
-### High-Level Structure
+### Visual Architecture
 
 ```text
 ┌─────────────────┐
-│   Data Block 1  │  ← 4KB blocks containing sorted K-V pairs
+│   Data Block 1  │  ← "A-C" authors (sorted books)
 ├─────────────────┤
-│   Data Block 2  │
+│   Data Block 2  │  ← "D-F" authors
 ├─────────────────┤
-│       ...       │
+│   Data Block 3  │  ← "G-M" authors
 ├─────────────────┤
-│   Data Block N  │
+│   Data Block 4  │  ← "N-Z" authors
 ├─────────────────┤
-│   Index Block   │  ← Maps block number to first key
+│   Index Block   │  ← Card catalog (which shelf has what)
 ├─────────────────┤
-│     Footer      │  ← Metadata and magic number
+│  Bloom Filter   │  ← Quick "do we have this?" check
+├─────────────────┤
+│     Footer      │  ← Information desk (where everything is)
 └─────────────────┘
 ```
 
-**Reading this diagram**:
+**Key principles:**
+1. **Immutability**: Once written, never changed (like printed books)
+2. **Block-based**: Read only what you need, not the whole file
+3. **Binary format**: Compact and efficient, not human-readable
 
-- Start at the bottom (Footer) to find where the Index is
-- Use the Index to find which Data Block might have your key
-- Read only that Data Block (not the whole file!)
+## FerrisDB Implementation Deep Dive
 
-### Binary Format Details
+### Core Data Structures
 
-#### Data Block Structure
-
-Each data block contains entries in this format:
-
-```rust
-// For each entry in the block:
-┌────────────┬────────────┬───────────┬──────────┬───────────┬─────┬───────┬───────────┐
-│ key_len    │ value_len  │ operation │ timestamp│ user_key  │ ... │ value │ (next)    │
-│ (4 bytes)  │ (4 bytes)  │ (1 byte)  │ (8 bytes)│ (variable)│     │ (var) │           │
-└────────────┴────────────┴───────────┴──────────┴───────────┴─────┴───────┴───────────┘
-```
-
-**Why this layout?**
-
-- **Length prefixes**: Know how much to read without scanning for delimiters
-- **Fixed-size headers**: Can calculate offsets quickly
-- **Operation byte**: Distinguishes puts from deletes (tombstones)
-- **Timestamp**: Enables time-travel queries and MVCC
-
-Our implementation:
+Let's examine how FerrisDB structures SSTable data:
 
 ```rust
+// ferrisdb-storage/src/sstable/mod.rs:180-204
 pub struct SSTableEntry {
-    pub key: InternalKey,    // user_key + timestamp
+    /// The internal key (user_key + timestamp)
+    pub key: InternalKey,
+    /// The value associated with this key version
     pub value: Value,
-    pub operation: Operation, // Put or Delete
+    /// The operation type (Put/Delete) for this entry
+    pub operation: Operation,
 }
 
-impl SSTableEntry {
-    pub fn encode(&self) -> Result<Vec<u8>> {
-        let mut buf = Vec::new();
-
-        // Encode key length and data
-        buf.write_u32::<LittleEndian>(self.key.user_key.len() as u32)?;
-        buf.write_u32::<LittleEndian>(self.value.len() as u32)?;
-        buf.write_u8(self.operation as u8)?;
-        buf.write_u64::<LittleEndian>(self.key.timestamp)?;
-        buf.extend_from_slice(&self.key.user_key);
-        buf.extend_from_slice(&self.value);
-
-        Ok(buf)
-    }
-}
-```
-
-#### Index Block Format
-
-The index helps locate data blocks quickly:
-
-```rust
-pub struct IndexEntry {
-    pub first_key: InternalKey,  // First key in the block
-    pub offset: u64,             // Byte offset in file
-    pub size: u32,               // Block size in bytes
-}
-```
-
-#### Footer Format
-
-The footer contains essential metadata:
-
-```rust
-pub struct Footer {
-    pub index_offset: u64,    // Where index block starts
-    pub index_size: u32,      // Size of index block
-    pub version: u32,         // Format version
-    pub magic: u64,           // 0x0123456789ABCDEF
-}
-```
-
-### Key Design Decisions
-
-#### 1. Why 4KB Blocks?
-
-```rust
-const TARGET_BLOCK_SIZE: usize = 4096; // 4KB
-```
-
-- **OS Page Size**: Most systems use 4KB pages, making this I/O efficient (the OS reads 4KB chunks anyway)
-- **Cache Friendly**: Fits well in CPU caches (L3 cache is typically 8-32MB)
-- **Balance**: Large enough to amortize seek costs (don't waste time for tiny reads), small enough for fast scans (don't read unnecessary data)
-
-**Think of it like book chapters**: Too short and you're constantly flipping pages. Too long and finding specific content is hard.
-
-#### 2. Why Include Operation in SSTable?
-
-Initially, we had `Operation` as part of `InternalKey`:
-
-```rust
-// Original design - problematic
 pub struct InternalKey {
     pub user_key: Key,
     pub timestamp: Timestamp,
-    pub operation: Operation,  // ❌ Mixed concerns
+}
+
+// ferrisdb-storage/src/sstable/mod.rs:207-228
+pub struct IndexEntry {
+    /// File offset of the data block
+    pub block_offset: u64,
+    /// First key in the data block
+    pub first_key: Key,
 }
 ```
 
-We refactored to separate concerns:
+**Key design decisions:**
+1. **Separate key components**: User key and timestamp stored separately for efficient comparison
+2. **Operation tracking**: Distinguishes between insertions and deletions
+3. **Block indexing**: Each index entry points to a 4KB data block
 
-```rust
-// Current design - clean separation
-pub struct InternalKey {
-    pub user_key: Key,
-    pub timestamp: Timestamp,  // ✅ Pure key identity
-}
+### Implementation Details
 
-pub struct SSTableEntry {
-    pub key: InternalKey,
-    pub value: Value,
-    pub operation: Operation,  // ✅ Storage metadata
-}
+#### Binary Format Details
+
+The actual bytes on disk follow a precise format:
+
+```text
+Entry Format (within Data Block):
+┌──────────┬─────────────┬───────────┬──────────────┬────────────┬──────────┐
+│ Key Len  │ Value Len   │ Timestamp │  Operation   │    Key     │  Value   │
+│(4 bytes) │ (4 bytes)   │ (8 bytes) │   (1 byte)   │ (variable) │(variable)│
+└──────────┴─────────────┴───────────┴──────────────┴────────────┴──────────┘
+
+Footer Format (always 40 bytes at end of file):
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│Index Offset │Index Length │Bloom Offset │Bloom Length │Magic Number │
+│  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │  (8 bytes)  │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
 ```
 
-This makes the API cleaner:
+**How it works:**
+1. **Fixed-size headers**: Can calculate positions without scanning
+2. **Little-endian encoding**: Consistent byte order across platforms
+3. **Magic number**: Validates file integrity (detects corruption)
+
+**Why this matters:**
+- **Efficient seeking**: Jump directly to any block without reading others
+- **Corruption detection**: Magic number and checksums catch disk errors
+- **Platform independence**: Same format works everywhere
+
+#### SSTable Writer Implementation
+
+Creating an SSTable involves careful data organization:
 
 ```rust
-// Before: Awkward API
-reader.get(&InternalKey::new(key, ts, Operation::Put))?
-
-// After: Natural API
-reader.get(&key, timestamp)?
-```
-
-#### 3. Checksum Strategy
-
-Each block includes a CRC32 checksum:
-
-```rust
-pub struct BlockHeader {
-    pub block_size: u32,
-    pub entry_count: u32,
-    pub checksum: u32,  // CRC32 of block data
+// ferrisdb-storage/src/sstable/writer.rs:34-65 (simplified)
+pub struct SSTableWriter {
+    file: File,
+    current_block: Vec<SSTableEntry>,
+    index_entries: Vec<IndexEntry>,
+    block_size: usize,
+    entries_written: usize,
 }
-```
 
-This enables:
-
-- **Corruption detection** during reads (know if disk/network corrupted data)
-- **Selective retry** of corrupted blocks (don't throw away the whole file)
-- **Background verification** without impacting reads (health checks)
-
-**Real-world example**: Like each page of a book having a small code that verifies the text hasn't been altered or smudged.
-
-## Binary Search Optimization
-
-### The Problem
-
-Our initial implementation used linear search:
-
-```rust
-// O(n) - Slow for large blocks!
-for entry in block.entries {
-    if entry.key.user_key == target_key
-       && entry.key.timestamp <= target_timestamp {
-        return Some(entry.value);
-    }
-}
-```
-
-**The problem**: With 100 entries per block, we'd check 50 entries on average. That's like reading half a phone book page to find one name!
-
-### The Solution
-
-We implemented binary search leveraging our sorted structure:
-
-```rust
-impl DataBlock {
-    pub fn get(&self, key: &[u8], timestamp: Timestamp) -> Result<Option<Value>> {
-        let target_key = InternalKey::new(key.to_vec(), timestamp);
-
-        // Binary search by key
-        match self.entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
-            Ok(idx) => Ok(Some(self.entries[idx].value.clone())),
-            Err(_) => Ok(None),
-        }
-    }
-}
-```
-
-### Performance Impact
-
-| Block Size   | Linear Search         | Binary Search        | Improvement |
-| ------------ | --------------------- | -------------------- | ----------- |
-| 100 entries  | 50 comparisons (avg)  | 7 comparisons (max)  | ~7x         |
-| 1000 entries | 500 comparisons (avg) | 10 comparisons (max) | ~50x        |
-
-**In practice**: The difference between checking 7 items vs 50 items can mean microseconds vs milliseconds - crucial when serving thousands of requests per second!
-
-## Two-Level Lookup
-
-FerrisDB uses a two-level lookup strategy:
-
-```rust
-pub fn get(&self, key: &[u8], timestamp: Timestamp) -> Result<Option<Value>> {
-    // Level 1: Binary search in index to find block
-    let block_idx = self.find_block_for_key(key)?;
-
-    // Level 2: Load block and binary search within it
-    let block = self.read_block(block_idx)?;
-    block.get(key, timestamp)
-}
-```
-
-Total complexity: **O(log B + log E)** where:
-
-- B = number of blocks
-- E = entries per block
-
-**Example with 1 million keys**:
-
-- 10,000 blocks of 100 entries each
-- Finding the right block: log₂(10,000) ≈ 13 comparisons
-- Finding entry in block: log₂(100) ≈ 7 comparisons
-- Total: ~20 comparisons to find any key among 1 million!
-
-## Implementation Insights
-
-### Writer Pattern
-
-The writer uses a streaming approach:
-
-```rust
 impl SSTableWriter {
-    pub fn add(&mut self, key: InternalKey, value: Value, op: Operation) -> Result<()> {
-        self.current_block.push(SSTableEntry { key, value, operation: op });
-
-        // Flush when block is full
-        if self.current_block_size() >= TARGET_BLOCK_SIZE {
-            self.flush_block()?;
+    pub fn add(&mut self, key: InternalKey, value: Value, operation: Operation) -> Result<()> {
+        // Check ordering (entries must be sorted)
+        if let Some(last) = self.current_block.last() {
+            if key <= last.key {
+                return Err(Error::OutOfOrder);
+            }
         }
+        
+        let entry = SSTableEntry::new(key, value, operation);
+        
+        // Check if block is full
+        if self.current_block_size() + entry.serialized_size() > self.block_size {
+            self.write_block()?;
+        }
+        
+        self.current_block.push(entry);
+        self.entries_written += 1;
+        
         Ok(())
     }
-
-    fn flush_block(&mut self) -> Result<()> {
-        // Write block with header and checksum
-        let encoded = self.encode_current_block()?;
-        self.file.write_all(&encoded)?;
-
-        // Update index
-        let first_key = self.current_block[0].key.clone();
-        self.index.push(IndexEntry {
-            first_key,
-            offset: self.current_offset,
-            size: encoded.len() as u32,
-        });
-
+    
+    fn write_block(&mut self) -> Result<()> {
+        let offset = self.file.seek(SeekFrom::Current(0))?;
+        let first_key = self.current_block[0].key.user_key.clone();
+        
+        // Write all entries in the block
+        for entry in &self.current_block {
+            self.write_entry(entry)?;
+        }
+        
+        // Add to index
+        self.index_entries.push(IndexEntry::new(offset, first_key));
+        
+        // Clear for next block
         self.current_block.clear();
+        
         Ok(())
     }
 }
 ```
 
-### Reader Pattern
+**Performance characteristics:**
+- **Write throughput**: Sequential I/O only (fast on all storage types)
+- **Memory usage**: Only one block (4KB) in memory at a time
+- **No random writes**: Append-only design ideal for SSDs
 
-The reader minimizes I/O through selective loading:
+#### Binary Search Within Blocks
+
+The real performance magic happens during reads:
 
 ```rust
-impl SSTableReader {
-    pub fn new(path: PathBuf) -> Result<Self> {
-        let mut file = File::open(&path)?;
-
-        // Read footer (last 24 bytes)
-        file.seek(SeekFrom::End(-24))?;
-        let footer = Footer::decode(&mut file)?;
-
-        // Read and cache index
-        file.seek(SeekFrom::Start(footer.index_offset))?;
-        let index = Self::read_index(&mut file, footer.index_size)?;
-
-        Ok(Self { file, index, footer })
+// ferrisdb-storage/src/sstable/reader.rs:150-180 (conceptual)
+pub fn find_in_block(&self, block: &DataBlock, key: &Key, timestamp: Timestamp) -> Option<Value> {
+    // Binary search for the key
+    let entries = &block.entries;
+    
+    let idx = entries.binary_search_by(|entry| {
+        match entry.key.user_key.cmp(key) {
+            Ordering::Equal => {
+                // Keys match, compare timestamps (newer first)
+                timestamp.cmp(&entry.key.timestamp)
+            }
+            other => other,
+        }
+    });
+    
+    match idx {
+        Ok(i) => {
+            // Found exact match
+            if entries[i].operation == Operation::Put {
+                Some(entries[i].value.clone())
+            } else {
+                None // Deleted entry
+            }
+        }
+        Err(_) => None, // Not found
     }
 }
 ```
 
-## Lessons Learned
+**Why binary search works so well:**
+- **O(log n) lookups**: 100 entries needs only 7 comparisons max
+- **Cache-friendly**: Sequential memory access within blocks
+- **Predictable performance**: No worst-case degradation
 
-### 1. Separation of Concerns Matters
+## Performance Analysis
 
-Moving `Operation` out of `InternalKey` made the code cleaner and more maintainable. Always question whether data belongs together.
+### Mathematical Analysis
 
-### 2. Binary Search is Essential
+**Search Performance:**
+- **Block location**: O(log B) where B = number of blocks (using index)
+- **Within block**: O(log E) where E = entries per block (~100)
+- **Total**: O(log B + log E) = O(log N) where N = total entries
 
-For sorted data, binary search provides dramatic performance improvements. The implementation effort pays off quickly.
+**Space Efficiency:**
+- **Overhead per entry**: ~17 bytes (lengths, timestamp, operation)
+- **Index overhead**: ~1% of data size (one entry per 4KB block)
+- **Compression potential**: 50-80% reduction for text data
 
-### 3. Block Size is a Key Tuning Parameter
+### Trade-off Analysis
 
-4KB works well for our use case, but this should be configurable based on:
+**Advantages:**
+- ✅ **Fast lookups**: Binary search in sorted data
+- ✅ **Efficient disk usage**: Only read necessary blocks
+- ✅ **Compression-friendly**: Sequential data compresses well
+- ✅ **Crash recovery**: Immutable files with checksums
 
-- **Workload characteristics**: Large values? Use bigger blocks. Tiny values? Use smaller blocks.
-- **Storage medium**: SSDs handle random reads better than HDDs (might use smaller blocks on SSD)
-- **Available memory for caching**: More RAM = can afford bigger blocks in cache
+**Disadvantages:**
+- ⚠️ **Write-once**: Can't update in place (need compaction)
+- ⚠️ **Space amplification**: Multiple versions until compaction
+- ⚠️ **Not human-readable**: Binary format requires tools
+- ⚠️ **Fixed block size**: May waste space for small datasets
 
-### 4. Checksums are Non-Negotiable
+**When to use alternatives:**
+- **Frequently updated data**: Use B-trees or hash tables
+- **Small datasets**: Simple formats like JSON might suffice
+- **Debugging needs**: Text formats easier to inspect
 
-Data corruption happens. Checksums let us detect it early and fail gracefully rather than returning bad data.
+## Advanced Topics
 
-**Why corruption happens**:
+### Bloom Filters for Existence Checks
 
-- Bit flips in RAM or on disk
-- Network transmission errors
-- Software bugs
-- Hardware failures
+Before reading a block, check if the key might exist:
 
-Without checksums, you might serve corrupted data and never know!
+```rust
+// Bloom filter basics
+pub struct BloomFilter {
+    bits: Vec<bool>,
+    hash_count: usize,
+}
 
-## What's Next?
-
-With SSTables implemented, the next challenges are:
-
-1. **Compaction**: Merging multiple SSTables to remove duplicates
-2. **Bloom Filters**: Avoiding unnecessary disk reads
-3. **Compression**: Reducing storage footprint
-4. **Block Cache**: Keeping hot blocks in memory
-
-## Try It Yourself
-
-Check out the [full implementation](https://github.com/ferrisdb/ferrisdb/tree/main/ferrisdb-storage/src/sstable) and run the tests:
-
-```bash
-# Run SSTable tests
-cargo test -p ferrisdb-storage sstable
-
-# Benchmark read performance
-cargo bench sstable_read
+impl BloomFilter {
+    pub fn might_contain(&self, key: &[u8]) -> bool {
+        for i in 0..self.hash_count {
+            let hash = self.hash_key(key, i);
+            let bit_pos = hash % self.bits.len();
+            
+            if !self.bits[bit_pos] {
+                return false; // Definitely not present
+            }
+        }
+        true // Might be present (or false positive)
+    }
+}
 ```
+
+**Bloom filter properties:**
+- **Space**: ~10 bits per key for 1% false positive rate
+- **Speed**: O(k) where k = number of hash functions
+- **No false negatives**: If it says "no", the key definitely doesn't exist
+
+### Compression Strategies
+
+FerrisDB can compress blocks before writing:
+
+```rust
+// Block compression options
+pub enum CompressionType {
+    None,
+    Snappy,  // Fast compression, moderate ratio
+    LZ4,     // Very fast, good for real-time
+    Zstd,    // Best ratio, slower
+}
+
+// Compression happens at block level
+fn compress_block(data: &[u8], compression: CompressionType) -> Vec<u8> {
+    match compression {
+        CompressionType::LZ4 => lz4::compress(data),
+        CompressionType::Snappy => snappy::compress(data),
+        // ... etc
+    }
+}
+```
+
+**Compression trade-offs:**
+- **LZ4**: 2-4x compression, minimal CPU overhead
+- **Snappy**: Google's choice, balanced performance
+- **Zstd**: 3-5x compression, higher CPU cost
+
+## Hands-On Exploration
+
+### Try It Yourself
+
+**Exercise 1**: Analyze SSTable structure
+```bash
+# Create a sample SSTable
+cargo run --example create_sstable -- --entries 1000
+
+# Examine the binary structure
+hexdump -C sample.sst | head -50
+
+# Look for the magic number at the end
+tail -c 40 sample.sst | hexdump -C
+```
+
+**Exercise 2**: Benchmark lookup performance
+```rust
+use std::time::Instant;
+
+fn benchmark_sstable_lookups() {
+    let reader = SSTableReader::open("sample.sst").unwrap();
+    
+    // Random lookups
+    let start = Instant::now();
+    for _ in 0..1000 {
+        let key = format!("user:{}", rand::random::<u32>() % 1000);
+        reader.get(key.as_bytes(), u64::MAX);
+    }
+    println!("Random lookups: {:?}/op", start.elapsed() / 1000);
+    
+    // Sequential scan
+    let start = Instant::now();
+    let mut count = 0;
+    for entry in reader.iter() {
+        count += 1;
+    }
+    println!("Sequential scan: {} entries in {:?}", count, start.elapsed());
+}
+```
+
+### Debugging & Observability
+
+**Key metrics to watch:**
+- **Block cache hit rate**: How often we avoid disk reads
+- **Average block fill**: Efficiency of space usage
+- **Bloom filter effectiveness**: False positive rate
+
+**Debugging techniques:**
+- **SSTable inspection tool**: `cargo run --bin sstable-dump`
+- **Block analysis**: Check compression ratios and fill rates
+- **Performance profiling**: Identify slow lookups
+
+## Real-World Context
+
+### Industry Comparison
+
+**How other databases implement persistent storage:**
+- **LevelDB/RocksDB**: Similar SSTable format with levels
+- **Cassandra**: SSTables with specialized compaction
+- **HBase**: StoreFiles (SSTable variant) with HDFS
+- **PostgreSQL**: Heap files with B-tree indexes (different approach)
+
+### Historical Evolution
+
+**Timeline:**
+- **2006**: Google Bigtable paper introduces SSTable concept
+- **2011**: LevelDB open-sources SSTable implementation
+- **2012**: RocksDB adds optimizations for SSDs
+- **Today**: Cloud-native adaptations for object storage
+
+## Common Pitfalls & Best Practices
+
+### Implementation Pitfalls
+
+1. **Forgetting to sort entries**:
+   - **Problem**: Binary search fails on unsorted data
+   - **Solution**: Enforce ordering in writer
+
+2. **Block size selection**:
+   - **Problem**: Too small = many seeks, too large = wasted reads
+   - **Solution**: 4-16KB sweet spot for most workloads
+
+3. **Missing checksums**:
+   - **Problem**: Silent data corruption
+   - **Solution**: CRC32 per block minimum
+
+### Production Considerations
+
+**Operational concerns:**
+- **File handle limits**: Many SSTables = many open files
+- **Compaction scheduling**: Balance read performance vs I/O load
+- **Backup strategies**: Immutable files make incremental backups easy
+- **Monitoring**: Track SSTable count, sizes, and age distribution
+
+## Summary & Key Takeaways
+
+### Core Concepts Learned
+
+1. **Immutable files enable efficient reads**: No locking, perfect for caching
+2. **Binary format with blocks**: Read only what you need
+3. **Sorted data enables binary search**: O(log n) lookups in large files
+
+### When to Apply This Knowledge
+
+- **Use SSTables when**: Write-once, read-many workloads (logs, time-series)
+- **Consider alternatives when**: Need in-place updates or real-time queries
+- **Implementation complexity**: Moderate - careful binary format handling required
+
+## Further Reading & References
+
+### Related FerrisDB Articles
+- [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): How SSTables fit in the architecture
+- [Understanding WAL and Crash Recovery](/deep-dive/wal-crash-recovery/): What happens before SSTable
+
+### Academic Papers
+- "Bigtable: A Distributed Storage System" (Chang et al., 2006): Original SSTable design
+- "Log-Structured Merge-Tree" (O'Neil et al., 1996): Theoretical foundation
+
+### Industry Resources
+- [RocksDB SSTable Format](https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format): Production implementation
+- [LevelDB Implementation Notes](https://github.com/google/leveldb/blob/master/doc/impl.md): Google's design doc
+
+### FerrisDB Code Exploration
+- **SSTable format**: `ferrisdb-storage/src/sstable/mod.rs` - Data structures
+- **Writer implementation**: `ferrisdb-storage/src/sstable/writer.rs` - Creating SSTables
+- **Reader implementation**: `ferrisdb-storage/src/sstable/reader.rs` - Querying SSTables
+- **Integration tests**: `ferrisdb-storage/src/sstable/tests.rs` - Usage examples
 
 ---
 
-_This article is based on Day 2 of FerrisDB development. Follow our [blog](/blog/) for daily updates on building a database from scratch!_
+## About This Series
+
+This article is part of FerrisDB's technical deep dive series. Each article provides comprehensive coverage of database internals through practical implementation:
+
+- ✅ **Real implementation details** from FerrisDB source code
+- ✅ **Mathematical analysis** with concrete complexity bounds
+- ✅ **Practical exercises** for hands-on learning
+- ✅ **Industry context** and alternative approaches
+
+**Target audience**: CRUD developers who want to understand database systems deeply.
+
+[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+
+---
+
+*Last updated: May 29, 2025*
+*Estimated reading time: 20 minutes*
+*Difficulty: Intermediate*

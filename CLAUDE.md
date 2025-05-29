@@ -39,6 +39,59 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
   - Use conditional imports `#[cfg(test)]` for symbols only used in tests to avoid unused import warnings
   - Prefer direct imports over fully qualified paths (e.g., `use ferrisdb_core::Operation;` then `Operation` instead of `ferrisdb_core::Operation`)
 
+### Website Design Guidelines
+
+**Design Philosophy:**
+- **Educational First**: Every design decision should make learning easier
+- **Page-Turner Experience**: Content should be engaging and flow naturally
+- **Transparent & Honest**: Show real progress, real mistakes, real learning
+- **Human-AI Balance**: Showcase collaboration without overselling either side
+
+**Visual Design:**
+- **Color Palette**: 
+  - Primary: Rust orange (#ce422b)
+  - Secondary: Darker orange (#f74c00)
+  - Accent: Bright orange (#ffa500)
+  - Text: Dark gray (#2d3748)
+  - Muted: Medium gray (#718096)
+- **Typography**:
+  - Body: Inter font family, 18px base size, 1.7-1.8 line height
+  - Code: JetBrains Mono, 0.95rem in blocks
+  - Headers: 600-700 weight for emphasis
+- **Layout**:
+  - Article content: 750px max width for optimal reading
+  - Consistent card-based design for featured content
+  - Generous whitespace for breathing room
+
+**Content Structure:**
+- **Homepage Flow**:
+  1. Hero with clear value proposition
+  2. Learning paths for different audiences
+  3. Why we built this (emotional connection)
+  4. What you'll learn (concrete benefits)
+  5. Progress tracking (transparency)
+  6. AI collaboration showcase
+  7. Educational resources
+  8. Call to action
+- **Navigation**:
+  - Dropdown menus for content grouping
+  - Learn menu groups all educational content
+  - Blog menu separates human and AI perspectives
+  - FAQ prominently featured
+
+**Component Patterns:**
+- **Cards**: Rounded corners (8-12px), subtle shadows, hover effects
+- **Buttons**: Primary (filled), Outline (bordered), Ghost (transparent)
+- **Code Blocks**: Light theme (#f6f8fa background), clear syntax highlighting
+- **Progress Items**: Visual indicators (✅/🚧/⏳) with clear status
+- **Metrics**: Large numbers with descriptive labels
+
+**Writing for the Web:**
+- **Scannable**: Use headers, bullets, and short paragraphs
+- **Progressive Disclosure**: Overview → Details → Deep Dive
+- **Multiple Entry Points**: Different CTAs for different audiences
+- **Clear Signposting**: Tell readers where they are and where to go next
+
 ### Documentation
 
 - **Always** add comprehensive doc comments for all public APIs
@@ -268,33 +321,152 @@ Maintaining truthful records in both human and Claude blogs is essential because
 
 ### Deep Dive Articles
 
-**Writing for Developers, Not Academics:**
+**Purpose**: Comprehensive technical articles that thoroughly explain database concepts through FerrisDB's implementation. These are the authoritative technical references for understanding database internals.
 
-- **Target audience**: Typical developers, not PhD students or researchers
-- **Explain jargon**: Always define technical terms when first used (e.g., "ABA problem" needs explanation)
-- **Use analogies**: Complex concepts benefit from real-world comparisons
-- **Show don't tell**: Use concrete examples instead of abstract descriptions
-- **Progressive complexity**: Start simple, build up to advanced concepts
-- **Avoid assumptions**: Don't assume readers know advanced CS topics
-- **Conversational tone**: Write like you're explaining to a colleague, not lecturing
+**Target Audience**: CRUD developers who want to understand database systems deeply but may not have systems programming background. Explain complex concepts accessibly while maintaining technical depth.
 
-**Deep Dive Structure:**
+**Article Structure (REQUIRED):**
 
-1. **Hook**: Start with a relatable problem or question
-2. **Context**: Why should developers care about this topic?
-3. **Fundamentals**: Explain basic concepts before diving deep
-4. **Implementation**: Show real code with clear explanations
-5. **Trade-offs**: Discuss pros, cons, and when to use
-6. **Practical tips**: Give actionable advice
-7. **Resources**: Link to further reading for those who want more
+Every deep dive article must follow this exact structure:
 
-**Examples of Good Explanations:**
+1. **Problem & Why It Matters**: Fundamental database problem and real-world impact
+2. **Conceptual Overview**: Core idea with analogies and visual diagrams
+3. **FerrisDB Implementation**: Actual code with detailed explanations and design decisions
+4. **Performance Analysis**: Benchmarks, measurements, and trade-off analysis
+5. **Advanced Topics**: Cutting-edge concepts and future improvements (optional)
+6. **Hands-On Exploration**: Practical exercises and debugging techniques
+7. **Real-World Context**: Industry comparison and historical evolution
+8. **Common Pitfalls**: Implementation mistakes and best practices
+9. **Summary & Takeaways**: Key concepts and when to apply them
+10. **Further Reading**: Curated resources and FerrisDB code references
 
-- ❌ "Uses epoch-based reclamation to avoid ABA problems"
-- ✅ "Uses epoch-based reclamation to avoid the ABA problem - a concurrency issue where a memory location is changed from A to B and back to A, making it appear unchanged when it actually was modified"
+**Content Quality Standards:**
 
-- ❌ "O(log n) complexity"
-- ✅ "O(log n) complexity - meaning if you have 1,000 items, you only need ~10 comparisons instead of 1,000"
+- **Use actual FerrisDB code**: Always reference real implementation with file paths
+- **Include file references**: `// ferrisdb-[crate]/src/[component]/[file].rs:[line-range]`
+- **Provide performance data**: Include concrete measurements, not theoretical claims
+- **Explain design decisions**: Why FerrisDB chose this approach over alternatives
+- **Show visual diagrams**: ASCII art or diagrams for complex concepts
+- **Include hands-on exercises**: Practical ways to explore the concepts
+
+**Writing Guidelines:**
+
+- **Write for CRUD developers**: Assume familiarity with basic programming but not systems programming or advanced CS
+- **No PhD required**: Complex concepts should be learnable by someone who builds REST APIs, not just database researchers
+- **Define all jargon**: Never use technical terms without clear definitions and examples
+- **Use relatable analogies**: Compare database concepts to everyday experiences (filing cabinets, restaurants, traffic)
+- **Progressive complexity**: Start with familiar concepts, gradually introduce database-specific ideas
+- **Show, don't tell**: Concrete examples rather than abstract descriptions
+- **Conversational tone**: Like explaining to a colleague over coffee, not lecturing in a classroom
+- **Honest trade-offs**: Don't oversell - acknowledge limitations and alternatives clearly
+
+**Technical Requirements:**
+
+- **File naming**: `deep-dive/[concept-slug].md`
+- **Permalink**: `/deep-dive/[concept-slug]/`
+- **Difficulty levels**: Use guidelines below to determine
+- **Estimated reading time**: Use calculation method below
+- **Prerequisites**: Link to required background articles
+- **Code testing**: All code examples must be tested and working
+- **Last updated date**: Manually update the date whenever content is modified (don't use dynamic dates)
+
+**Estimated Reading Time Calculation:**
+
+Use this formula as a baseline:
+- **Average reading speed**: 200 words per minute (technical content is slower than regular text)
+- **Code comprehension**: Add 30 seconds per code block
+- **Diagram analysis**: Add 1 minute per ASCII diagram or visual
+- **Exercise completion**: Add time specified in exercise (if hands-on)
+
+Example calculation:
+- 3000 words ÷ 200 = 15 minutes
+- 10 code blocks × 0.5 = 5 minutes  
+- 3 diagrams × 1 = 3 minutes
+- Total: ~23 minutes → Round to nearest 5 → "25 minutes"
+
+**Difficulty Level Guidelines:**
+
+**Beginner:**
+- Assumes only CRUD development experience
+- No systems programming knowledge required
+- Concepts explained with everyday analogies
+- Code examples use basic Rust syntax only
+- Topics: Basic storage concepts, simple algorithms, introductory database ideas
+
+**Intermediate:**
+- Assumes understanding of basic database concepts
+- Some familiarity with Rust syntax helpful
+- May introduce concurrent programming basics
+- Code examples include generics and error handling
+- Topics: Concurrency patterns, optimization techniques, complex data structures
+
+**Advanced:**
+- Assumes solid understanding of systems programming concepts
+- Comfortable with Rust ownership and lifetimes
+- Discusses low-level implementation details
+- Code examples include unsafe blocks, advanced traits
+- Topics: Lock-free algorithms, memory management, distributed systems
+
+**Performance Analysis Standards:**
+
+- **Only real measurements**: Use only verified data from actual tests, mathematical proofs, or cited research papers
+- **No fictional numbers**: Never make up benchmarks, percentages, or performance claims
+- **Benchmark methodology**: When presenting test results, explain exactly how measurements were taken
+- **Citation requirements**: Reference research papers or industry sources for external claims
+- **Theoretical analysis**: Use mathematical complexity analysis (O notation) when actual measurements aren't available
+- **Honest limitations**: If we don't have performance data, explicitly state that rather than inventing numbers
+
+**Visual Guidelines:**
+
+- **ASCII diagrams**: For architectural overviews and data flow
+- **Code structure**: Show before/after for refactoring examples
+- **Performance graphs**: When beneficial (prefer numbers in text)
+- **Consistent formatting**: Use template spacing and structure
+
+**Template Usage:**
+
+- **ALWAYS** use `docs/deep-dive/article-template.md`
+- Fill in all sections - never leave template placeholders
+- Include all required metadata in frontmatter
+- Follow exact section structure for consistency
+
+**Quality Checklist:**
+
+- [ ] Uses actual FerrisDB code with file references
+- [ ] Explains database concepts for non-experts
+- [ ] Includes verified performance measurements or mathematical analysis (no fictional numbers)
+- [ ] Provides hands-on exercises or exploration
+- [ ] References specific FerrisDB implementation decisions
+- [ ] Follows template structure exactly
+- [ ] All code examples tested and working
+- [ ] Includes industry context and alternatives
+- [ ] Clear about limitations and trade-offs
+- [ ] Links to related articles and resources
+
+**Publishing Process:**
+
+1. Create article using template
+2. Include actual performance measurements where possible
+3. Test all code examples and exercises
+4. Review for technical accuracy with FerrisDB maintainers
+5. Lint with prettier and markdownlint
+6. Submit PR with "deep-dive" label
+
+**Examples of Quality Standards:**
+
+**❌ Poor explanation:**
+"Uses epoch-based reclamation to avoid ABA problems"
+
+**✅ Good explanation:**
+"Uses epoch-based reclamation to avoid the ABA problem - a concurrency issue where a memory location is changed from A to B and back to A, making it appear unchanged when it actually was modified. In FerrisDB's skip list, this prevents a thread from accessing freed memory that appears valid."
+
+**❌ Vague performance claim:**
+"This approach is much faster"
+
+**✅ Concrete measurement:**
+"Binary search reduces comparisons from O(n) to O(log n) complexity. For a 100-item block, this means at most 7 comparisons (⌈log₂ 100⌉) instead of an average of 50 comparisons for linear search."
+
+**Note**: Only include actual benchmark numbers if we have conducted real tests or can cite specific research. Mathematical complexity analysis is always acceptable.
 
 **Blog Post Format (for main blog):**
 
@@ -341,6 +513,129 @@ grep -E "\[x\].*\(Day [0-9]+\)" TODO.md
 - After major architectural decisions
 - When solving interesting technical challenges
 - After significant refactoring or optimization work
+
+### Rust by Example: Database Edition
+
+**Purpose**: Educational articles that teach Rust concepts through real FerrisDB code, comparing with other languages to help CRUD developers understand Rust.
+
+**Target Audience**: Developers who know programming (especially CRUD development) but are new to Rust. Assumes familiarity with JavaScript, Python, Java, or Go.
+
+**Article Structure (REQUIRED):**
+
+Every "Rust by Example" article must follow this exact structure:
+
+1. **The Problem**: Clearly explain what we're solving in FerrisDB (business/technical requirement)
+2. **Rust Solution**: Show actual FerrisDB code with detailed explanations for Rust newcomers
+3. **Language Comparisons**: Implement the same solution in JavaScript, Python, Java, and Go
+4. **Trade-off Analysis**: Honest assessment of where Rust excels and where it's harder
+5. **Real Impact**: Concrete measurements/benefits in FerrisDB
+6. **Try It**: Hands-on exercise for readers
+
+**Language Comparison Requirements:**
+
+- **JavaScript/TypeScript**: Focus on syntax simplicity vs runtime safety trade-offs
+- **Python**: Emphasize readability vs performance, GIL limitations for concurrency
+- **Java**: Compare verbosity, OOP patterns, garbage collection overhead
+- **Go**: Compare simplicity vs safety, different concurrency models
+
+**Code Quality Standards:**
+
+- **Use actual FerrisDB code**: Never use toy examples - always reference real implementation
+- **Include file references**: `// ferrisdb-storage/src/[component]/[file].rs:[line-range]`
+- **Explain Rust concepts simply**: Assume zero Rust knowledge
+- **Provide working code**: All code examples must compile and run
+- **Accurate comparisons**: Don't oversimplify other languages or ignore their strengths
+
+**Writing Guidelines:**
+
+- **Conversational tone**: Write like explaining to a colleague over coffee
+- **Practical focus**: Always connect concepts to database engineering problems
+- **Honest trade-offs**: Don't oversell Rust - acknowledge where other languages are better
+- **Progressive complexity**: Start with basics, build to advanced concepts
+- **Concrete examples**: Use specific measurements, benchmarks, bug categories
+
+**Topics to Cover:**
+
+**Memory Management & Ownership:**
+- Skip list node allocation and deallocation
+- MemTable lifetime management during flush
+- Smart pointers (Arc, Box) in concurrent data structures
+
+**Safety & Error Handling:**
+- Result types vs exceptions in WAL operations
+- Option types vs null pointer exceptions
+- Pattern matching vs switch statements
+
+**Performance & Zero-Cost Abstractions:**
+- Generic traits vs interface overhead
+- Compile-time optimizations in binary serialization
+- Memory layout optimization for cache performance
+
+**Concurrency & Parallelism:**
+- Lock-free programming in skip lists
+- Message passing vs shared memory
+- Atomic operations vs traditional locking
+
+**Type System & Traits:**
+- Trait system vs inheritance/interfaces
+- Generic constraints vs runtime type checking
+- Associated types vs generic parameters
+
+**Systems Programming:**
+- Binary format design and endianness
+- Memory mapping for large files
+- FFI integration with system libraries
+
+**Article Naming Convention:**
+- File: `rust-by-example/[concept-slug].md`
+- Permalink: `/rust-by-example/[concept-slug]/`
+- Title: "[Rust Concept]: [Brief Description]"
+- Last updated: Manually update date when content changes (don't use dynamic dates)
+
+**Difficulty Levels for Rust by Example:**
+
+Since these articles teach Rust concepts to non-Rust developers:
+
+**Beginner:**
+- First Rust concepts (ownership, borrowing, Result types)
+- Comparisons focus on syntax differences
+- Simple code examples without advanced features
+- Topics: Basic ownership, error handling, simple structs
+
+**Intermediate:**  
+- Rust patterns and idioms (traits, generics)
+- Comparisons include performance implications
+- Code examples show real-world usage
+- Topics: Trait systems, iterators, smart pointers
+
+**Advanced:**
+- Complex Rust features (lifetimes, unsafe, macros)
+- Deep performance and memory comparisons
+- Code examples from actual FerrisDB implementation
+- Topics: Lock-free programming, async, advanced lifetimes
+
+**Template Usage:**
+- **ALWAYS** use `docs/rust-by-example/article-template.md`
+- Fill in all sections - never leave template placeholders
+- Include actual performance measurements when possible
+- Provide working code examples in all languages
+
+**Quality Checklist:**
+- [ ] Uses actual FerrisDB code (not toy examples)
+- [ ] Explains Rust concepts for complete beginners
+- [ ] Includes working code in all 4 comparison languages
+- [ ] Provides honest trade-off analysis
+- [ ] References specific file locations in FerrisDB
+- [ ] Includes hands-on exercise
+- [ ] Follows template structure exactly
+- [ ] Code examples are tested and working
+
+**Publishing Process:**
+1. Create article using template
+2. Test all code examples
+3. Review for accuracy with FerrisDB maintainers
+4. Lint with prettier and markdownlint
+5. Submit PR with "rust-by-example" label
 
 ### Testing
 

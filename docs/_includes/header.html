@@ -20,7 +20,16 @@
 
         <div class="trigger">
           {% for nav_item in site.navigation %}
-            {% if nav_item.external %}
+            {% if nav_item.dropdown %}
+              <div class="nav-dropdown">
+                <span class="page-link dropdown-toggle">{{ nav_item.title }} ▼</span>
+                <div class="dropdown-content">
+                  {% for sub_item in nav_item.items %}
+                    <a href="{{ sub_item.url | relative_url }}">{{ sub_item.title }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            {% elsif nav_item.external %}
               <a class="page-link" href="{{ nav_item.url }}" target="_blank">{{ nav_item.title }}</a>
             {% else %}
               <a class="page-link" href="{{ nav_item.url | relative_url }}">{{ nav_item.title }}</a>
