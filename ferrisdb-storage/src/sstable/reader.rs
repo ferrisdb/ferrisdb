@@ -1,6 +1,6 @@
 //! SSTable reader implementation
 
-use crate::sstable::{Footer, IndexEntry, InternalKey, SSTableEntry, FOOTER_SIZE, SSTABLE_MAGIC};
+use crate::sstable::{Footer, IndexEntry, InternalKey, SSTableEntry, FOOTER_SIZE};
 use ferrisdb_core::{Error, Key, Operation, Result, Timestamp, Value};
 use std::collections::BTreeMap;
 use std::fs::File;
@@ -120,8 +120,9 @@ impl SSTableReader {
         let entries = self.load_block(block_offset)?;
 
         // Create target key for binary search (Operation doesn't affect ordering)
-        let target_key = InternalKey::new(user_key.clone(), timestamp, ferrisdb_core::Operation::Put);
-        
+        let target_key =
+            InternalKey::new(user_key.clone(), timestamp, ferrisdb_core::Operation::Put);
+
         // Use binary search to find exact key match
         match entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
             Ok(index) => {
@@ -170,16 +171,16 @@ impl SSTableReader {
 
         // Use binary search to find the first entry with matching user_key
         let start_index = entries.partition_point(|entry| entry.key.user_key < *user_key);
-        
+
         // Linear search through versions (timestamp DESC) for the latest valid version
         for i in start_index..entries.len() {
             let entry = &entries[i];
-            
+
             // Stop if we've moved to a different user_key
             if entry.key.user_key != *user_key {
                 break;
             }
-            
+
             // Check if this version is within our timestamp limit
             if entry.key.timestamp <= max_timestamp {
                 return Ok(Some((
@@ -553,10 +554,14 @@ mod tests {
         let mut reader = SSTableReader::open(&path).unwrap();
 
         // Test exact key lookups
-        let result = reader.get(&test_data[0].0.user_key, test_data[0].0.timestamp).unwrap();
+        let result = reader
+            .get(&test_data[0].0.user_key, test_data[0].0.timestamp)
+            .unwrap();
         assert_eq!(result, Some(test_data[0].1.clone()));
 
-        let result = reader.get(&test_data[2].0.user_key, test_data[2].0.timestamp).unwrap();
+        let result = reader
+            .get(&test_data[2].0.user_key, test_data[2].0.timestamp)
+            .unwrap();
         assert_eq!(result, Some(test_data[2].1.clone()));
 
         // Test key that doesn't exist
@@ -713,7 +718,7 @@ mod tests {
         for i in [0, 50, 100, 150, 199] {
             let key = format!("key_{:06}", i).into_bytes();
             let expected_value = format!("value_{}", i).into_bytes();
-            
+
             let result = reader.get(&key, i as u64).unwrap();
             assert_eq!(result, Some(expected_value));
         }
