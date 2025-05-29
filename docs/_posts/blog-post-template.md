@@ -1,26 +1,36 @@
 ---
 layout: post
-title: "Blog Post Template"
-nav_exclude: true
-search_exclude: true
-permalink: /blog/template/
+title: "Day N: Your Catchy Title Here"
+subtitle: "Brief subtitle that adds context or humor"
+description: "SEO description 150-160 characters explaining what this post covers"
+date: YYYY-MM-DD
+day: N
+tags: [tag1, tag2, tag3, tag4, tag5]
+stats:
+  [
+    "📊 XX tests passing",
+    "📄 Y PRs merged", 
+    "🏗️ Feature implemented",
+    "⏱️ Key achievement"
+  ]
+confidence: "Start: X/10 ☕ | End: Y/10 ☕☕"
+compilation_attempts: "XX (optional funny note)"
 ---
 
-{: .no_toc }
+Opening paragraph that hooks the reader and will appear in blog listings. Keep it engaging and set the scene for what's to come.
 
-[Intriguing subtitle that hints at the journey]
-{: .fs-6 .fw-300 }
+<!--more-->
 
-**Date:** YYYY-MM-DD • **Day:** X
-{: .label .label-blue }
+## Table of contents
 
-📊 X tests passing • 📄 Y PRs merged • ☕ Z cups consumed
-{: .text-delta }
+{: .no_toc .text-delta }
 
-**Confidence:** Start: 2/10 ☕ | End: 7/10 ☕☕☕
-{: .text-gamma }
+1. TOC
+{:toc}
 
 ---
+
+
 
 ## The Morning That Changed Everything
 

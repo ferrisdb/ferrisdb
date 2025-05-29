@@ -139,6 +139,39 @@ Common issues prettier might miss:
 - Write posts after major features, interesting debugging sessions, or collaboration insights
 - **Templates**: Use `docs/_posts/blog-post-template.md` for human posts, `docs/_claude_blog/blog-post-template.md` for Claude posts
 
+**Blog Post Format Requirements:**
+
+1. **Excerpt Separator**: Add `<!--more-->` after the opening paragraph to control excerpt
+   ```markdown
+   ---
+   layout: post
+   title: "Your Title"
+   ---
+   
+   Opening paragraph that will appear in blog listing.
+   
+   <!--more-->
+   
+   ## Table of contents
+   ...
+   ```
+
+2. **Metadata Display**:
+   - Use inline format for stats: `📊 55 tests • 📄 5 PRs • 🏗️ Feature built`
+   - Date format: `📅 Month Day, Year • 🏗️ Day N`
+   - Confidence levels: `☕ Confidence: Start: 3/10 | End: 6/10`
+   - Pattern metrics: `🔍 8 patterns • 🤝 Collaboration: 7/10`
+
+3. **SEO Requirements**:
+   - Always include `description:` field (150-160 characters)
+   - Use relevant tags and categories
+   - Keep titles descriptive but concise
+
+4. **Visual Consistency**:
+   - NO label badges - use inline text with emojis
+   - Consistent emoji usage throughout
+   - Clean, integrated appearance
+
 ### Claude's Blog Voice & Guidelines
 
 **Personality Traits:**
@@ -392,6 +425,17 @@ Example calculation:
 - Total: ~23 minutes → Round to nearest 5 → "25 minutes"
 
 **Difficulty Level Guidelines:**
+
+**Visual Indicators:**
+- 📗 **Beginner**: Green book emoji
+- 📙 **Intermediate**: Orange book emoji  
+- 📕 **Advanced**: Red book emoji
+- ⏱️ **Reading time**: Clock emoji
+
+**Format for Articles:**
+```markdown
+📗 **Beginner** • ⏱️ **15 minutes**
+```
 
 **Beginner:**
 
@@ -844,6 +888,39 @@ None / List any breaking changes here
 - Add reviewers if specific expertise needed
 - Update documentation in the same PR as code changes
 - Include before/after examples for API changes
+
+### Documentation Site Configuration
+
+**Jekyll & Just the Docs Theme:**
+
+- **Theme Version**: Just the Docs 0.10.1 (keep updated)
+- **No Custom CSS**: Use only Just the Docs built-in components and utilities
+- **Accessibility**: Maintain WCAG AA color contrast standards
+
+**Essential Plugins:**
+```ruby
+group :jekyll_plugins do
+  gem "jekyll-feed"
+  gem "jekyll-sitemap" 
+  gem "jekyll-seo-tag"
+  gem "jekyll-include-cache"
+  gem "jekyll-paginate"
+end
+```
+
+**Blog Configuration:**
+- **Pagination**: 5 posts per page
+- **Blog listings**: Use HTML format (`blog/index.html`, `claude-blog/index.html`)
+- **No manual loops**: Let pagination handle post listing
+
+**Visual Standards:**
+- **Emoji indicators**: 📗📙📕 for difficulty, ⏱️ for time, 📊📄🏗️ for stats
+- **No label badges**: Use inline text formatting
+- **Consistent spacing**: Follow Just the Docs utilities
+
+**Google Analytics:**
+- **Tracking ID**: G-JPW5LY247F
+- **IP Anonymization**: Enabled for GDPR compliance
 
 ### Architecture Decisions
 

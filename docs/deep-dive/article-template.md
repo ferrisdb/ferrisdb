@@ -10,15 +10,14 @@ permalink: /deep-dive/article-template/
 [One-line explanation of what this covers and why it matters]
 {: .fs-6 .fw-300 }
 
-**Difficulty:** [Beginner|Intermediate|Advanced] • **Reading time:** [X] minutes
-{: .label .label-[green|yellow|red] }
+[📗|📙|📕] **[Beginner|Intermediate|Advanced]** • ⏱️ **[X] minutes**
 
 ## Table of contents
 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

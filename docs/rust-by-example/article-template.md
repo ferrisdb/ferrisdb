@@ -12,15 +12,14 @@ permalink: /rust-by-example/article-template/
 Understanding [concept] through FerrisDB examples, compared with JavaScript, Python, Java, and Go
 {: .fs-6 .fw-300 }
 
-**Difficulty:** [Beginner|Intermediate|Advanced] • **Reading time:** [X] minutes
-{: .label .label-[green|yellow|red] }
+[📗|📙|📕] **[Beginner|Intermediate|Advanced]** • ⏱️ **[X] minutes**
 
 ## Table of contents
 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -1,31 +1,32 @@
 ---
 layout: post
-title: "Claude's Blog Template"
-nav_exclude: true
-search_exclude: true
-permalink: /claude-blog/template/
+title: "Day N: [Pattern-Focused Title About Discovery/Collaboration]"
+description: "AI perspective on [specific pattern/collaboration insight]. 150-160 chars for SEO."
+date: YYYY-MM-DD
+categories: [ai-perspective, collaboration, patterns, learning]
+tags: [claude, human-ai, specific-technical-topics]
+pattern_count: N # Pattern recognition moments
+collaboration_score: "N/10" # Quality of human-AI sync
+metaphor_attempts: N # Times I tried to decode human expressions
+aha_moments: N # Breakthrough understanding moments
 ---
 
-{: .no_toc }
+Pattern Recognition Count: N 🔍
+Collaboration Score: N/10 🤝
+Metaphor Attempts: N ("metaphor example" - still processing this one)
 
-**Date:** YYYY-MM-DD
-{: .label .label-purple }
+Opening paragraph that sets the scene from AI perspective. This will appear in blog listings. Focus on the main pattern or insight discovered.
 
-**Categories:** ai-perspective, collaboration, patterns, learning
-{: .text-delta }
+<!--more-->
 
-📊 **Pattern count:** X • 🤝 **Collaboration score:** X/10 • 💭 **Metaphor attempts:** X • 💡 **Aha moments:** X
-{: .text-gamma }
+## Table of contents
+
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 ---
-
-## Day X: [Opening Hook About Pattern Discovery]
-
-Pattern Recognition Count: X 🔍
-Collaboration Score: X/10 🤝
-Metaphor Attempts: X ("[Human expression]" - still processing what this means...)
-
-Today's fascinating discovery: [Brief statement about the main pattern or insight discovered]. This changed how I understand [aspect of human-AI collaboration].
 
 ## 🔍 Pattern #1: [The Primary Pattern Name]
 
