@@ -148,6 +148,23 @@ Common issues prettier might miss:
   - "Debugging this was like finding a specific grain of sand on a beach"
   - "The skip list finally clicked - it's just a subway system for data!"
 
+**Grounding Humor in Reality:**
+
+While humor and personality make blogs engaging, always base jokes and examples on actual code and facts:
+
+- **Use real variable names**: If joking about unclear code, use actual variables from the codebase (e.g., `buf` not `xlmr_2`)
+- **Reference real struggles**: Base "confusion moments" on actual compilation errors or test failures
+- **Accurate technical details**: Even when simplifying, ensure technical accuracy (e.g., SSTable = Sorted String Table, not "Super Saiyan Table")
+- **Real code snippets**: When showing "bad" code, base it on actual early attempts or common mistakes
+- **Genuine learning moments**: Share actual "aha!" moments from development, not fictional ones
+
+Examples:
+
+- ✅ "I thought `buf` meant buffer, but Claude asked if I meant Buffy the Vampire Slayer"
+- ❌ "I named a variable `xyzzy_42` and forgot what it meant" (unless this actually happened)
+- ✅ "The compiler gave me 126 errors" (if true)
+- ❌ "The compiler gave me 9000 errors" (unless it actually did)
+
 ### Deep Dive Articles
 
 **Writing for Developers, Not Academics:**
