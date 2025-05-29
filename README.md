@@ -23,6 +23,7 @@ We're building a distributed database inspired by FoundationDB's architecture. L
 ### ✅ What's Working Now
 
 The storage engine foundation:
+
 - **Write-Ahead Log (WAL)** - Durability and crash recovery
 - **MemTable** - Lock-free concurrent skip list for in-memory operations
 - **SSTable** - Persistent sorted string tables with binary search
@@ -31,6 +32,7 @@ The storage engine foundation:
 ### 🚧 What We're Building
 
 Active development on:
+
 - **Compaction** - Background merging of SSTables
 - **Transaction Layer** - ACID transaction support
 - **Distribution Layer** - Data partitioning and replication
@@ -39,6 +41,7 @@ Active development on:
 ### 🎯 The End Goal
 
 A fully functional distributed database with:
+
 - **ACID Transactions** - True serializable isolation
 - **Horizontal Scalability** - Add nodes to scale out
 - **Fault Tolerance** - Automatic failover and recovery
@@ -108,6 +111,7 @@ Read our [development blogs](https://ferrisdb.org/blog/) to see this collaborati
 ## Roadmap
 
 ### Phase 1: Storage Engine ✅ (Mostly Complete)
+
 - [x] Write-Ahead Log
 - [x] MemTable with SkipList
 - [x] SSTable implementation
@@ -115,18 +119,21 @@ Read our [development blogs](https://ferrisdb.org/blog/) to see this collaborati
 - [ ] Bloom filters
 
 ### Phase 2: Transaction System 🚧 (Starting Soon)
+
 - [ ] MVCC implementation
 - [ ] Transaction coordinator
 - [ ] Snapshot isolation
 - [ ] Serializable transactions
 
 ### Phase 3: Distribution Layer 📋 (Planned)
+
 - [ ] Data partitioning
 - [ ] Replication protocol
 - [ ] Failure detection
 - [ ] Automatic recovery
 
 ### Phase 4: Consensus & Coordination 🔮 (Future)
+
 - [ ] Raft consensus
 - [ ] Cluster controller
 - [ ] Configuration management
@@ -150,6 +157,7 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 ## Acknowledgments
 
 Standing on the shoulders of giants:
+
 - [FoundationDB](https://apple.github.io/foundationdb/) - Architectural inspiration
 - [RocksDB](http://rocksdb.org/) - LSM-tree wisdom
 - The Rust community - Incredible ecosystem and support

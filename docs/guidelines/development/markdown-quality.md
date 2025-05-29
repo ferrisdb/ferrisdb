@@ -208,7 +208,7 @@ bundle exec jekyll serve
 
 # Check specific file
 markdownlint-cli2 "path/to/file.md"
-````
+```
 
 ## Troubleshooting
 

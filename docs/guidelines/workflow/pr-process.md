@@ -169,11 +169,11 @@ When asked to review a PR, Claude follows this structured approach:
 ```text
 🤖 This looks good overall! A few suggestions based on my research:
 
-1. According to the RocksDB implementation, using `Arc<Mutex<T>>` here could cause 
-   contention. Consider using a lock-free approach like crossbeam's epoch-based 
+1. According to the RocksDB implementation, using `Arc<Mutex<T>>` here could cause
+   contention. Consider using a lock-free approach like crossbeam's epoch-based
    memory reclamation: https://docs.rs/crossbeam-epoch/
 
-2. The error handling pattern here reminds me of how TiKV handles similar cases. 
+2. The error handling pattern here reminds me of how TiKV handles similar cases.
    They use a custom error type with context:
 
    return Err(StorageError::InvalidChecksum {
@@ -182,7 +182,7 @@ When asked to review a PR, Claude follows this structured approach:
        context: format!("Block at offset {}", offset)
    });
 
-3. I found this excellent article about LSM-tree compaction strategies that might 
+3. I found this excellent article about LSM-tree compaction strategies that might
    be relevant: [link to article]
 
 These changes would improve both performance and debugging experience.

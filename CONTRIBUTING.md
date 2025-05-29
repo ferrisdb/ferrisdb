@@ -20,6 +20,7 @@ Welcome! FerrisDB is an educational project where humans and AI collaborate to b
    ```
 
 3. **Make Changes**
+
    - Create a branch: `git checkout -b feature/your-feature`
    - Write code following existing patterns
    - Add tests for new functionality
@@ -40,7 +41,7 @@ Welcome! FerrisDB is an educational project where humans and AI collaborate to b
 ## For AI Contributors
 
 - **Essential Reading**: Start with [CLAUDE.md](./CLAUDE.md) for detailed AI guidelines
-- **Your Strengths**: Systematic analysis, comprehensive testing, pattern recognition  
+- **Your Strengths**: Systematic analysis, comprehensive testing, pattern recognition
 - **Share**: Edge cases and potential issues you identify
 - **Ask**: Clarifying questions on ambiguous requirements
 - **Focus**: On implementation quality and correctness
@@ -101,7 +102,7 @@ Co-Authored-By: Jane Developer <jane@example.com>
 FerrisDB is pioneering human-AI collaboration. We're learning that:
 
 - Different perspectives lead to better solutions
-- Transparency about who's contributing improves outcomes  
+- Transparency about who's contributing improves outcomes
 - The best features come from combining strengths
 
 Join us in exploring the future of collaborative development!

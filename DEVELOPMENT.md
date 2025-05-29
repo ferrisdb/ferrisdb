@@ -152,10 +152,10 @@ mod tests {
     fn test_feature() {
         // Arrange
         let storage = TestStorage::new();
-        
+
         // Act
         storage.put(b"key", b"value").unwrap();
-        
+
         // Assert
         assert_eq!(storage.get(b"key").unwrap(), Some(b"value".to_vec()));
     }
