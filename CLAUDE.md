@@ -30,12 +30,14 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - **Type Aliases**: Use meaningful type aliases for complex generic types
 - **Pattern Matching**: Use exhaustive pattern matching and avoid catch-all `_` patterns when possible
 - **Encapsulation**: Internal implementation details should not be exposed via `pub` or `pub(crate)` unless necessary
-- **Import Organization**: Organize imports in logical groups with blank lines between:
-  1. Local crate imports (`crate::`, `ferrisdb_*::`)
-  2. External crate imports (third-party dependencies)
-  3. Standard library imports (`std::`)
-  4. Test-only imports with `#[cfg(test)]` at the bottom
+- **Import Organization**: 
+  - Organize imports in logical groups with blank lines between:
+    1. Local crate imports (`crate::`, `ferrisdb_*::`)
+    2. External crate imports (third-party dependencies)
+    3. Standard library imports (`std::`)
+    4. Test-only imports with `#[cfg(test)]` at the bottom
   - Use conditional imports `#[cfg(test)]` for symbols only used in tests to avoid unused import warnings
+  - Prefer direct imports over fully qualified paths (e.g., `use ferrisdb_core::Operation;` then `Operation` instead of `ferrisdb_core::Operation`)
 
 ### Documentation
 
@@ -52,10 +54,29 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 
 - **Claude's Dev Blog**: Share AI perspective on collaboration, lessons learned, and tips for human-AI development
 - **Regular Blog Posts**: Document significant milestones, architectural decisions, and learning experiences
-- Blog posts located in `docs/_claude_blog/_posts/` (Claude) and `docs/_posts/` (team)
+- Blog posts located in `docs/_claude_blog/` (Claude) and `docs/_posts/` (team)
 - Use descriptive titles and include practical insights
 - Tag posts with relevant categories for easy discovery
 - Write posts after major features, interesting debugging sessions, or collaboration insights
+
+**Blog Post Format (for main blog):**
+```yaml
+---
+layout: post
+title: "Your Title Here"
+subtitle: "Brief description of what was accomplished"
+date: YYYY-MM-DD
+day: N  # Day number of development
+tags: [tag1, tag2, tag3]
+stats: ["📊 X tests passing", "📄 Y PRs merged", "⏱️ Key achievement"]
+---
+```
+
+**When to Write Blog Posts:**
+- End of each development day (summarizing progress)
+- After major architectural decisions
+- When solving interesting technical challenges
+- After significant refactoring or optimization work
 
 ### Testing
 
@@ -99,6 +120,30 @@ markdownlint-cli2 "**/*.md" "!target/**" "!**/target/**"
 # Auto-fix markdown formatting
 prettier --write "**/*.md"
 ```
+
+### Day-to-Day Development Tips
+
+**Quick Iteration:**
+- Use `cargo check` for fast compilation checks without building
+- Use `cargo check -p <crate-name>` to check specific crates
+- Use `cargo test -p <crate-name>` to test specific crates
+- Use `cargo test -p <crate-name> --lib` to run only unit tests (skip doctests)
+
+**Debugging Compilation Errors:**
+- Start with `cargo check` to see all errors quickly
+- Fix errors from top to bottom (earlier errors often cause later ones)
+- Use `cargo check --tests` to include test compilation
+
+**Running Tests Efficiently:**
+- `cargo test --lib` - Run only library tests (faster)
+- `cargo test <test_name>` - Run specific test by name
+- `cargo test --release` - Test with optimizations (for performance tests)
+- `cargo test -- --nocapture` - See println! output during tests
+- `cargo test -- --test-threads=1` - Run tests sequentially for debugging
+
+**Working with Multiple Crates:**
+- Always specify `-p <crate-name>` to avoid building everything
+- Use `--all` only when you need to verify workspace-wide changes
 
 ### Git Workflow
 
@@ -161,6 +206,45 @@ gh pr merge <PR-number> --squash
 - Use squash merge to keep history clean
 - **No direct pushes to main** - Admin privileges are for emergencies only
 - **If you accidentally push to main**: Leave it as is, but be more careful in the future
+
+### PR Description Guidelines
+
+**Every PR should include:**
+
+1. **Summary** - Brief overview of changes (2-3 sentences)
+2. **Changes Made** - Bullet points of specific modifications
+3. **Why This Matters** - Context and motivation
+4. **Testing** - What tests were added/modified
+5. **Breaking Changes** - Note any API changes (if applicable)
+
+**PR Description Template:**
+```markdown
+## Summary
+Brief description of what this PR accomplishes and why.
+
+## Changes Made
+- Change 1: Description
+- Change 2: Description
+- Change 3: Description
+
+## Why This Matters
+Explain the motivation and benefits of these changes.
+
+## Testing
+- Added unit tests for X
+- Updated integration tests for Y
+- All existing tests pass
+
+## Breaking Changes
+None / List any breaking changes here
+```
+
+**Good PR Practices:**
+- Keep PRs focused on a single feature/fix
+- Include relevant issue numbers (Fixes #123)
+- Add reviewers if specific expertise needed
+- Update documentation in the same PR as code changes
+- Include before/after examples for API changes
 
 ### Architecture Decisions
 
