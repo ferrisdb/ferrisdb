@@ -305,10 +305,22 @@ prettier --write "**/*.md"
 - Always run tests before pushing
 - Create focused PRs (one feature/fix per PR)
 
+**Pro Tip - Always Start from Updated Main:**
+
+Before creating any feature branch, ALWAYS:
+```bash
+git checkout main      # Switch to main branch
+git pull origin main   # Get latest changes
+git checkout -b feature/your-feature  # Now create your branch
+```
+
+This prevents merge conflicts and ensures you're building on the latest code. If you forget and create a branch from an outdated main, you'll need to rebase later (which can be painful!).
+
 ### Development Process (REQUIRED FOR ALL CHANGES)
 
 **Every change, no matter how small, must follow this process:**
 
+0. **Update main branch**: `git checkout main && git pull origin main`
 1. **Create feature branch**: `git checkout -b <branch-type>/<description>`
 2. **Make changes**: Edit files, add tests, update documentation
 3. **Lint and format**:
@@ -323,6 +335,10 @@ prettier --write "**/*.md"
 **Example workflow:**
 
 ```bash
+# Step 0: Update main branch
+git checkout main
+git pull origin main
+
 # Step 1: Create feature branch
 git checkout -b docs/update-readme
 
