@@ -4,19 +4,22 @@ title: Home
 ---
 
 <div class="hero-section">
-  <h1 class="hero-title">Building a Database, Learning in Public</h1>
-  <p class="hero-subtitle"><strong>FerrisDB</strong>: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way.</p>
-  
-  <div class="hero-stats">
-    <span class="hero-stat">🎯 <strong>Mission:</strong> Prove that anyone can understand database internals</span>
-    <span class="hero-stat">🤝 <strong>Approach:</strong> Human creativity + AI knowledge = Better learning</span>
-    <span class="hero-stat">📚 <strong>Result:</strong> The most transparent database development ever attempted</span>
-  </div>
-  
-  <div class="hero-cta">
-    <a href="{{ '/deep-dive/' | relative_url }}" class="btn btn-primary btn-lg">Start Learning</a>
-    <a href="{{ '/blog/' | relative_url }}" class="btn btn-outline btn-lg">Read Our Story</a>
-    <a href="#progress" class="btn btn-ghost btn-lg">View Progress</a>
+  <div class="hero-content">
+    <div class="hero-badge">🦀 Educational Project</div>
+    <h1 class="hero-title">Building a Database, Learning in Public</h1>
+    <p class="hero-subtitle"><strong>FerrisDB</strong>: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way.</p>
+    
+    <div class="hero-stats">
+      <span class="hero-stat">🎯 <strong>Mission:</strong> Prove that anyone can understand database internals</span>
+      <span class="hero-stat">🤝 <strong>Approach:</strong> Human creativity + AI knowledge = Better learning</span>
+      <span class="hero-stat">📚 <strong>Result:</strong> The most transparent database development ever attempted</span>
+    </div>
+    
+    <div class="hero-cta">
+      <a href="{{ '/deep-dive/' | relative_url }}" class="btn btn-primary btn-lg">Start Learning</a>
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn-outline btn-lg">Read Our Story</a>
+      <a href="#progress" class="btn btn-ghost btn-lg">View Progress</a>
+    </div>
   </div>
 </div>
 
