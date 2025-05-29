@@ -170,7 +170,7 @@ This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/
 ### Technical Deep Dives
 
 - [WAL and Crash Recovery](docs/wal-crash-recovery.md) - Write-ahead logging implementation
-- [LSM-Trees Deep Dive](docs/lsm-trees-deep-dive.md) - Storage engine internals
+- [LSM-Trees Deep Dive](docs/deep-dive/lsm-trees.md) - Storage engine internals
 
 ## Repository Setup
 
