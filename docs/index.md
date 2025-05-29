@@ -73,8 +73,8 @@ FerrisDB follows a layered architecture with separate components for transaction
 
 Learn database internals through FerrisDB's implementation:
 
-[Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }}){: .btn .btn-outline}
-[LSM-Trees and Storage Performance]({{ '/deep-dive/lsm-trees/' | relative_url }}){: .btn .btn-outline}
+[Explore All Deep Dives]({{ '/deep-dive/' | relative_url }}){: .btn .btn-primary}
+[Storage Engine Design]({{ '/storage-engine/' | relative_url }}){: .btn .btn-outline}
 
 ## Development Progress
 
