@@ -30,7 +30,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - **Type Aliases**: Use meaningful type aliases for complex generic types
 - **Pattern Matching**: Use exhaustive pattern matching and avoid catch-all `_` patterns when possible
 - **Encapsulation**: Internal implementation details should not be exposed via `pub` or `pub(crate)` unless necessary
-- **Import Organization**: 
+- **Import Organization**:
   - Organize imports in logical groups with blank lines between:
     1. Local crate imports (`crate::`, `ferrisdb_*::`)
     2. External crate imports (third-party dependencies)
@@ -47,8 +47,19 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Add `#[doc(hidden)]` for internal implementation details
 - Generate docs with `cargo doc --all --no-deps --open`
 - Review generated documentation before submitting PRs
-- **Run markdown linting** with `markdownlint-cli2 "**/*.md"` before committing
-- Use `prettier --write "**/*.md"` to auto-fix formatting issues
+
+**Markdown Quality (REQUIRED before commit):**
+1. **Format first**: `prettier --write "**/*.md"`
+2. **Lint second**: `markdownlint-cli2 "**/*.md"`
+3. **Fix any remaining issues manually** - prettier doesn't catch everything
+4. **Verify clean**: Run linter again to ensure no errors
+
+Common issues prettier might miss:
+- Lists need blank lines before and after
+- Code blocks need blank lines before and after
+- Headers need blank lines before and after
+
+**Note**: Consider adding `.prettierrc` configuration to ensure consistent formatting that aligns with markdownlint rules.
 
 ### Blogging
 
@@ -60,19 +71,21 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - Write posts after major features, interesting debugging sessions, or collaboration insights
 
 **Blog Post Format (for main blog):**
+
 ```yaml
 ---
 layout: post
 title: "Your Title Here"
 subtitle: "Brief description of what was accomplished"
 date: YYYY-MM-DD
-day: N  # Day number of development
+day: N # Day number of development
 tags: [tag1, tag2, tag3]
 stats: ["📊 X tests passing", "📄 Y PRs merged", "⏱️ Key achievement"]
 ---
 ```
 
 **When to Write Blog Posts:**
+
 - End of each development day (summarizing progress)
 - After major architectural decisions
 - When solving interesting technical challenges
@@ -124,17 +137,20 @@ prettier --write "**/*.md"
 ### Day-to-Day Development Tips
 
 **Quick Iteration:**
+
 - Use `cargo check` for fast compilation checks without building
 - Use `cargo check -p <crate-name>` to check specific crates
 - Use `cargo test -p <crate-name>` to test specific crates
 - Use `cargo test -p <crate-name> --lib` to run only unit tests (skip doctests)
 
 **Debugging Compilation Errors:**
+
 - Start with `cargo check` to see all errors quickly
 - Fix errors from top to bottom (earlier errors often cause later ones)
 - Use `cargo check --tests` to include test compilation
 
 **Running Tests Efficiently:**
+
 - `cargo test --lib` - Run only library tests (faster)
 - `cargo test <test_name>` - Run specific test by name
 - `cargo test --release` - Test with optimizations (for performance tests)
@@ -142,6 +158,7 @@ prettier --write "**/*.md"
 - `cargo test -- --test-threads=1` - Run tests sequentially for debugging
 
 **Working with Multiple Crates:**
+
 - Always specify `-p <crate-name>` to avoid building everything
 - Use `--all` only when you need to verify workspace-wide changes
 
@@ -161,18 +178,24 @@ prettier --write "**/*.md"
 
 1. **Create feature branch**: `git checkout -b <branch-type>/<description>`
 2. **Make changes**: Edit files, add tests, update documentation
-3. **Commit changes**: Use conventional commit messages
-4. **Push branch**: `git push -u origin <branch-name>`
-5. **Open PR**: `gh pr create` with descriptive title and body
-6. **Iterate if needed**: Push more commits to the feature branch
-7. **Merge when ready**: Only after all CI checks pass
+3. **Lint and format**: 
+   - Rust: `cargo fmt --all && cargo clippy --all-targets --all-features -- -D warnings`
+   - Markdown: `prettier --write "**/*.md" && markdownlint-cli2 "**/*.md"`
+4. **Commit changes**: Use conventional commit messages
+5. **Push branch**: `git push -u origin <branch-name>`
+6. **Open PR**: `gh pr create` with descriptive title and body
+7. **Iterate if needed**: Push more commits to the feature branch
+8. **Merge when ready**: Only after all CI checks pass
 
 **Example workflow:**
+
 ```bash
 # Step 1: Create feature branch
 git checkout -b docs/update-readme
 
-# Step 2-3: Make changes and commit
+# Step 2-3: Make changes, lint, and commit
+prettier --write README.md
+markdownlint-cli2 README.md
 git add README.md
 git commit -m "docs: Update installation instructions"
 
@@ -218,28 +241,35 @@ gh pr merge <PR-number> --squash
 5. **Breaking Changes** - Note any API changes (if applicable)
 
 **PR Description Template:**
+
 ```markdown
 ## Summary
+
 Brief description of what this PR accomplishes and why.
 
 ## Changes Made
+
 - Change 1: Description
 - Change 2: Description
 - Change 3: Description
 
 ## Why This Matters
+
 Explain the motivation and benefits of these changes.
 
 ## Testing
+
 - Added unit tests for X
 - Updated integration tests for Y
 - All existing tests pass
 
 ## Breaking Changes
+
 None / List any breaking changes here
 ```
 
 **Good PR Practices:**
+
 - Keep PRs focused on a single feature/fix
 - Include relevant issue numbers (Fixes #123)
 - Add reviewers if specific expertise needed
