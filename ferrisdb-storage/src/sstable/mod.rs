@@ -104,7 +104,7 @@
 //! - Checksums for corruption detection
 //! - Bloom filters for existence checks
 
-use ferrisdb_core::{Key, Operation, Result, Timestamp};
+use ferrisdb_core::{Key, Operation, Result, Timestamp, Value};
 use std::fmt;
 
 /// Magic number for SSTable files ("FERRISDB" in ASCII)
@@ -142,7 +142,7 @@ impl InternalKey {
 
     /// Returns the total serialized size of this internal key
     pub fn serialized_size(&self) -> usize {
-        4 + 4 + 8 + 1 + self.user_key.len() // key_len + value_len + timestamp + operation + key
+        4 + 8 + 1 + self.user_key.len() // key_len + timestamp + operation + key
     }
 }
 
@@ -175,6 +175,27 @@ impl fmt::Display for InternalKey {
             self.timestamp,
             self.operation
         )
+    }
+}
+
+/// An entry in the SSTable containing both key and value
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SSTableEntry {
+    /// The internal key with metadata
+    pub key: InternalKey,
+    /// The value associated with this key version
+    pub value: Value,
+}
+
+impl SSTableEntry {
+    /// Creates a new SSTable entry
+    pub fn new(key: InternalKey, value: Value) -> Self {
+        Self { key, value }
+    }
+
+    /// Returns the total serialized size of this entry
+    pub fn serialized_size(&self) -> usize {
+        self.key.serialized_size() + 4 + self.value.len() // key + value_len + value
     }
 }
 
@@ -276,6 +297,8 @@ impl Footer {
 pub mod reader;
 pub mod writer;
 
+pub use writer::{SSTableInfo, SSTableWriter};
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -297,7 +320,7 @@ mod tests {
     #[test]
     fn test_internal_key_serialized_size() {
         let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
-        let expected_size = 4 + 4 + 8 + 1 + 8; // key_len + value_len + timestamp + operation + key
+        let expected_size = 4 + 8 + 1 + 8; // key_len + timestamp + operation + key
         assert_eq!(key.serialized_size(), expected_size);
     }
 
@@ -375,5 +398,26 @@ mod tests {
         let bytes = SSTABLE_MAGIC.to_be_bytes();
         let ascii = std::str::from_utf8(&bytes).unwrap();
         assert_eq!(ascii, "FERRISDB");
+    }
+
+    #[test]
+    fn test_sstable_entry() {
+        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
+        let value = b"test_value".to_vec();
+        let entry = SSTableEntry::new(key.clone(), value.clone());
+
+        assert_eq!(entry.key, key);
+        assert_eq!(entry.value, value);
+    }
+
+    #[test]
+    fn test_sstable_entry_serialized_size() {
+        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
+        let value = b"test_value".to_vec();
+        let entry = SSTableEntry::new(key, value);
+
+        // key_serialized_size + value_len(4) + value
+        let expected_size = (4 + 8 + 1 + 8) + 4 + 10;
+        assert_eq!(entry.serialized_size(), expected_size);
     }
 }
