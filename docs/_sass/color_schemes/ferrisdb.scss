@@ -1,47 +1,228 @@
 // FerrisDB color scheme for Just the Docs
+// Inspired by VS Code's Light+ theme for better readability
 
-// Colors
+// Brand colors
+$ferris-orange: #ff6b6b;
+$ferris-orange-dark: #ee5a24;
+$ferris-blue: #4e54c8;
+$ferris-blue-light: #8f94fb;
+
+// Background colors
 $body-background-color: #ffffff;
-$sidebar-color: #f5f6fa;
-$search-background-color: #fff;
-$table-background-color: #fff;
-$code-background-color: #f5f6fa;
+$sidebar-color: #f8f9fa;
+$search-background-color: #ffffff;
+$table-background-color: #ffffff;
 $feedback-color: darken($sidebar-color, 7%);
 
-// Typography
-$body-text-color: #2c3e50;
-$body-heading-color: #27374d;
-$search-result-preview-color: #777;
-$nav-child-link-color: #516b8b;
-$link-color: #ff6b6b;
-$btn-primary-color: #ff6b6b;
-$base-button-color: #f7f7f7;
+// Text colors
+$body-text-color: #24292e;
+$body-heading-color: #24292e;
+$search-result-preview-color: #586069;
+$nav-child-link-color: #0366d6;
+$link-color: $ferris-orange;
+$btn-primary-color: $ferris-orange;
+$base-button-color: #fafbfc;
 
-// Code
-$code-background-color: #f8f9fa;
-$code-text-color: #e83e8c;
+// Code colors (VS Code Light+ inspired)
+$code-background-color: #f6f8fa;
+$code-text-color: #24292e;
+$inline-code-bg: rgba(27, 31, 35, 0.05);
+$inline-code-color: #d73a49;
+
+// Syntax highlighting (VS Code Light+ theme)
+$code-keyword: #0000ff;
+$code-string: #a31515;
+$code-comment: #008000;
+$code-function: #795e26;
+$code-variable: #001080;
+$code-number: #098658;
+$code-operator: #24292e;
+$code-class: #267f99;
+$code-constant: #0070c1;
 
 // Borders
-$border-color: #eeebee;
-$search-input-focus-border-color: #ff6b6b;
+$border-color: #e1e4e8;
+$search-input-focus-border-color: $ferris-orange;
 
-// Overrides
-$body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$mono-font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Monospace;
+// Fonts
+$body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+$mono-font-family: "SF Mono", Monaco, Inconsolata, "Fira Code", "Fira Mono", "Droid Sans Mono", Consolas, monospace;
 
-// Custom gradients
-$gradient-primary: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-$gradient-secondary: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-
-// Spacing
+// Spacing and sizing
 $gutter-spacing: $sp-6;
 $gutter-spacing-sm: $sp-4;
 $nav-width: 264px;
 $nav-width-md: 248px;
 $nav-list-expander-right: true;
 $content-width: 1000px;
-$header-height: 80px;
+$header-height: 60px;
 $search-results-width: $content-width - $nav-width;
 $transition-duration: 200ms;
 
-@import "./vendor/OneDarkJekyll/syntax";
+// Custom callout colors
+$callout-note-color: #0366d6;
+$callout-important-color: #f97316;
+$callout-warning-color: #d73a49;
+$callout-caution-color: #6f42c1;
+$callout-tip-color: #22863a;
+
+// Override code highlighting
+.highlight {
+  background-color: $code-background-color;
+  
+  .c { color: $code-comment; font-style: italic } // Comment
+  .err { color: #a61717; background-color: #e3d2d2 } // Error
+  .k { color: $code-keyword; font-weight: normal } // Keyword
+  .o { color: $code-operator } // Operator
+  .cm { color: $code-comment; font-style: italic } // Comment.Multiline
+  .cp { color: $code-comment; font-weight: normal } // Comment.Preproc
+  .c1 { color: $code-comment; font-style: italic } // Comment.Single
+  .cs { color: $code-comment; font-weight: normal; font-style: italic } // Comment.Special
+  .gd { color: #000000; background-color: #ffdddd } // Generic.Deleted
+  .gd .x { color: #000000; background-color: #ffaaaa } // Generic.Deleted.Specific
+  .ge { font-style: italic } // Generic.Emph
+  .gr { color: #aa0000 } // Generic.Error
+  .gh { color: #999999 } // Generic.Heading
+  .gi { color: #000000; background-color: #ddffdd } // Generic.Inserted
+  .gi .x { color: #000000; background-color: #aaffaa } // Generic.Inserted.Specific
+  .go { color: #888888 } // Generic.Output
+  .gp { color: #555555 } // Generic.Prompt
+  .gs { font-weight: bold } // Generic.Strong
+  .gu { color: #aaaaaa } // Generic.Subheading
+  .gt { color: #aa0000 } // Generic.Traceback
+  .kc { color: $code-keyword; font-weight: normal } // Keyword.Constant
+  .kd { color: $code-keyword; font-weight: normal } // Keyword.Declaration
+  .kp { color: $code-keyword; font-weight: normal } // Keyword.Pseudo
+  .kr { color: $code-keyword; font-weight: normal } // Keyword.Reserved
+  .kt { color: $code-class; font-weight: normal } // Keyword.Type
+  .m { color: $code-number } // Literal.Number
+  .s { color: $code-string } // Literal.String
+  .na { color: $code-function } // Name.Attribute
+  .nb { color: $code-constant } // Name.Builtin
+  .nc { color: $code-class; font-weight: normal } // Name.Class
+  .no { color: $code-constant } // Name.Constant
+  .ni { color: #800080 } // Name.Entity
+  .ne { color: $code-class; font-weight: normal } // Name.Exception
+  .nf { color: $code-function } // Name.Function
+  .nn { color: $code-class } // Name.Namespace
+  .nt { color: #000080 } // Name.Tag
+  .nv { color: $code-variable } // Name.Variable
+  .ow { color: $code-keyword; font-weight: normal } // Operator.Word
+  .w { color: #bbbbbb } // Text.Whitespace
+  .mf { color: $code-number } // Literal.Number.Float
+  .mh { color: $code-number } // Literal.Number.Hex
+  .mi { color: $code-number } // Literal.Number.Integer
+  .mo { color: $code-number } // Literal.Number.Oct
+  .sb { color: $code-string } // Literal.String.Backtick
+  .sc { color: $code-string } // Literal.String.Char
+  .sd { color: $code-string } // Literal.String.Doc
+  .s2 { color: $code-string } // Literal.String.Double
+  .se { color: $code-string } // Literal.String.Escape
+  .sh { color: $code-string } // Literal.String.Heredoc
+  .si { color: $code-string } // Literal.String.Interpol
+  .sx { color: $code-string } // Literal.String.Other
+  .sr { color: $code-string } // Literal.String.Regex
+  .s1 { color: $code-string } // Literal.String.Single
+  .ss { color: $code-string } // Literal.String.Symbol
+  .bp { color: $code-constant } // Name.Builtin.Pseudo
+  .vc { color: $code-variable } // Name.Variable.Class
+  .vg { color: $code-variable } // Name.Variable.Global
+  .vi { color: $code-variable } // Name.Variable.Instance
+  .il { color: $code-number } // Literal.Number.Integer.Long
+}
+
+// Inline code styling
+code {
+  background-color: $inline-code-bg;
+  color: $inline-code-color;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  border-radius: 3px;
+}
+
+// Code blocks
+pre {
+  background-color: $code-background-color;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+}
+
+// Custom component styles
+.label {
+  border-radius: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.btn {
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0 1px 0 rgba(27,31,35,.04), inset 0 1px 0 hsla(0,0%,100%,.25);
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+}
+
+// Callout styling
+.highlight {
+  margin-bottom: $sp-3;
+  border-radius: 6px;
+}
+
+// Card styling for article lists
+.article-card {
+  background: #ffffff;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: $sp-4;
+  margin-bottom: $sp-4;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+}
+
+// Progress indicators
+.progress-bar {
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  height: 8px;
+  margin: $sp-2 0;
+  
+  .progress-fill {
+    background-color: $ferris-orange;
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+  }
+}
+
+// Better spacing for sections
+.main-content {
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: $sp-8;
+    margin-bottom: $sp-4;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  p {
+    margin-bottom: $sp-3;
+  }
+  
+  ul, ol {
+    margin-bottom: $sp-4;
+  }
+  
+  pre {
+    margin: $sp-4 0;
+  }
+}

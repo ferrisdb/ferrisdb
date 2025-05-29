@@ -13,35 +13,38 @@ In-depth exploration of database internals through FerrisDB's implementation
 
 Welcome to FerrisDB's technical deep dives! These articles explore fundamental database concepts through our actual implementation, providing both theoretical understanding and practical code examples.
 
-**Who are these articles for?**
+{: .note }
+> **Who are these articles for?**
+>
+> - Developers curious about how databases work internally
+> - Engineers building data-intensive applications
+> - Anyone who's wondered "but how does it actually work?"
+>
+> No PhD required! We explain complex concepts in plain English with real-world analogies.
 
-- Developers curious about how databases work internally
-- Engineers building data-intensive applications
-- Anyone who's wondered "but how does it actually work?"
-
-No PhD required! We explain complex concepts in plain English with real-world analogies.
-
-## Article Difficulty Levels
-
-- **Beginner**: Assumes only CRUD development experience. Concepts explained with everyday analogies.
-- **Intermediate**: Some familiarity with Rust and concurrent programming helpful. Includes more complex code examples.
-- **Advanced**: Solid understanding of systems programming concepts required. Discusses low-level implementation details.
+{: .important }
+> **Article Difficulty Levels**
+>
+> - **Beginner**: Assumes only CRUD development experience. Concepts explained with everyday analogies.
+> - **Intermediate**: Some familiarity with Rust and concurrent programming helpful. Includes more complex code examples.
+> - **Advanced**: Solid understanding of systems programming concepts required. Discusses low-level implementation details.
 
 ## Storage Engine Fundamentals
 
-<div class="article-grid">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
   <div class="article-card">
-    <h3><a href="{{ '/deep-dive/wal-crash-recovery/' | relative_url }}">WAL and Crash Recovery</a></h3>
+    <h3 class="mt-0"><a href="{{ '/deep-dive/wal-crash-recovery/' | relative_url }}">WAL and Crash Recovery</a></h3>
     <p>Understand how Write-Ahead Logs ensure data durability and enable crash recovery. Learn about FerrisDB's WAL format, checksums, and recovery process.</p>
-    <div class="article-meta">
-      <span class="difficulty beginner">Beginner</span>
-      <span class="reading-time">15 min read</span>
+    <div class="d-flex flex-justify-between mb-2">
+      <span class="label label-green">Beginner</span>
+      <span class="text-grey-dk-100">15 min read</span>
     </div>
-    <div class="article-tags">
-      <span class="tag">Durability</span>
-      <span class="tag">Recovery</span>
-      <span class="tag">WAL</span>
+    <div class="mb-3">
+      <span class="label label-blue">Durability</span>
+      <span class="label label-blue">Recovery</span>
+      <span class="label label-blue">WAL</span>
     </div>
+    <a href="{{ '/deep-dive/wal-crash-recovery/' | relative_url }}" class="btn btn-purple btn-sm">Read Article →</a>
   </div>
 
   <div class="article-card">

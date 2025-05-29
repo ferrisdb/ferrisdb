@@ -21,9 +21,10 @@ How to build, run, and contribute to FerrisDB
 
 Welcome to FerrisDB! This guide will help you get up and running with the project, whether you're interested in following along with development or contributing to the codebase.
 
-## ⚠️ Important Note
-
-**FerrisDB is an educational project** designed for learning Rust and distributed systems concepts. It is **not intended for production use**. If you need a production-ready distributed database, consider [FoundationDB](https://apple.github.io/foundationdb/), [TiKV](https://tikv.org/), or [CockroachDB](https://www.cockroachlabs.com/).
+{: .warning }
+> **Educational Project Only**
+>
+> FerrisDB is designed for learning Rust and distributed systems concepts. It is **not intended for production use**. If you need a production-ready distributed database, consider [FoundationDB](https://apple.github.io/foundationdb/), [TiKV](https://tikv.org/), or [CockroachDB](https://www.cockroachlabs.com/).
 
 ## Prerequisites
 
@@ -33,6 +34,9 @@ Welcome to FerrisDB! This guide will help you get up and running with the projec
 - **Git** - For cloning the repository
 
 ### Verify Installation
+
+{: .note }
+> Run these commands to ensure everything is installed correctly:
 
 ```bash
 # Check Rust installation

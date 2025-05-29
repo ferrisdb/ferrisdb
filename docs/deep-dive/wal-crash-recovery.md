@@ -27,12 +27,13 @@ Imagine you're running an e-commerce website. A customer completes their order, 
 
 This is the fundamental durability problem that every database must solve. Without proper crash recovery, you risk:
 
-**Real-world nightmares for CRUD developers:**
-
-- **Lost transactions**: Customer paid but order disappeared
-- **Inconsistent data**: Half-completed updates that corrupt your database
-- **Angry users**: "I know I updated my profile, where did my changes go?"
-- **Business impact**: Lost sales, refunds, and damaged reputation
+{: .warning }
+> **Real-world nightmares for CRUD developers:**
+>
+> - **Lost transactions**: Customer paid but order disappeared
+> - **Inconsistent data**: Half-completed updates that corrupt your database  
+> - **Angry users**: "I know I updated my profile, where did my changes go?"
+> - **Business impact**: Lost sales, refunds, and damaged reputation
 
 The problem is that computers use two types of storage:
 
@@ -47,7 +48,10 @@ If your database only writes to memory for speed, all data is lost on crash. If 
 
 Write-Ahead Logging follows a simple principle:
 
-> **"Write changes to a log file BEFORE updating the actual data"**
+{: .highlight }
+> **WAL Core Principle**
+>
+> "Write changes to a log file BEFORE updating the actual data"
 
 **Think of it like a restaurant's order system:**
 
@@ -65,11 +69,12 @@ User Request → WAL (Disk) → MemTable (RAM) → SSTable (Disk)
    "Success"   Durability    Fast Access    Long-term Storage
 ```
 
-**Key principles:**
-
-1. **Write-ahead**: Log first, update data structures second
-2. **Sequential writes**: Appending to log is fast (like writing in a journal)
-3. **Recovery guarantee**: Can rebuild state from log after crash
+{: .important }
+> **Key WAL Principles**
+>
+> 1. **Write-ahead**: Log first, update data structures second
+> 2. **Sequential writes**: Appending to log is fast (like writing in a journal)
+> 3. **Recovery guarantee**: Can rebuild state from log after crash
 
 ## FerrisDB Implementation Deep Dive
 
