@@ -1,6 +1,6 @@
 //! SSTable reader implementation
 
-use crate::sstable::{Footer, IndexEntry, InternalKey, SSTableEntry, FOOTER_SIZE};
+use crate::sstable::{Footer, IndexEntry, InternalKey, SSTableEntry, FOOTER_SIZE, SSTABLE_MAGIC};
 use ferrisdb_core::{Error, Key, Operation, Result, Timestamp, Value};
 use std::collections::BTreeMap;
 use std::fs::File;
