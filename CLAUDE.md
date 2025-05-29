@@ -105,20 +105,62 @@ prettier --write "**/*.md"
 - Main branch: `main`
 - Feature branches: `feature/description`
 - Bug fixes: `fix/description`
+- Documentation: `docs/description`
 - Commit messages: Use conventional commits format
 - Always run tests before pushing
 - Create focused PRs (one feature/fix per PR)
 
+### Development Process (REQUIRED FOR ALL CHANGES)
+
+**Every change, no matter how small, must follow this process:**
+
+1. **Create feature branch**: `git checkout -b <branch-type>/<description>`
+2. **Make changes**: Edit files, add tests, update documentation
+3. **Commit changes**: Use conventional commit messages
+4. **Push branch**: `git push -u origin <branch-name>`
+5. **Open PR**: `gh pr create` with descriptive title and body
+6. **Iterate if needed**: Push more commits to the feature branch
+7. **Merge when ready**: Only after all CI checks pass
+
+**Example workflow:**
+```bash
+# Step 1: Create feature branch
+git checkout -b docs/update-readme
+
+# Step 2-3: Make changes and commit
+git add README.md
+git commit -m "docs: Update installation instructions"
+
+# Step 4: Push branch
+git push -u origin docs/update-readme
+
+# Step 5: Create PR
+gh pr create --title "docs: Update installation instructions" --body "..."
+
+# Step 6: If changes requested, add more commits
+git add .
+git commit -m "docs: Address review feedback"
+git push
+
+# Step 7: Merge (only after CI passes)
+gh pr merge <PR-number> --squash
+```
+
 ### Pull Request Policy
 
-- **All changes must go through PRs** - Even maintainers should not push directly to main
-- **CRITICAL**: Never push directly to main branch - always use PRs even for small fixes
+- **All changes must go through PRs** - This includes:
+  - Code changes (features, bug fixes, refactoring)
+  - Documentation updates (README, guides, comments)
+  - Configuration changes (Cargo.toml, CI files)
+  - Any file in the repository
+- **NO EXCEPTIONS**: Even single-line typo fixes must use PRs
+- **CRITICAL**: Never push directly to main branch - always use PRs
 - **Maintainers**: Can merge PRs after all CI checks pass (no review required)
 - **External contributors**: Require review from a maintainer
 - All PRs must pass CI checks before merging
 - Use squash merge to keep history clean
-- **No direct pushes to main** - Use admin privileges only for emergency fixes
-- **Reminder**: If you accidentally push to main, create a revert PR immediately
+- **No direct pushes to main** - Admin privileges are for emergencies only
+- **If you accidentally push to main**: Create a revert PR immediately
 
 ### Architecture Decisions
 
