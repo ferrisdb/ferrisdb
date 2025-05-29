@@ -1,7 +1,6 @@
 ---
 layout: home
 title: Home
-hero: true
 ---
 
 <div class="hero-section">
