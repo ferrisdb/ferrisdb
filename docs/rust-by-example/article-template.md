@@ -3,6 +3,7 @@ layout: default
 title: "Article Template"
 parent: "Rust by Example"
 nav_exclude: true
+search_exclude: true
 permalink: /rust-by-example/article-template/
 ---
 

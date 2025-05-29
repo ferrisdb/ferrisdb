@@ -2,6 +2,7 @@
 layout: default
 title: "Blog Post Template"
 nav_exclude: true
+search_exclude: true
 permalink: /blog/template/
 ---
 

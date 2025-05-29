@@ -1,0 +1,5 @@
+# Rakefile for Just the Docs search initialization
+# This ensures search works properly with gem-based theme
+
+spec = Gem::Specification.find_by_name 'just-the-docs'
+load "#{spec.gem_dir}/lib/tasks/search.rake"

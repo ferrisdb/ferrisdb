@@ -3,6 +3,7 @@ layout: default
 title: "Article Template"
 parent: Deep Dives
 nav_exclude: true
+search_exclude: true
 permalink: /deep-dive/article-template/
 ---
 
