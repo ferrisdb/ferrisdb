@@ -122,9 +122,8 @@ impl SSTableReader {
         // Load the block (from cache or disk)
         let entries = self.load_block(block_offset)?;
 
-        // Create target key for binary search (Operation doesn't affect ordering)
-        let target_key =
-            InternalKey::new(user_key.clone(), timestamp, ferrisdb_core::Operation::Put);
+        // Create target key for binary search
+        let target_key = InternalKey::new(user_key.clone(), timestamp);
 
         // Use binary search to find exact key match
         match entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
@@ -189,7 +188,7 @@ impl SSTableReader {
                 return Ok(Some((
                     entry.value.clone(),
                     entry.key.timestamp,
-                    entry.key.operation,
+                    entry.operation,
                 )));
             }
         }
@@ -382,8 +381,8 @@ impl SSTableReader {
         let mut value = vec![0u8; value_len];
         self.reader.read_exact(&mut value)?;
 
-        let internal_key = InternalKey::new(user_key, timestamp, operation);
-        Ok(SSTableEntry::new(internal_key, value))
+        let internal_key = InternalKey::new(user_key, timestamp);
+        Ok(SSTableEntry::new(internal_key, value, operation))
     }
 }
 
@@ -516,7 +515,7 @@ mod tests {
     use crate::sstable::writer::SSTableWriter;
     use tempfile::TempDir;
 
-    fn create_test_sstable() -> (TempDir, std::path::PathBuf, Vec<(InternalKey, Value)>) {
+    fn create_test_sstable() -> (TempDir, std::path::PathBuf, Vec<(InternalKey, Value, Operation)>) {
         let temp_dir = TempDir::new().unwrap();
         let path = temp_dir.path().join("test.sst");
 
@@ -524,25 +523,29 @@ mod tests {
 
         let test_data = vec![
             (
-                InternalKey::new(b"key1".to_vec(), 100, Operation::Put),
+                InternalKey::new(b"key1".to_vec(), 100),
                 b"value1".to_vec(),
+                Operation::Put,
             ),
             (
-                InternalKey::new(b"key1".to_vec(), 50, Operation::Put),
+                InternalKey::new(b"key1".to_vec(), 50),
                 b"old_value1".to_vec(),
+                Operation::Put,
             ),
             (
-                InternalKey::new(b"key2".to_vec(), 200, Operation::Delete),
+                InternalKey::new(b"key2".to_vec(), 200),
                 Vec::new(),
+                Operation::Delete,
             ),
             (
-                InternalKey::new(b"key3".to_vec(), 150, Operation::Put),
+                InternalKey::new(b"key3".to_vec(), 150),
                 b"value3".to_vec(),
+                Operation::Put,
             ),
         ];
 
-        for (key, value) in &test_data {
-            writer.add(key.clone(), value.clone()).unwrap();
+        for (key, value, operation) in &test_data {
+            writer.add(key.clone(), value.clone(), *operation).unwrap();
         }
 
         writer.finish().unwrap();
@@ -706,10 +709,9 @@ mod tests {
             let key = InternalKey::new(
                 format!("key_{:06}", i).into_bytes(),
                 i as u64,
-                Operation::Put,
             );
             let value = format!("value_{}", i).into_bytes();
-            writer.add(key, value).unwrap();
+            writer.add(key, value, Operation::Put).unwrap();
         }
 
         writer.finish().unwrap();

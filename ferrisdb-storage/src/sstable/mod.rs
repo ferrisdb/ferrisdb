@@ -121,28 +121,27 @@ pub const MAX_ENTRY_SIZE: usize = 16 * 1024 * 1024;
 
 /// Internal key representation for SSTable entries
 ///
-/// Combines user key with MVCC timestamp and operation type.
+/// Combines user key with MVCC timestamp for versioning.
 /// Keys are ordered by (user_key ASC, timestamp DESC).
+/// Operation metadata is stored separately in SSTableEntry.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InternalKey {
     pub user_key: Key,
     pub timestamp: Timestamp,
-    pub operation: Operation,
 }
 
 impl InternalKey {
     /// Creates a new internal key
-    pub fn new(user_key: Key, timestamp: Timestamp, operation: Operation) -> Self {
+    pub fn new(user_key: Key, timestamp: Timestamp) -> Self {
         Self {
             user_key,
             timestamp,
-            operation,
         }
     }
 
     /// Returns the total serialized size of this internal key
     pub fn serialized_size(&self) -> usize {
-        4 + 8 + 1 + self.user_key.len() // key_len + timestamp + operation + key
+        4 + 8 + self.user_key.len() // key_len + timestamp + key
     }
 }
 
@@ -170,32 +169,33 @@ impl fmt::Display for InternalKey {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{}@{}:{:?}",
+            "{}@{}",
             String::from_utf8_lossy(&self.user_key),
-            self.timestamp,
-            self.operation
+            self.timestamp
         )
     }
 }
 
-/// An entry in the SSTable containing both key and value
+/// An entry in the SSTable containing key, value, and operation metadata
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SSTableEntry {
-    /// The internal key with metadata
+    /// The internal key (user_key + timestamp)
     pub key: InternalKey,
     /// The value associated with this key version
     pub value: Value,
+    /// The operation type (Put/Delete) for this entry
+    pub operation: Operation,
 }
 
 impl SSTableEntry {
     /// Creates a new SSTable entry
-    pub fn new(key: InternalKey, value: Value) -> Self {
-        Self { key, value }
+    pub fn new(key: InternalKey, value: Value, operation: Operation) -> Self {
+        Self { key, value, operation }
     }
 
     /// Returns the total serialized size of this entry
     pub fn serialized_size(&self) -> usize {
-        self.key.serialized_size() + 4 + self.value.len() // key + value_len + value
+        self.key.serialized_size() + 4 + self.value.len() + 1 // key + value_len + value + operation
     }
 }
 
@@ -306,9 +306,9 @@ mod tests {
 
     #[test]
     fn test_internal_key_ordering() {
-        let key1 = InternalKey::new(b"key1".to_vec(), 100, Operation::Put);
-        let key2 = InternalKey::new(b"key1".to_vec(), 200, Operation::Put);
-        let key3 = InternalKey::new(b"key2".to_vec(), 100, Operation::Put);
+        let key1 = InternalKey::new(b"key1".to_vec(), 100);
+        let key2 = InternalKey::new(b"key1".to_vec(), 200);
+        let key3 = InternalKey::new(b"key2".to_vec(), 100);
 
         // Same user key: newer timestamp comes first
         assert!(key2 < key1);
@@ -320,8 +320,8 @@ mod tests {
 
     #[test]
     fn test_internal_key_serialized_size() {
-        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
-        let expected_size = 4 + 8 + 1 + 8; // key_len + timestamp + operation + key
+        let key = InternalKey::new(b"test_key".to_vec(), 12345);
+        let expected_size = 4 + 8 + 8; // key_len + timestamp + key
         assert_eq!(key.serialized_size(), expected_size);
     }
 
@@ -374,20 +374,20 @@ mod tests {
 
     #[test]
     fn test_internal_key_display() {
-        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
+        let key = InternalKey::new(b"test_key".to_vec(), 12345);
         let display = format!("{}", key);
-        assert_eq!(display, "test_key@12345:Put");
+        assert_eq!(display, "test_key@12345");
 
-        let delete_key = InternalKey::new(b"del_key".to_vec(), 99999, Operation::Delete);
+        let delete_key = InternalKey::new(b"del_key".to_vec(), 99999);
         let display = format!("{}", delete_key);
-        assert_eq!(display, "del_key@99999:Delete");
+        assert_eq!(display, "del_key@99999");
     }
 
     #[test]
     fn test_internal_key_equality() {
-        let key1 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
-        let key2 = InternalKey::new(b"key".to_vec(), 100, Operation::Put);
-        let key3 = InternalKey::new(b"key".to_vec(), 101, Operation::Put);
+        let key1 = InternalKey::new(b"key".to_vec(), 100);
+        let key2 = InternalKey::new(b"key".to_vec(), 100);
+        let key3 = InternalKey::new(b"key".to_vec(), 101);
 
         assert_eq!(key1, key2);
         assert_ne!(key1, key3);
@@ -403,22 +403,23 @@ mod tests {
 
     #[test]
     fn test_sstable_entry() {
-        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
+        let key = InternalKey::new(b"test_key".to_vec(), 12345);
         let value = b"test_value".to_vec();
-        let entry = SSTableEntry::new(key.clone(), value.clone());
+        let entry = SSTableEntry::new(key.clone(), value.clone(), Operation::Put);
 
         assert_eq!(entry.key, key);
         assert_eq!(entry.value, value);
+        assert_eq!(entry.operation, Operation::Put);
     }
 
     #[test]
     fn test_sstable_entry_serialized_size() {
-        let key = InternalKey::new(b"test_key".to_vec(), 12345, Operation::Put);
+        let key = InternalKey::new(b"test_key".to_vec(), 12345);
         let value = b"test_value".to_vec();
-        let entry = SSTableEntry::new(key, value);
+        let entry = SSTableEntry::new(key, value, Operation::Put);
 
-        // key_serialized_size + value_len(4) + value
-        let expected_size = (4 + 8 + 1 + 8) + 4 + 10;
+        // key_serialized_size + value_len(4) + value + operation(1)
+        let expected_size = (4 + 8 + 8) + 4 + 10 + 1;
         assert_eq!(entry.serialized_size(), expected_size);
     }
 
@@ -433,32 +434,37 @@ mod tests {
         // Create test data
         let test_entries = vec![
             (
-                InternalKey::new(b"apple".to_vec(), 100, Operation::Put),
+                InternalKey::new(b"apple".to_vec(), 100),
                 b"red fruit".to_vec(),
+                Operation::Put,
             ),
             (
-                InternalKey::new(b"banana".to_vec(), 200, Operation::Put),
+                InternalKey::new(b"banana".to_vec(), 200),
                 b"yellow fruit".to_vec(),
+                Operation::Put,
             ),
             (
-                InternalKey::new(b"banana".to_vec(), 150, Operation::Put),
+                InternalKey::new(b"banana".to_vec(), 150),
                 b"old yellow".to_vec(),
+                Operation::Put,
             ),
             (
-                InternalKey::new(b"cherry".to_vec(), 300, Operation::Delete),
+                InternalKey::new(b"cherry".to_vec(), 300),
                 Vec::new(),
+                Operation::Delete,
             ),
             (
-                InternalKey::new(b"date".to_vec(), 250, Operation::Put),
+                InternalKey::new(b"date".to_vec(), 250),
                 b"sweet fruit".to_vec(),
+                Operation::Put,
             ),
         ];
 
         // Write the SSTable
         {
             let mut writer = SSTableWriter::new(&path).unwrap();
-            for (key, value) in &test_entries {
-                writer.add(key.clone(), value.clone()).unwrap();
+            for (key, value, operation) in &test_entries {
+                writer.add(key.clone(), value.clone(), *operation).unwrap();
             }
             let info = writer.finish().unwrap();
             assert_eq!(info.entry_count, test_entries.len());
@@ -469,7 +475,7 @@ mod tests {
             let mut reader = SSTableReader::open(&path).unwrap();
 
             // Test exact key lookups
-            for (key, expected_value) in &test_entries {
+            for (key, expected_value, _operation) in &test_entries {
                 let result = reader.get(&key.user_key, key.timestamp).unwrap();
                 assert_eq!(result.as_ref(), Some(expected_value));
             }
