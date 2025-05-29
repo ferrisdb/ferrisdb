@@ -133,6 +133,7 @@ FerrisDB targets high performance through careful design:
 🚧 **This project is under active development as a learning exercise** 🚧
 
 ### Completed ✅
+
 - [x] Design document
 - [x] Write-Ahead Log (WAL)
 - [x] MemTable with SkipList
@@ -140,11 +141,13 @@ FerrisDB targets high performance through careful design:
 - [x] Documentation site with blogs
 
 ### In Progress 🔨
+
 - [ ] Compaction system
 - [ ] Transaction system
 - [ ] Distribution layer
 
 ### Future Plans 🚀
+
 - [ ] Consensus protocol (Raft)
 - [ ] Client libraries (multiple languages)
 - [ ] Operational tools
@@ -154,23 +157,27 @@ FerrisDB targets high performance through careful design:
 
 FerrisDB is licensed under the **Apache License 2.0** - here's what that means in human terms:
 
-### ✅ You CAN:
+### ✅ You CAN
+
 - **Use it** - For any purpose, even commercially!
 - **Modify it** - Make changes to suit your needs
 - **Distribute it** - Share the original or modified versions
 - **Patent it** - The license includes patent grants
 - **Keep it private** - No obligation to share your modifications
 
-### 📋 You MUST:
+### 📋 You MUST
+
 - **Include the license** - Keep the LICENSE file and notices
 - **State changes** - Document what you modified (if you distribute)
 - **Include NOTICE** - If we had one (we don't yet!)
 
-### ❌ You CANNOT:
+### ❌ You CANNOT
+
 - **Blame us** - Software is "AS IS" with no warranty
 - **Use our trademarks** - The FerrisDB name/logo aren't included
 
-### 🤝 In Simple Terms:
+### 🤝 In Simple Terms
+
 "Do whatever you want with this code, just don't blame us if something breaks, and mention where you got it from!"
 
 See [LICENSE](LICENSE) for the full legal text (warning: written by lawyers, not humans 😄).
@@ -180,11 +187,12 @@ See [LICENSE](LICENSE) for the full legal text (warning: written by lawyers, not
 This project is inspired by [FoundationDB](https://apple.github.io/foundationdb/) and incorporates ideas from:
 
 - Google Spanner - Distributed transactions
-- Amazon DynamoDB - Scalability patterns  
+- Amazon DynamoDB - Scalability patterns
 - CockroachDB - SQL layer design
 - TiKV - Rust implementation patterns
 
 Special thanks to:
+
 - The Rust community for excellent documentation and crates
 - Claude (that's me! 🤖) for helping maintain this README and assisting with development
 - You, for reading this far!
@@ -194,26 +202,29 @@ Special thanks to:
 Visit our [documentation site](https://ferrisdb.org/) for comprehensive guides:
 
 ### For Users
+
 - [Getting Started Guide](docs/getting-started.md) - Quick setup and basic usage
 - [Architecture Overview](docs/architecture.md) - System design and components
 - [FAQ](https://ferrisdb.org/faq/) - Common questions answered
 
 ### For Developers
+
 - [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute to the project
 - [DEVELOPMENT.md](DEVELOPMENT.md) - Development environment and workflows
 - [CLAUDE.md](CLAUDE.md) - AI-assisted development guidelines
 
 ### Technical Deep Dives
+
 - [LSM-Trees Explained](docs/deep-dive/lsm-trees.md) - Storage engine internals
 - [WAL and Crash Recovery](docs/deep-dive/wal-crash-recovery.md) - Write-ahead logging implementation
 - [Concurrent Skip Lists](docs/deep-dive/concurrent-skip-list.md) - Lock-free data structures
 - [SSTable Design](docs/deep-dive/sstable-design.md) - On-disk storage format
 
 ### Learning Resources
+
 - [Human Development Blog](https://ferrisdb.org/blog/) - Daily progress from a CRUD developer's perspective
 - [Claude's Dev Blog](https://ferrisdb.org/claude-blog/) - AI insights on patterns and collaboration
 - [Rust by Example: Database Edition](https://ferrisdb.org/rust-by-example/) - Learn Rust through real database code
-
 
 ## Show Your Support
 
@@ -233,4 +244,4 @@ If you find FerrisDB interesting or useful for learning distributed systems:
 
 ---
 
-*Built with ❤️ and 🦀 by humans and AI working together*
+_Built with ❤️ and 🦀 by humans and AI working together_

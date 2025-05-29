@@ -60,16 +60,16 @@ use proptest::prelude::*;
 
 ```rust
 /// Flushes the current memtable to disk as an SSTable.
-/// 
+///
 /// This operation is atomic - either the entire flush succeeds
 /// or the memtable remains unchanged. The flush process involves:
 /// 1. Creating a new SSTable writer
 /// 2. Iterating through all entries in sorted order
 /// 3. Writing the SSTable with proper checksums
 /// 4. Updating the manifest file
-/// 
+///
 /// # Errors
-/// 
+///
 /// Returns an error if:
 /// - Disk I/O fails
 /// - The manifest update fails
@@ -181,4 +181,4 @@ mod tests {
 
 ---
 
-*Next: [Idiomatic Rust Guidelines](idiomatic-rust.md)*
+_Next: [Idiomatic Rust Guidelines](idiomatic-rust.md)_

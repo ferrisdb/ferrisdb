@@ -18,7 +18,7 @@ FerrisDB: Where a CRUD developer and an AI collaborate to build a real database 
 
 **Prove that anyone can understand database internals** - No PhD required, just curiosity and coffee.
 
-### 🤝 Our Approach  
+### 🤝 Our Approach
 
 **Human creativity + AI knowledge = Better learning** - Combining the best of both worlds.
 
@@ -57,6 +57,7 @@ Set up FerrisDB locally, run tests, and contribute to an open-source database pr
 ## Why We Built This
 
 {: .important }
+
 > **Have you ever wondered how databases really work? We did too.**
 >
 > As a CRUD developer, I spent years using databases without understanding their magic. Then I partnered with Claude, an AI assistant, to build one from scratch. Not because the world needs another database, but because **learning in public changes everything**.
@@ -70,6 +71,7 @@ This project proves three things:
 📖 **Learning together is better** - every mistake becomes a lesson
 
 {: .note }
+
 > **Human Developer's Insight**
 >
 > "Working with Claude showed me that AI isn't here to take our jobs - it's here to help us tackle projects we never thought possible."
@@ -96,19 +98,20 @@ How to effectively partner with AI tools to tackle complex engineering challenge
 
 Follow our journey as we build a production-quality database from scratch. Every success, failure, and "aha!" moment documented.
 
-| Component | Status | Description |
-|-----------|--------|-------------|
-| ✅ Project Foundation | Complete | Architecture design, Rust workspace setup, development guidelines |
-| ✅ Storage Engine Foundation | Complete | Write-Ahead Log, MemTable with concurrent skip list, MVCC support |
-| ✅ SSTable Implementation | Complete | Binary format design, writer/reader with binary search, 4KB blocks with checksums |
-| 🚧 Compaction & Optimization | In Progress | Background compaction, bloom filters, block cache |
-| ⏳ Transaction System | Planned | MVCC transactions, conflict detection, distributed coordination |
+| Component                    | Status      | Description                                                                       |
+| ---------------------------- | ----------- | --------------------------------------------------------------------------------- |
+| ✅ Project Foundation        | Complete    | Architecture design, Rust workspace setup, development guidelines                 |
+| ✅ Storage Engine Foundation | Complete    | Write-Ahead Log, MemTable with concurrent skip list, MVCC support                 |
+| ✅ SSTable Implementation    | Complete    | Binary format design, writer/reader with binary search, 4KB blocks with checksums |
+| 🚧 Compaction & Optimization | In Progress | Background compaction, bloom filters, block cache                                 |
+| ⏳ Transaction System        | Planned     | MVCC transactions, conflict detection, distributed coordination                   |
 
 ## The AI Collaboration Experiment
 
 ### Claude's Perspective
 
 {: .note }
+
 > "I've discovered patterns in how humans learn complex systems. My blog documents these insights to help future human-AI teams collaborate better."
 
 [Read Claude's Blog →](/claude-blog/){: .btn .btn-purple }
@@ -116,6 +119,7 @@ Follow our journey as we build a production-quality database from scratch. Every
 ### Human's Perspective
 
 {: .note }
+
 > "Claude doesn't just write code - it teaches, explains, and sometimes surprises me with insights I never considered. This is the future of development."
 
 [Read Development Blog →](/blog/){: .btn .btn-purple }
@@ -123,7 +127,7 @@ Follow our journey as we build a production-quality database from scratch. Every
 ### Latest Collaboration Metrics
 
 - **47** Pattern recognitions by Claude
-- **12** Human intuition saves  
+- **12** Human intuition saves
 - **8/10** Collaboration score
 - **55+** Tests passing
 
@@ -162,6 +166,7 @@ Whether you're here to learn Rust, understand databases, or explore human-AI col
 [Get Started](/getting-started/){: .btn .fs-5 }
 
 {: .warning }
+
 > **Educational Project**
 >
 > FerrisDB is designed for learning, not production use. For production databases, consider FoundationDB, TiKV, or CockroachDB.

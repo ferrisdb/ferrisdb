@@ -12,6 +12,7 @@ In-depth exploration of database internals through FerrisDB's implementation
 Welcome to FerrisDB's technical deep dives! These articles explore fundamental database concepts through our actual implementation, providing both theoretical understanding and practical code examples.
 
 {: .note }
+
 > **Who are these articles for?**
 >
 > - Developers curious about how databases work internally
@@ -21,6 +22,7 @@ Welcome to FerrisDB's technical deep dives! These articles explore fundamental d
 > No PhD required! We explain complex concepts in plain English with real-world analogies.
 
 {: .important }
+
 > **Article Difficulty Levels**
 >
 > - 📗 **Beginner**: Assumes only CRUD development experience. Concepts explained with everyday analogies.
@@ -80,6 +82,7 @@ Explore concurrent data structures that power FerrisDB's MemTable. Understanding
 ## Coming Soon
 
 {: .note }
+
 > **More articles in development:**
 >
 > - Compaction Strategies - How to merge SSTables efficiently
@@ -95,6 +98,7 @@ Explore concurrent data structures that power FerrisDB's MemTable. Understanding
 4. **Join the discussion** on GitHub if you have questions
 
 {: .highlight }
+
 > **Learning Path Recommendation**
 >
 > For a complete understanding of FerrisDB's architecture:

@@ -11,7 +11,7 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
 - **Jobs**:
   - Quick checks (formatting, clippy)
   - Markdown linting
-  - Spell checking  
+  - Spell checking
   - Test suite (multiple OS and Rust versions)
   - Documentation build (Rust docs)
   - MSRV testing (1.81.0)
@@ -21,7 +21,7 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
 ### Deploy Docs (`deploy-docs.yml`)
 
 - **Triggers**:
-  - Push to main (only when docs/** or workflow changes)
+  - Push to main (only when docs/\*\* or workflow changes)
   - Manual workflow dispatch
 - **Purpose**: Build and deploy documentation site to GitHub Pages
 - **Jobs**:

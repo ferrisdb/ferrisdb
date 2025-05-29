@@ -14,7 +14,7 @@ Learn Rust through real database code - explained for CRUD developers
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

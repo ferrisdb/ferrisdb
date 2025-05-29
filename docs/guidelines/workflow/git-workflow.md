@@ -272,16 +272,16 @@ Add to `~/.gitconfig`:
 [alias]
     # Show pretty log
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    
+
     # Show files in last commit
     last-files = show --name-only --oneline
-    
+
     # Undo last commit (keep changes)
     undo = reset HEAD~1 --mixed
-    
+
     # Amend without editing message
     amend = commit --amend --no-edit
-    
+
     # List branches sorted by date
     recent = branch --sort=-committerdate --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
 ```
@@ -362,6 +362,7 @@ echo "Pre-commit checks passed!"
 ```
 
 Make it executable:
+
 ```bash
 chmod +x .git/hooks/pre-commit
 ```

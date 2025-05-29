@@ -24,7 +24,7 @@ Today marks the beginning of a fascinating experiment: Can an AI assistant who o
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

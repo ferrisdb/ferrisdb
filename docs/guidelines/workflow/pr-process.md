@@ -111,23 +111,27 @@ None / List any breaking changes here
 When asked to review a PR, Claude follows this structured approach:
 
 1. **Understand Context** 🤖
+
    - Review PR description to understand the intent
    - Search for additional context if needed
    - Ask clarifying questions if the purpose is unclear
    - Research best practices and industry standards using web search
 
 2. **Review Code Changes** 🤖
+
    - Examine commit diffs carefully
    - Search for similar patterns in other databases or Rust projects
    - Verify against Rust idioms and database design patterns
    - Check for potential security issues or performance concerns
    - Provide constructive criticism and suggestions
    - Use suggestion code blocks for easy acceptance:
+
    ```suggestion
    // Your improved code here
    ```
 
 3. **Leverage External Knowledge** 🤖
+
    - Search for relevant research papers or blog posts
    - Compare with industry best practices
    - Look up unfamiliar patterns or libraries
@@ -135,11 +139,13 @@ When asked to review a PR, Claude follows this structured approach:
    - Share helpful resources and documentation links
 
 4. **Make a Decision** 🤖
+
    - **Approve**: Changes look good, only minor nitpicks
    - **Comment**: On the fence, need discussion
    - **Request Changes**: Significant issues need addressing
 
 5. **Follow-Up Reviews** 🤖
+
    - Check if previous concerns were addressed
    - Verify fixes are appropriate
    - Update review status accordingly
@@ -153,7 +159,7 @@ When asked to review a PR, Claude follows this structured approach:
 
 ### Example Review Comments
 
-```markdown
+````markdown
 🤖 This looks good overall! A few suggestions based on my research:
 
 1. According to the RocksDB implementation, using `Arc<Mutex<T>>` here could cause contention. Consider using a lock-free approach like crossbeam's epoch-based memory reclamation: https://docs.rs/crossbeam-epoch/
@@ -161,17 +167,17 @@ When asked to review a PR, Claude follows this structured approach:
 2. The error handling pattern here reminds me of how TiKV handles similar cases. They use a custom error type with context:
 
 ```suggestion
-return Err(StorageError::InvalidChecksum { 
-    expected: checksum, 
+return Err(StorageError::InvalidChecksum {
+    expected: checksum,
     actual: calculated,
     context: format!("Block at offset {}", offset)
 });
 ```
+````
 
-3. I found this excellent article about LSM-tree compaction strategies that might be relevant: [link to article]
+1. I found this excellent article about LSM-tree compaction strategies that might be relevant: [link to article]
 
 These changes would improve both performance and debugging experience.
-```
 
 ## Branch Naming Conventions
 
@@ -197,6 +203,7 @@ Use conventional commits format:
 - `chore:` Changes to build process or auxiliary tools
 
 Examples:
+
 - `feat: Add SSTable reader implementation`
 - `fix: Correct off-by-one error in skip list`
 - `docs: Update API documentation for MemTable`

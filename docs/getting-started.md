@@ -13,13 +13,14 @@ How to build, run, and contribute to FerrisDB
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
 Welcome to FerrisDB! This guide will help you get up and running with the project, whether you're interested in following along with development or contributing to the codebase.
 
 {: .warning }
+
 > **Educational Project Only**
 >
 > FerrisDB is designed for learning Rust and distributed systems concepts. It is **not intended for production use**. If you need a production-ready distributed database, consider [FoundationDB](https://apple.github.io/foundationdb/), [TiKV](https://tikv.org/), or [CockroachDB](https://www.cockroachlabs.com/).
@@ -34,6 +35,7 @@ Welcome to FerrisDB! This guide will help you get up and running with the projec
 ### Verify Installation
 
 {: .note }
+
 > Run these commands to ensure everything is installed correctly:
 
 ```bash

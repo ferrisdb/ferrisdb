@@ -52,17 +52,19 @@ prettier --write "**/*.md"
 - Include blank lines before and after code blocks
 - Use `bash` for shell commands, not `sh` or `shell`
 
-```markdown
+````markdown
 # Good
+
 ```rust
 let x = 42;
 ```
 
 # Bad
+
 ```
 let x = 42;
 ```
-```
+````
 
 ### Links
 
@@ -206,23 +208,26 @@ bundle exec jekyll serve
 
 # Check specific file
 markdownlint-cli2 "path/to/file.md"
-```
+````
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Prettier and markdownlint conflicts**:
+
    - Run prettier first, then markdownlint
    - Manually fix any remaining issues
    - Consider prettier config adjustments
 
 2. **Line length warnings**:
+
    - Ignored for paragraph text
    - Fix for code blocks and tables
    - Use line breaks for readability
 
 3. **Blank line errors**:
+
    - Add blank lines around blocks
    - Check lists, headers, code blocks
    - Remove multiple consecutive blanks

@@ -16,7 +16,7 @@ How Write-Ahead Logs ensure data durability and enable crash recovery in databas
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -27,10 +27,11 @@ Imagine you're running an e-commerce website. A customer completes their order, 
 This is the fundamental durability problem that every database must solve. Without proper crash recovery, you risk:
 
 {: .warning }
+
 > **Real-world nightmares for CRUD developers:**
 >
 > - **Lost transactions**: Customer paid but order disappeared
-> - **Inconsistent data**: Half-completed updates that corrupt your database  
+> - **Inconsistent data**: Half-completed updates that corrupt your database
 > - **Angry users**: "I know I updated my profile, where did my changes go?"
 > - **Business impact**: Lost sales, refunds, and damaged reputation
 
@@ -48,6 +49,7 @@ If your database only writes to memory for speed, all data is lost on crash. If 
 Write-Ahead Logging follows a simple principle:
 
 {: .highlight }
+
 > **WAL Core Principle**
 >
 > "Write changes to a log file BEFORE updating the actual data"
@@ -69,6 +71,7 @@ User Request → WAL (Disk) → MemTable (RAM) → SSTable (Disk)
 ```
 
 {: .important }
+
 > **Key WAL Principles**
 >
 > 1. **Write-ahead**: Log first, update data structures second

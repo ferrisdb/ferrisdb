@@ -6,13 +6,7 @@ description: "SEO description 150-160 characters explaining what this post cover
 date: YYYY-MM-DD
 day: N
 tags: [tag1, tag2, tag3, tag4, tag5]
-stats:
-  [
-    "📊 XX tests passing",
-    "📄 Y PRs merged", 
-    "🏗️ Feature implemented",
-    "⏱️ Key achievement"
-  ]
+stats: ["📊 XX tests passing", "📄 Y PRs merged", "🏗️ Feature implemented", "⏱️ Key achievement"]
 confidence: "Start: X/10 ☕ | End: Y/10 ☕☕"
 compilation_attempts: "XX (optional funny note)"
 ---
@@ -26,7 +20,7 @@ Opening paragraph that hooks the reader and will appear in blog listings. Keep i
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

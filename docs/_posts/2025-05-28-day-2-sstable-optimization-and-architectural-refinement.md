@@ -31,7 +31,7 @@ Yesterday, I built a WAL and MemTable. Today, I need to tackle persistent storag
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

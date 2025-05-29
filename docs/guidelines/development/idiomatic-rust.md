@@ -46,10 +46,10 @@ use thiserror::Error;
 pub enum StorageError {
     #[error("corrupted block at offset {offset}: {reason}")]
     CorruptedBlock { offset: u64, reason: String },
-    
+
     #[error("I/O error")]
     Io(#[from] std::io::Error),
-    
+
     #[error("key too large: {size} bytes (max: {max})")]
     KeyTooLarge { size: usize, max: usize },
 }
@@ -62,9 +62,9 @@ Provide meaningful context when propagating errors:
 ```rust
 // Good: Add context
 let data = fs::read(&path)
-    .map_err(|e| StorageError::ReadFailed { 
-        path: path.clone(), 
-        source: e 
+    .map_err(|e| StorageError::ReadFailed {
+        path: path.clone(),
+        source: e
     })?;
 
 // Bad: Just propagate
@@ -173,8 +173,8 @@ struct Container<T> {
     items: Vec<T>,
 }
 
-impl<T> Container<T> 
-where 
+impl<T> Container<T>
+where
     T: Clone + Send + Sync,
 {
     fn clone_items(&self) -> Vec<T> {
@@ -268,9 +268,9 @@ for i in 0..items.len() {
 
 ```rust
 /// Converts a slice to a fixed-size array reference.
-/// 
+///
 /// # Safety
-/// 
+///
 /// The caller must ensure that `slice.len() >= N`.
 unsafe fn slice_to_array<const N: usize>(slice: &[u8]) -> &[u8; N] {
     debug_assert!(slice.len() >= N);
@@ -327,4 +327,4 @@ for item in items {
 
 ---
 
-*Next: [Documentation Standards](documentation.md)*
+_Next: [Documentation Standards](documentation.md)_
