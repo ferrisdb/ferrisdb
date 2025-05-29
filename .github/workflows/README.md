@@ -5,6 +5,7 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
 ## Workflows Overview
 
 ### CI (`ci.yml`)
+
 - **Triggers**: Push to main, pull requests, merge groups
 - **Purpose**: Run all continuous integration checks
 - **Jobs**:
@@ -18,7 +19,8 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
   - Security audit
 
 ### Deploy Docs (`deploy-docs.yml`)
-- **Triggers**: 
+
+- **Triggers**:
   - Push to main (only when docs/** or workflow changes)
   - Manual workflow dispatch
 - **Purpose**: Build and deploy documentation site to GitHub Pages
@@ -28,17 +30,21 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
 - **Note**: Requires GitHub Pages source to be set to "GitHub Actions" in repo settings
 
 ### PR Review Check (`pr-review-check.yml`)
+
 - **Purpose**: Enforce pull request review requirements
 
 ### Release (`release.yml`)
+
 - **Purpose**: Handle release automation
 
 ### Security (`security.yml`)
+
 - **Purpose**: Run security-specific checks
 
 ## No Conflicts
 
 The workflows are designed to work together without conflicts:
+
 - **CI** validates that the docs build correctly but doesn't deploy
 - **Deploy Docs** only runs after changes are merged to main and actually deploys the site
 - Both use the same Ruby/Jekyll setup for consistency
@@ -46,6 +52,7 @@ The workflows are designed to work together without conflicts:
 ## GitHub Pages Configuration
 
 After enabling the Deploy Docs workflow, ensure:
+
 1. Go to Settings → Pages
 2. Set Source to "GitHub Actions" (not "Deploy from a branch")
 3. Custom domain is already configured (CNAME file exists)
