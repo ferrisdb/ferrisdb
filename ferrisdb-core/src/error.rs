@@ -35,6 +35,10 @@ pub enum Error {
     #[error("MemTable is full")]
     MemTableFull,
 
+    /// Invalid file or data format
+    #[error("Invalid format: {0}")]
+    InvalidFormat(String),
+
     /// A transaction error occurred
     #[error("Transaction error: {0}")]
     Transaction(String),
