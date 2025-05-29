@@ -9,8 +9,7 @@ permalink: /deep-dive/wal-crash-recovery/
 How Write-Ahead Logs ensure data durability and enable crash recovery in database systems
 {: .fs-6 .fw-300 }
 
-**Difficulty:** Beginner • **Reading time:** 15 minutes
-{: .label .label-green }
+📗 **Difficulty:** Beginner • ⏱️ **Reading time:** 15 minutes
 
 ## Table of contents
 

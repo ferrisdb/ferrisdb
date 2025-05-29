@@ -9,8 +9,7 @@ permalink: /deep-dive/lsm-trees/
 Understanding Log-Structured Merge Trees through FerrisDB's implementation
 {: .fs-6 .fw-300 }
 
-**Difficulty:** Intermediate • **Reading time:** 25 minutes
-{: .label .label-yellow }
+📙 **Difficulty:** Intermediate • ⏱️ **Reading time:** 25 minutes
 
 ## Table of contents
 

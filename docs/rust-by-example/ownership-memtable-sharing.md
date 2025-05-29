@@ -9,8 +9,7 @@ permalink: /rust-by-example/ownership-memtable-sharing/
 Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go
 {: .fs-6 .fw-300 }
 
-**Difficulty:** Beginner • **Reading time:** 10 minutes
-{: .label .label-green }
+📗 **Beginner** • ⏱️ **10 minutes**
 
 ## Table of contents
 

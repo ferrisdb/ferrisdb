@@ -9,8 +9,7 @@ permalink: /deep-dive/sstable-design/
 How databases organize and access data on disk for optimal performance
 {: .fs-6 .fw-300 }
 
-**Difficulty:** Intermediate • **Reading time:** 30 minutes
-{: .label .label-yellow }
+📙 **Difficulty:** Intermediate • ⏱️ **Reading time:** 30 minutes
 
 ## Table of contents
 

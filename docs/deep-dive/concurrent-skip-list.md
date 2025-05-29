@@ -9,8 +9,7 @@ permalink: /deep-dive/concurrent-skip-list/
 Understanding concurrent programming through FerrisDB's MemTable implementation
 {: .fs-6 .fw-300 }
 
-**Difficulty:** Advanced • **Reading time:** 35 minutes
-{: .label .label-red }
+📕 **Advanced** • ⏱️ **35 minutes**
 
 ## Table of contents
 
