@@ -53,21 +53,16 @@ Every article follows the same structure:
 
 Learn Rust's ownership system through data structure examples.
 
-<div class="article-grid">
-  <div class="article-card">
-    <h3><a href="{{ '/rust-by-example/ownership-memtable-sharing/' | relative_url }}">Ownership & Sharing: MemTable Lifecycle Management</a></h3>
-    <p>Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go.</p>
-    <div class="article-meta">
-      <span class="difficulty beginner">Beginner</span>
-      <span class="reading-time">10 min read</span>
-    </div>
-    <div class="article-tags">
-      <span class="tag">Ownership</span>
-      <span class="tag">Arc</span>
-      <span class="tag">Memory Management</span>
-    </div>
-  </div>
-</div>
+#### [Ownership & Sharing: MemTable Lifecycle Management](/rust-by-example/ownership-memtable-sharing/)
+
+{: .label .label-green } Beginner
+{: .label .label-blue } 10 min read
+
+Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go.
+
+**Topics:** Ownership, Arc, Memory Management
+
+[Read Article →](/rust-by-example/ownership-memtable-sharing/){: .btn .btn-purple }
 
 **Coming Soon:**
 
