@@ -71,9 +71,6 @@ enable_copy_code_button: true
 # Callout titles
 callout_color_scheme: light
 
-# Footer content (deprecated - should use _includes/footer_custom.html instead)
-footer_content: "⚠️ Educational project - not for production use. Built with ❤️ by a CRUD developer and Claude."
-
 # Back to top link
 back_to_top: true
 back_to_top_text: "Back to top"
