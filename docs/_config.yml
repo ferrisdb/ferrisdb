@@ -35,7 +35,7 @@ kramdown:
 
 # Just the Docs settings
 logo: "/assets/images/ferrisdb_logo.svg"
-favicon_ico: "/assets/images/ferrisdb_logo.svg"
+# favicon_ico: "/assets/images/favicon.ico" # TODO: Add ICO favicon when available
 color_scheme: ferrisdb
 
 # Enable heading anchors for better navigation
