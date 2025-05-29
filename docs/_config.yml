@@ -35,7 +35,11 @@ kramdown:
 
 # Just the Docs settings
 logo: "/assets/images/ferrisdb_logo.svg"
+favicon_ico: "/assets/images/ferrisdb_logo.svg"
 color_scheme: ferrisdb
+
+# Enable heading anchors for better navigation
+heading_anchors: true
 
 # Search configuration
 search_enabled: true
@@ -58,23 +62,23 @@ search:
   # Enable or disable the search button that appears in the bottom right corner of every page
   # Supports true or false (default)
   button: true
+  # Keyboard shortcut to focus the search bar
+  focus_shortcut_key: 'k'
 
 # Enable copy button on code blocks
 enable_copy_code_button: true
 
-# Footer content
+# Callout titles
+callout_color_scheme: light
+
+# Footer content (deprecated - should use _includes/footer_custom.html instead)
 footer_content: "⚠️ Educational project - not for production use. Built with ❤️ by a CRUD developer and Claude."
 
 # Back to top link
 back_to_top: true
 back_to_top_text: "Back to top"
 
-# External links
-nav_external_links:
-  - title: GitHub
-    url: https://github.com/ferrisdb/ferrisdb
-  - title: Blog
-    url: /blog/
+# External links (using aux_links instead - see below)
 
 # Collections
 collections:
@@ -125,8 +129,16 @@ project:
 aux_links:
   "GitHub":
     - "//github.com/ferrisdb/ferrisdb"
-  "Claude's Blog":
-    - "/claude-blog/"
+
+# Hide aux links on print
+aux_links_new_tab: true
+
+# Navigation structure
+nav_enabled: true
+nav_sort: case_sensitive # or case_insensitive
+
+# Expand/collapse navigation sections
+nav_fold: true
 
 # Enable "Edit this page on GitHub" link
 gh_edit_link: true
