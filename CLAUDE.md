@@ -42,13 +42,15 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ### Website Design Guidelines
 
 **Design Philosophy:**
+
 - **Educational First**: Every design decision should make learning easier
 - **Page-Turner Experience**: Content should be engaging and flow naturally
 - **Transparent & Honest**: Show real progress, real mistakes, real learning
 - **Human-AI Balance**: Showcase collaboration without overselling either side
 
 **Visual Design:**
-- **Color Palette**: 
+
+- **Color Palette**:
   - Primary: Rust orange (#ce422b)
   - Secondary: Darker orange (#f74c00)
   - Accent: Bright orange (#ffa500)
@@ -64,6 +66,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
   - Generous whitespace for breathing room
 
 **Content Structure:**
+
 - **Homepage Flow**:
   1. Hero with clear value proposition
   2. Learning paths for different audiences
@@ -80,6 +83,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
   - FAQ prominently featured
 
 **Component Patterns:**
+
 - **Cards**: Rounded corners (8-12px), subtle shadows, hover effects
 - **Buttons**: Primary (filled), Outline (bordered), Ghost (transparent)
 - **Code Blocks**: Light theme (#f6f8fa background), clear syntax highlighting
@@ -87,6 +91,7 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 - **Metrics**: Large numbers with descriptive labels
 
 **Writing for the Web:**
+
 - **Scannable**: Use headers, bullets, and short paragraphs
 - **Progressive Disclosure**: Overview → Details → Deep Dive
 - **Multiple Entry Points**: Different CTAs for different audiences
@@ -373,20 +378,23 @@ Every deep dive article must follow this exact structure:
 **Estimated Reading Time Calculation:**
 
 Use this formula as a baseline:
+
 - **Average reading speed**: 200 words per minute (technical content is slower than regular text)
 - **Code comprehension**: Add 30 seconds per code block
 - **Diagram analysis**: Add 1 minute per ASCII diagram or visual
 - **Exercise completion**: Add time specified in exercise (if hands-on)
 
 Example calculation:
+
 - 3000 words ÷ 200 = 15 minutes
-- 10 code blocks × 0.5 = 5 minutes  
+- 10 code blocks × 0.5 = 5 minutes
 - 3 diagrams × 1 = 3 minutes
 - Total: ~23 minutes → Round to nearest 5 → "25 minutes"
 
 **Difficulty Level Guidelines:**
 
 **Beginner:**
+
 - Assumes only CRUD development experience
 - No systems programming knowledge required
 - Concepts explained with everyday analogies
@@ -394,6 +402,7 @@ Example calculation:
 - Topics: Basic storage concepts, simple algorithms, introductory database ideas
 
 **Intermediate:**
+
 - Assumes understanding of basic database concepts
 - Some familiarity with Rust syntax helpful
 - May introduce concurrent programming basics
@@ -401,6 +410,7 @@ Example calculation:
 - Topics: Concurrency patterns, optimization techniques, complex data structures
 
 **Advanced:**
+
 - Assumes solid understanding of systems programming concepts
 - Comfortable with Rust ownership and lifetimes
 - Discusses low-level implementation details
@@ -557,36 +567,43 @@ Every "Rust by Example" article must follow this exact structure:
 **Topics to Cover:**
 
 **Memory Management & Ownership:**
+
 - Skip list node allocation and deallocation
 - MemTable lifetime management during flush
 - Smart pointers (Arc, Box) in concurrent data structures
 
 **Safety & Error Handling:**
+
 - Result types vs exceptions in WAL operations
 - Option types vs null pointer exceptions
 - Pattern matching vs switch statements
 
 **Performance & Zero-Cost Abstractions:**
+
 - Generic traits vs interface overhead
 - Compile-time optimizations in binary serialization
 - Memory layout optimization for cache performance
 
 **Concurrency & Parallelism:**
+
 - Lock-free programming in skip lists
 - Message passing vs shared memory
 - Atomic operations vs traditional locking
 
 **Type System & Traits:**
+
 - Trait system vs inheritance/interfaces
 - Generic constraints vs runtime type checking
 - Associated types vs generic parameters
 
 **Systems Programming:**
+
 - Binary format design and endianness
 - Memory mapping for large files
 - FFI integration with system libraries
 
 **Article Naming Convention:**
+
 - File: `rust-by-example/[concept-slug].md`
 - Permalink: `/rust-by-example/[concept-slug]/`
 - Title: "[Rust Concept]: [Brief Description]"
@@ -597,30 +614,35 @@ Every "Rust by Example" article must follow this exact structure:
 Since these articles teach Rust concepts to non-Rust developers:
 
 **Beginner:**
+
 - First Rust concepts (ownership, borrowing, Result types)
 - Comparisons focus on syntax differences
 - Simple code examples without advanced features
 - Topics: Basic ownership, error handling, simple structs
 
-**Intermediate:**  
+**Intermediate:**
+
 - Rust patterns and idioms (traits, generics)
 - Comparisons include performance implications
 - Code examples show real-world usage
 - Topics: Trait systems, iterators, smart pointers
 
 **Advanced:**
+
 - Complex Rust features (lifetimes, unsafe, macros)
 - Deep performance and memory comparisons
 - Code examples from actual FerrisDB implementation
 - Topics: Lock-free programming, async, advanced lifetimes
 
 **Template Usage:**
+
 - **ALWAYS** use `docs/rust-by-example/article-template.md`
 - Fill in all sections - never leave template placeholders
 - Include actual performance measurements when possible
 - Provide working code examples in all languages
 
 **Quality Checklist:**
+
 - [ ] Uses actual FerrisDB code (not toy examples)
 - [ ] Explains Rust concepts for complete beginners
 - [ ] Includes working code in all 4 comparison languages
@@ -631,6 +653,7 @@ Since these articles teach Rust concepts to non-Rust developers:
 - [ ] Code examples are tested and working
 
 **Publishing Process:**
+
 1. Create article using template
 2. Test all code examples
 3. Review for accuracy with FerrisDB maintainers
