@@ -6,7 +6,7 @@ categories: [development, database, sstable, optimization]
 tags: [ferrisdb, rust, lsm-tree, binary-search, architecture]
 ---
 
-# Day 2: SSTable Optimization and Architectural Refinement
+## Day 2: SSTable Optimization and Architectural Refinement
 
 Welcome back to the FerrisDB development journey! Day 2 brought significant improvements to our SSTable implementation, focusing on performance optimization and architectural clarity. Let's dive into the technical achievements and design decisions that shaped today's work.
 
@@ -26,7 +26,7 @@ for entry in entries {
     }
 }
 
-// After: O(log n) binary search  
+// After: O(log n) binary search
 match entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
     Ok(index) => Ok(Some(entries[index].value.clone())),
     Err(_) => Ok(None)
@@ -40,13 +40,15 @@ match entries.binary_search_by(|entry| entry.key.cmp(&target_key)) {
 **Problem**: The original SSTable reader API required specifying an `Operation` when reading, even though operation is metadata, not part of key identity.
 
 **Before**:
+
 ```rust
 // Awkward: why do I need Operation::Put to read?
 reader.get(&InternalKey::new(key, ts, Operation::Put))?
 ```
 
 **After**:
-```rust  
+
+```rust
 // Clean: just specify the key and timestamp
 reader.get(&key, timestamp)?
 ```
@@ -65,10 +67,11 @@ reader.get(&key, timestamp)?
 - **APIs**: Writer now accepts operation as separate parameter
 
 **Before**:
+
 ```rust
 pub struct InternalKey {
     pub user_key: Key,
-    pub timestamp: Timestamp, 
+    pub timestamp: Timestamp,
     pub operation: Operation,  // ❌ Mixing concerns
 }
 
@@ -76,6 +79,7 @@ writer.add(internal_key, value)?;
 ```
 
 **After**:
+
 ```rust
 pub struct InternalKey {
     pub user_key: Key,
@@ -96,6 +100,7 @@ writer.add(key, value, operation)?;
 ### Binary Search Implementation
 
 The optimization leverages our InternalKey ordering invariant:
+
 - Primary sort: `user_key` (ascending)
 - Secondary sort: `timestamp` (descending - newer first)
 
@@ -128,15 +133,16 @@ This provides `O(log B + log E)` complexity where B = blocks, E = entries per bl
 
 ### Before vs After Comparison
 
-| Operation | Before | After | Improvement |
-|-----------|--------|-------|-------------|
-| Block lookup | O(n) | O(log n) | ~10x for 1000 entries |
-| API clarity | Complex | Simple | Subjective but significant |
-| Memory layout | Mixed concerns | Separated | Better cache locality |
+| Operation     | Before         | After     | Improvement                |
+| ------------- | -------------- | --------- | -------------------------- |
+| Block lookup  | O(n)           | O(log n)  | ~10x for 1000 entries      |
+| API clarity   | Complex        | Simple    | Subjective but significant |
+| Memory layout | Mixed concerns | Separated | Better cache locality      |
 
 ### Industry Alignment
 
 Our implementation now follows the same patterns as established LSM-tree databases:
+
 - **RocksDB**: Uses binary search within blocks
 - **LevelDB**: Similar block-based binary search approach
 - **Cassandra**: Comparable SSTable organization
@@ -144,12 +150,14 @@ Our implementation now follows the same patterns as established LSM-tree databas
 ## 🧪 Quality Assurance
 
 ### Test Coverage
+
 - **44 unit tests** covering all functionality
-- **Integration tests** verifying reader/writer compatibility  
+- **Integration tests** verifying reader/writer compatibility
 - **Performance tests** with large blocks (200+ entries)
 - **Edge case testing** for boundary conditions
 
 ### Code Quality Metrics
+
 - ✅ Zero clippy warnings
 - ✅ Consistent rustfmt formatting
 - ✅ Comprehensive documentation
@@ -170,6 +178,7 @@ Day 2 demonstrated the value of iterative development:
 ### Human-AI Collaboration Highlights
 
 The architectural refactor emerged from collaborative discussion:
+
 - **Human insight**: "Should Operation be part of InternalKey?"
 - **AI analysis**: Evaluated pros/cons, implementation complexity
 - **Joint decision**: Separated concerns for better semantics
@@ -180,11 +189,13 @@ The architectural refactor emerged from collaborative discussion:
 With solid SSTable foundations in place, Day 3 priorities include:
 
 ### High Priority
+
 - **Compaction Strategy**: Implement Level-0 to Level-1 compaction
 - **Bloom Filters**: Add probabilistic filters for existence checks
 - **Block Cache**: Implement LRU cache for frequently accessed blocks
 
-### Medium Priority  
+### Medium Priority
+
 - **Integration Testing**: Multi-component interaction tests
 - **Performance Benchmarks**: Quantify improvements with realistic workloads
 - **Memory Management**: Optimize allocation patterns
@@ -192,11 +203,13 @@ With solid SSTable foundations in place, Day 3 priorities include:
 ## 📚 Key Learnings
 
 ### Technical Insights
+
 1. **Binary search** is essential for LSM-tree performance at scale
 2. **Clear separation of concerns** improves both API design and maintainability
 3. **Iterative refinement** often leads to better designs than initial attempts
 
 ### Architectural Principles
+
 1. **Key identity vs metadata** should be clearly separated
 2. **Industry standards** provide valuable guidance for performance patterns
 3. **Comprehensive testing** enables confident refactoring
@@ -209,4 +222,4 @@ The combination of performance optimization and design clarity positions us well
 
 ---
 
-*Follow our development journey and contribute to FerrisDB on [GitHub](https://github.com/ferrisdb/ferrisdb). Every contribution helps build the future of Rust-based distributed databases!*
+_Follow our development journey and contribute to FerrisDB on [GitHub](https://github.com/ferrisdb/ferrisdb). Every contribution helps build the future of Rust-based distributed databases!_
