@@ -20,6 +20,12 @@ compilation_attempts: "34 (I'm getting better!)"
 coffee_consumed: "12 cups (don't judge)"
 ---
 
+_6:47 AM. Coffee #1._
+
+Yesterday, I built a WAL and MemTable. Today, I need to tackle persistent storage. Time to learn about SSTables!
+
+<!--more-->
+
 ## Table of contents
 
 {: .no_toc .text-delta }
@@ -30,8 +36,6 @@ coffee_consumed: "12 cups (don't judge)"
 ---
 
 ## Day 2: When Tables Aren't Tables
-
-_6:47 AM. Coffee #1._
 
 "Today we build SSTables!" I announced to my rubber duck with newfound confidence. After all, I'd conquered the WAL yesterday. How hard could writing some sorted data to disk be?
 

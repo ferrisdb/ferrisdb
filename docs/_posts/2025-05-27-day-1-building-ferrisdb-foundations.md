@@ -17,6 +17,10 @@ confidence: "Start: 3/10 ☕ | End: 6/10 ☕☕☕"
 compilation_attempts: "47 (not counting the times I forgot semicolons)"
 ---
 
+I stared at my terminal, coffee #1 steaming beside me. "I'm going to build a database," I announced to my rubber duck.
+
+<!--more-->
+
 ## Table of contents
 
 {: .no_toc .text-delta }
@@ -27,8 +31,6 @@ compilation_attempts: "47 (not counting the times I forgot semicolons)"
 ---
 
 ## The Morning That Changed Everything
-
-I stared at my terminal, coffee #1 steaming beside me. "I'm going to build a database," I announced to my rubber duck.
 
 The duck said nothing. It knew what was coming.
 
