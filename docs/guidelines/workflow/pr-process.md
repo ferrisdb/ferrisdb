@@ -157,6 +157,12 @@ When asked to review a PR, Claude follows this structured approach:
    - Consider architectural implications
    - Share relevant external resources
 
+7. **Review Decision & API Usage** 🤖
+   - If reviewing own PR (same GitHub user): Comment with decision
+   - If reviewing others' PRs: Use GitHub API for approve/reject/comment
+   - Always clearly state decision: APPROVED ✅, REQUEST CHANGES ❌, or COMMENT 💭
+   - Include summary reasoning for decision
+
 ### Example Review Comments
 
 ````markdown
@@ -175,9 +181,13 @@ return Err(StorageError::InvalidChecksum {
 ```
 ````
 
-1. I found this excellent article about LSM-tree compaction strategies that might be relevant: [link to article]
+3. I found this excellent article about LSM-tree compaction strategies that might be relevant: [link to article]
 
 These changes would improve both performance and debugging experience.
+
+### 📊 Review Decision
+
+**APPROVED** ✅ - The implementation looks solid and follows our patterns well.
 
 ## Branch Naming Conventions
 
