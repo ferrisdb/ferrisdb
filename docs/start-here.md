@@ -60,14 +60,14 @@ As a CRUD developer, you've probably:
 {: .fs-7 .fw-600 }
 
 ```bash
-# Clone and explore
+## Clone and explore
 git clone https://github.com/ferrisdb/ferrisdb
 cd ferrisdb
 
-# See the components we're building
+## See the components we're building
 ls ferrisdb-storage/src/
 
-# Run tests to see it working
+## Run tests to see it working
 cargo test -p ferrisdb-storage
 ```
 
