@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Getting Started
+title: Try It Locally
 nav_order: 7
-permalink: /getting-started/
+permalink: /try-locally/
 ---
 
-How to build, run, and contribute to FerrisDB
+Clone, build, and explore the code on your machine
 {: .fs-6 .fw-300 }
 
 ## Table of contents

@@ -79,11 +79,14 @@ What's implemented so far:
 **📖 Read the Blog** - Follow our daily progress and learnings  
 [Start Reading →]({{ '/blog/' | relative_url }}){: .btn .btn-purple .btn-lg }
 
-**🔧 Start Building** - Jump into the code  
-[Get Started →]({{ '/getting-started/' | relative_url }}){: .btn .btn-outline .btn-lg }
+**🔧 Try It Locally** - Clone, build, and explore the code  
+[Try It Locally →]({{ '/try-locally/' | relative_url }}){: .btn .btn-outline .btn-lg }
 
 **🤔 Database Concepts** - Understand the theory  
 [Learn More →]({{ '/database-concepts/' | relative_url }}){: .btn .btn-outline .btn-lg }
+
+**🦀 Rust by Example** - Learn Rust through database code  
+[Learn Rust →]({{ '/rust-by-example/' | relative_url }}){: .btn .btn-outline .btn-lg }
 
 ---
 

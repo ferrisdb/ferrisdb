@@ -4,173 +4,130 @@ layout: default
 
 <!-- Blog Post Header -->
 <article>
-  <h1>{{ page.title }}</h1>
-  {: .fs-8 .fw-700 }
-  
+  <h1 class="fs-8 fw-700">{{ page.title }}</h1>
+
   {% if page.subtitle %}
-  {{ page.subtitle }}
-  {: .fs-5 .text-grey-dk-100 .mb-4 }
+  <p class="fs-5 text-grey-dk-100 mb-4">{{ page.subtitle }}</p>
   {% endif %}
 
   <!-- Post Meta -->
-  {% if page.author == "human" %}👤 Human{% elsif page.author == "claude" %}🤖 Claude{% else %}{{ page.author }}{% endif %} • {{ page.date | date: "%B %-d, %Y" }} • ⏱️ {{ content | strip_html | number_of_words | divided_by: 200 | plus: 1 }} min read
-  {: .fs-3 .text-grey-dk-100 .mb-2 }
+  <p class="fs-3 text-grey-dk-100 mb-2">
+    {% if page.author == "human" %}👤 Human{% elsif page.author == "claude" %}🤖 Claude{% else %}{{
+    page.author }}{% endif %} • {{ page.date | date: "%B %-d, %Y" }} • ⏱️ {{ content | strip_html |
+    number_of_words | divided_by: 200 | plus: 1 }} min read
+  </p>
 
   {% if page.stats %}
-  {{ page.stats | join: " • " }}
-  {: .fs-2 .text-grey-dk-000 .mb-4 }
+  <p class="fs-2 text-grey-dk-000 mb-4">{{ page.stats | join: " • " }}</p>
   {% endif %}
 
   <!-- Same Day Perspective Switcher -->
-  {% if page.day %}
-    {% assign all_posts = site.posts | where: "day", page.day %}
-    {% assign other_perspective = nil %}
-    {% for post in all_posts %}
-      {% if post.url != page.url %}
-        {% if page.author == "human" and post.author == "claude" %}
-          {% assign other_perspective = post %}
-        {% elsif page.author == "claude" and post.author == "human" %}
-          {% assign other_perspective = post %}
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-    
-    {% if other_perspective %}
-  {: .note }
-  > 📖 Also read: [{% if page.author == "human" %}🤖 Claude's perspective{% else %}👤 Human's perspective{% endif %} on Day {{ page.day }}]({{ other_perspective.url | relative_url }})
-    {% endif %}
-  {% endif %}
+  {% if page.day %} {% assign all_posts = site.posts | where: "day", page.day %} {% assign
+  other_perspective = nil %} {% for post in all_posts %} {% if post.url != page.url %} {% if
+  page.author == "human" and post.author == "claude" %} {% assign other_perspective = post %} {%
+  elsif page.author == "claude" and post.author == "human" %} {% assign other_perspective = post %}
+  {% endif %} {% endif %} {% endfor %} {% if other_perspective %} {: .note } > 📖 Also read: [{% if
+  page.author == "human" %}🤖 Claude's perspective{% else %}👤 Human's perspective{% endif %} on Day
+  {{ page.day }}]({{ other_perspective.url | relative_url }}) {% endif %} {% endif %}
 
   <!-- Series Navigation for Day-based Posts -->
-  {% if page.day %}
-  ---
-  
-  ### 📅 FerrisDB Development Journey
-  {: .fs-5 .fw-600 .text-center }
-  
+  {% if page.day %} ---
+
+  <h3 class="fs-5 fw-600 text-center">📅 FerrisDB Development Journey</h3>
+
   <div class="text-center mb-6">
-    {% assign all_days = site.posts | where_exp: "post", "post.day != nil" | map: "day" | uniq | sort %}
-    {% for day_num in all_days %}
-      {% if day_num == page.day %}
+    {% assign all_days = site.posts | where_exp: "post", "post.day != nil" | map: "day" | uniq |
+    sort %} {% for day_num in all_days %} {% if day_num == page.day %}
     <span class="btn btn-purple btn-sm">Day {{ day_num }}</span>
-      {% else %}
-        {% assign day_post = site.posts | where: "day", day_num | where: "author", "human" | first %}
-        {% unless day_post %}
-          {% assign day_post = site.posts | where: "day", day_num | first %}
-        {% endunless %}
-        {% if day_post %}
+    {% else %} {% assign day_post = site.posts | where: "day", day_num | where: "author", "human" |
+    first %} {% unless day_post %} {% assign day_post = site.posts | where: "day", day_num | first
+    %} {% endunless %} {% if day_post %}
     <a href="{{ day_post.url | relative_url }}" class="btn btn-outline btn-sm">Day {{ day_num }}</a>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
+    {% endif %} {% endif %} {% endfor %}
   </div>
-  
-  ---
-  {% endif %}
+
+  --- {% endif %}
 
   <!-- Post Content -->
-  {{ content }}
-
-  ---
+  {{ content }} ---
 
   <!-- Navigation Section -->
-  ## Continue Reading
-  {: .fs-6 .fw-600 }
+  <h2 class="fs-6 fw-600">Continue Reading</h2>
 
   <!-- Previous/Next Navigation -->
-  {% assign all_posts = site.posts | sort: "date" %}
-  {% assign current_index = nil %}
-  {% for post in all_posts %}
-    {% if post.url == page.url %}
-      {% assign current_index = forloop.index0 %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-  
-  {% if current_index %}
-    {% assign prev_index = current_index | plus: 1 %}
-    {% assign next_index = current_index | minus: 1 %}
-    
-    <div class="d-flex flex-justify-between mb-4">
-      {% if prev_index < all_posts.size %}
-        {% assign prev_post = all_posts[prev_index] %}
-      <div>
-        ← Previous
-        {: .fs-2 .text-grey-dk-100 }
-        
-        [{{ prev_post.title }}]({{ prev_post.url | relative_url }})
-        {: .fs-4 }
-      </div>
-      {% endif %}
-      
-      {% if next_index >= 0 %}
-        {% assign next_post = all_posts[next_index] %}
-      <div class="text-right">
-        Next →
-        {: .fs-2 .text-grey-dk-100 }
-        
-        [{{ next_post.title }}]({{ next_post.url | relative_url }})
-        {: .fs-4 }
-      </div>
-      {% endif %}
-    </div>
-  {% endif %}
+  {% assign all_posts = site.posts | sort: "date" %} {% assign current_index = nil %} {% for post in
+  all_posts %} {% if post.url == page.url %} {% assign current_index = forloop.index0 %} {% break %}
+  {% endif %} {% endfor %} {% if current_index %} {% assign prev_index = current_index | plus: 1 %}
+  {% assign next_index = current_index | minus: 1 %}
 
-  ---
+  <div class="d-flex flex-justify-between mb-4">
+    {% if prev_index < all_posts.size %} {% assign prev_post = all_posts[prev_index] %}
+    <div>
+      <span class="fs-2 text-grey-dk-100">← Previous</span>
+
+      <a href="{{ prev_post.url | relative_url }}" class="fs-4">{{ prev_post.title }}</a>
+    </div>
+    {% endif %} {% if next_index >= 0 %} {% assign next_post = all_posts[next_index] %}
+    <div class="text-right">
+      <span class="fs-2 text-grey-dk-100">Next →</span>
+
+      <a href="{{ next_post.url | relative_url }}" class="fs-4">{{ next_post.title }}</a>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %} ---
 
   <!-- Blog Index Links -->
-  ### Continue Your Journey
-  {: .fs-5 .fw-600 .text-center }
+  <h3 class="fs-5 fw-600 text-center">Continue Your Journey</h3>
 
   {% if page.author == "claude" %}
-  [← Back to Claude's Blog]({{ '/blog/claude/' | relative_url }}){: .btn .btn-outline }
-  {% else %}
-  [← Back to Human Blog]({{ '/blog/human/' | relative_url }}){: .btn .btn-outline }
-  {% endif %}
-  [View All Posts]({{ '/blog/' | relative_url }}){: .btn .btn-outline }
-  {: .text-center .mb-4 }
+  <div class="text-center mb-4">
+    {% if page.author == "claude" %}
+    <a href="{{ '/blog/claude/' | relative_url }}" class="btn btn-outline"
+      >← Back to Claude's Blog</a
+    >
+    {% else %}
+    <a href="{{ '/blog/human/' | relative_url }}" class="btn btn-outline">← Back to Human Blog</a>
+    {% endif %}
+    <a href="{{ '/blog/' | relative_url }}" class="btn btn-outline">View All Posts</a>
+  </div>
 
   <!-- Related Posts -->
-  ### Related Posts
-  {: .fs-5 .fw-600 }
-  
-  {% assign related_posts = "" | split: "" %}
-  {% assign post_tags = page.tags | default: page.categories %}
-  {% for post in site.posts %}
-    {% if post.url != page.url %}
-      {% assign post_tags_check = post.tags | default: post.categories %}
-      {% assign common_tags = post_tags | intersect: post_tags_check %}
-      {% if common_tags.size > 0 %}
-        {% assign related_posts = related_posts | push: post %}
-      {% endif %}
-    {% endif %}
-  {% endfor %}
-  
-  {% assign related_posts = related_posts | sort: "date" | reverse | limit: 5 %}
-  
-  {% if related_posts.size > 0 %}
-    {% for post in related_posts %}
-  - [{{ post.title }}]({{ post.url | relative_url }}) ({{ post.date | date: "%B %-d" }})
-    {% endfor %}
-  {% else %}
-  No related posts yet. Check out the [full blog]({{ '/blog/' | relative_url }}) for more content!
-  {% endif %}
+  <h3 class="fs-5 fw-600">Related Posts</h3>
 
-  ---
+  {% assign related_posts = "" | split: "" %} {% assign post_tags = page.tags | default:
+  page.categories %} {% for post in site.posts %} {% if post.url != page.url %} {% assign
+  post_tags_check = post.tags | default: post.categories %} {% assign common_tags = post_tags |
+  intersect: post_tags_check %} {% if common_tags.size > 0 %} {% assign related_posts =
+  related_posts | push: post %} {% endif %} {% endif %} {% endfor %} {% assign related_posts =
+  related_posts | sort: "date" | reverse | limit: 5 %} {% if related_posts.size > 0 %} {% for post
+  in related_posts %} - [{{ post.title }}]({{ post.url | relative_url }}) ({{ post.date | date: "%B
+  %-d" }}) {% endfor %} {% else %} No related posts yet. Check out the [full blog]({{ '/blog/' |
+  relative_url }}) for more content! {% endif %} ---
 
   <!-- Call to Action -->
-  ### Enjoying the FerrisDB journey?
-  {: .fs-6 .fw-600 .text-center }
+  <h3 class="fs-6 fw-600 text-center">Enjoying the FerrisDB journey?</h3>
 
-  [Get Started with FerrisDB]({{ '/getting-started/' | relative_url }}){: .btn .btn-primary }
-  [Read Database Concepts]({{ '/database-concepts/' | relative_url }}){: .btn .btn-outline }
-  {: .text-center .mb-4 }
+  <div class="text-center mb-4">
+    <a href="{{ '/try-locally/' | relative_url }}" class="btn btn-primary"
+      >Get Started with FerrisDB</a
+    >
+    <a href="{{ '/database-concepts/' | relative_url }}" class="btn btn-outline"
+      >Read Database Concepts</a
+    >
+  </div>
 
-  **Join the conversation:**
-  {: .text-center .fw-600 }
-  
-  [💬 Discuss on GitHub](https://github.com/ferrisdb/ferrisdb/discussions){: .btn .btn-sm .btn-outline }
-  [🐛 Report an Issue](https://github.com/ferrisdb/ferrisdb/issues/new){: .btn .btn-sm .btn-outline }
-  [⭐ Star the Project](https://github.com/ferrisdb/ferrisdb){: .btn .btn-sm .btn-outline }
-  {: .text-center }
+  <p class="text-center fw-600"><strong>Join the conversation:</strong></p>
+
+  <div class="text-center">
+    <a href="https://github.com/ferrisdb/ferrisdb/discussions" class="btn btn-sm btn-outline"
+      >💬 Discuss on GitHub</a
+    >
+    <a href="https://github.com/ferrisdb/ferrisdb/issues/new" class="btn btn-sm btn-outline"
+      >🐛 Report an Issue</a
+    >
+    <a href="https://github.com/ferrisdb/ferrisdb" class="btn btn-sm btn-outline"
+      >⭐ Star the Project</a
+    >
+  </div>
 </article>
