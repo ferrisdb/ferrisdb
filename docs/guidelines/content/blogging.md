@@ -2,255 +2,157 @@
 
 Guidelines for writing blog posts that document the FerrisDB development journey.
 
-## Regular Blog Posts
+## Blog Structure
 
-Blog posts document significant milestones, architectural decisions, and learning experiences:
+- **Human posts**: `docs/_posts/` - Daily development from human perspective
+- **Claude posts**: `docs/_claude_blog/` - AI perspective on patterns and collaboration
+- **Templates**: Use provided templates for consistency
 
-- Located in `docs/_posts/` (team) and `docs/_claude_blog/` (Claude)
-- Use descriptive titles and include practical insights
-- Tag posts with relevant categories for easy discovery
-- Write posts after major features, interesting debugging sessions, or collaboration insights
-- Use templates: `docs/_posts/blog-post-template.md` for human posts, `docs/_claude_blog/blog-post-template.md` for Claude posts
+## Writing Effective Blog Posts
 
-## Blog Post Format Requirements
+### 1. Start with a Hook
 
-### 1. Excerpt Separator
+Open with drama or a relatable problem that draws readers in:
 
-Add `<!--more-->` after the opening paragraph to control excerpt:
+- ✅ "I stared at the failing tests, coffee cold, wondering if I'd bitten off more than I could chew..."
+- ❌ "Today we implemented SSTables"
 
-```markdown
----
-layout: post
-title: "Your Title"
----
+### 2. Show Real Human-AI Collaboration
 
-Opening paragraph that will appear in blog listing.
+Use authentic prompting patterns that readers can learn from:
 
-<!--more-->
-
-## Table of contents
-
-...
-```
-
-### 2. Metadata Display
-
-- Use inline format for stats: `📊 55 tests • 📄 5 PRs • 🏗️ Feature built`
-- Date format: `📅 Month Day, Year • 🏗️ Day N`
-- Confidence levels: `☕ Confidence: Start: 3/10 | End: 6/10`
-- Pattern metrics: `🔍 8 patterns • 🤝 Collaboration: 7/10`
-
-### 3. SEO Requirements
-
-- Always include `description:` field (150-160 characters)
-- Use relevant tags and categories
-- Keep titles descriptive but concise
-
-### 4. Visual Consistency
-
-- NO label badges - use inline text with emojis
-- Consistent emoji usage throughout
-- Clean, integrated appearance
-
-## Blog Post Format (for main blog)
-
-```yaml
----
-layout: post
-title: "Your Title Here"
-subtitle: "Brief description of what was accomplished"
-date: YYYY-MM-DD
-day: N # Day number of development
-tags: [tag1, tag2, tag3]
-stats: ["📊 X tests passing", "📄 Y PRs merged", "⏱️ Key achievement"]
----
-```
-
-## Gathering Statistics for Blog Posts
-
-Before writing a daily blog post, gather accurate statistics:
-
-```bash
-# Count total tests across all crates
-cargo test --all --quiet 2>&1 | grep -E "test result:" | grep -oE "[0-9]+ passed" | awk '{sum += $1} END {print "Total tests: " sum}'
-
-# List technical PRs merged on the day (adjust dates)
-gh pr list --state merged --limit 50 --json number,title,mergedAt | jq -r '.[] | select(.mergedAt >= "2025-05-28T00:00:00Z" and .mergedAt < "2025-05-29T00:00:00Z") | "\(.number) - \(.title)"' | grep -E "(feat:|fix:|refactor:|perf:|test:)"
-
-# Check current branch for recent commits
-git log --oneline --since="1 day ago" --until="now"
-
-# Verify feature completeness
-grep -E "\[x\].*\(Day [0-9]+\)" TODO.md
-```
-
-## Stats Line Format
-
-- First stat: Always include test count (e.g., "📊 55 tests passing")
-- Second stat: Number of technical PRs merged (exclude docs-only PRs)
-- Remaining stats: Key technical achievements of the day
-- Be specific with numbers and achievements, not generic
-
-## When to Write Blog Posts
-
-- End of each development day (summarizing progress)
-- After major architectural decisions
-- When solving interesting technical challenges
-- After significant refactoring or optimization work
-
-## Making Blog Posts Engaging (Page-Turner Style)
-
-### Create a Relatable Protagonist
-
-You're a humble CRUD developer who never imagined building a database!
-
-### Story Elements to Include
-
-1. **The Hook**: Start with drama or a relatable problem
-
-   - ❌ "Today we implemented SSTables"
-   - ✅ "I stared at the failing tests, coffee cold, wondering if I'd bitten off more than I could chew..."
-
-2. **The Struggle**: Show real challenges
-
-   - "For three hours, I fought with Rust's borrow checker like it was my nemesis"
-   - "The segfault appeared out of nowhere - my old CRUD reflexes were useless here"
-
-3. **The AI Save**: Give Claude credit when deserved
-
-   - "Then Claude dropped a knowledge bomb that changed everything"
-   - "I was ready to give up when Claude suggested something I'd never considered"
-
-4. **The Insight**: Share what you learned
-
-   - "That's when it clicked - databases aren't magic, they're just really clever file management!"
-   - "Who knew that 'eventual consistency' meant 'eventually I'd understand this'?"
-
-5. **The Human Touch**: Address AI replacement fears
-   - "Working with Claude proved my job is safe - AI amplifies developers, it doesn't replace them"
-   - "Claude can write code, but only I can decide what code _should_ be written"
-
-### Engagement Techniques
-
-- **Running Jokes**: Develop recurring themes
-
-  - "My CRUD brain vs database reality"
-  - "Coffee count: 7 cups and counting..."
-  - "Rust compiler: 1, Me: 0 (but I'm learning!)"
-
-- **Pop Culture References**: Make it relatable
-
-  - "I felt like Neo seeing the Matrix for the first time"
-  - "This bug was my white whale"
-  - "Claude became my Yoda in the database arts"
-
-- **Visual Breaks**: Use emojis and formatting
-
-  - 🎉 for victories
-  - 😱 for shocking discoveries
-  - 💡 for "aha!" moments
-  - 🤦 for facepalm mistakes
-
-- **Mini-Cliffhangers**: Keep readers scrolling
-
-  - "Little did I know, this simple change would cascade into..."
-  - "The solution was right there, but I wouldn't see it for another hour"
-  - "And that's when everything went sideways..."
-
-- **Relatable Comparisons**:
-  - "Building a database is like assembling IKEA furniture in the dark"
-  - "Debugging this was like finding a specific grain of sand on a beach"
-  - "The skip list finally clicked - it's just a subway system for data!"
-
-## Realistic Prompting Style
-
-Based on reader feedback, the blog should show authentic human-AI collaboration through realistic prompts and responses:
-
-### What to Include
-
-- **Actual prompts**: Real questions a developer would ask
-- **Full AI responses**: Complete technical explanations with code
-- **Follow-up questions**: Natural back-and-forth clarification
-- **Real errors**: Actual compilation errors and debugging sessions
-- **Learning progression**: How understanding deepens through interaction
-
-### Example Format
-
-Instead of theatrical dialogue:
-```
-Me: "I'm ready for Super Saiyan Tables!"
-Claude: "...it's Sorted String Table."
-```
-
-Use realistic prompting:
 ```
 Me: I need to implement SSTables next. Can you explain the basic structure 
 and what components I need to build?
 
 Claude: SSTables (Sorted String Tables) are immutable files that store 
 sorted key-value pairs. Here's what you'll need to implement:
-[detailed technical explanation with code]
+
+1. File format with these components:
+   - Data blocks (4KB each with sorted entries)
+   - Index block (for binary search across blocks)
+   - Footer (metadata and checksums)
+
+[code example]
 
 Me: Why do we need blocks instead of just writing all data sequentially?
 
-Claude: Good question! Sequential writing would be simpler, but...
-[explains tradeoffs with specific examples]
+Claude: Good question! Sequential writing would be simpler, but it creates 
+problems at scale:
+- To find a key in a 1GB file, you'd need to scan the entire file
+- With blocks, you only read ~4KB after finding the right block
+- This changes lookup from O(n) to O(log n)
 ```
 
-### Benefits of This Style
+### 3. Maintain Your Personality
 
-- **Educational**: Readers learn actual prompting techniques
-- **Authentic**: Shows real human-AI interaction patterns  
-- **Practical**: Demonstrates effective collaboration with LLMs
-- **Relatable**: Readers recognize their own AI interactions
+Between technical exchanges, add your colorful commentary:
 
-### What to Keep from the Original Style
+- Running gags (coffee count, compiler battles)
+- Pop culture references that fit
+- Honest reactions and emotions
+- Relatable comparisons
 
-- **Your personality**: Still show frustration, excitement, confusion in narrative
-- **Humor**: Keep the coffee count, funny observations between prompts
-- **Real struggles**: Show actual errors and debugging
-- **Story arc**: Maintain the journey from confusion to understanding
+### 4. Document the Journey
 
-## Absolute Honesty About Contributions
+- Show compilation errors and debugging sessions
+- Include "aha!" moments when concepts click
+- Track confidence levels throughout
+- Share what you learned in plain language
 
-CRITICAL: Always accurately represent who suggested what idea or solution:
+## Technical Requirements
 
-- **Credit the human**: When the human suggests an optimization or finds a bug, they get credit
-- **Credit Claude**: When Claude implements or explains something, Claude gets credit
-- **No role reversal**: Never swap who did what for dramatic effect
-- **Verify with Claude's blog**: Cross-check stories with Claude's perspective for accuracy
-- **True collaboration**: Show the real back-and-forth, not a fictional version
-- **Study collaboration effectiveness**: Accurate records help us understand what makes human-AI partnerships successful
+### Frontmatter Format
 
-Examples:
+```yaml
+---
+layout: post
+title: "Day N: Catchy Title That Describes the Achievement"
+subtitle: "Brief context or humor"
+description: "SEO description 150-160 chars"
+date: YYYY-MM-DD
+day: N
+tags: [tag1, tag2, tag3, tag4, tag5]
+stats: ["📊 X tests passing", "📄 Y PRs merged", "🏗️ Key achievement"]
+confidence: "Start: X/10 ☕ | End: Y/10 ☕☕"
+compilation_attempts: "XX (optional funny note)"
+---
+```
 
-- ✅ "I suggested binary search and Claude implemented it"
-- ❌ "Claude suggested binary search" (if the human actually suggested it)
-- ✅ "I noticed the API was confusing, Claude helped refactor it"
-- ❌ "Claude noticed the API issue" (if the human actually noticed it)
+### Required Elements
 
-The goal is an honest, engaging story - not fiction. Readers should trust that while the tone is fun, the facts are real.
+1. **Excerpt separator**: Add `<!--more-->` after opening paragraph
+2. **Table of contents**: Include TOC after excerpt
+3. **Statistics**: Gather accurate numbers before writing
+4. **Attribution**: Credit ideas accurately to human or AI
 
-## Why Accuracy Matters for Both Blogs
+## Gathering Statistics
 
-Maintaining truthful records in both human and Claude blogs is essential because:
+```bash
+# Count tests
+cargo test --all --quiet 2>&1 | grep -E "test result:" | grep -oE "[0-9]+ passed"
 
-- **Research value**: Future teams studying human-AI collaboration need accurate data
-- **Pattern recognition**: We can only identify effective collaboration patterns from true events
-- **Trust building**: Readers rely on our honesty to understand real vs imagined capabilities
-- **Learning opportunity**: Honest mistakes and corrections teach more than fictional successes
+# List PRs merged today
+gh pr list --state merged --limit 50 --json number,title,mergedAt | \
+  jq -r '.[] | select(.mergedAt >= "YYYY-MM-DD") | "\(.number) - \(.title)"'
 
-## Template Usage
+# Recent commits
+git log --oneline --since="1 day ago"
+```
 
-- **Human blog template** (`docs/_posts/blog-post-template.md`): For daily development posts from the human perspective
-- **Claude blog template** (`docs/_claude_blog/blog-post-template.md`): For Claude's pattern-recognition focused posts
-- Templates ensure consistency in structure, metrics, and personality
-- Modify templates as needed but maintain the core personality traits
+## Engagement Techniques
 
-## Publishing Process
+### Visual Elements
+- 🎉 Victories
+- 😱 Shocking discoveries  
+- 💡 "Aha!" moments
+- 🤦 Facepalm mistakes
+- ☕ Coffee count tracker
 
-1. Create post using appropriate template
-2. Include actual statistics gathered from commands
-3. Review for accuracy and engagement
-4. Lint with prettier and markdownlint
-5. Submit PR with "blog" label
+### Narrative Devices
+- Mini-cliffhangers between sections
+- Relatable analogies (e.g., "like IKEA furniture assembly")
+- Running jokes that develop over time
+- Honest vulnerability about struggles
+
+### Educational Value
+- Show effective prompting techniques
+- Explain concepts in accessible terms
+- Include working code examples
+- Document real errors and fixes
+
+## Absolute Accuracy
+
+Always maintain truthful attribution:
+
+- If human suggested it → human gets credit
+- If Claude implemented it → Claude gets credit  
+- If collaboration → explain who did what
+- Cross-reference with Claude's blog for consistency
+
+This matters because:
+- Builds reader trust
+- Provides research value
+- Shows real collaboration patterns
+- Teaches authentic lessons
+
+## Publishing Checklist
+
+1. ✅ Used appropriate template
+2. ✅ Gathered accurate statistics
+3. ✅ Included realistic AI interactions
+4. ✅ Maintained engaging narrative voice
+5. ✅ Credited contributions accurately
+6. ✅ Added SEO description
+7. ✅ Ran markdown linters
+8. ✅ Created PR with "blog" label
+
+## Remember
+
+You're writing for:
+- Developers curious about AI collaboration
+- People learning database internals
+- Readers who enjoy technical journeys
+- Future researchers studying human-AI work
+
+Make it educational, honest, and fun!
