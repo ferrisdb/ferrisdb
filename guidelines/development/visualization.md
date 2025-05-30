@@ -2,6 +2,9 @@
 
 Standards for creating clear, consistent visualizations in FerrisDB documentation.
 
+**Purpose**: Define standards for creating ASCII diagrams and tables that enhance understanding of complex concepts.  
+**Prerequisites**: Basic understanding of markdown and ASCII art
+
 ## Purpose
 
 Visual representations help readers understand complex concepts quickly. We use ASCII diagrams and tables as our primary visualization tools because they:
@@ -355,3 +358,10 @@ When reviewing documentation with visualizations:
 - [ ] Diagrams match the actual implementation
 - [ ] Complex diagrams have explanatory text
 - [ ] Symbols are used consistently
+
+## Related Guidelines
+
+- [Documentation](documentation.md) - Where visualizations are used
+- [Markdown Standards](markdown-standards.md) - Formatting diagrams
+- [Website Design](../content/website-design.md) - Mermaid diagrams for web
+- [Architecture](../technical/architecture.md) - System diagrams

@@ -2,6 +2,9 @@
 
 This document outlines Rust-specific best practices and patterns for FerrisDB. Following these guidelines ensures our code is maintainable, performant, and leverages Rust's strengths.
 
+**Purpose**: Guide developers in writing Rust code that is safe, efficient, and follows community best practices.  
+**Prerequisites**: Solid understanding of Rust ownership, borrowing, lifetimes, and trait system
+
 ## Module Organization
 
 ### File Naming
@@ -325,6 +328,9 @@ for item in items {
 }
 ```
 
----
+## Related Guidelines
 
-_Next: [Documentation Standards](documentation.md)_
+- **Previous**: [Code Style](code-style.md) - Formatting and conventions
+- **Next**: [Documentation](documentation.md) - Documenting your code
+- **Also See**: [Testing](../workflow/testing.md) - Writing idiomatic tests
+- **Reference**: [Performance](../technical/performance.md) - Performance best practices

@@ -2,6 +2,9 @@
 
 Comprehensive guidelines for markdown documentation in FerrisDB, including quality standards, formatting rules, and tool configuration.
 
+**Purpose**: Ensure consistent, high-quality markdown documentation across the project.  
+**Prerequisites**: Basic markdown knowledge, prettier and markdownlint installed
+
 ## Quick Start
 
 Before committing any markdown:

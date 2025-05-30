@@ -2,6 +2,9 @@
 
 Comprehensive guidelines for creating, reviewing, and merging pull requests in FerrisDB.
 
+**Purpose**: Ensure consistent, high-quality pull requests that maintain code quality and project standards.  
+**Prerequisites**: Understanding of git, GitHub, and the FerrisDB contribution process
+
 ## Pull Request Policy
 
 - **All changes must go through PRs** - This includes:
@@ -394,3 +397,10 @@ Before approving a PR, ensure:
 6. **Communicate** if PR is blocked or needs help
 7. **Be patient** with reviews and CI
 8. **Learn** from review feedback
+
+## Related Guidelines
+
+- [Git Workflow](git-workflow.md) - Branching and commit standards
+- [Testing](testing.md) - Test requirements for PRs
+- [Code Style](../development/code-style.md) - Code standards
+- [Commands](commands.md) - PR commands reference

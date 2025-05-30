@@ -2,6 +2,9 @@
 
 Educational articles that teach Rust concepts through real FerrisDB code, comparing with other languages to help CRUD developers understand Rust.
 
+**Purpose**: Create educational content that teaches Rust through practical database examples with language comparisons.  
+**Prerequisites**: Proficiency in Rust and at least one other language (JavaScript, Python, Java, or Go)
+
 ## Purpose
 
 These articles bridge the gap between CRUD development and systems programming by teaching Rust concepts through practical database engineering examples, with comparisons to familiar languages.
@@ -241,3 +244,10 @@ type MemTable struct {
 4. Review for balanced language comparisons
 5. Lint with prettier and markdownlint
 6. Submit PR with "rust-by-example" label
+
+## Related Guidelines
+
+- [Idiomatic Rust](../development/idiomatic-rust.md) - Rust best practices
+- [Database Concepts](database-concepts-articles.md) - Technical depth
+- [Documentation](../development/documentation.md) - Writing standards
+- [Code Style](../development/code-style.md) - Code examples formatting

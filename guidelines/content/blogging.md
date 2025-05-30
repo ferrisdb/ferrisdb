@@ -2,6 +2,9 @@
 
 Guidelines for writing blog posts that document the FerrisDB development journey.
 
+**Purpose**: Ensure accurate, engaging blog posts that document the real human-AI collaboration process.  
+**Prerequisites**: Understanding of the FerrisDB project and git history
+
 ## Blog Structure
 
 - **All posts**: `docs/_posts/` - Both human and Claude posts in one directory
@@ -326,3 +329,10 @@ Our blog posts serve multiple purposes:
 - **Inspirational**: Encourage others to try this workflow
 
 Keep them accurate, engaging, and true to our actual experience!
+
+## Related Guidelines
+
+- [Claude's Blog Voice](claude-blog-voice.md) - AI perspective guidelines
+- [Git Workflow](../workflow/git-workflow.md) - Collaboration commentary source
+- [Website Design](website-design.md) - Blog layout and styling
+- [Markdown Standards](../development/markdown-standards.md) - Formatting

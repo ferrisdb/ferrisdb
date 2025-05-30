@@ -2,6 +2,9 @@
 
 This document outlines the code style standards for FerrisDB. Consistent style makes the codebase easier to read, understand, and maintain.
 
+**Purpose**: Define formatting and style conventions for all Rust code in FerrisDB.  
+**Prerequisites**: Basic Rust knowledge and familiarity with cargo tools
+
 ## Rust Formatting
 
 ### Basic Rules

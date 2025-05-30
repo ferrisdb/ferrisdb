@@ -2,6 +2,9 @@
 
 Quick reference for frequently used commands in FerrisDB development.
 
+**Purpose**: Provide a single reference for all commonly used development and maintenance commands.  
+**Prerequisites**: Basic familiarity with command line, git, and cargo
+
 ## Development Commands
 
 ### Building
@@ -228,3 +231,10 @@ Run these commands before every commit:
 3. `cargo test --all` - Run tests
 4. `prettier --write "**/*.md"` - Format markdown
 5. `markdownlint-cli2 "**/*.md"` - Lint markdown
+
+## Related Guidelines
+
+- [Git Workflow](git-workflow.md) - Using git commands effectively
+- [Website Maintenance](website-maintenance.md) - Maintenance workflows
+- [Testing](testing.md) - Test command details
+- [Markdown Standards](../development/markdown-standards.md) - Markdown tools

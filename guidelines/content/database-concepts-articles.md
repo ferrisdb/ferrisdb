@@ -2,6 +2,9 @@
 
 Comprehensive technical articles that thoroughly explain database concepts through FerrisDB's implementation. These are the authoritative technical references for understanding database internals.
 
+**Purpose**: Create comprehensive educational articles that explain database concepts using FerrisDB as a concrete example.  
+**Prerequisites**: Strong understanding of database systems and technical writing
+
 ## Purpose
 
 Database concepts articles serve as the primary educational resource for understanding how databases work "under the hood" using FerrisDB as a concrete implementation example.
@@ -233,3 +236,10 @@ Example calculation:
 4. Review for technical accuracy with FerrisDB maintainers
 5. Lint with prettier and markdownlint
 6. Submit PR with "database-concepts" label
+
+## Related Guidelines
+
+- [Visualization](../development/visualization.md) - Creating diagrams
+- [Documentation](../development/documentation.md) - Technical writing standards
+- [Architecture](../technical/architecture.md) - System design reference
+- [Website Design](website-design.md) - Article layout and styling

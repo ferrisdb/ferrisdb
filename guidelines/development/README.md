@@ -2,6 +2,8 @@
 
 This directory contains all development standards and best practices for FerrisDB.
 
+**Purpose**: Index of all development-related guidelines for code quality and documentation standards.
+
 ## Guidelines
 
 - [Code Style](code-style.md) - Rust formatting and conventions
@@ -26,3 +28,9 @@ This directory contains all development standards and best practices for FerrisD
 3. **Visual when helpful** - Use diagrams to clarify complex concepts
 4. **Consistent style** - Follow established patterns
 5. **Test everything** - No code without tests
+
+## Related Sections
+
+- [Content Creation](../content/) - Writing documentation and articles
+- [Development Workflow](../workflow/) - Development processes
+- [Technical Architecture](../technical/) - System design guidelines

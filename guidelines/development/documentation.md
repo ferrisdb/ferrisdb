@@ -2,6 +2,9 @@
 
 Guidelines for documenting FerrisDB code and technical specifications.
 
+**Purpose**: Ensure comprehensive and consistent documentation across all FerrisDB code and specifications.  
+**Prerequisites**: Understanding of Rust doc comments and markdown
+
 ## Code Documentation Standards
 
 ### Public API Documentation
@@ -282,3 +285,10 @@ cargo test --doc --package ferrisdb-storage
 - Note when features were added
 - Document deprecations clearly
 - Maintain compatibility notes
+
+## Related Guidelines
+
+- [Code Style](code-style.md) - Code formatting standards
+- [Visualization](visualization.md) - Creating diagrams for documentation
+- [Markdown Standards](markdown-standards.md) - Markdown formatting
+- [Website Design](../content/website-design.md) - Public documentation

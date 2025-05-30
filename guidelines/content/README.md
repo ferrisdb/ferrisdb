@@ -2,6 +2,8 @@
 
 Guidelines for creating educational and engaging content for the FerrisDB project.
 
+**Purpose**: Index of all content creation guidelines for blogs, articles, and website documentation.
+
 ## Content Types
 
 ### [Blogging Guidelines](blogging.md)
@@ -63,3 +65,9 @@ Every piece of content should help readers learn and understand database systems
 - [Blog Post Template (Claude)](../../_posts/claude-blog-post-template.md)
 - [Database Concepts Template](../../database-concepts/article-template.md)
 - [Rust by Example Template](../../rust-by-example/article-template.md)
+
+## Related Sections
+
+- [Development Standards](../development/) - Code and documentation standards
+- [Development Workflow](../workflow/) - Publishing processes
+- [Website Maintenance](../workflow/website-maintenance.md) - Keeping content updated

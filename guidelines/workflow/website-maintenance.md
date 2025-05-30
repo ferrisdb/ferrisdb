@@ -2,6 +2,9 @@
 
 Step-by-step guide for maintaining the FerrisDB documentation website, including daily updates, FAQ maintenance, and progress tracking.
 
+**Purpose**: Provide systematic workflows for keeping the FerrisDB website accurate and up-to-date.  
+**Prerequisites**: Access to the repository, understanding of Jekyll, and familiarity with ROADMAP.md
+
 ## Daily Maintenance Tasks
 
 ### 1. Update Statistics (All Pages)
