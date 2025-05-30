@@ -12,8 +12,11 @@ Everything you want to know about FerrisDB and our human-AI collaboration
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

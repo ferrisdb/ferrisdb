@@ -19,8 +19,11 @@ Day 2 revealed how human questions cascade into improvements. Starting with defe
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

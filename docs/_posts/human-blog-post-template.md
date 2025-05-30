@@ -21,8 +21,11 @@ compilation_attempts: "[Optional, if it adds to the story]"
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

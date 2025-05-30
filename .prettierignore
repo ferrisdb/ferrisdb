@@ -1,0 +1,30 @@
+# Prettier ignore file
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+target/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.zip
+
+# Cargo files
+Cargo.lock
+
+# Don't format these files as they have special Jekyll/Kramdown syntax
+# that prettier incorrectly modifies

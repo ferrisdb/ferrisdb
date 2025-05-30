@@ -10,6 +10,7 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 - [Idiomatic Rust](development/idiomatic-rust.md) - Rust best practices and patterns
 - [Documentation](development/documentation.md) - Code documentation standards
 - [Markdown Quality](development/markdown-quality.md) - Markdown formatting and linting
+- [Markdown Tooling](development/markdown-tooling.md) - Prettier/markdownlint configuration
 
 ### 🎨 Content Creation
 

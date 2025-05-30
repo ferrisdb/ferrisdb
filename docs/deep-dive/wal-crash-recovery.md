@@ -15,8 +15,11 @@ How Write-Ahead Logs ensure data durability and enable crash recovery in databas
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

@@ -6,16 +6,21 @@ Ensuring consistent, high-quality markdown documentation across FerrisDB.
 
 1. **Format first**: `prettier --write "**/*.md"`
 2. **Lint second**: `markdownlint-cli2 "**/*.md"`
-3. **Fix any remaining issues manually** - prettier doesn't catch everything
-4. **Verify clean**: Run linter again to ensure no errors
+3. **Both must pass** before committing any markdown changes
 
-## Common Issues Prettier Might Miss
+## Tool Configuration
 
-- Lists need blank lines before and after
-- Code blocks need blank lines before and after
-- Headers need blank lines before and after
+### Prettier
 
-**Note**: Consider adding `.prettierrc` configuration to ensure consistent formatting that aligns with markdownlint rules.
+- Handles all formatting (indentation, spacing, line breaks)
+- Configured to work with Jekyll/kramdown using `prettier-ignore` comments
+- See [Markdown Tooling](markdown-tooling.md) for kramdown compatibility details
+
+### Markdownlint
+
+- Handles best practices and non-formatting issues
+- Formatting rules disabled in `.markdownlint.json` to avoid conflicts with prettier
+- See `.markdownlint.json` for disabled rules
 
 ## Markdown Linting Commands
 
@@ -151,6 +156,20 @@ let x = 42;
 - Include `<!--more-->` for post excerpts
 - Use liquid tags properly (spaces around filters)
 - Test locally with `bundle exec jekyll serve`
+
+### Jekyll/kramdown TOC Formatting
+
+For Table of Contents, use our standard format with prettier-ignore:
+
+```markdown
+<!-- prettier-ignore-start -->
+
+1. TOC
+{:toc}
+<!-- prettier-ignore-end -->
+```
+
+This prevents prettier from indenting `{:toc}` which would break Jekyll's processing.
 
 ### Just the Docs Theme
 

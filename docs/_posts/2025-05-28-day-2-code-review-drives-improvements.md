@@ -29,8 +29,11 @@ Day 2 showed how simple questions during code review can lead to major improveme
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

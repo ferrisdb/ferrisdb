@@ -19,8 +19,11 @@ Day 1 of FerrisDB revealed a fundamental pattern: when humans say "help me build
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

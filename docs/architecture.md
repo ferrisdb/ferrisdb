@@ -12,8 +12,11 @@ Comprehensive design document for FerrisDB's distributed database architecture
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 

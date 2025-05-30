@@ -175,6 +175,12 @@ git checkout -b feature/your-feature-name
 # Make your changes
 vim src/module.rs
 
+# Format and lint before staging (REQUIRED)
+cargo fmt --all
+cargo clippy --all-targets --all-features -- -D warnings
+prettier --write "**/*.md"
+markdownlint-cli2 "**/*.md"
+
 # Check status
 git status
 

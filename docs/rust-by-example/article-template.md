@@ -18,8 +18,11 @@ Understanding [concept] through FerrisDB examples, compared with JavaScript, Pyt
 
 {: .no_toc .text-delta }
 
+<!-- prettier-ignore-start -->
+
 1. TOC
-   {:toc}
+{:toc}
+<!-- prettier-ignore-end -->
 
 ---
 
