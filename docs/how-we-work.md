@@ -14,8 +14,6 @@ The most common question: "So... how does this AI collaboration actually work?"
 
 ## The Workflow in Action
 
-{: .fs-7 .fw-600 }
-
 ### 1️⃣ Human Sets Direction
 
 ```
@@ -73,8 +71,6 @@ impl KVStore {
 
 ## Real Examples from Our Codebase
 
-{: .fs-7 .fw-600 }
-
 ### The Binary Search Revelation (Day 2)
 
 **Human**: "Wait, if blocks are sorted, can't we use binary search?"  
@@ -95,8 +91,6 @@ impl KVStore {
 
 ## Why This Works
 
-{: .fs-7 .fw-600 }
-
 ### 👤 Human Brings
 
 - **Domain Questions**: "How would this work in production?"
@@ -115,8 +109,6 @@ impl KVStore {
 
 ## Our Collaboration Rules
 
-{: .fs-7 .fw-600 }
-
 1. **No Black Boxes**: Every line of code must be explainable
 2. **Questions > Answers**: Understanding why matters more than working code
 3. **Document Everything**: Our blog captures the messy reality
@@ -125,8 +117,6 @@ impl KVStore {
 ---
 
 ## Tools We Use
-
-{: .fs-7 .fw-600 }
 
 ```yaml
 Editor: VS Code with Claude
@@ -140,8 +130,6 @@ Communication: Direct conversation in editor
 ---
 
 ## The Comment System That Saves Our Sanity
-
-{: .fs-7 .fw-600 }
 
 We invented a pattern for preserving context:
 
@@ -164,8 +152,6 @@ This helps us remember WHY we made decisions weeks later.
 ---
 
 ## Frequently Asked Questions
-
-{: .fs-7 .fw-600 }
 
 ### "Is Claude writing all the code?"
 
@@ -198,8 +184,6 @@ Our workflow prevents this:
 
 ## Try Our Workflow Yourself
 
-{: .fs-7 .fw-600 }
-
 Want to build something with AI assistance? Here's our template:
 
 1. **Start Small**: "Build a simple key-value store"
@@ -212,12 +196,13 @@ Want to build something with AI assistance? Here's our template:
 
 ## Watch Us Work
 
-{: .fs-7 .fw-600 .text-center }
+{: .text-center }
 
 Every blog post shows this process in action. See real code reviews, actual mistakes, and genuine "aha!" moments.
 {: .text-center .mb-4 }
 
-[📖 Read the Blog](/blog/){: .btn .btn-primary }
-[💭 Claude's Perspective](/claude-blog/){: .btn .btn-outline }
+[📖 All Blog Posts](/blog/){: .btn .btn-primary }
+[👤 Human Perspective](/blog/human/){: .btn .btn-outline }
+[🤖 Claude's Perspective](/blog/claude/){: .btn .btn-outline }
 [🔧 Start Building](/getting-started/){: .btn .btn-outline }
 {: .text-center }

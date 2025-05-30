@@ -26,6 +26,8 @@ Everything you want to know about FerrisDB and our human-AI collaboration
 
 FerrisDB is an educational distributed database project built in Rust. It's inspired by FoundationDB and implements a real LSM-tree based storage engine, WAL for durability, and eventually will include distributed consensus. The key difference? We're building it completely in public, documenting every decision, mistake, and learning moment.
 
+**Current Progress**: Day 2 of development with 3,694 lines of Rust code, 44 passing tests, and 6 blog posts documenting our journey.
+
 ### Is FerrisDB production-ready?
 
 **No!** FerrisDB is explicitly an educational project. While we're building real database components that work, this is not intended for production use. Think of it as a fully functional teaching tool - it works, but it's optimized for learning, not for your production workload.
@@ -64,7 +66,7 @@ Claude serves multiple roles:
 - **Implementation partner**: Helps write actual Rust code and debug issues
 - **Pattern recognizer**: Identifies common mistakes and learning opportunities
 - **Documentation assistant**: Helps create clear, comprehensive documentation
-- **Teaching assistant**: Breaks down complex topics for the blog and deep dives
+- **Teaching assistant**: Breaks down complex topics for the blog and database concepts articles
 
 ### Does AI replace human developers?
 
@@ -83,9 +85,10 @@ Claude amplifies human capabilities but can't replace human judgment, creativity
 We're meticulous about attribution:
 
 - Both blogs document who contributed what
-- Git commits clearly show implementation details
+- Git commits include collaboration commentary tracking our process
 - We never swap credit for dramatic effect
-- Accurate attribution helps study effective collaboration
+- Accurate attribution helps study effective collaboration patterns
+- All commits include 🤖 emoji to mark AI collaboration
 
 ## Learning with FerrisDB
 
@@ -102,15 +105,18 @@ FerrisDB is perfect for:
 
 Not necessarily! We offer multiple learning paths:
 
-- **Deep Dives**: Focus on database concepts (language-agnostic)
+- **Database Concepts**: Focus on database concepts (language-agnostic)
 - **Rust by Example**: Learn Rust through database code with comparisons to JavaScript, Python, Java, and Go
-- **Development Blog**: Follow the journey without diving into code
+- **Development Blog**: Follow our collaboration journey from both human and AI perspectives
 
 ### How should I use FerrisDB to learn?
 
-1. **Start with Deep Dives** if you want to understand database concepts
+1. **Start with Database Concepts** if you want to understand database concepts
 2. **Try Rust by Example** if you want to learn Rust through practical code
-3. **Follow the blogs** to understand the development process
+3. **Follow the blogs** to understand the development process:
+   - **[Main Blog](/blog/)**: Combined view of both perspectives
+   - **[Human Perspective](/blog/human/)**: Learning journey and code reviews
+   - **[AI Perspective](/blog/claude/)**: Pattern analysis and collaboration insights
 4. **Run the code locally** to experiment and learn by doing
 5. **Contribute** to really solidify your understanding
 
@@ -158,10 +164,11 @@ Starting from scratch means:
 
 FerrisDB follows a layered architecture inspired by FoundationDB:
 
-- **Storage Engine**: LSM-tree with MemTable and SSTables
-- **Transaction Layer**: MVCC for isolation (in progress)
+- **Storage Engine**: LSM-tree with MemTable (Skip List) and SSTables ✅
+- **Write-Ahead Log**: Crash recovery and durability ✅
+- **Transaction Layer**: MVCC for isolation (planned)
 - **Distribution Layer**: Consensus and sharding (planned)
-- **Client Library**: Simple key-value API
+- **Client Library**: Simple key-value API (planned)
 
 ### How can I run it?
 
@@ -210,19 +217,19 @@ Yes! We welcome contributions:
 
 ### Is there a roadmap?
 
-Yes! Check our [TODO.md](https://github.com/ferrisdb/ferrisdb/blob/main/TODO.md) for the current roadmap. We update it regularly as we progress.
+Yes! Check our [ROADMAP.md](https://github.com/ferrisdb/ferrisdb/blob/main/ROADMAP.md) for the current roadmap. We update it regularly as we progress.
 
 ## The Future
 
 ### What's next for FerrisDB?
 
-Immediate priorities:
+Based on our [ROADMAP.md](https://github.com/ferrisdb/ferrisdb/blob/main/ROADMAP.md), immediate priorities:
 
-1. Complete compaction implementation
-2. Add bloom filters for read optimization
-3. Implement MVCC transactions
-4. Build consensus layer
-5. Add distribution features
+1. **Basic Operations**: Get/Put/Delete operations, batch writes, range queries
+2. **Storage Optimization**: Compaction, bloom filters, block cache, compression
+3. **ACID Transactions**: MVCC foundation, snapshot isolation, optimistic concurrency
+4. **Distribution Layer**: Consensus protocols, replication, sharding
+5. **Production Features**: Monitoring, backup/restore, client libraries
 
 ### Will FerrisDB ever be production-ready?
 
@@ -244,7 +251,7 @@ As long as there's something valuable to learn and teach! We're documenting not 
 If your question isn't answered here, please:
 
 1. Check our [documentation](/getting-started/)
-2. Read the [deep dive articles](/database-concepts/)
+2. Read the [database concepts articles](/database-concepts/)
 3. [Open an issue](https://github.com/ferrisdb/ferrisdb/issues) on GitHub
 
 Remember: every question helps improve this FAQ and helps others learn!

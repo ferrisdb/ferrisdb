@@ -36,6 +36,8 @@ Welcome! This is the quick reference for FerrisDB development. For detailed guid
 - **"Create a deep dive"** → [Deep Dive Articles](docs/guidelines/content/deep-dive-articles.md)
 - **"Explain Rust concepts"** → [Rust by Example](docs/guidelines/content/rust-by-example.md)
 - **"Update the website"** → [Website Design](docs/guidelines/content/website-design.md)
+- **"Update FAQ.md"** → [FAQ Maintenance](docs/guidelines/content/website-design.md#faq-maintenance)
+- **"Update statistics"** → [Cached Statistics](docs/guidelines/content/website-design.md#faq-maintenance) (avoids recomputing for same commit)
 
 ### Process & Workflow Tasks
 

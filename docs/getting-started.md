@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting Started
-nav_order: 8
+nav_order: 7
 permalink: /getting-started/
 ---
 
@@ -181,11 +181,12 @@ ls ferrisdb-storage/src/memtable/
 # Files: skiplist.rs, memtable.rs, mod.rs
 ```
 
-#### 🚧 SSTable (In Progress)
+#### ✅ SSTable Format & Reader
 
 - **Location**: `ferrisdb-storage/src/sstable/`
-- **Status**: Basic structure, needs implementation
-- **Next**: File format, compression, bloom filters
+- **Status**: Complete with tests
+- **Features**: Binary file format, SSTable reader implementation
+- **Next**: Compaction, bloom filters, compression
 
 ### Reading the Code
 
@@ -273,13 +274,13 @@ Follow the guidelines in `CLAUDE.md`:
 
 ### Areas for Contribution
 
-Current priorities for contributors:
+Current priorities for contributors (based on [ROADMAP.md](https://github.com/ferrisdb/ferrisdb/blob/main/ROADMAP.md)):
 
-1. **SSTable Implementation** - File format, compression, bloom filters
-2. **Compaction Strategy** - Background merging and optimization
-3. **Integration Tests** - Multi-threaded scenarios
-4. **Benchmarks** - Performance measurement
-5. **Documentation** - API docs and examples
+1. **Basic Operations** - Get/Put/Delete operations, batch writes, range queries
+2. **Storage Optimization** - Compaction strategy, bloom filters, block cache, compression
+3. **Integration Tests** - Multi-threaded scenarios and edge cases
+4. **Benchmarks** - Performance measurement and optimization
+5. **Documentation** - API docs, examples, and learning materials
 
 ### Submitting Changes
 

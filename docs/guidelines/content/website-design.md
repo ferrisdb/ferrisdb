@@ -251,10 +251,10 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 ### Daily/Weekly Updates
 
 - [ ] Update progress stats on homepage and start-here page:
-  - Days: `git log --format="%ad" --date=short -- "*.rs" "Cargo.toml" | sort | uniq | wc -l`
-  - Lines of Rust code: `find . -path ./target -prune -o -name "*.rs" -type f -print | xargs wc -l | tail -1`
-  - Test count: `grep -r "#\[test\]" --include="*.rs" . | wc -l`
-  - Rust commits: `git log --oneline -- "*.rs" "Cargo.toml" "Cargo.lock" | wc -l`
+  - Use cached statistics function (see FAQ Maintenance Commands below)
+  - Update all pages with consistent stats from same commit
+  - Only recomputes if HEAD commit has changed since last cache
+- [ ] Update FAQ.md statistics and accuracy (see FAQ Maintenance section below)
 
 ### Update ALL Progress Sections from ROADMAP.md
 
@@ -352,6 +352,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 ### When New Features Are Ready
 
 - [ ] **When Binary/REPL is Available**: Update "Try It Now" sections
+
   - Homepage: Replace "See The Code In Action" with actual REPL example
   - Start-here: Add interactive playground example
   - Example format:
@@ -365,6 +366,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
     ferris> get key
     "value"
     ```
+
 - [ ] **When Examples are Added**: Update with `cargo run --example`
 - [ ] **When Server is Ready**: Add client connection examples
 
@@ -375,6 +377,107 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] **Check blog cross-references**: Verify companion post links between human/Claude blogs
 - [ ] **Validate external links**: GitHub repo, issues, discussions links still work
 - [ ] **Content accuracy check**: All technical claims match actual ROADMAP.md progress
+
+### FAQ Maintenance
+
+**Daily Updates (`/faq.md`):**
+
+- [ ] **Update Statistics** in "What is FerrisDB?" section:
+
+  - Current Progress line: Update development days, lines of code, tests, blog posts
+  - Use commands from Daily/Weekly Updates section above
+  - Ensure consistency with homepage (`/index.md`) statistics
+
+- [ ] **Verify Links** (all must work):
+  - Internal: `/blog/`, `/blog/human/`, `/blog/claude/`, `/getting-started/`, `/database-concepts/`
+  - External: GitHub repo, CONTRIBUTING.md, ROADMAP.md, issues page
+  - Navigation: All internal FAQ anchors and cross-references
+
+**Weekly Updates (`/faq.md`):**
+
+- [ ] **Progress Accuracy** against ROADMAP.md:
+
+  - "What's the architecture?" section: Update ✅ status for completed components
+  - "What's next for FerrisDB?" section: Ensure priorities match current ROADMAP.md order
+  - Remove/add features only if ROADMAP.md changes
+
+- [ ] **Blog Structure References**:
+  - "How should I use FerrisDB to learn?" section: Verify blog links and descriptions
+  - Ensure three-perspective blog approach is accurately described
+
+**Monthly Updates (`/faq.md`):**
+
+- [ ] **Content Accuracy Review**:
+
+  - Technical claims about Rust and database concepts
+  - Learning path recommendations and difficulty assessments
+  - Collaboration process descriptions
+  - Community interaction and contribution guidelines
+
+- [ ] **External Link Validation**:
+  - Test all GitHub links for accuracy
+  - Verify CONTRIBUTING.md and ROADMAP.md references
+  - Check that issue tracker and discussions links work
+
+**Commands for FAQ Maintenance:**
+
+```bash
+# Cached statistics script (avoids recomputing for same commit)
+get_cached_stats() {
+    local current_commit=$(git rev-parse HEAD)
+    local cache_file="/tmp/ferrisdb_stats_cache.txt"
+
+    # Check if cache exists and matches current commit
+    if [[ -f "$cache_file" ]]; then
+        local cached_commit=$(head -n1 "$cache_file" 2>/dev/null)
+        if [[ "$cached_commit" == "$current_commit" ]]; then
+            # Use cached stats
+            tail -n+2 "$cache_file"
+            return 0
+        fi
+    fi
+
+    # Compute fresh stats and cache them
+    echo "Computing fresh statistics for commit $current_commit..."
+    local days=$(git log --format="%ad" --date=short -- "*.rs" "Cargo.toml" | sort | uniq | wc -l)
+    local lines=$(find . -path ./target -prune -o -name "*.rs" -type f -print | xargs wc -l | tail -1 | awk '{print $1}')
+    local tests=$(grep -r "#\[test\]" --include="*.rs" . | wc -l)
+    local posts=$(find docs/_posts -name "*.md" | grep -v template | wc -l)
+
+    # Cache results
+    {
+        echo "$current_commit"
+        echo "DAYS=$days"
+        echo "LINES=$lines"
+        echo "TESTS=$tests"
+        echo "POSTS=$posts"
+        echo "SUMMARY=\"Day $days of development with $lines lines of Rust code, $tests passing tests, and $posts blog posts\""
+    } > "$cache_file"
+
+    # Output the stats
+    tail -n+2 "$cache_file"
+}
+
+# Usage Examples:
+
+# 1. Get the summary string directly
+SUMMARY=$(get_cached_stats | grep "SUMMARY=" | cut -d= -f2- | tr -d '"')
+echo "$SUMMARY"
+
+# 2. Source all stats as variables
+eval "$(get_cached_stats)"
+echo "Days: $DAYS, Lines: $LINES, Tests: $TESTS, Posts: $POSTS"
+
+# 3. Get individual values
+DAYS_COUNT=$(get_cached_stats | grep "DAYS=" | cut -d= -f2)
+LINES_COUNT=$(get_cached_stats | grep "LINES=" | cut -d= -f2)
+
+# Benefits:
+# - First call computes and caches (takes ~2-3 seconds)
+# - Subsequent calls use cache (instant, <0.1 seconds)
+# - Cache invalidates automatically when HEAD commit changes
+# - Perfect for maintenance sessions updating multiple pages
+```
 
 ### Monthly Review
 
@@ -396,3 +499,5 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] Educational value prioritized
 - [ ] No custom CSS hacks
 - [ ] All progress sections match ROADMAP.md
+- [ ] FAQ.md statistics current and accurate
+- [ ] All FAQ links functional

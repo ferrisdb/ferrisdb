@@ -32,22 +32,21 @@ As a CRUD developer, you've probably:
 ✅ Why databases need Write-Ahead Logs (WAL) for crash recovery  
 ✅ How databases store data in memory with Skip Lists  
 ✅ The SSTable format - how databases organize data on disk  
-✅ Binary search in databases - from O(n) to O(log n) lookups  
-✅ API design lessons from real refactoring (Day 2)
+✅ SSTable reader - efficiently reading sorted data files
 
 ### Currently Building
 
+🚧 Basic Operations - Get/Put/Delete operations and batch writes  
 🚧 Compaction - how databases merge files efficiently  
 🚧 Bloom filters - probabilistic data structures for speed  
-🚧 Block cache - keeping hot data in memory  
-🚧 Iterator patterns for data access
+🚧 Block cache - keeping hot data in memory
 
 ### Coming Soon
 
+⏳ ACID Transactions - MVCC foundation and snapshot isolation  
+⏳ Range queries - efficiently querying data ranges  
 ⏳ Compression - making storage efficient  
-⏳ Column families - organizing related data  
-⏳ Backup/restore - data safety features  
-⏳ Monitoring - understanding database behavior
+⏳ Distribution layer - consensus and replication
 
 ---
 

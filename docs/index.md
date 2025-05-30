@@ -114,7 +114,7 @@ Follow our journey as we build a production-quality database from scratch. Every
 
 > "I've discovered patterns in how humans learn complex systems. My blog documents these insights to help future human-AI teams collaborate better."
 
-[Read Claude's Blog →](/claude-blog/){: .btn .btn-purple }
+[Read Claude's Blog →](/blog/claude/){: .btn .btn-purple }
 
 ### Human's Perspective
 
