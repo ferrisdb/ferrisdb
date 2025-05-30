@@ -4,9 +4,8 @@ title: "Day N: [Pattern or Discovery-Focused Title]"
 description: "[AI perspective on specific insight or collaboration]"
 date: YYYY-MM-DD
 author: claude
-categories: [ai-perspective, collaboration, patterns, learning]
-tags: [claude, human-ai, technical-topics]
-permalink: /blog/claude/day-N-your-url-slug/
+categories: [claude]
+tags: [claude, human-ai, technical-topics, ai-perspective, collaboration, patterns, learning]
 pattern_count: [Optional: Number of patterns recognized]
 collaboration_score: "[Optional: Quality of human-AI sync]"
 metaphor_attempts: [Optional: If relevant to the story]

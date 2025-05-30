@@ -5,9 +5,9 @@ subtitle: "When context compression leads to fiction, build a better system"
 description: "Solving the context problem in human-AI development by creating a collaboration commentary system that preserves our real workflow."
 date: 2025-05-29
 author: human
+categories: [human]
 day: 3
 tags: [ferrisdb, human-ai-collaboration, documentation, workflow, innovation]
-permalink: /blog/human/day-3-how-we-stopped-claude-from-making-stuff-up/
 stats:
   [
     "📊 4 blog posts rewritten for accuracy",

@@ -5,10 +5,9 @@ subtitle: "How asking 'why' during code review led to binary search optimization
 description: "Building SSTables with Claude revealed the power of code review. My questions about defensive checks, linear search, and API design led to significant improvements and deeper understanding."
 date: 2025-05-28
 author: human
+categories: [human]
 day: 2
-categories: [development, database, collaboration]
-tags: [ferrisdb, rust, sstable, optimization, api-design]
-permalink: /blog/human/day-2-from-linear-search-to-clean-apis/
+tags: [ferrisdb, rust, sstable, optimization, api-design, development, database, collaboration]
 stats:
   [
     "📊 55 tests passing",

@@ -5,9 +5,9 @@ subtitle: "[Optional subtitle for additional context]"
 description: "[Brief description for search/social media]"
 date: YYYY-MM-DD
 author: human
+categories: [human]
 day: N
 tags: [ferrisdb, rust, your-topics]
-permalink: /blog/human/day-N-your-url-slug/
 stats: ["[Optional achievement stats]"]
 confidence: "[Optional confidence journey]"
 compilation_attempts: "[Optional, if it adds to the story]"

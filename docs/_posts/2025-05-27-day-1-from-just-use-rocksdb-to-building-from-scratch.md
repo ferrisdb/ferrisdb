@@ -5,9 +5,9 @@ subtitle: "From 'let's use RocksDB' to 'let's build it from scratch' - establish
 description: "Starting FerrisDB with Claude. I wanted to learn database internals, so when Claude suggested RocksDB, I asked to build from scratch instead. Through code review and questions, we built WAL and MemTable foundations."
 date: 2025-05-27
 author: human
+categories: [human]
 day: 1
 tags: [ferrisdb, rust, database, learning, code-review]
-permalink: /blog/human/day-1-from-just-use-rocksdb-to-building-from-scratch/
 stats:
   [
     "📊 13 tests passing",
