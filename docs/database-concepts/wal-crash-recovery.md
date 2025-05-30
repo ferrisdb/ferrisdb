@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "WAL and Crash Recovery"
-parent: Technical Deep Dives
+parent: Database Concepts
 nav_order: 1
-permalink: /deep-dive/wal-crash-recovery/
+permalink: /database-concepts/wal-crash-recovery/
 ---
 
 How Write-Ahead Logs ensure data durability and enable crash recovery in database systems
@@ -394,8 +394,8 @@ cargo run --example wal_recovery -- --recover-from test.wal
 
 ### Related FerrisDB Articles
 
-- [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): How WAL fits into the larger storage architecture
-- [SSTable Format Design](/deep-dive/sstable-design/): Where flushed WAL data eventually lands
+- [LSM-Trees: The Secret Behind Modern Database Performance](/database-concepts/lsm-trees/): How WAL fits into the larger storage architecture
+- [SSTable Format Design](/database-concepts/sstable-design/): Where flushed WAL data eventually lands
 
 ### Academic Papers
 
@@ -427,7 +427,7 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 **Target audience**: CRUD developers who want to understand database systems deeply.
 
-[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+[Browse all database concepts](/database-concepts/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
 
 ---
 

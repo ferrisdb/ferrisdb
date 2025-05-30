@@ -8,7 +8,7 @@ author: human
 day: 2
 categories: [development, database, collaboration]
 tags: [ferrisdb, rust, sstable, optimization, api-design]
-permalink: /blog/human/day-2-code-review-drives-improvements/
+permalink: /blog/human/day-2-from-linear-search-to-clean-apis/
 stats:
   [
     "📊 55 tests passing",

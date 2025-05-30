@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Frequently Asked Questions
-nav_order: 6
+nav_order: 9
 permalink: /faq/
 ---
 
@@ -244,7 +244,7 @@ As long as there's something valuable to learn and teach! We're documenting not 
 If your question isn't answered here, please:
 
 1. Check our [documentation](/getting-started/)
-2. Read the [deep dive articles](/deep-dive/)
+2. Read the [deep dive articles](/database-concepts/)
 3. [Open an issue](https://github.com/ferrisdb/ferrisdb/issues) on GitHub
 
 Remember: every question helps improve this FAQ and helps others learn!

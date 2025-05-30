@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Technical Deep Dives
+title: Database Concepts
 nav_order: 3
 has_children: true
-permalink: /deep-dive/
+permalink: /database-concepts/
 ---
 
 In-depth exploration of database internals through FerrisDB's implementation
@@ -39,7 +39,7 @@ Understand how Write-Ahead Logs ensure data durability and enable crash recovery
 
 **Topics:** Durability, Recovery, WAL
 
-[Read Article →](/deep-dive/wal-crash-recovery/){: .btn .btn-purple .fs-5 }
+[Read Article →](/database-concepts/wal-crash-recovery/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -51,7 +51,7 @@ Discover why LSM-trees revolutionized write performance in modern databases. Exp
 
 **Topics:** LSM-Trees, MemTable, Compaction
 
-[Read Article →](/deep-dive/lsm-trees/){: .btn .btn-purple .fs-5 }
+[Read Article →](/database-concepts/lsm-trees/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -63,7 +63,7 @@ Deep dive into efficient on-disk storage formats. Learn how FerrisDB organizes d
 
 **Topics:** Storage Format, Binary Search, Checksums
 
-[Read Article →](/deep-dive/sstable-design/){: .btn .btn-purple .fs-5 }
+[Read Article →](/database-concepts/sstable-design/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -75,7 +75,7 @@ Explore concurrent data structures that power FerrisDB's MemTable. Understanding
 
 **Topics:** Concurrency, Skip Lists, Lock-Free
 
-[Read Article →](/deep-dive/concurrent-skip-list/){: .btn .btn-purple .fs-5 }
+[Read Article →](/database-concepts/concurrent-skip-list/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -103,9 +103,9 @@ Explore concurrent data structures that power FerrisDB's MemTable. Understanding
 >
 > For a complete understanding of FerrisDB's architecture:
 >
-> 1. [WAL and Crash Recovery](/deep-dive/wal-crash-recovery/) - Foundation
-> 2. [LSM-Trees Explained](/deep-dive/lsm-trees/) - Core concept
-> 3. [SSTable Format Design](/deep-dive/sstable-design/) - Storage details
-> 4. [Lock-Free Skip Lists](/deep-dive/concurrent-skip-list/) - Advanced concurrency
+> 1. [WAL and Crash Recovery](/database-concepts/wal-crash-recovery/) - Foundation
+> 2. [LSM-Trees Explained](/database-concepts/lsm-trees/) - Core concept
+> 3. [SSTable Format Design](/database-concepts/sstable-design/) - Storage details
+> 4. [Lock-Free Skip Lists](/database-concepts/concurrent-skip-list/) - Advanced concurrency
 
-Ready to start? Begin with [WAL and Crash Recovery](/deep-dive/wal-crash-recovery/) to understand the foundation of database durability.
+Ready to start? Begin with [WAL and Crash Recovery](/database-concepts/wal-crash-recovery/) to understand the foundation of database durability.

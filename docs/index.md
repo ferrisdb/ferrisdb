@@ -8,7 +8,7 @@ permalink: /
 FerrisDB: Where a CRUD developer and an AI collaborate to build a real database from scratch, documenting every lesson learned along the way.
 {: .fs-6 .fw-300 }
 
-[Start Learning](/deep-dive/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[Start Learning](/database-concepts/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [Read Our Story](/blog/){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [Star on GitHub](https://github.com/ferrisdb/ferrisdb){: .btn .fs-5 .mb-4 .mb-md-0 }
 
@@ -34,7 +34,7 @@ FerrisDB: Where a CRUD developer and an AI collaborate to build a real database 
 
 Explore how databases actually work under the hood, from storage engines to distributed systems.
 
-[Deep Dive Articles →](/deep-dive/){: .btn .btn-purple .fs-5 }
+[Deep Dive Articles →](/database-concepts/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -101,9 +101,9 @@ Follow our journey as we build a production-quality database from scratch. Every
 | Component                    | Status      | Description                                                                       |
 | ---------------------------- | ----------- | --------------------------------------------------------------------------------- |
 | ✅ Project Foundation        | Complete    | Architecture design, Rust workspace setup, development guidelines                 |
-| ✅ Storage Engine Foundation | Complete    | Write-Ahead Log, MemTable with concurrent skip list, MVCC support                 |
-| ✅ SSTable Implementation    | Complete    | Binary format design, writer/reader with binary search, 4KB blocks with checksums |
-| 🚧 Compaction & Optimization | In Progress | Background compaction, bloom filters, block cache                                 |
+| ✅ Storage Engine Foundation | Complete    | Write-Ahead Log (WAL), MemTable (Skip List), SSTable format, SSTable reader     |
+| 🚧 Basic Operations          | Planned     | Get/Put/Delete operations, batch writes, range queries                           |
+| ⏳ Compaction & Optimization | Planned     | Compaction, bloom filters, block cache                                           |
 | ⏳ Transaction System        | Planned     | MVCC transactions, conflict detection, distributed coordination                   |
 
 ## The AI Collaboration Experiment
@@ -124,25 +124,25 @@ Follow our journey as we build a production-quality database from scratch. Every
 
 [Read Development Blog →](/blog/){: .btn .btn-purple }
 
-### Latest Collaboration Metrics
+### Our Collaboration So Far
 
-- **47** Pattern recognitions by Claude
-- **12** Human intuition saves
-- **8/10** Collaboration score
-- **55+** Tests passing
+- **Day 2** of development
+- **3,694** lines of Rust code written
+- **44** tests passing
+- **6 blog posts** documenting our journey
 
 ## Educational Resources
 
-### 📚 Deep Dive Articles
+### 📚 Database Concepts
 
 In-depth technical articles explaining database concepts through FerrisDB's implementation.
 
-- [WAL and Crash Recovery](/deep-dive/wal-crash-recovery/) - How databases survive crashes
-- [LSM-Trees Explained](/deep-dive/lsm-trees/) - The secret to fast writes
-- [SSTable Format Design](/deep-dive/sstable-design/) - Efficient on-disk storage
-- [Lock-Free Skip Lists](/deep-dive/concurrent-skip-list/) - Concurrent data structures
+- [WAL and Crash Recovery](/database-concepts/wal-crash-recovery/) - How databases survive crashes
+- [LSM-Trees Explained](/database-concepts/lsm-trees/) - The secret to fast writes
+- [SSTable Format Design](/database-concepts/sstable-design/) - Efficient on-disk storage
+- [Lock-Free Skip Lists](/database-concepts/concurrent-skip-list/) - Concurrent data structures
 
-[View All Deep Dives](/deep-dive/){: .btn .fs-5 }
+[View All Database Concepts](/database-concepts/){: .btn .fs-5 }
 
 ### 🦀 Rust by Example
 
@@ -161,7 +161,7 @@ Learn Rust through real database code with comparisons to familiar languages.
 
 Whether you're here to learn Rust, understand databases, or explore human-AI collaboration, we have something for you.
 
-[Explore Deep Dives](/deep-dive/){: .btn .btn-primary .fs-5 .mr-2 }
+[Explore Deep Dives](/database-concepts/){: .btn .btn-primary .fs-5 .mr-2 }
 [Star on GitHub](https://github.com/ferrisdb/ferrisdb){: .btn .fs-5 .mr-2 }
 [Get Started](/getting-started/){: .btn .fs-5 }
 

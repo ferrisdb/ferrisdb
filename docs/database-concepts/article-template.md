@@ -4,7 +4,7 @@ title: "Article Template"
 parent: Deep Dives
 nav_exclude: true
 search_exclude: true
-permalink: /deep-dive/article-template/
+permalink: /database-concepts/article-template/
 ---
 
 [One-line explanation of what this covers and why it matters]
@@ -352,7 +352,7 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 **Target audience**: Developers who want to understand database systems deeply.
 
-[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+[Browse all database concepts](/database-concepts/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
 
 ---
 

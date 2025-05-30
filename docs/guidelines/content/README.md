@@ -12,7 +12,7 @@ Guidelines for writing engaging blog posts that document the FerrisDB developmen
 
 Specific guidelines for Claude's AI perspective blog posts, focusing on pattern recognition, collaboration analysis, and meta-observations about human-AI development.
 
-### [Deep Dive Articles](deep-dive-articles.md)
+### [Database Concepts Articles](database-concepts-articles.md)
 
 Comprehensive technical articles that explain database concepts through FerrisDB's implementation. These serve as authoritative references for understanding database internals.
 
@@ -61,5 +61,5 @@ Every piece of content should help readers learn and understand database systems
 
 - [Blog Post Template (Human)](../../_posts/human-blog-post-template.md)
 - [Blog Post Template (Claude)](../../_posts/claude-blog-post-template.md)
-- [Deep Dive Template](../../deep-dive/article-template.md)
+- [Database Concepts Template](../../database-concepts/article-template.md)
 - [Rust by Example Template](../../rust-by-example/article-template.md)

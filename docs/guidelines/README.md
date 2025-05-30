@@ -17,7 +17,7 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 - [Website Design](content/website-design.md) - Visual design and Jekyll configuration
 - [Blogging Guidelines](content/blogging.md) - General blog post standards
 - [Claude's Blog Voice](content/claude-blog-voice.md) - AI perspective and personality
-- [Deep Dive Articles](content/deep-dive-articles.md) - Technical article structure
+- [Database Concepts Articles](content/database-concepts-articles.md) - Technical article structure
 - [Rust by Example](content/rust-by-example.md) - Educational article format
 
 ### 🔄 Development Workflow

@@ -1,10 +1,10 @@
-# Deep Dive Articles Guidelines
+# Database Concepts Articles Guidelines
 
 Comprehensive technical articles that thoroughly explain database concepts through FerrisDB's implementation. These are the authoritative technical references for understanding database internals.
 
 ## Purpose
 
-Deep dive articles serve as the primary educational resource for understanding how databases work "under the hood" using FerrisDB as a concrete implementation example.
+Database concepts articles serve as the primary educational resource for understanding how databases work "under the hood" using FerrisDB as a concrete implementation example.
 
 ## Target Audience
 
@@ -12,7 +12,7 @@ CRUD developers who want to understand database systems deeply but may not have 
 
 ## Article Structure (REQUIRED)
 
-Every deep dive article must follow this exact structure:
+Every database concepts article must follow this exact structure:
 
 1. **Problem & Why It Matters**: Fundamental database problem and real-world impact
 2. **Conceptual Overview**: Core idea with analogies and visual diagrams
@@ -47,8 +47,8 @@ Every deep dive article must follow this exact structure:
 
 ## Technical Requirements
 
-- **File naming**: `deep-dive/[concept-slug].md`
-- **Permalink**: `/deep-dive/[concept-slug]/`
+- **File naming**: `database-concepts/[concept-slug].md`
+- **Permalink**: `/database-concepts/[concept-slug]/`
 - **Difficulty levels**: Use guidelines below to determine
 - **Estimated reading time**: Use calculation method below
 - **Prerequisites**: Link to required background articles
@@ -187,7 +187,7 @@ Example calculation:
 
 ## Template Usage
 
-- **ALWAYS** use `docs/deep-dive/article-template.md`
+- **ALWAYS** use `docs/database-concepts/article-template.md`
 - Fill in all sections - never leave template placeholders
 - Include all required metadata in frontmatter
 - Follow exact section structure for consistency
@@ -199,4 +199,4 @@ Example calculation:
 3. Test all code examples and exercises
 4. Review for technical accuracy with FerrisDB maintainers
 5. Lint with prettier and markdownlint
-6. Submit PR with "deep-dive" label
+6. Submit PR with "database-concepts" label

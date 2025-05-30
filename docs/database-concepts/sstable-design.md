@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "SSTable Format Design"
-parent: Technical Deep Dives
+parent: Database Concepts
 nav_order: 3
-permalink: /deep-dive/sstable-design/
+permalink: /database-concepts/sstable-design/
 ---
 
 How databases organize and access data on disk for optimal performance
@@ -481,8 +481,8 @@ fn benchmark_sstable_lookups() {
 
 ### Related FerrisDB Articles
 
-- [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): How SSTables fit in the architecture
-- [Understanding WAL and Crash Recovery](/deep-dive/wal-crash-recovery/): What happens before SSTable
+- [LSM-Trees: The Secret Behind Modern Database Performance](/database-concepts/lsm-trees/): How SSTables fit in the architecture
+- [Understanding WAL and Crash Recovery](/database-concepts/wal-crash-recovery/): What happens before SSTable
 
 ### Academic Papers
 
@@ -514,7 +514,7 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 **Target audience**: CRUD developers who want to understand database systems deeply.
 
-[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+[Browse all database concepts](/database-concepts/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
 
 ---
 

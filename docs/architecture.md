@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Architecture Design
-nav_order: 8
+nav_order: 10
 permalink: /architecture/
 ---
 
@@ -284,10 +284,10 @@ async fn example() -> Result<()> {
 - [Storage Engine Design]({{ '/storage-engine/' | relative_url }})
 - [Future Architecture Explorations]({{ '/future-architecture/' | relative_url }})
 
-**Technical Deep Dives:**
+**Database Concepts:**
 
-- [Understanding WAL and Crash Recovery]({{ '/deep-dive/wal-crash-recovery/' | relative_url }})
-- [LSM-Trees and Storage Engine Design]({{ '/deep-dive/lsm-trees/' | relative_url }})
+- [Understanding WAL and Crash Recovery]({{ '/database-concepts/wal-crash-recovery/' | relative_url }})
+- [LSM-Trees and Storage Engine Design]({{ '/database-concepts/lsm-trees/' | relative_url }})
 
 **Project Links:**
 

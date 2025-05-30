@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "LSM-Trees Explained"
-parent: Technical Deep Dives
+parent: Database Concepts
 nav_order: 2
-permalink: /deep-dive/lsm-trees/
+permalink: /database-concepts/lsm-trees/
 ---
 
 Understanding Log-Structured Merge Trees through FerrisDB's implementation
@@ -362,8 +362,8 @@ cargo run --example bulk_insert -- --count 100000 --observe-memory
 
 ### Related FerrisDB Articles
 
-- [Understanding WAL and Crash Recovery](/deep-dive/wal-crash-recovery/): How durability works in LSM systems
-- [Lock-Free Skip Lists](/deep-dive/concurrent-skip-list/): Deep dive into MemTable implementation
+- [Understanding WAL and Crash Recovery](/database-concepts/wal-crash-recovery/): How durability works in LSM systems
+- [Lock-Free Skip Lists](/database-concepts/concurrent-skip-list/): Deep dive into MemTable implementation
 
 ### Academic Papers
 
@@ -395,7 +395,7 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 **Target audience**: CRUD developers who want to understand database systems deeply.
 
-[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+[Browse all database concepts](/database-concepts/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
 
 ---
 

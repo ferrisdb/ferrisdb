@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Day 1: Learning Database Internals Through Code Review"
+title: "Day 1: From 'Just Use RocksDB' to Building From Scratch"
 subtitle: "From 'let's use RocksDB' to 'let's build it from scratch' - establishing our workflow"
 description: "Starting FerrisDB with Claude. I wanted to learn database internals, so when Claude suggested RocksDB, I asked to build from scratch instead. Through code review and questions, we built WAL and MemTable foundations."
 date: 2025-05-27
 author: human
 day: 1
 tags: [ferrisdb, rust, database, learning, code-review]
-permalink: /blog/human/day-1-learning-through-code-review/
+permalink: /blog/human/day-1-from-just-use-rocksdb-to-building-from-scratch/
 stats:
   [
     "📊 13 tests passing",
@@ -140,7 +140,7 @@ This explanation was so clear that it sparked an idea...
 
 ## Deeper Understanding
 
-**Me**: Your explanation of WAL recovery is really informative. I think we should start a series of deep-dive articles explaining these concepts using our actual implementation.
+**Me**: Your explanation of WAL recovery is really informative. I think we should start a series of database concept articles explaining these concepts using our actual implementation.
 
 **Claude**: That's a great idea! We could cover:
 

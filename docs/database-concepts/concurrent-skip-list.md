@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "Lock-Free Skip Lists"
-parent: Technical Deep Dives
+parent: Database Concepts
 nav_order: 4
-permalink: /deep-dive/concurrent-skip-list/
+permalink: /database-concepts/concurrent-skip-list/
 ---
 
 Understanding concurrent programming through FerrisDB's MemTable implementation
@@ -439,7 +439,7 @@ fn benchmark_concurrent_writes(num_threads: usize) {
 
 ### Related FerrisDB Articles
 
-- [LSM-Trees: The Secret Behind Modern Database Performance](/deep-dive/lsm-trees/): Where skip lists fit in the architecture
+- [LSM-Trees: The Secret Behind Modern Database Performance](/database-concepts/lsm-trees/): Where skip lists fit in the architecture
 - [Ownership & Sharing: MemTable Lifecycle](/rust-by-example/ownership-memtable-sharing/): Rust's memory model in practice
 
 ### Academic Papers
@@ -471,7 +471,7 @@ This article is part of FerrisDB's technical deep dive series. Each article prov
 
 **Target audience**: CRUD developers who want to understand database systems deeply.
 
-[Browse all deep dives](/deep-dive/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
+[Browse all database concepts](/database-concepts/) | [Architecture overview](/architecture/) | [Contribute on GitHub]({{ site.project.repo_url }})
 
 ---
 
