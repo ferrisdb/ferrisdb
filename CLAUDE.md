@@ -89,13 +89,13 @@ gh pr create
 
 ## 📝 Collaboration Commentary
 
-When working with Claude, include collaboration commentary in:
+**MANDATORY**: When working with Claude, **always include** detailed collaboration commentary in:
 
-- **Commits**: See [Git Workflow - Claude's Collaboration Commentary](docs/guidelines/workflow/git-workflow.md#claudes-collaboration-commentary)
-- **PR Descriptions**: See [PR Process - Collaboration Summary](docs/guidelines/workflow/pr-process.md#pr-description-template)
-- **Squash Merges**: See [PR Process - Squash Merge Format](docs/guidelines/workflow/pr-process.md#squash-merge-commit-message-format)
+- **Commits**: See [Git Workflow - Claude's Collaboration Commentary](docs/guidelines/workflow/git-workflow.md#claudes-collaboration-commentary) - **REQUIRED in every commit**
+- **PR Descriptions**: See [PR Process - Collaboration Summary](docs/guidelines/workflow/pr-process.md#pr-description-template) - **REQUIRED in every PR**
+- **Squash Merges**: See [PR Process - Squash Merge Format](docs/guidelines/workflow/pr-process.md#squash-merge-commit-message-format) - **REQUIRED when squash merging**
 
-This helps track our collaboration patterns for blog posts and research.
+This tracks collaboration patterns for blog posts and research. **Never skip this - it's essential data.**
 
 ## 📚 Complete Guidelines Directory
 

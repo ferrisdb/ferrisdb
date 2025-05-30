@@ -99,20 +99,37 @@ Fixes #123"
 
 ### Claude's Collaboration Commentary
 
-When working with Claude, add a collaboration commentary at the end of commit messages to track the human-AI interaction process:
+**REQUIRED**: When working with Claude, **always include** collaboration commentary in commit messages to track the human-AI interaction process. This is essential for research and documentation purposes:
 
 #### Commentary Format
+
+**Every commit involving Claude MUST include this section:**
 
 ```
 <standard commit message>
 
 [optional body]
 
-🤖 Claude's Commentary:
-📊 Stats: X iterations, Y key insights, Z refactors
-🔄 Process: [Brief summary of how we arrived at this solution]
-💡 Key Learning: [What insight drove the improvement]
-🎯 Outcome: [What was achieved]
+## Claude's Collaboration Commentary
+
+**Session Stats:**
+- 📊 X files modified, Y key insights, Z iterations
+- 💬 ~N user-AI exchanges
+- ⚡ Major changes or decisions made
+
+**Collaboration Patterns Observed:**
+1. **Pattern Name**: Brief description of what happened
+2. **Technical Insight**: What we learned or discovered
+3. **Process Note**: How the collaboration worked
+
+**Key Outcomes:**
+- What was achieved
+- What improved through human-AI iteration
+- Any process insights for future sessions
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 #### Commentary Emojis
@@ -149,12 +166,17 @@ Changes:
 🎯 Outcome: Accurate blog posts with verifiable guidelines"
 ```
 
-This commentary helps us:
+#### Why This Commentary is Required
 
-- Track collaboration patterns over time
-- Identify what triggers major improvements
-- Understand how human review improves AI output
-- Build a historical record for blog posts
+This collaboration commentary is **mandatory** because it:
+
+- **Enables research**: Creates data about human-AI collaboration patterns
+- **Improves future collaboration**: Documents what works and what doesn't
+- **Provides blog content**: Raw material for human and AI perspective blog posts
+- **Tracks learning**: Shows how understanding develops through iteration
+- **Documents decisions**: Preserves context for future reference
+
+**Note for Claude**: You must include detailed collaboration commentary in every commit message. Don't skip this - it's essential for our research and documentation goals.
 
 ## Workflow Steps
 

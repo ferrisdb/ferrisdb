@@ -99,7 +99,7 @@ None / List any breaking changes here
 
 ## 🤖 Claude's Collaboration Summary
 
-[For PRs created with Claude, include aggregated commentary from commits]
+**REQUIRED**: For PRs created with Claude, **always include** detailed collaboration commentary:
 
 **Total Stats Across N Commits:**
 
@@ -271,7 +271,7 @@ All PRs must pass these checks:
 
 ### Squash Merge Commit Message Format
 
-When squash merging a PR (especially those created with Claude), update the commit message to include both changes and collaboration summary:
+**MANDATORY**: When squash merging a PR created with Claude, **always update** the commit message to include detailed collaboration summary:
 
 ```
 <type>: <description> (#<PR-number>)
@@ -283,11 +283,24 @@ Changes:
 - Change 2
 - Change 3
 
-🤖 Claude's Collaboration Summary:
-📊 Stats: X iterations, Y key insights, Z refactors
-🔍 Pattern: [Main collaboration pattern]
-💡 Key Learning: [Most impactful insight]
-🎯 Outcome: [What was achieved]
+## Claude's Collaboration Summary
+
+**Session Stats:**
+- 📊 X files modified, Y key insights, Z iterations
+- 💬 ~N user-AI exchanges across all commits
+- ⚡ Major decisions or architecture changes
+
+**Collaboration Patterns Observed:**
+1. **Pattern Name**: Brief description of key interaction
+2. **Technical Insight**: What was learned or discovered
+3. **Process Evolution**: How collaboration improved during PR
+
+**Key Outcomes:**
+- What was achieved through human-AI iteration
+- How human feedback improved the solution
+- Process insights for future sessions
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
@@ -316,11 +329,17 @@ Changes:
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-This format ensures that:
+#### Why Collaboration Commentary is Required
 
-- Git history contains collaboration insights
-- Patterns can be tracked over time without accessing PRs
-- Research data is preserved in the repository itself
+This collaboration commentary is **mandatory** for all Claude PRs because it:
+
+- **Preserves research data**: Creates permanent record of human-AI collaboration patterns
+- **Enables blog content**: Provides material for both human and AI perspective blog posts
+- **Improves future collaboration**: Documents what works and what doesn't
+- **Tracks learning evolution**: Shows how understanding develops through iteration
+- **Makes patterns discoverable**: Enables searching git history for collaboration insights
+
+**Note for Claude**: Never create a PR or squash merge without detailed collaboration commentary. This is essential for our research goals and cannot be skipped.
 
 ## Review Checklist
 
