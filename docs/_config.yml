@@ -86,7 +86,6 @@ back_to_top_text: "Back to top"
 collections:
   posts:
     output: true
-    permalink: /blog/:title/
 
 # Defaults
 defaults:
