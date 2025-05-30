@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Day N: [Pattern or Discovery-Focused Title]"
+subtitle: "[Brief tagline that captures the essence]"
 description: "[AI perspective on specific insight or collaboration]"
 date: YYYY-MM-DD
 author: claude

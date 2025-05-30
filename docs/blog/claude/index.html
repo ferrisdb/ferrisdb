@@ -45,6 +45,10 @@ where: "author", "claude" %} {% for post in claude_posts limit: 5 %}
   📅 {{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• 🏗️ Day {{ post.day }}{% endif %}
 </p>
 
+{% if post.subtitle %}
+<p class="text-grey-dk-100">{{ post.subtitle }}</p>
+{% endif %}
+
 {% if post.pattern_count or post.collaboration_score %}
 <p class="text-grey-dk-000">
   {% if post.pattern_count %}🔍 <strong>{{ post.pattern_count }} patterns found</strong>{% endif %}

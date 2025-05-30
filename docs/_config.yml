@@ -86,7 +86,10 @@ back_to_top_text: "Back to top"
 collections:
   posts:
     output: true
-    permalink: /blog/:categories/:title/
+    permalink: /blog/:categories/:name/
+
+# Permalink style
+permalink: pretty
 
 # Defaults
 defaults:
@@ -152,8 +155,7 @@ gh_edit_view_mode: "edit"
 # - nav_exclude: true to hide from nav
 
 # Blog settings
-paginate: 5
-paginate_path: "/blog/page:num/"
+# Pagination disabled - using expandable sections instead
 
 # Exclude from processing
 exclude:
