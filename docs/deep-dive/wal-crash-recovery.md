@@ -16,7 +16,7 @@ How Write-Ahead Logs ensure data durability and enable crash recovery in databas
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

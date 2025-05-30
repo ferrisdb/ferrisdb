@@ -97,6 +97,65 @@ Fixes #123"
 6. **50/72 rule**: Subject line max 50 chars, body wrapped at 72
 7. **Why not what**: Body should explain why, not what (code shows what)
 
+### Claude's Collaboration Commentary
+
+When working with Claude, add a collaboration commentary at the end of commit messages to track the human-AI interaction process:
+
+#### Commentary Format
+
+```
+<standard commit message>
+
+[optional body]
+
+🤖 Claude's Commentary:
+📊 Stats: X iterations, Y key insights, Z refactors
+🔄 Process: [Brief summary of how we arrived at this solution]
+💡 Key Learning: [What insight drove the improvement]
+🎯 Outcome: [What was achieved]
+```
+
+#### Commentary Emojis
+
+- 🤖 **Main identifier**: Claude's Commentary header
+- 📊 **Stats**: Iterations, changes, insights count
+- 🔄 **Process**: Workflow summary
+- 💡 **Key Learning**: Main insight that drove improvement
+- 🎯 **Outcome**: What was achieved
+- ❓ **Questions**: Number of human questions that led to changes
+- 🔍 **Pattern**: Collaboration pattern observed
+- 🚀 **Performance**: If optimization was involved
+- 🐛 **Bug Found**: Through human review
+- 📝 **Documentation**: Clarity improvements
+
+#### Example with Commentary
+
+```bash
+git commit -m "docs: Update blogging guidelines for accuracy and real workflow
+
+This commit updates all blogging guidelines and templates to emphasize
+accuracy and document our real human-AI collaboration workflow.
+
+Changes:
+- Updated blogging guidelines to require verification
+- Added accuracy checklist and common pitfalls
+- Rewrote blog posts to reflect actual events
+- Simplified templates for flexibility
+
+🤖 Claude's Commentary:
+📊 Stats: 8 iterations, 4 major insights, 2 complete rewrites
+🔄 Process: Human noticed inaccuracies → fact-checking revealed gaps → rewrote with verification → improved URL structure
+💡 Key Learning: Human's insistence on accuracy against git history prevented fictional documentation
+🎯 Outcome: Accurate blog posts with verifiable guidelines"
+```
+
+This commentary helps us:
+
+- Track collaboration patterns over time
+- Identify what triggers major improvements
+- Understand how human review improves AI output
+- Build a historical record for blog posts
+
 ## Workflow Steps
 
 ### 1. Start New Work

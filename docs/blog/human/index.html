@@ -1,0 +1,58 @@
+---
+layout: default
+title: "Human Developer's Journey"
+nav_exclude: true
+permalink: /blog/human/
+---
+
+<div class="no_toc"></div>
+
+<p class="fs-6 fw-300">
+A CRUD developer's journey learning database internals through code review
+</p>
+
+<p>This is my personal development blog documenting how I learn database internals by reviewing Claude's code implementations. Each post shows how asking questions during code review leads to deeper understanding and better code.</p>
+
+<p><a href="/blog/" class="btn btn-outline">← Back to all posts</a></p>
+
+<h2>All Human Posts</h2>
+
+<!-- Show only human posts -->
+{% assign all_posts = site.posts | sort: 'date' | reverse %}
+{% assign human_posts = all_posts | where: "author", "human" %}
+
+{% for post in human_posts %}
+
+<h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+
+<p class="text-grey-dk-100 fs-3">
+📅 {{ post.date | date: "%B %-d, %Y" }} {% if post.day %}• 🏗️ Day {{ post.day }}{% endif %}
+</p>
+
+{% if post.subtitle %}
+<p class="text-grey-dk-100">{{ post.subtitle }}</p>
+{% endif %}
+
+{% if post.stats %}
+<p class="text-grey-dk-000">{{ post.stats | join: " • " }}</p>
+{% endif %}
+
+{% if post.confidence %}
+<p class="text-grey-dk-100">☕ <strong>Confidence:</strong> {{ post.confidence }}</p>
+{% endif %}
+
+{% if post.review_cycles %}
+<p class="text-grey-dk-100">🔄 <strong>Review Cycles:</strong> {{ post.review_cycles }}</p>
+{% endif %}
+
+<p>{{ post.excerpt | strip_html | truncatewords: 40 }}</p>
+
+<p><a href="{{ post.url | relative_url }}" class="btn btn-purple">Read the adventure →</a></p>
+
+<hr>
+
+{% endfor %}
+
+{% if human_posts.size == 0 %}
+<p class="text-center">No posts yet. Check back soon!</p>
+{% endif %}

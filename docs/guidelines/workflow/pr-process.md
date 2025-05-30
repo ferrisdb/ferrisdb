@@ -96,6 +96,30 @@ Explain the motivation and benefits of these changes.
 ## Breaking Changes
 
 None / List any breaking changes here
+
+## 🤖 Claude's Collaboration Summary
+
+[For PRs created with Claude, include aggregated commentary from commits]
+
+**Total Stats Across N Commits:**
+
+- 📊 X iterations, Y key insights, Z refactors
+- ❓ Q human questions led to improvements
+- 🔍 Pattern: [Main collaboration pattern observed]
+
+**Key Collaboration Moments:**
+
+1. [Most impactful human feedback → result]
+2. [Major direction change or insight]
+3. [Significant improvement from review]
+
+**What Worked Well:**
+
+- [Effective collaboration aspects]
+- [Valuable human insights]
+- [Successful patterns]
+
+**Collaboration Pattern**: [Overall pattern like "Deep Review → Accuracy Focus → Structural Improvement"]
 ```
 
 ## Good PR Practices

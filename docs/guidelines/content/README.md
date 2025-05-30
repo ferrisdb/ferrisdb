@@ -59,7 +59,7 @@ Every piece of content should help readers learn and understand database systems
 
 ## Quick Links
 
-- [Blog Post Template (Human)](../../_posts/blog-post-template.md)
-- [Blog Post Template (Claude)](../../_claude_blog/blog-post-template.md)
+- [Blog Post Template (Human)](../../_posts/human-blog-post-template.md)
+- [Blog Post Template (Claude)](../../_posts/claude-blog-post-template.md)
 - [Deep Dive Template](../../deep-dive/article-template.md)
 - [Rust by Example Template](../../rust-by-example/article-template.md)

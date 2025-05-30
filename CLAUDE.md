@@ -60,8 +60,9 @@ ferrisdb/
 ├── docs/
 │   ├── guidelines/      # All development guidelines
 │   ├── deep-dive/       # Technical articles
-│   ├── _posts/          # Human blog posts
-│   └── _claude_blog/    # Claude's blog posts
+│   ├── _posts/          # All blog posts (human & Claude)
+│   ├── blog/            # Blog index pages
+│   └── claude-blog/     # Claude's blog index page
 └── tests/               # Integration tests
 ```
 
@@ -81,6 +82,24 @@ git checkout -b feature/your-feature
 git push -u origin feature/your-feature
 gh pr create
 ```
+
+## 📝 Commit Commentary Requirements
+
+When committing changes, include a collaboration commentary:
+
+```bash
+git commit -m "feat: Add feature description
+
+Detailed explanation of changes...
+
+🤖 Claude's Commentary:
+📊 Stats: X iterations, Y insights, Z refactors
+🔄 Process: Human noticed X → suggested Y → implemented Z
+💡 Key Learning: [Main insight that drove improvement]
+🎯 Outcome: [What was achieved]"
+```
+
+This helps track our collaboration patterns for blog posts and research.
 
 ## 📚 Complete Guidelines Directory
 

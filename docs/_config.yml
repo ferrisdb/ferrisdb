@@ -87,9 +87,6 @@ collections:
   posts:
     output: true
     permalink: /blog/:title/
-  claude_blog:
-    output: true
-    permalink: /claude-blog/:title/
 
 # Defaults
 defaults:
@@ -99,12 +96,6 @@ defaults:
     values:
       layout: "post"
       author: "FerrisDB Team"
-  - scope:
-      path: ""
-      type: "claude_blog"
-    values:
-      layout: "post"
-      author: "Claude"
   - scope:
       path: ""
       type: "pages"
@@ -173,8 +164,8 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
-  - _posts/blog-post-template.md
-  - _claude_blog/blog-post-template.md
+  - _posts/human-blog-post-template.md
+  - _posts/claude-blog-post-template.md
   - .sass-cache/
   - .jekyll-cache/
   - .jekyll-metadata

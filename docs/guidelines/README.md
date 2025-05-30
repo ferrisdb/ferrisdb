@@ -40,6 +40,19 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 2. **Content Writers**: Review [Blogging Guidelines](content/blogging.md) or relevant article formats
 3. **Core Developers**: Familiarize yourself with [Architecture Decisions](technical/architecture.md) and [System Invariants](technical/invariants.md)
 
+## Our Human-AI Workflow
+
+FerrisDB demonstrates a specific collaboration pattern:
+
+1. **Human assigns task**: Clear direction with context
+2. **Claude implements**: Complete solution with tests
+3. **Human reviews**: Questions, optimization ideas, edge cases
+4. **Claude iterates**: Improvements based on feedback
+5. **Together refine**: Until both are satisfied
+6. **PR & merge**: Clear commits and documentation
+
+This workflow is documented honestly in our blog posts, showing real conversations and actual development progress.
+
 ## Project Overview
 
 FerrisDB is a distributed, transactional key-value database inspired by FoundationDB, implemented in Rust. This project serves as both a learning exercise and a demonstration of human-AI collaboration in software development.
@@ -47,10 +60,11 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 ## Key Principles
 
 1. **Educational First**: Every decision should make learning easier
-2. **Transparency**: Document real progress, real mistakes, real learning
-3. **Quality Code**: Follow Rust best practices and idioms
-4. **Collaboration**: Showcase effective human-AI partnership
-5. **Documentation**: Keep everything well-documented and accessible
+2. **Accuracy Always**: Verify technical details against codebase and git history
+3. **Transparency**: Document real progress, real mistakes, real learning
+4. **Quality Code**: Follow Rust best practices and idioms
+5. **Real Collaboration**: Show actual human-AI workflow, not idealized version
+6. **Documentation**: Keep everything well-documented and accessible
 
 ## Quick Links
 
