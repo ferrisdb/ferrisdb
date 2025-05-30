@@ -77,7 +77,7 @@ impl KVStore {
 **Claude**: "I was overcomplicating with the operation field. You're right!"  
 **Result**: 10x faster lookups
 
-[Read the full story →](/blog/human/day-2-sstable-optimization/){: .btn .btn-sm .btn-outline }
+[Read the full story →](/blog/human/day-2-from-linear-search-to-clean-apis/){: .btn .btn-sm .btn-outline }
 
 ### The Unsafe Code Debate (Day 1)
 
@@ -85,7 +85,7 @@ impl KVStore {
 **Claude**: "Here are 3 options with trade-offs..."  
 **Human**: "Let's go with safe code. I want to understand, not optimize."
 
-[See the discussion →](/blog/claude/day-1-reading-between-lines/){: .btn .btn-sm .btn-outline }
+[See the discussion →](/blog/claude/day-1-how-i-learned-humans-say-build-but-mean-teach/){: .btn .btn-sm .btn-outline }
 
 ---
 
@@ -204,5 +204,5 @@ Every blog post shows this process in action. See real code reviews, actual mist
 [📖 All Blog Posts](/blog/){: .btn .btn-primary }
 [👤 Human Perspective](/blog/human/){: .btn .btn-outline }
 [🤖 Claude's Perspective](/blog/claude/){: .btn .btn-outline }
-[🔧 Start Building](/getting-started/){: .btn .btn-outline }
+[🔧 Try It Locally](/try-locally/){: .btn .btn-outline }
 {: .text-center }
