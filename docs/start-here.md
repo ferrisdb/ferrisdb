@@ -6,6 +6,7 @@ permalink: /start/
 ---
 
 # 🚀 From CRUD to Core: The Database Learning Journey
+
 {: .fs-9 .fw-700 }
 
 Learn how databases really work by building one from scratch
@@ -14,11 +15,13 @@ Learn how databases really work by building one from scratch
 ---
 
 ## Why Should You Care?
+
 {: .fs-7 .fw-600 }
 
 As a CRUD developer, you've probably:
+
 - Wondered why your queries are slow
-- Hit mysterious deadlocks  
+- Hit mysterious deadlocks
 - Struggled with database scaling
 - Wanted to understand what's under the hood
 
@@ -27,30 +30,35 @@ As a CRUD developer, you've probably:
 ---
 
 ## What You'll Learn
+
 {: .fs-7 .fw-600 }
 
 ### Core Concepts (Available Now)
+
 ✅ Why databases need Write-Ahead Logs (WAL) for crash recovery  
 ✅ How databases store data in memory with Skip Lists  
 ✅ The SSTable format - how databases organize data on disk  
 ✅ Binary search in databases - from O(n) to O(log n) lookups  
 ✅ API design lessons from real refactoring (Day 2)
 
-### Currently Building  
+### Currently Building
+
 🚧 Compaction - how databases merge files efficiently  
 🚧 Bloom filters - probabilistic data structures for speed  
 🚧 Block cache - keeping hot data in memory  
 🚧 Iterator patterns for data access
 
 ### Coming Soon
+
 ⏳ Compression - making storage efficient  
 ⏳ Column families - organizing related data  
 ⏳ Backup/restore - data safety features  
-⏳ Monitoring - understanding database behavior  
+⏳ Monitoring - understanding database behavior
 
 ---
 
 ## Explore The Code (2 minutes)
+
 {: .fs-7 .fw-600 }
 
 ```bash
@@ -66,6 +74,7 @@ cargo test -p ferrisdb-storage
 ```
 
 What's implemented so far:
+
 - ✅ Write-Ahead Log (WAL)
 - ✅ MemTable (Skip List)
 - ✅ SSTable format
@@ -75,6 +84,7 @@ What's implemented so far:
 ---
 
 ## Choose Your Path
+
 {: .fs-7 .fw-600 .text-center .mb-6 }
 
 [📖 Read the Blog]({{ '/blog/' | relative_url }}){: .btn .btn-purple .btn-lg .mr-2 }
@@ -92,12 +102,13 @@ Understand the concepts
 ---
 
 ## The Twist: AI Collaboration
+
 {: .fs-7 .fw-600 }
 
 This isn't just another database project. I'm learning WITH Claude AI:
 
 1. **I assign tasks** → "Implement SSTable reader"
-2. **Claude codes** → Implements with explanations  
+2. **Claude codes** → Implements with explanations
 3. **I review** → "Why no error handling here?"
 4. **We iterate** → Better code through questions
 
@@ -106,6 +117,7 @@ This isn't just another database project. I'm learning WITH Claude AI:
 ---
 
 ## Real Progress, Real Learning
+
 {: .fs-7 .fw-600 }
 
 <div class="text-center my-4">
@@ -119,11 +131,12 @@ No hiding failures. Every refactor, bug, and "aha!" moment is documented.
 ---
 
 ## Join Our Learning Journey
+
 {: .fs-6 .fw-600 .text-center }
 
 ⭐ Star the repo to follow along  
 💬 Join discussions on implementation choices  
-🐛 Submit issues when something doesn't make sense  
+🐛 Submit issues when something doesn't make sense
 
 [⭐ Star on GitHub](https://github.com/ferrisdb/ferrisdb){: .btn .btn-primary .btn-lg }
 {: .text-center }
@@ -132,4 +145,4 @@ No hiding failures. Every refactor, bug, and "aha!" moment is documented.
 
 > "This is the resource I wish existed when I started learning databases. Real code, real problems, real solutions."  
 > — A fellow CRUD developer
-{: .text-grey-dk-300 }
+> {: .text-grey-dk-300 }

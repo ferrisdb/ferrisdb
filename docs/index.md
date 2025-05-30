@@ -98,13 +98,13 @@ How to effectively partner with AI tools to tackle complex engineering challenge
 
 Follow our journey as we build a production-quality database from scratch. Every success, failure, and "aha!" moment documented.
 
-| Component                    | Status      | Description                                                                       |
-| ---------------------------- | ----------- | --------------------------------------------------------------------------------- |
-| ✅ Project Foundation        | Complete    | Architecture design, Rust workspace setup, development guidelines                 |
-| ✅ Storage Engine Foundation | Complete    | Write-Ahead Log (WAL), MemTable (Skip List), SSTable format, SSTable reader     |
-| 🚧 Basic Operations          | Planned     | Get/Put/Delete operations, batch writes, range queries                           |
-| ⏳ Compaction & Optimization | Planned     | Compaction, bloom filters, block cache                                           |
-| ⏳ Transaction System        | Planned     | MVCC transactions, conflict detection, distributed coordination                   |
+| Component                    | Status   | Description                                                                 |
+| ---------------------------- | -------- | --------------------------------------------------------------------------- |
+| ✅ Project Foundation        | Complete | Architecture design, Rust workspace setup, development guidelines           |
+| ✅ Storage Engine Foundation | Complete | Write-Ahead Log (WAL), MemTable (Skip List), SSTable format, SSTable reader |
+| 🚧 Basic Operations          | Planned  | Get/Put/Delete operations, batch writes, range queries                      |
+| ⏳ Compaction & Optimization | Planned  | Compaction, bloom filters, block cache                                      |
+| ⏳ Transaction System        | Planned  | MVCC transactions, conflict detection, distributed coordination             |
 
 ## The AI Collaboration Experiment
 

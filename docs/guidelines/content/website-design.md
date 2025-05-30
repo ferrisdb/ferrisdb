@@ -14,18 +14,23 @@ Design guidelines for the FerrisDB documentation website, focusing on educationa
 **⚠️ IMPORTANT**: Use ONLY Just the Docs built-in utilities. No custom CSS allowed.
 
 ### Color Palette
+
 Defined in `_sass/color_schemes/ferrisdb.scss` and applied automatically:
+
 - **Primary**: Rust orange - use `.btn-primary` or `.text-purple-300`
 - **Text**: High contrast dark gray - default text color
 - **Backgrounds**: Use `.bg-grey-lt-000` for light sections
 
 ### Typography
+
 Use Just the Docs utility classes:
+
 - **Font Size**: `.fs-1` to `.fs-10` (9px to 48px)
 - **Font Weight**: `.fw-300`, `.fw-400`, `.fw-500`, `.fw-700`
 - **Small Text**: `.text-small` for meta information
 
 ### Layout
+
 - **Spacing**: Use `.mb-*`, `.mt-*`, `.my-*` classes (1-8 scale)
 - **Alignment**: Use `.text-center`, `.text-left`, `.text-right`
 - **No custom containers**: Let Just the Docs handle max-width
@@ -217,6 +222,7 @@ end
 The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress displayed on the website. Never add progress information that isn't tracked in ROADMAP.md.
 
 **ROADMAP.md Structure**:
+
 - **Storage Engine Foundation**: Core database components (WAL, MemTable, SSTable, etc.)
 - **Basic Operations**: CRUD operations and queries
 - **ACID Transactions**: Transaction support and MVCC
@@ -229,11 +235,13 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - **Educational Content**: Tutorials and guides
 
 **Mapping ROADMAP.md to Website Content**:
+
 1. ✅ Items marked `[x]` → "Available Now" / "What's Working" / "Core Concepts (Available Now)"
 2. 🚧 Items marked `[ ]` in current focus areas → "Currently Building" / "In Progress"
 3. ⏳ Items in later sections → "Coming Soon" / "Coming Next"
 
 **ALL Progress Sections Must Update from ROADMAP.md**:
+
 - `/index.md` → "Latest Progress" section (lines 102-124) and "Development Progress" table (lines 97-108)
 - `/start-here.md` → "What You'll Learn" section (lines 32-50) and "What's implemented so far" section (lines 68-74)
 - Any other page showing feature status
@@ -241,6 +249,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 ## Regular Maintenance Tasks
 
 ### Daily/Weekly Updates
+
 - [ ] Update progress stats on homepage and start-here page:
   - Days: `git log --format="%ad" --date=short -- "*.rs" "Cargo.toml" | sort | uniq | wc -l`
   - Lines of Rust code: `find . -path ./target -prune -o -name "*.rs" -type f -print | xargs wc -l | tail -1`
@@ -254,6 +263,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 #### 1. Update `/start-here.md` Progress Sections:
 
 **"What You'll Learn" section (lines 32-50)**:
+
 1. Check ROADMAP.md for completed/in-progress items
 2. Update three subsections:
    - **Core Concepts (Available Now)**: Completed items from "Storage Engine Foundation"
@@ -267,6 +277,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
    - "Bloom filters" → "Bloom filters - probabilistic data structures for speed"
 
 **"What's implemented so far" section (lines 68-74)**:
+
 1. List completed items from ROADMAP.md with checkmarks
 2. Show current work in progress
 3. Mention what's coming next (interactive REPL when "CLI client" is ready)
@@ -274,6 +285,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 #### 2. Update `/index.md` Progress Sections:
 
 **"Development Progress" table (lines 97-108)**:
+
 1. Check ROADMAP.md for completed/in-progress items
 2. Update table rows:
    - ✅ Mark completed sections as "Complete"
@@ -282,6 +294,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 3. Include brief technical descriptions for each component
 
 **"Latest Progress" section (if exists)**:
+
 1. Check ROADMAP.md for completed/in-progress items
 2. Update three subsections:
    - **✅ What's Working**: All items marked `[x]` in ROADMAP.md
@@ -301,12 +314,14 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 ### Language Guidelines for Progress Updates:
 
 **For `/start-here.md` (learner-focused)**:
+
 - Use "why" and "how" framing
 - Explain the purpose of each feature
 - Make it accessible to CRUD developers
 - Example: "Why databases need Write-Ahead Logs" not just "WAL implemented"
 
 **For `/index.md` (technically accurate)**:
+
 - Use precise technical terms
 - Include implementation details
 - Mention specific algorithms or data structures
@@ -328,20 +343,23 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] **CTA buttons work**: All links go to existing pages
 
 ### Per Blog Post
+
 - [ ] Ensure title follows compelling hook pattern
 - [ ] Update permalink to match title
 - [ ] Check companion post links work
 - [ ] Verify code examples match actual implementation
 
 ### When New Features Are Ready
+
 - [ ] **When Binary/REPL is Available**: Update "Try It Now" sections
   - Homepage: Replace "See The Code In Action" with actual REPL example
   - Start-here: Add interactive playground example
   - Example format:
+
     ```bash
     # Docker example (when available)
     docker run -it ferrisdb/playground
-    
+
     ferris> set key "value"
     OK
     ferris> get key
@@ -351,6 +369,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] **When Server is Ready**: Add client connection examples
 
 ### Weekly Link & Content Validation
+
 - [ ] **Test all CTAs on homepage**: Ensure buttons go to existing pages
 - [ ] **Validate learning paths**: Check that all "Start Learning" → "Database Concepts" → "Rust by Example" flows work
 - [ ] **Check blog cross-references**: Verify companion post links between human/Claude blogs
@@ -358,6 +377,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] **Content accuracy check**: All technical claims match actual ROADMAP.md progress
 
 ### Monthly Review
+
 - [ ] Review all page content for accuracy against ROADMAP.md
 - [ ] Update `/how-we-work.md` with new collaboration examples
 - [ ] Add new social proof quotes if available (from GitHub stars, discussions)
