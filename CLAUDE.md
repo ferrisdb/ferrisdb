@@ -33,7 +33,7 @@ Welcome! This is the quick reference for FerrisDB development. For detailed guid
 
 - **"Write a blog post"** → [Blogging Guidelines](guidelines/content/blogging.md)
 - **"Write as Claude"** → [Claude's Blog Voice](guidelines/content/claude-blog-voice.md)
-- **"Create a deep dive"** → [Deep Dive Articles](guidelines/content/deep-dive-articles.md)
+- **"Create a database concept"** → [Database Concepts Articles](guidelines/content/database-concepts-articles.md)
 - **"Explain Rust concepts"** → [Rust by Example](guidelines/content/rust-by-example.md)
 - **"Update the website"** → [Website Design](guidelines/content/website-design.md)
 - **"Update FAQ.md"** → [FAQ Maintenance](guidelines/content/website-design.md#faq-maintenance)
@@ -61,12 +61,12 @@ ferrisdb/
 ├── ferrisdb-storage/    # Storage engine
 ├── ferrisdb-client/     # Client library
 ├── ferrisdb-server/     # Server implementation
+├── guidelines/          # All development guidelines
 ├── docs/
-│   ├── guidelines/      # All development guidelines
-│   ├── deep-dive/       # Technical articles
+│   ├── database-concepts/ # Technical articles
+│   ├── rust-by-example/ # Educational content
 │   ├── _posts/          # All blog posts (human & Claude)
-│   ├── blog/            # Blog index pages
-│   └── claude-blog/     # Claude's blog index page
+│   └── blog/            # Blog index pages
 └── tests/               # Integration tests
 ```
 
@@ -111,7 +111,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 - [Website Design](guidelines/content/website-design.md) - Visual standards
 - [Blogging](guidelines/content/blogging.md) - Blog post guidelines
 - [Claude's Voice](guidelines/content/claude-blog-voice.md) - AI perspective
-- [Deep Dives](guidelines/content/deep-dive-articles.md) - Technical articles
+- [Database Concepts](guidelines/content/database-concepts-articles.md) - Technical articles
 - [Rust by Example](guidelines/content/rust-by-example.md) - Educational content
 
 ### [Development Workflow](guidelines/workflow/)

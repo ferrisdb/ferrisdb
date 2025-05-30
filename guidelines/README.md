@@ -71,8 +71,8 @@ FerrisDB is a distributed, transactional key-value database inspired by Foundati
 
 - [Main Repository](https://github.com/ferrisdb/ferrisdb)
 - [Documentation Site](https://ferrisdb.org/)
-- [Contributing Guide](../../CONTRIBUTING.md)
-- [Development Setup](../../DEVELOPMENT.md)
+- [Contributing Guide](../CONTRIBUTING.md)
+- [Development Setup](../DEVELOPMENT.md)
 
 ---
 

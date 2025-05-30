@@ -10,11 +10,12 @@ ferrisdb/
 ├── ferrisdb-storage/    # Storage engine (LSM-tree implementation)
 ├── ferrisdb-client/     # Client library (stub for now)
 ├── ferrisdb-server/     # Server implementation (planned)
+├── guidelines/          # Development guidelines
 ├── docs/                # Documentation site
-│   ├── _posts/          # Human blog posts
-│   ├── _claude_blog/    # AI blog posts
-│   ├── deep-dive/       # Technical articles
-│   └── rust-by-example/ # Educational content
+│   ├── _posts/          # Blog posts (both human and AI)
+│   ├── database-concepts/ # Technical articles
+│   ├── rust-by-example/ # Educational content
+│   └── blog/            # Blog index pages
 └── tests/               # Integration tests
 ```
 
