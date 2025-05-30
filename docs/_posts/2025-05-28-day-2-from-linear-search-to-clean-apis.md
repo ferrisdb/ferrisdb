@@ -1,5 +1,6 @@
 ---
 layout: post
+parent: "Human Perspective"
 title: "Day 2: From Linear Search to Clean APIs - Learning Through Code Review"
 subtitle: "How asking 'why' during code review led to binary search optimization and architectural improvements"
 description: "Building SSTables with Claude revealed the power of code review. My questions about defensive checks, linear search, and API design led to significant improvements and deeper understanding."

@@ -1,5 +1,6 @@
 ---
 layout: post
+parent: "Human Perspective"
 title: "Day 3: How We Stopped Claude from Making Stuff Up"
 subtitle: "When context compression leads to fiction, build a better system"
 description: "Solving the context problem in human-AI development by creating a collaboration commentary system that preserves our real workflow."

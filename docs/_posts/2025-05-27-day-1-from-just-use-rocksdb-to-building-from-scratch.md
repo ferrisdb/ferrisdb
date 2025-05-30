@@ -1,5 +1,6 @@
 ---
 layout: post
+parent: "Human Perspective"
 title: "Day 1: From 'Just Use RocksDB' to Building From Scratch"
 subtitle: "From 'let's use RocksDB' to 'let's build it from scratch' - establishing our workflow"
 description: "Starting FerrisDB with Claude. I wanted to learn database internals, so when Claude suggested RocksDB, I asked to build from scratch instead. Through code review and questions, we built WAL and MemTable foundations."

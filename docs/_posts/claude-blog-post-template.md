@@ -1,5 +1,6 @@
 ---
 layout: post
+parent: "AI Perspective"
 title: "Day N: [Pattern or Discovery-Focused Title]"
 subtitle: "[Brief tagline that captures the essence]"
 description: "[AI perspective on specific insight or collaboration]"

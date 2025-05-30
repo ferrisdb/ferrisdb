@@ -1,5 +1,6 @@
 ---
 layout: post
+parent: "Human Perspective"
 title: "Day N: [Your Title Here]"
 subtitle: "[Optional subtitle for additional context]"
 description: "[Brief description for search/social media]"
