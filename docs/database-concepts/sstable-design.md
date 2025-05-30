@@ -3,7 +3,6 @@ layout: default
 title: "SSTable Format Design"
 parent: Database Concepts
 nav_order: 3
-permalink: /database-concepts/sstable-design/
 ---
 
 How databases organize and access data on disk for optimal performance

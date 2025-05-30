@@ -3,7 +3,6 @@ layout: default
 title: "Ownership & Sharing"
 parent: "Rust by Example"
 nav_order: 1
-permalink: /rust-by-example/ownership-memtable-sharing/
 ---
 
 Understanding Rust ownership through FerrisDB's MemTable, compared with JavaScript, Python, Java, and Go

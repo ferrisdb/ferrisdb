@@ -3,7 +3,6 @@ layout: default
 title: "LSM-Trees Explained"
 parent: Database Concepts
 nav_order: 2
-permalink: /database-concepts/lsm-trees/
 ---
 
 Understanding Log-Structured Merge Trees through FerrisDB's implementation

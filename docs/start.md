@@ -2,7 +2,6 @@
 layout: default
 title: Start Here
 nav_order: 2
-permalink: /start/
 ---
 
 # 🚀 From CRUD to Core: The Database Learning Journey

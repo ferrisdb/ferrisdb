@@ -1,8 +1,7 @@
 ---
 layout: default
 title: Frequently Asked Questions
-nav_order: 9
-permalink: /faq/
+nav_order: 8
 ---
 
 Everything you want to know about FerrisDB and our human-AI collaboration
@@ -187,7 +186,7 @@ cargo bench
 cargo build --release
 ```
 
-See our [Getting Started guide](/getting-started/) for detailed instructions.
+See our [Getting Started guide](/try-locally/) for detailed instructions.
 
 ## Contributing and Community
 
@@ -250,7 +249,7 @@ As long as there's something valuable to learn and teach! We're documenting not 
 
 If your question isn't answered here, please:
 
-1. Check our [documentation](/getting-started/)
+1. Check our [documentation](/try-locally/)
 2. Read the [database concepts articles](/database-concepts/)
 3. [Open an issue](https://github.com/ferrisdb/ferrisdb/issues) on GitHub
 

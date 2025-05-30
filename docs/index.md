@@ -50,7 +50,7 @@ Master Rust through real database code, with comparisons to JavaScript, Python, 
 
 Set up FerrisDB locally, run tests, and contribute to an open-source database project.
 
-[Getting Started →](/getting-started/){: .btn .btn-purple .fs-5 }
+[Getting Started →](/try-locally/){: .btn .btn-purple .fs-5 }
 
 ---
 
@@ -163,7 +163,7 @@ Whether you're here to learn Rust, understand databases, or explore human-AI col
 
 [Explore Database Concepts](/database-concepts/){: .btn .btn-primary .fs-5 .mr-2 }
 [Star on GitHub](https://github.com/ferrisdb/ferrisdb){: .btn .fs-5 .mr-2 }
-[Get Started](/getting-started/){: .btn .fs-5 }
+[Get Started](/try-locally/){: .btn .fs-5 }
 
 {: .warning }
 

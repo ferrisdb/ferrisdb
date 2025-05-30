@@ -214,5 +214,5 @@ _This document will evolve as we explore these concepts and discover new archite
 ## Navigation
 
 - [← Back to Architecture Overview]({{ '/architecture/' | relative_url }})
-- [Getting Started Guide →]({{ '/getting-started/' | relative_url }})
+- [Getting Started Guide →]({{ '/try-locally/' | relative_url }})
 - [Storage Engine Details →]({{ '/storage-engine/' | relative_url }})

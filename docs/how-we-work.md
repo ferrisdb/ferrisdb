@@ -2,7 +2,6 @@
 layout: default
 title: How We Work
 nav_order: 5
-permalink: /how-we-work/
 ---
 
 # Human + AI: How We Actually Build FerrisDB

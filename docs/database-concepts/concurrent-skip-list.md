@@ -3,7 +3,6 @@ layout: default
 title: "Lock-Free Skip Lists"
 parent: Database Concepts
 nav_order: 4
-permalink: /database-concepts/concurrent-skip-list/
 ---
 
 Understanding concurrent programming through FerrisDB's MemTable implementation

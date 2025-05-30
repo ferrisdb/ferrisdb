@@ -3,7 +3,6 @@ layout: default
 title: "WAL and Crash Recovery"
 parent: Database Concepts
 nav_order: 1
-permalink: /database-concepts/wal-crash-recovery/
 ---
 
 How Write-Ahead Logs ensure data durability and enable crash recovery in database systems

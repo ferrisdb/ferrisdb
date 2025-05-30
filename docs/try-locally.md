@@ -1,8 +1,7 @@
 ---
 layout: default
 title: Try It Locally
-nav_order: 7
-permalink: /try-locally/
+nav_order: 6
 ---
 
 Clone, build, and explore the code on your machine

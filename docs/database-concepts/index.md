@@ -3,7 +3,6 @@ layout: default
 title: Database Concepts
 nav_order: 3
 has_children: true
-permalink: /database-concepts/
 ---
 
 In-depth exploration of database internals through FerrisDB's implementation

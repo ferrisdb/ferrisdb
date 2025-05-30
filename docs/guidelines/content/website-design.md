@@ -250,7 +250,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 ### Daily/Weekly Updates
 
-- [ ] Update progress stats on homepage and start-here page:
+- [ ] Update progress stats on homepage and start page:
   - Use cached statistics function (see FAQ Maintenance Commands below)
   - Update all pages with consistent stats from same commit
   - Only recomputes if HEAD commit has changed since last cache
@@ -260,7 +260,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 **⚠️ CRITICAL**: ALL progress information on the website MUST be derived from ROADMAP.md. Never add features that aren't tracked there.
 
-#### 1. Update `/start-here.md` Progress Sections
+#### 1. Update `/start.md` Progress Sections
 
 **"What You'll Learn" section (lines 32-50)**
 
@@ -300,7 +300,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
    - **✅ What's Working**: All items marked `[x]` in ROADMAP.md
    - **🚧 Currently Building**: Items marked `[ ]` in current focus areas (usually Storage Engine)
    - **⏳ Coming Next**: Next logical items from ROADMAP.md
-3. Use technical descriptions (more detailed than start-here.md):
+3. Use technical descriptions (more detailed than start.md):
    - Include implementation details: "MemTable with concurrent Skip List"
    - Mention optimizations: "SSTable reader with binary search optimization"
    - Reference architectural decisions: "Clean API design after Day 2 refactoring"
@@ -313,7 +313,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 ### Language Guidelines for Progress Updates
 
-**For `/start-here.md` (learner-focused)**
+**For `/start.md` (learner-focused)**
 
 - Use "why" and "how" framing
 - Explain the purpose of each feature
@@ -354,7 +354,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 - [ ] **When Binary/REPL is Available**: Update "Try It Now" sections
 
   - Homepage: Replace "See The Code In Action" with actual REPL example
-  - Start-here: Add interactive playground example
+  - Start page: Add interactive playground example
   - Example format:
 
     ```bash
@@ -389,7 +389,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
   - Ensure consistency with homepage (`/index.md`) statistics
 
 - [ ] **Verify Links** (all must work):
-  - Internal: `/blog/`, `/blog/human/`, `/blog/claude/`, `/getting-started/`, `/database-concepts/`
+  - Internal: `/blog/`, `/blog/human/`, `/blog/claude/`, `/try-locally/`, `/database-concepts/`
   - External: GitHub repo, CONTRIBUTING.md, ROADMAP.md, issues page
   - Navigation: All internal FAQ anchors and cross-references
 

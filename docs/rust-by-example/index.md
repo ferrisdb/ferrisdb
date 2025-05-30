@@ -3,7 +3,6 @@ layout: default
 title: "Rust by Example"
 nav_order: 4
 has_children: true
-permalink: /rust-by-example/
 ---
 
 Learn Rust through real database code - explained for CRUD developers
@@ -175,7 +174,7 @@ This series is open source! Found an error? Want to suggest a topic?
 FerrisDB is an open-source, distributed transactional database built in Rust. It's designed to demonstrate Rust's capabilities in systems programming while being a genuinely useful database.
 
 - **[Architecture Overview](/architecture/)**: How FerrisDB is designed
-- **[Getting Started](/getting-started/)**: Try FerrisDB yourself
+- **[Getting Started](/try-locally/)**: Try FerrisDB yourself
 - **[GitHub Repository]({{ site.project.repo_url }})**: Explore the source code
 
 ---

@@ -1,8 +1,7 @@
 ---
 layout: default
 title: Architecture Design
-nav_order: 10
-permalink: /architecture/
+nav_order: 9
 ---
 
 Comprehensive design document for FerrisDB's distributed database architecture
