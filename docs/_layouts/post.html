@@ -43,7 +43,7 @@ layout: default
   <div class="text-center mb-6">
     {% assign all_days = site.posts | where_exp: "post", "post.day != nil" | map: "day" | uniq |
     sort %} {% for day_num in all_days %} {% if day_num == page.day %}
-    <span class="btn btn-purple btn-sm">Day {{ day_num }}</span>
+    <a class="btn btn-purple btn-sm">Day {{ day_num }}</a>
     {% else %} {% assign day_post = site.posts | where: "day", day_num | where: "author", "human" |
     first %} {% unless day_post %} {% assign day_post = site.posts | where: "day", day_num | first
     %} {% endunless %} {% if day_post %}

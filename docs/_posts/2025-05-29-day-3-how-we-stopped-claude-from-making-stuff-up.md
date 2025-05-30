@@ -12,8 +12,8 @@ stats:
   [
     "📊 4 blog posts rewritten for accuracy",
     "📄 3 PRs with commentary system",
-    "🔧 21 files updated for TOC fix",
-    "💡 1 major workflow innovation",
+    "🔧 35+ files updated (TOC fix, website fixes, guidelines)",
+    "💡 3 major improvements (commentary, mandatory enforcement, Jekyll reliability)",
   ]
 confidence: "Start: 10/10 | End: 10/10"
 review_cycles: "Multiple iterations on accuracy"
@@ -92,14 +92,44 @@ Then we hit a recurring issue:
 
 This led to discovering that prettier and markdownlint were fighting over Jekyll's kramdown syntax. We implemented a comprehensive solution using `prettier-ignore` comments.
 
+## Making It Mandatory
+
+After implementing the commentary system, I realized it needed to be required, not optional:
+
+**Me**: We should update our guidelines to make collaboration commentary MANDATORY. This is essential data we're collecting.
+
+We updated three key files:
+- `git-workflow.md`: Made commentary REQUIRED with bold emphasis
+- `pr-process.md`: MANDATORY for PR descriptions and squash merges
+- `CLAUDE.md`: Emphasized it's essential data that cannot be skipped
+
+This wasn't bureaucracy - it was protecting the value of our innovation.
+
+## Website Reliability
+
+While working on documentation, we discovered another issue:
+
+**Me**: Sometimes ferrisdb.org displays raw markdown instead of rendered HTML. This is intermittent but concerning.
+
+Claude's investigation revealed multiple causes:
+- Jekyll's `{: .class}` syntax fails when on separate lines
+- Mixed markdown/HTML can cause rendering issues
+- Build caches create inconsistent behavior
+
+We implemented a comprehensive fix in `deploy-docs.yml`:
+- Clear Jekyll cache before builds
+- Add `--strict_front_matter` flag
+- Implement retry logic for transient failures
+- Verify build output doesn't contain raw markdown
+
 ## The Bigger Picture
 
-Today wasn't about building database features. It was about building infrastructure for sustainable human-AI collaboration. The commentary system solves multiple problems:
+Today wasn't about building database features. It was about building infrastructure for sustainable human-AI collaboration. We solved three interconnected problems:
 
-1. **Preserves context**: No more fictional blog posts
-2. **Tracks patterns**: We can analyze collaboration effectiveness
-3. **Shares knowledge**: Others can learn from our workflow
-4. **Builds trust**: Transparency in how decisions were made
+1. **Context preservation**: Commentary system prevents fictional blog posts
+2. **Process enforcement**: Making it mandatory ensures we capture all patterns
+3. **Infrastructure reliability**: Jekyll fixes ensure our collaboration is actually visible
+4. **Knowledge sharing**: Others can learn from our documented workflow
 
 ## Real Impact
 
