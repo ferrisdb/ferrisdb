@@ -2,6 +2,8 @@
 
 Welcome! This is the quick reference for FerrisDB development. For detailed guidelines, see the [comprehensive documentation](docs/guidelines/README.md).
 
+⚠️ **Important**: This file is an INDEX for quick lookups. Do NOT add detailed content here - update the appropriate guideline file instead and link to it.
+
 ## 🚀 Quick Start
 
 ### Essential Reading
@@ -83,21 +85,13 @@ git push -u origin feature/your-feature
 gh pr create
 ```
 
-## 📝 Commit Commentary Requirements
+## 📝 Collaboration Commentary
 
-When committing changes, include a collaboration commentary:
+When working with Claude, include collaboration commentary in:
 
-```bash
-git commit -m "feat: Add feature description
-
-Detailed explanation of changes...
-
-🤖 Claude's Commentary:
-📊 Stats: X iterations, Y insights, Z refactors
-🔄 Process: Human noticed X → suggested Y → implemented Z
-💡 Key Learning: [Main insight that drove improvement]
-🎯 Outcome: [What was achieved]"
-```
+- **Commits**: See [Git Workflow - Claude's Collaboration Commentary](docs/guidelines/workflow/git-workflow.md#claudes-collaboration-commentary)
+- **PR Descriptions**: See [PR Process - Collaboration Summary](docs/guidelines/workflow/pr-process.md#pr-description-template)
+- **Squash Merges**: See [PR Process - Squash Merge Format](docs/guidelines/workflow/pr-process.md#squash-merge-commit-message-format)
 
 This helps track our collaboration patterns for blog posts and research.
 
@@ -138,9 +132,10 @@ This helps track our collaboration patterns for blog posts and research.
 ### When Updating Guidelines
 
 1. **Update the specific guideline file** in `docs/guidelines/`
-2. **Update this index** if adding new sections or changing structure
+2. **Update this index ONLY** if adding new sections or changing structure
 3. **Update cross-references** in related guideline files
 4. **Test all links** to ensure they work
+5. **NEVER add detailed content to CLAUDE.md** - it's an index, not a manual!
 
 ### My Quick Reminders
 

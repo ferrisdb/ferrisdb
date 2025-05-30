@@ -439,6 +439,48 @@ chmod +x .git/hooks/pre-commit
 9. **Review your changes**: Use `git diff` before committing
 10. **Sign your commits**: Use GPG signing for important projects
 
+## Squash Merging with Commentary
+
+When squash merging PRs (especially those with Claude's collaboration):
+
+### Using GitHub CLI
+
+```bash
+# Squash merge with custom commit message
+gh pr merge <PR-number> --squash --body-file commit-message.txt
+
+# Or edit interactively
+gh pr merge <PR-number> --squash --edit
+```
+
+### Using GitHub Web UI
+
+1. Click "Squash and merge"
+2. Click "Edit commit message"
+3. Update the message to include:
+   - Clear summary of changes
+   - Collaboration commentary summary
+   - Co-authorship attribution
+
+### Why This Matters
+
+Including collaboration summaries in squash commits:
+
+- Preserves research data in git history
+- Makes patterns discoverable via `git log`
+- Documents the human-AI workflow evolution
+- Creates a permanent record of insights
+
+Example search for collaboration patterns:
+
+```bash
+# Find all commits with collaboration summaries
+git log --grep="🤖 Claude's Collaboration Summary" --oneline
+
+# See full collaboration details
+git log --grep="🤖" --pretty=full
+```
+
 ## Git Resources
 
 - [Pro Git Book](https://git-scm.com/book/en/v2)

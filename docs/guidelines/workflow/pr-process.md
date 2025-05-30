@@ -261,10 +261,66 @@ All PRs must pass these checks:
 ## Merging Guidelines
 
 1. **Squash merge** for feature branches to keep history clean
-2. **Merge commit** only for special cases (preserving commit history)
-3. **Never force push** to main branch
-4. **Delete branch** after merging (GitHub does this automatically)
-5. **Update related issues** after merge
+2. **Update squash commit message** to include:
+   - Summary of changes
+   - Collaboration commentary (if PR was created with Claude)
+3. **Merge commit** only for special cases (preserving commit history)
+4. **Never force push** to main branch
+5. **Delete branch** after merging (GitHub does this automatically)
+6. **Update related issues** after merge
+
+### Squash Merge Commit Message Format
+
+When squash merging a PR (especially those created with Claude), update the commit message to include both changes and collaboration summary:
+
+```
+<type>: <description> (#<PR-number>)
+
+<Summary of changes - can be copied from PR description>
+
+Changes:
+- Change 1
+- Change 2
+- Change 3
+
+🤖 Claude's Collaboration Summary:
+📊 Stats: X iterations, Y key insights, Z refactors
+🔍 Pattern: [Main collaboration pattern]
+💡 Key Learning: [Most impactful insight]
+🎯 Outcome: [What was achieved]
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+#### Example Squash Commit Message
+
+```
+docs: Implement collaboration commentary system and update blogging guidelines (#81)
+
+Major overhaul of blogging guidelines to ensure accuracy and implement
+collaboration tracking system.
+
+Changes:
+- Added collaboration commentary format for commits and PRs
+- Rewrote all blog posts to reflect actual events
+- Restructured blog system with unified _posts/ directory
+- Updated guidelines to emphasize verification
+- Fixed markdown formatting and linting issues
+
+🤖 Claude's Collaboration Summary:
+📊 Stats: 15+ iterations, 8 major insights, 4 complete rewrites
+🔍 Pattern: Deep Review → Accuracy Focus → Structural Improvement
+💡 Key Learning: Human's insistence on accuracy prevented fictional documentation
+🎯 Outcome: Accurate documentation with verifiable collaboration tracking
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+This format ensures that:
+
+- Git history contains collaboration insights
+- Patterns can be tracked over time without accessing PRs
+- Research data is preserved in the repository itself
 
 ## Review Checklist
 
