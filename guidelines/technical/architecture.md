@@ -24,11 +24,11 @@ FerrisDB is a distributed, transactional key-value database with the following a
             │   (LSM-tree)    │
             └────────┬────────┘
                      │
-         ┌───────────┼───────────┐
-         │           │           │
-    ┌────▼────┐ ┌───▼────┐ ┌───▼────┐
-    │MemTable │ │SSTables│ │  WAL   │
-    └─────────┘ └────────┘ └────────┘
+          ┌──────────┼───────────┐
+          │          │           │
+     ┌────▼────┐ ┌───▼────┐ ┌───▼────┐
+     │MemTable │ │SSTables│ │  WAL   │
+     └─────────┘ └────────┘ └────────┘
 ```
 
 ### Component Boundaries
