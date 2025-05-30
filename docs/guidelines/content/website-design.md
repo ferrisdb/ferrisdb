@@ -262,7 +262,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 #### 1. Update `/start-here.md` Progress Sections:
 
-**"What You'll Learn" section (lines 32-50)**:
+**"What You'll Learn" section (lines 32-50)**
 
 1. Check ROADMAP.md for completed/in-progress items
 2. Update three subsections:
@@ -276,7 +276,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
    - "Compaction" → "Compaction - how databases merge files efficiently"
    - "Bloom filters" → "Bloom filters - probabilistic data structures for speed"
 
-**"What's implemented so far" section (lines 68-74)**:
+**"What's implemented so far" section (lines 68-74)**
 
 1. List completed items from ROADMAP.md with checkmarks
 2. Show current work in progress
@@ -313,21 +313,21 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 ### Language Guidelines for Progress Updates:
 
-**For `/start-here.md` (learner-focused)**:
+**For `/start-here.md` (learner-focused)**
 
 - Use "why" and "how" framing
 - Explain the purpose of each feature
 - Make it accessible to CRUD developers
 - Example: "Why databases need Write-Ahead Logs" not just "WAL implemented"
 
-**For `/index.md` (technically accurate)**:
+**For `/index.md` (technically accurate)**
 
 - Use precise technical terms
 - Include implementation details
 - Mention specific algorithms or data structures
 - Example: "MemTable with concurrent Skip List" not just "in-memory storage"
 
-### Daily Homepage Checklist:
+### Daily Homepage Checklist
 
 - [ ] **Development Progress table** (lines 101-108): Reflects current ROADMAP.md status
 - [ ] **Latest Collaboration Metrics** (lines 127-133): Update from actual collaboration data

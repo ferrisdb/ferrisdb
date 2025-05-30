@@ -7,8 +7,6 @@ permalink: /start/
 
 # 🚀 From CRUD to Core: The Database Learning Journey
 
-{: .fs-9 .fw-700 }
-
 Learn how databases really work by building one from scratch
 {: .fs-6 .text-grey-dk-100 }
 

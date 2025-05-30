@@ -7,8 +7,6 @@ permalink: /how-we-work/
 
 # Human + AI: How We Actually Build FerrisDB
 
-{: .fs-8 .fw-700 }
-
 The most common question: "So... how does this AI collaboration actually work?"
 {: .fs-5 .text-grey-dk-100 }
 
