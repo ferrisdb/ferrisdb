@@ -9,12 +9,14 @@ Guidelines for working on FerrisDB's LSM-tree storage engine.
 The in-memory component using a concurrent skip list.
 
 **Guidelines:**
+
 - Keep the skip list implementation lock-free
 - Use Arc for node management (no unsafe)
 - Maintain sorted order for efficient scans
 - Track memory usage for flush decisions
 
 **Interface:**
+
 ```rust
 pub trait MemTable: Send + Sync {
     fn put(&self, key: &[u8], value: &[u8]) -> Result<()>;
@@ -29,6 +31,7 @@ pub trait MemTable: Send + Sync {
 Immutable on-disk files with sorted key-value pairs.
 
 **Format:**
+
 ```
 ┌─────────────┐
 │   Header    │ - Magic number, version
@@ -44,6 +47,7 @@ Immutable on-disk files with sorted key-value pairs.
 ```
 
 **Guidelines:**
+
 - Use block-based format for efficient reads
 - Include bloom filters for existence checks
 - Compress blocks individually
@@ -54,6 +58,7 @@ Immutable on-disk files with sorted key-value pairs.
 Durability through sequential writes.
 
 **Entry Format:**
+
 ```rust
 pub struct LogEntry {
     pub sequence: u64,
@@ -65,6 +70,7 @@ pub struct LogEntry {
 ```
 
 **Guidelines:**
+
 - Always sync after write (configurable)
 - Use CRC32 for checksums
 - Implement log rotation
@@ -75,11 +81,13 @@ pub struct LogEntry {
 Background process to merge SSTables.
 
 **Strategies:**
+
 1. **Size-tiered**: Compact similar-sized files
 2. **Leveled**: Maintain level invariants
 3. **Universal**: Balance space and write amplification
 
 **Guidelines:**
+
 - Start with size-tiered (simpler)
 - Make strategy pluggable
 - Track statistics
@@ -96,10 +104,10 @@ use thiserror::Error;
 pub enum StorageError {
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
-    
+
     #[error("Corruption detected: {0}")]
     Corruption(String),
-    
+
     #[error("Key not found")]
     KeyNotFound,
 }
@@ -113,15 +121,15 @@ mod tests {
     // Test single-threaded operations
     #[test]
     fn test_basic_operations() { }
-    
+
     // Test concurrent operations
     #[test]
     fn test_concurrent_writes() { }
-    
+
     // Test crash recovery
     #[test]
     fn test_recovery_after_crash() { }
-    
+
     // Test compaction
     #[test]
     fn test_compaction_correctness() { }
@@ -131,11 +139,13 @@ mod tests {
 ### Performance Considerations
 
 1. **Write Path**
+
    - Batch writes when possible
    - Use write buffer
    - Async WAL writes (with durability trade-off)
 
 2. **Read Path**
+
    - Check MemTable first
    - Use bloom filters
    - Cache frequently accessed blocks
@@ -156,7 +166,7 @@ impl StorageEngine {
     pub fn dump_stats(&self) -> Stats {
         // Return internal statistics
     }
-    
+
     #[cfg(debug_assertions)]
     pub fn validate_invariants(&self) -> Result<()> {
         // Check all invariants hold

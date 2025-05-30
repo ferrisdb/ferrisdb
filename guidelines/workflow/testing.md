@@ -83,17 +83,19 @@ proptest! {
 ## Best Practices
 
 1. **Test names should describe what they test**
+
    ```rust
    // Good
    #[test]
    fn get_returns_none_for_missing_key() { }
-   
+
    // Bad
    #[test]
    fn test_get() { }
    ```
 
 2. **Use helper functions to reduce duplication**
+
    ```rust
    fn create_test_memtable() -> MemTable {
        // Common setup code
@@ -101,6 +103,7 @@ proptest! {
    ```
 
 3. **Test one thing at a time**
+
    - Each test should verify a single behavior
    - Multiple assertions are fine if testing related aspects
 
@@ -111,6 +114,7 @@ proptest! {
 ## Continuous Integration
 
 All tests run automatically on:
+
 - Every push to a PR
 - Before merging to main
 - Nightly for extended test suites

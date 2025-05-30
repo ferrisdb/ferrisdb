@@ -50,12 +50,14 @@ match result {
 ### Dependency Security
 
 1. **Audit dependencies**
+
    ```bash
    cargo install cargo-audit
    cargo audit
    ```
 
 2. **Minimize dependencies**
+
    - Only add what's necessary
    - Prefer well-maintained crates
    - Review dependency trees
@@ -77,20 +79,20 @@ use rustls::{ServerConfig, NoClientAuth};
 
 fn create_tls_config() -> ServerConfig {
     let mut config = ServerConfig::new(NoClientAuth);
-    
+
     // Load certificates
     config.set_single_cert(cert_chain, private_key)?;
-    
+
     // Set secure protocols
     config.versions = vec![&rustls::version::TLS13];
-    
+
     // Configure cipher suites
     config.ciphersuites = rustls::ALL_CIPHERSUITES
         .iter()
         .filter(|suite| suite.suite.is_tls13())
         .copied()
         .collect();
-    
+
     config
 }
 ```
@@ -152,7 +154,7 @@ impl EncryptedStorage {
         let ciphertext = self.cipher
             .encrypt(&nonce, data)
             .map_err(|_| Error::EncryptionFailed)?;
-        
+
         // Prepend nonce to ciphertext
         let mut result = nonce.to_vec();
         result.extend_from_slice(&ciphertext);
@@ -223,7 +225,7 @@ use std::path::{Path, Component};
 
 fn safe_path(base: &Path, user_input: &str) -> Result<PathBuf> {
     let path = Path::new(user_input);
-    
+
     // Check for path traversal
     for component in path.components() {
         match component {
@@ -232,7 +234,7 @@ fn safe_path(base: &Path, user_input: &str) -> Result<PathBuf> {
             _ => {}
         }
     }
-    
+
     Ok(base.join(path))
 }
 ```

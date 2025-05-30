@@ -50,6 +50,7 @@ FerrisDB is a distributed, transactional key-value database with the following a
 ### 2. Safety Over Performance
 
 During the learning phase:
+
 - Avoid `unsafe` code unless absolutely necessary
 - Use safe abstractions even if slower
 - Make performance optimizations explicit and documented
@@ -66,12 +67,14 @@ During the learning phase:
 ### Storage Engine: LSM-Tree
 
 **Why LSM-tree over B-tree:**
+
 - Better write performance
 - Natural fit for append-only operations
 - Demonstrates compaction concepts
 - Used by RocksDB, LevelDB, Cassandra
 
 **Trade-offs:**
+
 - More complex read path
 - Requires background compaction
 - Space amplification
@@ -79,12 +82,14 @@ During the learning phase:
 ### Concurrency: Lock-Free Skip List
 
 **Why skip list for MemTable:**
+
 - Lock-free concurrent operations
 - Good cache locality
 - Simpler than lock-free B-trees
 - Educational value
 
 **Implementation:**
+
 - No `unsafe` code (learning focus)
 - Arc-based node management
 - Eventually optimize if needed
@@ -92,6 +97,7 @@ During the learning phase:
 ### Persistence: Write-Ahead Log
 
 **Design choices:**
+
 - Simple append-only format
 - CRC32 checksums for integrity
 - Synchronous writes by default
@@ -100,6 +106,7 @@ During the learning phase:
 ### API: gRPC
 
 **Why gRPC:**
+
 - Language-agnostic clients
 - Built-in code generation
 - Streaming support
@@ -110,6 +117,7 @@ During the learning phase:
 ### Distribution
 
 When we add distribution:
+
 - Raft for consensus
 - Range-based sharding
 - Learner replicas
@@ -118,6 +126,7 @@ When we add distribution:
 ### Transactions
 
 Transaction design:
+
 - Optimistic concurrency control
 - Snapshot isolation
 - Multi-key transactions
@@ -126,6 +135,7 @@ Transaction design:
 ## Non-Goals
 
 Things we explicitly don't optimize for:
+
 1. **SQL compatibility** - We're a key-value store
 2. **Embedded use** - We're building a server
 3. **Maximum performance** - We prioritize learning

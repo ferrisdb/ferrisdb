@@ -37,11 +37,13 @@ criterion_main!(benches);
 ### Key Metrics to Track
 
 1. **Throughput**
+
    - Operations per second
    - Bytes per second
    - Transactions per second
 
 2. **Latency**
+
    - p50, p95, p99, p999
    - Mean and standard deviation
    - Worst case
@@ -55,6 +57,7 @@ criterion_main!(benches);
 ### Benchmark Categories
 
 Create benchmarks for:
+
 - Single-threaded operations
 - Concurrent operations
 - Large value handling
@@ -67,6 +70,7 @@ Create benchmarks for:
 ### Memory Optimizations
 
 1. **Arena Allocation**
+
    ```rust
    // Consider arena allocation for MemTable
    pub struct Arena {
@@ -76,20 +80,22 @@ Create benchmarks for:
    ```
 
 2. **Object Pooling**
+
    ```rust
    // Reuse expensive objects
    use crossbeam::queue::ArrayQueue;
-   
+
    struct BufferPool {
        pool: ArrayQueue<Vec<u8>>,
    }
    ```
 
 3. **Zero-Copy Operations**
+
    ```rust
    // Use bytes::Bytes for zero-copy
    use bytes::Bytes;
-   
+
    pub struct Value {
        data: Bytes,
    }
@@ -98,9 +104,10 @@ Create benchmarks for:
 ### I/O Optimizations
 
 1. **Vectored I/O**
+
    ```rust
    use std::io::IoSlice;
-   
+
    // Write multiple buffers in one syscall
    file.write_vectored(&[
        IoSlice::new(&header),
@@ -110,21 +117,23 @@ Create benchmarks for:
    ```
 
 2. **Direct I/O**
+
    ```rust
    // Bypass page cache for large sequential writes
    #[cfg(target_os = "linux")]
    use std::os::unix::fs::OpenOptionsExt;
-   
+
    OpenOptions::new()
        .custom_flags(libc::O_DIRECT)
        .open(path)?;
    ```
 
 3. **Asynchronous I/O**
+
    ```rust
    // Use tokio for async I/O
    use tokio::fs::File;
-   
+
    async fn write_async(file: &mut File, data: &[u8]) {
        file.write_all(data).await?;
    }
@@ -133,14 +142,16 @@ Create benchmarks for:
 ### Concurrency Optimizations
 
 1. **Lock-Free Data Structures**
+
    - Already using for skip list
    - Consider for other hot paths
    - Document memory ordering carefully
 
 2. **Read-Write Locks**
+
    ```rust
    use parking_lot::RwLock;
-   
+
    // Prefer RwLock when reads dominate
    struct Cache {
        data: RwLock<HashMap<Key, Value>>,
@@ -193,7 +204,7 @@ lazy_static! {
         "ferrisdb_writes_total",
         "Total number of write operations"
     ).unwrap();
-    
+
     static ref WRITE_LATENCY: Histogram = register_histogram!(
         "ferrisdb_write_latency_seconds",
         "Write operation latency"
