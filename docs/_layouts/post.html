@@ -26,12 +26,17 @@ layout: default
   other_perspective = nil %} {% for post in all_posts %} {% if post.url != page.url %} {% if
   page.author == "human" and post.author == "claude" %} {% assign other_perspective = post %} {%
   elsif page.author == "claude" and post.author == "human" %} {% assign other_perspective = post %}
-  {% endif %} {% endif %} {% endfor %} {% if other_perspective %} {: .note } > 📖 Also read: [{% if
-  page.author == "human" %}🤖 Claude's perspective{% else %}👤 Human's perspective{% endif %} on Day
-  {{ page.day }}]({{ other_perspective.url | relative_url }}) {% endif %} {% endif %}
+  {% endif %} {% endif %} {% endfor %} {% if other_perspective %}
+  <div class="note">
+    <p>📖 Also read: <a href="{{ other_perspective.url | relative_url }}">{% if
+    page.author == "human" %}🤖 Claude's perspective{% else %}👤 Human's perspective{% endif %} on Day
+    {{ page.day }}</a></p>
+  </div>
+  {% endif %} {% endif %}
 
   <!-- Series Navigation for Day-based Posts -->
-  {% if page.day %} ---
+  {% if page.day %}
+  <hr />
 
   <h3 class="fs-5 fw-600 text-center">📅 FerrisDB Development Journey</h3>
 
@@ -46,10 +51,13 @@ layout: default
     {% endif %} {% endif %} {% endfor %}
   </div>
 
-  --- {% endif %}
+  <hr />
+  {% endif %}
 
   <!-- Post Content -->
-  {{ content }} ---
+  {{ content }}
+  
+  <hr />
 
   <!-- Navigation Section -->
   <h2 class="fs-6 fw-600">Continue Reading</h2>
@@ -75,7 +83,9 @@ layout: default
     </div>
     {% endif %}
   </div>
-  {% endif %} ---
+  {% endif %}
+  
+  <hr />
 
   <!-- Blog Index Links -->
   <h3 class="fs-5 fw-600 text-center">Continue Your Journey</h3>
@@ -99,10 +109,17 @@ layout: default
   post_tags_check = post.tags | default: post.categories %} {% assign common_tags = post_tags |
   intersect: post_tags_check %} {% if common_tags.size > 0 %} {% assign related_posts =
   related_posts | push: post %} {% endif %} {% endif %} {% endfor %} {% assign related_posts =
-  related_posts | sort: "date" | reverse | limit: 5 %} {% if related_posts.size > 0 %} {% for post
-  in related_posts %} - [{{ post.title }}]({{ post.url | relative_url }}) ({{ post.date | date: "%B
-  %-d" }}) {% endfor %} {% else %} No related posts yet. Check out the [full blog]({{ '/blog/' |
-  relative_url }}) for more content! {% endif %} ---
+  related_posts | sort: "date" | reverse | limit: 5 %} {% if related_posts.size > 0 %}
+  <ul>
+  {% for post in related_posts %}
+  <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> ({{ post.date | date: "%B %-d" }})</li>
+  {% endfor %}
+  </ul>
+  {% else %}
+  <p>No related posts yet. Check out the <a href="{{ '/blog/' | relative_url }}">full blog</a> for more content!</p>
+  {% endif %}
+  
+  <hr />
 
   <!-- Call to Action -->
   <h3 class="fs-6 fw-600 text-center">Enjoying the FerrisDB journey?</h3>

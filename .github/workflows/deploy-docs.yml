@@ -35,12 +35,55 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
         
+      - name: Clear Jekyll cache
+        run: |
+          cd docs
+          rm -rf .jekyll-cache _site .sass-cache
+          echo "✅ Jekyll cache cleared"
+          
       - name: Build with Jekyll
         run: |
           cd docs
-          bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+          # Try building up to 3 times in case of transient failures
+          for i in 1 2 3; do
+            if bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --strict_front_matter; then
+              echo "✅ Jekyll build succeeded on attempt $i"
+              break
+            else
+              echo "⚠️  Jekyll build failed on attempt $i"
+              if [ $i -eq 3 ]; then
+                echo "❌ Jekyll build failed after 3 attempts"
+                exit 1
+              fi
+              sleep 2
+            fi
+          done
         env:
           JEKYLL_ENV: production
+          
+      - name: Verify build output
+        run: |
+          cd docs/_site
+          # Check that index.html exists and contains HTML, not raw markdown
+          if [ ! -f "index.html" ]; then
+            echo "ERROR: index.html not generated"
+            exit 1
+          fi
+          # More thorough check for markdown patterns
+          if grep -E "^#{1,6}\s|^\*\s|^-\s|^\d+\.\s|^\`\`\`" index.html; then
+            echo "ERROR: Raw markdown detected in built HTML"
+            echo "First 50 lines of index.html:"
+            head -50 index.html
+            exit 1
+          fi
+          # Check for Liquid syntax that wasn't processed
+          if grep -E "\{\%|%\}|\{\{|\}\}" index.html; then
+            echo "ERROR: Unprocessed Liquid syntax detected"
+            echo "First 50 lines of index.html:"
+            head -50 index.html
+            exit 1
+          fi
+          echo "✅ Build verification passed"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
