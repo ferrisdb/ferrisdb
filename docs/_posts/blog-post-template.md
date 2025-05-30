@@ -55,20 +55,26 @@ For three hours (yes, I counted), I battled with:
 
 **Times I Googled "[search term]":** 23
 
-## Enter Claude, Stage Left
+## Asking for Help (Realistic Prompting)
 
-Just when I was about to [dramatic action like throwing laptop out window], I asked Claude for help...
+Just when I was about to [dramatic action], I turned to Claude:
 
-💭 **Claude Says:** "[Insightful explanation that changes everything]"
+**Me**: [Actual question you would ask, e.g., "I'm getting this error when trying to implement X. Here's my code: [code]. What am I doing wrong?"]
 
-Wait, what? 🤯
+**Claude**: [Full technical response with explanation and code examples. This should be educational and complete, showing how AI actually responds to technical questions]
+
+**Me**: [Follow-up question for clarification]
+
+**Claude**: [Clarifying response]
+
+*My brain: processing... processing... OH!* 🤯
 
 ## The "Aha!" Moment
 
-[Describe the breakthrough]
+[Describe how you understood it, what clicked, in your narrative voice]
 
 ```rust
-// What actually worked (thanks Claude!)
+// The working implementation
 [code snippet]
 ```
 
