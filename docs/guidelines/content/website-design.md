@@ -260,7 +260,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 
 **⚠️ CRITICAL**: ALL progress information on the website MUST be derived from ROADMAP.md. Never add features that aren't tracked there.
 
-#### 1. Update `/start-here.md` Progress Sections:
+#### 1. Update `/start-here.md` Progress Sections
 
 **"What You'll Learn" section (lines 32-50)**
 
@@ -282,7 +282,7 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
 2. Show current work in progress
 3. Mention what's coming next (interactive REPL when "CLI client" is ready)
 
-#### 2. Update `/index.md` Progress Sections:
+#### 2. Update `/index.md` Progress Sections
 
 **"Development Progress" table (lines 97-108)**:
 
@@ -305,13 +305,13 @@ The `ROADMAP.md` file is the SINGLE source of truth for ALL project progress dis
    - Mention optimizations: "SSTable reader with binary search optimization"
    - Reference architectural decisions: "Clean API design after Day 2 refactoring"
 
-#### 3. Check for Other Progress Sections:
+#### 3. Check for Other Progress Sections
 
 - Search for any other pages mentioning features or progress
 - Ensure they all reference ROADMAP.md items only
 - Update as needed to maintain consistency
 
-### Language Guidelines for Progress Updates:
+### Language Guidelines for Progress Updates
 
 **For `/start-here.md` (learner-focused)**
 
