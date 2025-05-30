@@ -162,22 +162,54 @@ You're a humble CRUD developer who never imagined building a database!
   - "Debugging this was like finding a specific grain of sand on a beach"
   - "The skip list finally clicked - it's just a subway system for data!"
 
-## Grounding Humor in Reality
+## Realistic Prompting Style
 
-While humor and personality make blogs engaging, always base jokes and examples on actual code and facts:
+Based on reader feedback, the blog should show authentic human-AI collaboration through realistic prompts and responses:
 
-- **Use real variable names**: If joking about unclear code, use actual variables from the codebase (e.g., `buf` not `xlmr_2`)
-- **Reference real struggles**: Base "confusion moments" on actual compilation errors or test failures
-- **Accurate technical details**: Even when simplifying, ensure technical accuracy (e.g., SSTable = Sorted String Table, not "Super Saiyan Table")
-- **Real code snippets**: When showing "bad" code, base it on actual early attempts or common mistakes
-- **Genuine learning moments**: Share actual "aha!" moments from development, not fictional ones
+### What to Include
 
-Examples:
+- **Actual prompts**: Real questions a developer would ask
+- **Full AI responses**: Complete technical explanations with code
+- **Follow-up questions**: Natural back-and-forth clarification
+- **Real errors**: Actual compilation errors and debugging sessions
+- **Learning progression**: How understanding deepens through interaction
 
-- ✅ "I thought `buf` meant buffer, but Claude asked if I meant Buffy the Vampire Slayer"
-- ❌ "I named a variable `xyzzy_42` and forgot what it meant" (unless this actually happened)
-- ✅ "The compiler gave me 126 errors" (if true)
-- ❌ "The compiler gave me 9000 errors" (unless it actually did)
+### Example Format
+
+Instead of theatrical dialogue:
+```
+Me: "I'm ready for Super Saiyan Tables!"
+Claude: "...it's Sorted String Table."
+```
+
+Use realistic prompting:
+```
+Me: I need to implement SSTables next. Can you explain the basic structure 
+and what components I need to build?
+
+Claude: SSTables (Sorted String Tables) are immutable files that store 
+sorted key-value pairs. Here's what you'll need to implement:
+[detailed technical explanation with code]
+
+Me: Why do we need blocks instead of just writing all data sequentially?
+
+Claude: Good question! Sequential writing would be simpler, but...
+[explains tradeoffs with specific examples]
+```
+
+### Benefits of This Style
+
+- **Educational**: Readers learn actual prompting techniques
+- **Authentic**: Shows real human-AI interaction patterns  
+- **Practical**: Demonstrates effective collaboration with LLMs
+- **Relatable**: Readers recognize their own AI interactions
+
+### What to Keep from the Original Style
+
+- **Your personality**: Still show frustration, excitement, confusion in narrative
+- **Humor**: Keep the coffee count, funny observations between prompts
+- **Real struggles**: Show actual errors and debugging
+- **Story arc**: Maintain the journey from confusion to understanding
 
 ## Absolute Honesty About Contributions
 

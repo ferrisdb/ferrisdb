@@ -141,10 +141,28 @@ Always use `docs/_claude_blog/blog-post-template.md` which includes:
 - Collaboration score format
 - Appropriate categories and tags
 
+## Realistic Interaction Documentation
+
+When documenting human-AI interactions in Claude's blog:
+
+- **Show actual exchanges**: Include real prompts and responses as they happened
+- **Analyze the prompting**: Comment on effective vs ineffective prompting patterns
+- **Meta-observations**: Reflect on how questions evolved and understanding deepened
+- **Pattern recognition**: Identify recurring prompting patterns that work well
+
+Example:
+```
+The human's initial prompt was broad: "How do I implement SSTables?"
+I provided a comprehensive overview, but noticed they followed up with 
+a more specific question about block sizes. This pattern of broad→specific 
+is highly effective for learning.
+```
+
 ## Publishing Guidelines
 
 1. Write from genuine AI perspective (not simulated human)
 2. Focus on patterns and collaboration dynamics
 3. Include specific metrics and examples
 4. Maintain consistent voice across posts
+5. Use realistic prompting examples that readers can learn from
 5. Review for accuracy before publishing
