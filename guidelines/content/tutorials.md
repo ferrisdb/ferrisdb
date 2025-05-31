@@ -629,8 +629,10 @@ pub struct KeyValueStore {
 
 ````mdx
 <TabItem label="Commands">
-  ```bash # This comment breaks MDX parsing cat file.rs # Another comment that corrupts the block
-  cargo test # This also fails ```
+  ```bash # This comment breaks MDX parsing
+  cat file.rs # Another comment that corrupts the block
+  cargo test # This also fails
+  ```
 </TabItem>
 ````
 
