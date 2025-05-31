@@ -487,6 +487,171 @@ Common external links to verify:
 - Std library docs: `https://doc.rust-lang.org/std/`
 - Rustup: `https://rustup.rs`
 
+## Tutorial Reference Maintenance
+
+### Overview
+
+When adding new tutorials or updating existing ones, multiple files across the codebase may reference them. This section ensures all references stay consistent and accurate, preventing stale "coming soon" messages after tutorials are published.
+
+### Reference Update Checklist
+
+When publishing a new tutorial, update ALL of these locations:
+
+#### 1. Navigation Files
+- [ ] **`ferrisdb-docs/astro.config.mjs`**
+  - Add tutorial to the "Learn by Building" section
+  - Ensure correct order and nesting
+  - Update any "Coming Soon" badges to published status
+
+#### 2. Previous Tutorial Files
+- [ ] **Previous tutorial's "Next Steps" section**
+  - Update from playful "secret" message to actual link
+  - Example: `tutorials/01-key-value-store.mdx` → Update to link to Tutorial 2
+
+#### 3. Tracking Files
+- [ ] **`LEARNING-PROGRESS.md`**
+  - Change status from "Planned" → "In Progress" → "Published"
+  - Update progress bars for concept coverage
+  - Add publication date
+  
+- [ ] **`RUST-CONCEPTS-TAUGHT.md`**
+  - Mark concepts as taught (✅)
+  - Add tutorial number references
+  
+- [ ] **`DATABASE-CONCEPTS-TAUGHT.md`**
+  - Mark database concepts as covered
+  - Add real-world examples used
+
+#### 4. Index and Overview Files
+- [ ] **`ferrisdb-docs/src/content/docs/tutorials/index.mdx`**
+  - Update tutorial list
+  - Remove any "coming soon" placeholders
+  - Add brief description of new tutorial
+  
+- [ ] **`ferrisdb-docs/src/content/docs/index.mdx`** (home page)
+  - Update tutorial count if mentioned
+  - Update any featured tutorial sections
+
+#### 5. Cross-Tutorial References
+- [ ] **Search for tutorial mentions**
+  ```bash
+  # Find all references to your tutorial number
+  rg "Tutorial [0-9]" --type md --type mdx
+  rg "coming soon" --type md --type mdx
+  rg "stealth mode" --type md --type mdx
+  ```
+
+- [ ] **Common reference locations**:
+  - Other tutorials' prerequisite sections
+  - FAQ pages mentioning learning resources
+  - Getting started guides
+  - README files
+
+### Process for Keeping References Consistent
+
+#### Before Creating a Tutorial
+
+1. **Reserve the tutorial slot**:
+   - Add placeholder entry in `LEARNING-PROGRESS.md` with "Planned" status
+   - Add placeholder in navigation with "Coming Soon" badge
+   - Use consistent tutorial numbering
+
+2. **Create placeholder references**:
+   - Use playful "secret" messages (see guidelines above)
+   - Never use boring "TBD" or "coming soon" without personality
+
+#### During Tutorial Development
+
+1. **Update status to "In Progress"**:
+   - Update `LEARNING-PROGRESS.md`
+   - Keep placeholder messages in place
+
+2. **Track concepts being introduced**:
+   - Maintain a draft of concepts for tracking files
+   - Plan prerequisites based on existing tutorials
+
+#### After Tutorial Publication
+
+1. **Execute the complete checklist above**
+2. **Run verification commands**:
+   ```bash
+   # Verify no orphaned "coming soon" messages
+   rg "coming soon.*Tutorial $NUMBER" --type md --type mdx
+   
+   # Verify navigation is updated
+   grep -n "Tutorial $NUMBER" ferrisdb-docs/astro.config.mjs
+   
+   # Check for broken internal links
+   # (Use your link checker tool of choice)
+   ```
+
+3. **Test the learning path**:
+   - Navigate from previous tutorial to yours
+   - Verify all links work
+   - Ensure prerequisites are accurate
+
+### Common Reference Patterns
+
+#### Playful Placeholder Messages
+
+When referencing unpublished tutorials, maintain consistency with these patterns:
+
+```mdx
+<!-- Pattern 1: Discovery -->
+<Card title="You Found Our Secret! 🤫" icon="puzzle">
+  Tutorial {N} is still in stealth mode. We're adding the final touches!
+  Drop us a star if you want us to hurry up! ⭐
+</Card>
+
+<!-- Pattern 2: Construction -->
+<Card title="Under Construction 🚧" icon="rocket">
+  Our Rust wizards are crafting Tutorial {N} right now!
+  Check back soon for database magic! ✨
+</Card>
+
+<!-- Pattern 3: Anticipation -->
+<Card title="Coming to Your IDE Soon! 🎬" icon="sparkles">
+  Tutorial {N} is rendering... Like a good database write, 
+  we're making sure it's durable before shipping!
+</Card>
+```
+
+#### Published Tutorial References
+
+After publication, replace with:
+
+```mdx
+<Card title="Ready for Tutorial {N}? 🚀" icon="rocket">
+  **[Tutorial Title]**(/tutorials/{slug})
+  
+  Build {component} while learning {key concepts}!
+</Card>
+```
+
+### Preventing Stale References
+
+1. **Use GitHub Issues**: Create an issue for each tutorial with a checklist
+2. **PR Template**: Include reference update reminder in PR template
+3. **Regular Audits**: Monthly check for stale "coming soon" messages
+4. **Automated Checks**: Consider CI job to flag old placeholders
+
+### Reference Update Template
+
+When creating a PR for a new tutorial, include this in your PR description:
+
+```markdown
+## Tutorial Reference Updates
+
+- [ ] Updated astro.config.mjs navigation
+- [ ] Updated previous tutorial's Next Steps
+- [ ] Updated LEARNING-PROGRESS.md status
+- [ ] Updated concept tracking files
+- [ ] Updated tutorials index page
+- [ ] Searched for and updated all "coming soon" references
+- [ ] Verified all internal links work
+- [ ] Tested navigation flow from previous tutorial
+```
+
 ## CI Integration
 
 The tutorial codebase should be included in CI to ensure:
