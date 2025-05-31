@@ -629,11 +629,8 @@ pub struct KeyValueStore {
 
 ````mdx
 <TabItem label="Commands">
-  ```bash
-  # This comment breaks MDX parsing
-  cat file.rs # Another comment that corrupts the block  
-  cargo test # This also fails
-  ```
+  ```bash # This comment breaks MDX parsing cat file.rs # Another comment that corrupts the block
+  cargo test # This also fails ```
 </TabItem>
 ````
 
@@ -822,11 +819,12 @@ ferrisdb-tutorials/
 #### Directory Purpose
 
 - **`tests/`** - CI tests these automatically ✅
+
   - Step tests, integration tests, solution tests
   - Must pass with 100% success rate
   - No `todo!()` or stub implementations
 
-- **`examples/`** - CI ignores these by default ❌  
+- **`examples/`** - CI ignores these by default ❌
   - Exercise templates with `todo!()` for students
   - Run manually: `cargo test --example exercises`
   - Students can still run and debug their implementations
@@ -834,11 +832,12 @@ ferrisdb-tutorials/
 #### Student Experience
 
 Students can run all the same commands as before:
+
 ```bash
 # Test main implementation
 cargo test --tests
 
-# Test their exercise solutions  
+# Test their exercise solutions
 cargo test --example exercises
 
 # Check exercise compilation
