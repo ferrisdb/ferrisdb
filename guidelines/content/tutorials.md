@@ -629,8 +629,9 @@ pub struct KeyValueStore {
 
 ````mdx
 <TabItem label="Commands">
-  ```bash # This comment breaks MDX parsing
-  cat file.rs # Another comment that corrupts the block
+  ```bash
+  # This comment breaks MDX parsing
+  cat file.rs # Another comment that corrupts the block  
   cargo test # This also fails
   ```
 </TabItem>
@@ -657,6 +658,7 @@ cargo test
 **Why this breaks**: MDX interprets inline comments in code blocks as JSX expressions when inside components, corrupting the entire code block structure.
 
 **Always use**:
+
 - Comments on separate lines in code blocks
 - Empty lines around code blocks in JSX components
 - Proper line separation for all bash commands
