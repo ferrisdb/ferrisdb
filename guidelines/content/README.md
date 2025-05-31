@@ -130,4 +130,4 @@ All content templates have been migrated to Starlight format and are located in 
 
 - [Development Standards](../development/) - Code and documentation standards
 - [Development Workflow](../workflow/) - Publishing processes
-- [Website Maintenance](../workflow/website-maintenance.md) - Keeping content updated
+- [Website Maintenance](../workflow/website-maintenance-simple.md) - Keeping content updated

@@ -27,7 +27,7 @@ Visual representations help readers understand complex concepts quickly. We use 
 
 - **Location**: Blog posts, articles, website documentation
 - **Purpose**: Better visual presentation for web readers
-- **Usage**: Jekyll-rendered content with Mermaid.js support
+- **Usage**: Starlight-rendered content with Mermaid.js support
 - **Rule**: MUST be based on corresponding ASCII diagram
 
 ### Conversion Example
@@ -363,5 +363,5 @@ When reviewing documentation with visualizations:
 
 - [Documentation](documentation.md) - Where visualizations are used
 - [Markdown Standards](markdown-standards.md) - Formatting diagrams
-- [Website Design](../content/website-design.md) - Mermaid diagrams for web
+- [Website Design](../content/website-design-starlight.md) - Mermaid diagrams for web
 - [Architecture](../technical/architecture.md) - System diagrams

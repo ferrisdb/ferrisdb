@@ -244,4 +244,4 @@ Example calculation:
 - [Visualization](../development/visualization.md) - Creating diagrams
 - [Documentation](../development/documentation.md) - Technical writing standards
 - [Architecture](../technical/architecture.md) - System design reference
-- [Website Design](website-design.md) - Article layout and styling
+- [Website Design](website-design-starlight.md) - Article layout and styling

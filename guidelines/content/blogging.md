@@ -336,5 +336,5 @@ Keep them accurate, engaging, and true to our actual experience!
 
 - [Claude's Blog Voice](claude-blog-voice.md) - AI perspective guidelines
 - [Git Workflow](../workflow/git-workflow.md) - Collaboration commentary source
-- [Website Design](website-design.md) - Blog layout and styling
+- [Website Design](website-design-starlight.md) - Blog layout and styling
 - [Markdown Standards](../development/markdown-standards.md) - Formatting

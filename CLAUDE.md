@@ -55,7 +55,7 @@ Start with: [Content Strategy](guidelines/content/content-strategy.md) → [Info
 
 #### 🌐 Website Maintainers
 
-Follow: [Website Design](guidelines/content/website-design.md) → [Website Maintenance](guidelines/workflow/website-maintenance.md)
+Follow: [Website Design](guidelines/content/website-design-starlight.md) → [Website Maintenance](guidelines/workflow/website-maintenance-simple.md)
 
 #### 🤖 Claude (me!)
 
@@ -177,7 +177,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 - [Commands](guidelines/workflow/commands.md) - Common commands
 - [Git Workflow](guidelines/workflow/git-workflow.md) - Version control
 - [PR Process](guidelines/workflow/pr-process.md) - Pull requests
-- [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md) - Website updates
+- [Website Maintenance](guidelines/workflow/website-maintenance-simple.md) - Website updates
 
 ### [Technical Architecture](guidelines/technical/)
 
@@ -213,11 +213,11 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 1. Choose type: [Blog](guidelines/content/blogging.md) / [Database Concept](guidelines/content/database-concepts-articles.md) / [Rust Example](guidelines/content/rust-by-example.md)
 2. [Visualization](guidelines/development/visualization.md) - Add diagrams if needed
 3. [Markdown Standards](guidelines/development/markdown-standards.md) - Format properly
-4. [Website Maintenance](guidelines/workflow/website-maintenance.md) - Update stats/progress
+4. [Website Maintenance](guidelines/workflow/website-maintenance-simple.md) - Update stats/progress
 
 ### Daily Maintenance
 
-1. [Website Maintenance](guidelines/workflow/website-maintenance.md#daily-maintenance-tasks) - Update stats
+1. [Website Maintenance](guidelines/workflow/website-maintenance-simple.md#daily-maintenance-tasks) - Update stats
 2. [Commands](guidelines/workflow/commands.md#website-maintenance-commands) - Use cached functions
 3. Check ROADMAP.md - Ensure progress accuracy
 
@@ -241,7 +241,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 
 ### "How do I maintain the website?"
 
-→ Follow [Website Maintenance](guidelines/workflow/website-maintenance.md) workflow
+→ Follow [Website Maintenance](guidelines/workflow/website-maintenance-simple.md) workflow
 
 ## 🤖 Claude's Maintenance Notes
 

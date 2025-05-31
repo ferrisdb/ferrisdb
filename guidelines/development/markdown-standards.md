@@ -129,13 +129,15 @@ let x = 42;
 - Align with spaces for readability
 - Keep simple (consider lists for complex data)
 
-### Front Matter (Jekyll)
+### Front Matter (Starlight/MDX)
 
 ```yaml
 ---
-layout: post
-title: "Required for Jekyll pages"
-description: "Keep under 160 characters"
+title: "Page Title"
+description: "Keep under 160 characters for SEO"
+sidebar:
+  order: 1
+  badge: "New" # Optional
 ---
 ```
 
@@ -146,7 +148,7 @@ description: "Keep under 160 characters"
 **Problem**: Prettier may format MDX components unexpectedly  
 **Solution**: Use prettier-ignore comments around complex components
 
-### 2. kramdown Syntax Breaking
+### 2. MDX Syntax Issues
 
 **Problem**: Prettier indents `{:toc}` breaking Jekyll  
 **Solution**: Use prettier-ignore comments
@@ -233,15 +235,15 @@ prettier --write "**/*.md" && prettier --check "**/*.md"
 3. Compare with well-formatted files
 4. Ask in PR review
 
-### Jekyll build failing?
+### Starlight build failing?
 
-1. Check for broken kramdown syntax
+1. Check for MDX syntax errors (unescaped `<>` in text)
 2. Verify front matter YAML
-3. Test locally: `bundle exec jekyll serve`
-4. Check for special characters in titles
+3. Test locally: `cd docs && npm run build`
+4. Check [Starlight Technical Reference](../workflow/starlight-technical-reference.md)
 
 ## Related Guidelines
 
 - [Documentation](documentation.md) - Writing technical documentation
 - [Visualization](visualization.md) - Creating diagrams and tables
-- [Website Design](../content/website-design.md) - Jekyll-specific requirements
+- [Website Design](../content/website-design-starlight.md) - Starlight-specific requirements

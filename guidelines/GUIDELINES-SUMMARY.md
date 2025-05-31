@@ -3,7 +3,25 @@
 **Date**: January 2025  
 **Purpose**: Realign project guidelines with core value propositions
 
-## What Changed
+## Recent Maintenance (2025-05-31)
+
+### Guidelines Cleanup Completed
+
+1. **Removed deprecated files**:
+   - Deleted `website-design.md` (replaced by `website-design-starlight.md`)
+2. **Fixed broken references**:
+   - Updated all references from `website-design.md` → `website-design-starlight.md`
+   - Fixed references from non-existent `website-maintenance-starlight.md` → `website-maintenance-simple.md`
+3. **Updated technology references**:
+
+   - Changed Jekyll commands → Starlight/Astro commands in `commands.md`
+   - Updated Jekyll-specific sections → Starlight/MDX in `markdown-standards.md`
+   - Updated migration notes to reflect completed Starlight migration
+
+4. **Added missing documentation**:
+   - Created `technical/README.md` index file for technical guidelines
+
+## What Changed (Original Update)
 
 ### New Core Philosophy
 
@@ -24,6 +42,7 @@
 - Added [content-strategy.md](content/content-strategy.md) as primary guide
 - Added [information-architecture.md](content/information-architecture.md) for structure
 - Added [website-maintenance-simple.md](workflow/website-maintenance-simple.md) for focused updates
+- Added [starlight-technical-reference.md](workflow/starlight-technical-reference.md) for MDX troubleshooting
 
 #### Content Approach
 
@@ -33,7 +52,7 @@
 
 ### Information Architecture
 
-**New Structure**:
+**Current Structure**:
 
 ```
 Start Here (Story, Status, Vision)
@@ -42,6 +61,13 @@ Start Here (Story, Status, Vision)
 ├── Deep Dives (Optional technical details)
 └── Get Involved (Contributing)
 ```
+
+## Technology Stack
+
+- **Documentation**: Astro with Starlight theme (migrated from Jekyll)
+- **Blog**: starlight-blog plugin
+- **Formatting**: Prettier with MDX support
+- **Deployment**: GitHub Actions → GitHub Pages
 
 ## Why These Changes
 
@@ -57,13 +83,27 @@ Start Here (Story, Status, Vision)
 - Remove speculative documentation
 - Add clear status indicators everywhere
 
+## Guidelines Health Status
+
+✅ **Healthy**:
+
+- All file references are valid
+- Technology stack references updated
+- Consistent navigation structure
+- GOVERNANCE.md principles followed
+
+⚠️ **Needs Attention**:
+
+- Database concepts phase-out timeline needs clarification
+- Some guidelines could use standardized headers
+- Consider automated link checking in CI
+
 ## Next Steps
 
-1. Audit existing content against new guidelines
-2. Remove/archive speculative documentation
-3. Enhance tutorials with inline concepts
-4. Create compelling "Start Here" experience
-5. Update navigation to reflect journey focus
+1. Continue database concepts integration into tutorials
+2. Standardize file headers across all guidelines
+3. Add automated guideline validation to CI
+4. Regular quarterly guideline audits
 
 ## Success Metrics
 
@@ -71,7 +111,8 @@ Start Here (Story, Status, Vision)
 - Clear learning path from CRUD dev to database builder
 - Human-AI collaboration visible throughout
 - No confusion about what exists vs. planned
+- Guidelines remain accurate and up-to-date
 
 ---
 
-_Guidelines updated collaboratively by Human and Claude to better reflect our educational mission_
+_Guidelines updated collaboratively by Human and Claude to better reflect our educational mission and maintain information architecture integrity_

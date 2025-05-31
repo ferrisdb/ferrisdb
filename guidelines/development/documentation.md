@@ -291,4 +291,4 @@ cargo test --doc --package ferrisdb-storage
 - [Code Style](code-style.md) - Code formatting standards
 - [Visualization](visualization.md) - Creating diagrams for documentation
 - [Markdown Standards](markdown-standards.md) - Markdown formatting
-- [Website Design](../content/website-design.md) - Public documentation
+- [Website Design](../content/website-design-starlight.md) - Public documentation

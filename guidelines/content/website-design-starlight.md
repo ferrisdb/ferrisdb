@@ -665,15 +665,15 @@ npm run preview
 
 ## Migration Notes
 
-- Old Jekyll site remains in `/docs/` as backup
-- New Starlight site in `/docs/`
-- Can switch GitHub Pages source when ready
-- All content migrated and enhanced
-- Blog system improved with custom views
+- Migration from Jekyll to Starlight completed (2025-05-31)
+- Starlight site deployed from `/docs/` directory
+- GitHub Pages configured for GitHub Actions deployment
+- All content successfully migrated with enhanced features
+- Blog system now uses starlight-blog plugin
 
 ## Related Guidelines
 
 - **Content Types**: [Blogging](blogging.md), [Database Concepts](database-concepts-articles.md), [Rust by Example](rust-by-example.md)
-- **Maintenance**: [Website Maintenance](../workflow/website-maintenance.md)
+- **Maintenance**: [Website Maintenance](../workflow/website-maintenance-simple.md)
 - **Commands**: [Common Commands](../workflow/commands.md#website-maintenance-commands)
 - **Markdown**: [Markdown Standards](../development/markdown-standards.md)

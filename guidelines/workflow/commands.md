@@ -125,22 +125,25 @@ gh pr list
 gh pr merge PR_NUMBER --squash
 ```
 
-## Jekyll Commands
+## Starlight/Astro Commands
 
 ### Local Development
 
 ```bash
 # Install dependencies
-cd docs && bundle install
+cd docs && npm install
 
-# Serve locally
-cd docs && bundle exec jekyll serve
+# Serve locally (development mode)
+cd docs && npm run dev
 
-# Build site
-cd docs && bundle exec jekyll build
+# Build site (production)
+cd docs && npm run build
 
-# Clean and rebuild
-cd docs && bundle exec jekyll clean && bundle exec jekyll build
+# Preview production build
+cd docs && npm run preview
+
+# Type check
+cd docs && npm run astro check
 ```
 
 ## Helpful Aliases
@@ -155,7 +158,7 @@ alias fdb-check='cargo fmt --all && cargo clippy --all-targets --all-features --
 alias fdb-md='prettier --check "**/*.md"'
 
 # Serve docs locally
-alias fdb-docs='cd docs && bundle exec jekyll serve'
+alias fdb-docs='cd docs && npm run dev'
 ```
 
 ## Website Maintenance Commands
@@ -229,6 +232,6 @@ Run these commands before every commit:
 ## Related Guidelines
 
 - [Git Workflow](git-workflow.md) - Using git commands effectively
-- [Website Maintenance](website-maintenance.md) - Maintenance workflows
+- [Website Maintenance](website-maintenance-simple.md) - Maintenance workflows
 - [Testing](testing.md) - Test command details
 - [Markdown Standards](../development/markdown-standards.md) - Markdown tools
