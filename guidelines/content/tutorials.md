@@ -256,22 +256,25 @@ When publishing a new tutorial:
 When making changes:
 
 1. **If clippy suggests improvements** (like adding `#[derive(Default)]`):
+
    - Update the implementation in `ferrisdb-tutorials/`
    - Update ALL code examples in the MDX file
    - Especially update the "final code" comparison section
 
 2. **Common sync points**:
+
    - Step-by-step code examples
    - Final complete implementation
    - Comparison with "real" FerrisDB code
    - Any code shown in Tabs/TabItems
 
 3. **Use this workflow**:
+
    ```bash
    # 1. Fix the implementation
    cd ferrisdb-tutorials
    cargo clippy --all-targets --all-features -- -D warnings
-   
+
    # 2. Update the MDX to match
    # 3. Dogfood test the tutorial again
    ```
@@ -467,6 +470,7 @@ cargo clippy --all-targets --all-features -- -D warnings
 Be aware of these common clippy suggestions for tutorial code:
 
 1. **Default Implementation**: If you have `new() -> Self` with no parameters, derive Default:
+
    ```rust
    #[derive(Default)]
    pub struct KeyValueStore {
