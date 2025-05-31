@@ -95,7 +95,7 @@ Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro 
 
 ## 🚢 Deployment
 
-The site automatically deploys to GitHub Pages when changes are pushed to `main` that affect the `ferrisdb-docs/` directory.
+The site automatically deploys to GitHub Pages when changes are pushed to `main` that affect the `docs/` directory.
 
 ## 📚 Resources
 

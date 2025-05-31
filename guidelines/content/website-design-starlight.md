@@ -5,7 +5,7 @@ Design guidelines for the FerrisDB documentation website using Astro Starlight, 
 ## Migration Status
 
 **Current State**: Migrated from Jekyll (Just the Docs) to Astro Starlight
-**Location**: `/ferrisdb-docs/` directory
+**Location**: `/docs/` directory
 **Framework**: Astro with Starlight theme and starlight-blog plugin
 
 ## Design Philosophy
@@ -185,7 +185,7 @@ Starlight provides built-in typography scales:
 ### File Organization
 
 ```
-ferrisdb-docs/src/
+docs/src/
 ├── content/
 │   ├── docs/           # Main documentation
 │   │   ├── index.mdx   # Homepage
@@ -620,7 +620,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "ferrisdb-docs/**"
+      - "docs/**"
       - ".github/workflows/deploy-docs.yml"
 ```
 
@@ -628,7 +628,7 @@ on:
 
 ```bash
 # Development
-cd ferrisdb-docs
+cd docs
 npm install
 npm run dev
 
@@ -666,7 +666,7 @@ npm run preview
 ## Migration Notes
 
 - Old Jekyll site remains in `/docs/` as backup
-- New Starlight site in `/ferrisdb-docs/`
+- New Starlight site in `/docs/`
 - Can switch GitHub Pages source when ready
 - All content migrated and enhanced
 - Blog system improved with custom views

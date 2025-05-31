@@ -16,10 +16,10 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 prettier --write "**/*.md" "**/*.mdx"
 ```
 
-### 2. Build Starlight if you touched ferrisdb-docs/:
+### 2. Build Starlight if you touched docs/:
 
 ```bash
-cd ferrisdb-docs && npm run build
+cd docs && npm run build
 ```
 
 **Both are as critical as running `cargo fmt` for Rust code. CI will fail if skipped!**

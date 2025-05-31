@@ -28,10 +28,10 @@ prettier --check "**/*.md" "**/*.mdx"
 
 ## 🚨 MANDATORY: Starlight Build Verification
 
-**CRITICAL**: When modifying ANY Starlight site files (ferrisdb-docs/), you MUST build before committing:
+**CRITICAL**: When modifying ANY Starlight site files (docs/), you MUST build before committing:
 
 ```bash
-cd ferrisdb-docs
+cd docs
 npm run build
 ```
 
@@ -42,7 +42,7 @@ npm run build
 - Ensures the documentation site can actually be deployed
 - Catches build issues early rather than in CI
 
-**Rule**: If you touch ANY file in `ferrisdb-docs/`, you MUST run the build to verify it works!
+**Rule**: If you touch ANY file in `docs/`, you MUST run the build to verify it works!
 
 ## Tool Configuration
 

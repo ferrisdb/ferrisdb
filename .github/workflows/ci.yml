@@ -46,7 +46,7 @@ jobs:
             - '**/*.md'
             - 'README.md'
             - 'CLAUDE.md'
-            - 'ferrisdb-docs/**'
+            - 'docs/**'
 
   # Quick checks that should pass before running expensive tests
   quick-checks:
@@ -105,7 +105,7 @@ jobs:
           src/
           ferrisdb-*/src/
           ferrisdb-tutorials/
-          ferrisdb-docs/
+          docs/
 
   # Main test suite
   test:
@@ -295,21 +295,21 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
-        cache-dependency-path: ferrisdb-docs/package-lock.json
+        cache-dependency-path: docs/package-lock.json
 
     - name: Install dependencies
       run: |
-        cd ferrisdb-docs
+        cd docs
         npm ci
 
     - name: Build Starlight site
       run: |
-        cd ferrisdb-docs
+        cd docs
         npm run build
 
     - name: Check for broken links
       run: |
-        cd ferrisdb-docs
+        cd docs
         # Basic check that build succeeded and created output
         test -d dist
         test -f dist/index.html

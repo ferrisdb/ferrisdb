@@ -191,7 +191,7 @@ _Status: PUBLISHED_
 - ✅ `Option<T>`
 - ✅ `&self` vs `&mut self`
 
-**File**: `/ferrisdb-docs/src/content/docs/tutorials/01-key-value-store.mdx`
+**File**: `/docs/src/content/docs/tutorials/01-key-value-store.mdx`
 
 ### Tutorial 2: Adding Persistence
 

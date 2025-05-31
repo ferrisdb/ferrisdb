@@ -18,7 +18,7 @@ export default defineConfig({
 			],
 			customCss: ['./src/styles/custom.css'],
 			editLink: {
-				baseUrl: 'https://github.com/ferrisdb/ferrisdb/edit/main/ferrisdb-docs/',
+				baseUrl: 'https://github.com/ferrisdb/ferrisdb/edit/main/docs/',
 			},
 			sidebar: [
 				{

@@ -5,7 +5,7 @@
 set -e
 
 TUTORIAL_DIR="$(pwd)"
-MDX_FILE="../../ferrisdb-docs/src/content/docs/tutorials/01-key-value-store.mdx"
+MDX_FILE="../../docs/src/content/docs/tutorials/01-key-value-store.mdx"
 
 echo "🔍 Verifying Tutorial 01 code synchronization..."
 echo "Tutorial dir: $TUTORIAL_DIR"

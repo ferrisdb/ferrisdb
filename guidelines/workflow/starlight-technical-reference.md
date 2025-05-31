@@ -71,7 +71,7 @@ import { Aside, Card, CardGrid, Tabs, TabItem, Badge, Steps } from "@astrojs/sta
 ## Project Structure
 
 ```
-ferrisdb-docs/
+docs/
 ├── src/
 │   ├── content/
 │   │   ├── docs/          # Main documentation
@@ -86,7 +86,7 @@ ferrisdb-docs/
 
 ```bash
 # Development server
-cd ferrisdb-docs
+cd docs
 npm run dev
 
 # Build for production

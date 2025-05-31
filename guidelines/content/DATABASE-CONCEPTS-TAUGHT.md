@@ -168,7 +168,7 @@ _Status: PUBLISHED_
 - ✅ In-memory storage - Why databases cache data
 - ✅ Hash table basics - O(1) average access time
 
-**File**: `/ferrisdb-docs/src/content/docs/tutorials/01-key-value-store.mdx`
+**File**: `/docs/src/content/docs/tutorials/01-key-value-store.mdx`
 
 ### Tutorial 2: Adding Persistence
 
