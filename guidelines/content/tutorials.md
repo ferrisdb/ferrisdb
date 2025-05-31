@@ -789,29 +789,63 @@ ferrisdb-tutorials/
 │   ├── src/
 │   │   ├── lib.rs (final implementation)
 │   │   └── main.rs (if tutorial includes one)
-│   ├── tests/
+│   ├── tests/                        # CI tests these ✅
 │   │   ├── step_01_tests.rs (test each step)
 │   │   ├── step_02_tests.rs
 │   │   ├── step_03_tests.rs
 │   │   ├── integration_tests.rs
-│   │   └── concurrent_tests.rs (if applicable)
+│   │   ├── concurrent_tests.rs (if applicable)
+│   │   └── solutions.rs (runs all solutions)
 │   ├── benches/
 │   │   └── performance.rs (simple benchmarks)
-│   └── exercises/
-│       ├── README.md (challenge descriptions)
-│       ├── challenge_01_delete.rs
-│       ├── challenge_02_ttl.rs
-│       ├── challenge_03_case_insensitive.rs
-│       ├── challenge_04_prefix_scan.rs
-│       └── solutions/
-│           ├── challenge_01_solution.rs
-│           ├── challenge_02_solution.rs
-│           ├── challenge_03_solution.rs
-│           └── challenge_04_solution.rs
-│   └── tests/
-│       ├── exercises.rs (runs all challenges)
-│       └── solutions.rs (runs all solutions)
+│   ├── examples/                     # CI ignores these ❌
+│   │   ├── exercises.rs (manual test runner)
+│   │   └── exercises/
+│   │       ├── README.md (challenge descriptions)
+│   │       ├── challenge_01_delete.rs
+│   │       ├── challenge_02_ttl.rs
+│   │       ├── challenge_03_case_insensitive.rs
+│   │       ├── challenge_04_prefix_scan.rs
+│   │       └── solutions/
+│   │           ├── challenge_01_solution.rs
+│   │           ├── challenge_02_solution.rs
+│   │           ├── challenge_03_solution.rs
+│   │           └── challenge_04_solution.rs
+│   └── scripts/
+│       └── verify-sync.sh (code sync verification)
 ```
+
+### CI-Friendly Structure
+
+**Key Design**: Exercise templates are in `examples/` to avoid CI failures while remaining accessible to students.
+
+#### Directory Purpose
+
+- **`tests/`** - CI tests these automatically ✅
+  - Step tests, integration tests, solution tests
+  - Must pass with 100% success rate
+  - No `todo!()` or stub implementations
+
+- **`examples/`** - CI ignores these by default ❌  
+  - Exercise templates with `todo!()` for students
+  - Run manually: `cargo test --example exercises`
+  - Students can still run and debug their implementations
+
+#### Student Experience
+
+Students can run all the same commands as before:
+```bash
+# Test main implementation
+cargo test --tests
+
+# Test their exercise solutions  
+cargo test --example exercises
+
+# Check exercise compilation
+cargo check --example exercises
+```
+
+The structure is transparent to students while preventing CI failures.
 
 ### Exercise Design Guidelines
 
@@ -1027,7 +1061,7 @@ Before committing tutorial changes:
 - [ ] Run `cargo clippy --all-targets --all-features -- -D warnings` on **main implementations** and fix ALL warnings
 - [ ] Verify **exercise templates** compile but may have expected warnings (unused variables, etc.)
 - [ ] Run `cargo test --all` to ensure solution tests pass
-- [ ] Run `cargo test --test exercises` to verify exercise templates compile
+- [ ] Run `cargo check --example exercises` to verify exercise templates compile
 - [ ] Run `cargo bench` to ensure benchmarks compile
 - [ ] **CRITICAL: Verify code synchronization** between MDX and implementation:
   - [ ] Extract and compare all code blocks from tutorial
