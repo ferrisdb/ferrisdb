@@ -14,6 +14,7 @@
 use std::collections::HashMap;
 
 /// A simple key-value store backed by a HashMap
+#[derive(Default)]
 pub struct KeyValueStore {
     /// Internal storage using HashMap
     data: HashMap<String, String>,
