@@ -1,16 +1,23 @@
 //! Tutorial 2: Building a Write-Ahead Log
 //! 
 //! This tutorial teaches you how to build a durable Write-Ahead Log (WAL)
-//! that ensures data survives crashes.
+//! that ensures data survives crashes. We'll progressively build towards
+//! the same design used in real FerrisDB.
 
 use std::fs::{File, OpenOptions};
-use std::io::{self, BufReader, BufWriter, Read, Seek, SeekFrom, Write};
+use std::io::{self, BufReader, BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use crc32fast::Hasher;
 use thiserror::Error;
+
+// Type aliases to match FerrisDB's design
+// In FerrisDB: use ferrisdb_core::{Key, Value, Timestamp};
+pub type Key = Vec<u8>;
+pub type Value = Vec<u8>;
+pub type Timestamp = u64;
 
 /// Custom error types for our WAL
 #[derive(Error, Debug)]
@@ -35,11 +42,51 @@ pub enum Operation {
     Delete { key: String },
 }
 
+/// Operation types - matching FerrisDB's internal design
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OperationType {
+    Put = 1,
+    Delete = 2,
+}
+
 /// A single entry in the WAL
 #[derive(Debug, Clone, PartialEq)]
 pub struct LogEntry {
     pub sequence: u64,
     pub operation: Operation,
+}
+
+/// WAL Entry - the internal representation closer to FerrisDB
+/// 
+/// This is what FerrisDB actually uses internally
+#[derive(Debug, Clone, PartialEq)]
+pub struct WALEntry {
+    pub timestamp: Timestamp,
+    pub operation: OperationType,
+    pub key: Key,
+    pub value: Value,
+}
+
+impl WALEntry {
+    /// Creates a new Put entry
+    pub fn new_put(key: Key, value: Value, timestamp: Timestamp) -> Self {
+        Self {
+            timestamp,
+            operation: OperationType::Put,
+            key,
+            value,
+        }
+    }
+    
+    /// Creates a new Delete entry
+    pub fn new_delete(key: Key, timestamp: Timestamp) -> Self {
+        Self {
+            timestamp,
+            operation: OperationType::Delete,
+            key,
+            value: Vec::new(),
+        }
+    }
 }
 
 /// Configuration for sync behavior
@@ -141,7 +188,7 @@ impl WriteAheadLog {
         Ok(())
     }
 
-    /// Append a new entry to the log
+    /// Append a new entry to the log (high-level API)
     pub fn append(&mut self, operation: Operation) -> Result<u64> {
         let entry = LogEntry {
             sequence: self.next_sequence,
@@ -166,36 +213,77 @@ impl WriteAheadLog {
         Ok(entry.sequence)
     }
 
-    /// Encode an entry to bytes with checksum
+    /// Append a WAL entry (low-level API matching FerrisDB)
+    pub fn append_entry(&mut self, entry: &WALEntry) -> Result<()> {
+        let encoded = self.encode_wal_entry(entry)?;
+        
+        // Check if we need to rotate
+        if self.current_size + encoded.len() as u64 > self.max_file_size {
+            self.rotate()?;
+        }
+
+        // Write the entry
+        self.file.write_all(&encoded)?;
+        self.current_size += encoded.len() as u64;
+
+        // Update sequence if needed
+        if entry.timestamp >= self.next_sequence {
+            self.next_sequence = entry.timestamp + 1;
+        }
+
+        // Sync based on mode
+        self.sync()?;
+
+        Ok(())
+    }
+
+    /// Encode an entry to bytes with checksum (high-level)
     fn encode_entry(&self, entry: &LogEntry) -> Result<Vec<u8>> {
-        let mut buf = Vec::new();
-        
-        // Write entry header
-        buf.write_u64::<LittleEndian>(entry.sequence)?;
-        
-        // Write operation
-        match &entry.operation {
+        // Convert to WALEntry format
+        let wal_entry = match &entry.operation {
             Operation::Set { key, value } => {
-                buf.write_u8(1)?; // Operation type: Set
-                buf.write_u32::<LittleEndian>(key.len() as u32)?;
-                buf.write_all(key.as_bytes())?;
-                buf.write_u32::<LittleEndian>(value.len() as u32)?;
-                buf.write_all(value.as_bytes())?;
+                WALEntry::new_put(key.as_bytes().to_vec(), value.as_bytes().to_vec(), entry.sequence)
             }
             Operation::Delete { key } => {
-                buf.write_u8(2)?; // Operation type: Delete
-                buf.write_u32::<LittleEndian>(key.len() as u32)?;
-                buf.write_all(key.as_bytes())?;
+                WALEntry::new_delete(key.as_bytes().to_vec(), entry.sequence)
             }
-        }
+        };
         
-        // Calculate and append checksum
+        self.encode_wal_entry(&wal_entry)
+    }
+
+    /// Encode a WAL entry to bytes with checksum
+    /// 
+    /// Binary format (matching FerrisDB):
+    /// ```text
+    /// +------------+------------+------------+-------+------------+
+    /// | Length(4B) | CRC32(4B)  | Time(8B)   | Op(1B)| Key Len(4B)|
+    /// +------------+------------+------------+-------+------------+
+    /// | Key(var)   | Val Len(4B)| Value(var) |
+    /// +------------+------------+------------+
+    /// ```
+    fn encode_wal_entry(&self, entry: &WALEntry) -> Result<Vec<u8>> {
+        let mut buf = Vec::new();
+        
+        // Write entry data
+        buf.write_u64::<LittleEndian>(entry.timestamp)?;
+        buf.write_u8(entry.operation as u8)?;
+        
+        // Write key
+        buf.write_u32::<LittleEndian>(entry.key.len() as u32)?;
+        buf.write_all(&entry.key)?;
+        
+        // Write value
+        buf.write_u32::<LittleEndian>(entry.value.len() as u32)?;
+        buf.write_all(&entry.value)?;
+        
+        // Calculate checksum
         let checksum = calculate_checksum(&buf);
-        buf.write_u32::<LittleEndian>(checksum)?;
         
-        // Prepend total length
+        // Build final buffer with length and checksum
         let mut final_buf = Vec::new();
-        final_buf.write_u32::<LittleEndian>(buf.len() as u32)?;
+        final_buf.write_u32::<LittleEndian>((buf.len() + 4) as u32)?; // +4 for checksum
+        final_buf.write_u32::<LittleEndian>(checksum)?;
         final_buf.extend_from_slice(&buf);
         
         Ok(final_buf)
@@ -203,51 +291,32 @@ impl WriteAheadLog {
 
     /// Decode an entry from bytes
     fn decode_entry(data: &[u8]) -> Result<LogEntry, WalError> {
-        let mut cursor = io::Cursor::new(data);
+        let wal_entry = Self::decode_wal_entry(data)?;
         
-        // Read sequence
-        let sequence = cursor.read_u64::<LittleEndian>()?;
-        
-        // Read operation type
-        let op_type = cursor.read_u8()?;
-        
-        let operation = match op_type {
-            1 => {
-                // Set operation
-                let key_len = cursor.read_u32::<LittleEndian>()? as usize;
-                let mut key_bytes = vec![0u8; key_len];
-                cursor.read_exact(&mut key_bytes)?;
-                let key = String::from_utf8(key_bytes).map_err(|_| {
-                    WalError::CorruptedEntry { offset: cursor.position() }
-                })?;
-                
-                let value_len = cursor.read_u32::<LittleEndian>()? as usize;
-                let mut value_bytes = vec![0u8; value_len];
-                cursor.read_exact(&mut value_bytes)?;
-                let value = String::from_utf8(value_bytes).map_err(|_| {
-                    WalError::CorruptedEntry { offset: cursor.position() }
-                })?;
-                
-                Operation::Set { key, value }
-            }
-            2 => {
-                // Delete operation
-                let key_len = cursor.read_u32::<LittleEndian>()? as usize;
-                let mut key_bytes = vec![0u8; key_len];
-                cursor.read_exact(&mut key_bytes)?;
-                let key = String::from_utf8(key_bytes).map_err(|_| {
-                    WalError::CorruptedEntry { offset: cursor.position() }
-                })?;
-                
-                Operation::Delete { key }
-            }
-            _ => return Err(WalError::CorruptedEntry { offset: cursor.position() }),
+        // Convert back to high-level format
+        let operation = match wal_entry.operation {
+            OperationType::Put => Operation::Set {
+                key: String::from_utf8(wal_entry.key).map_err(|_| WalError::CorruptedEntry { offset: 0 })?,
+                value: String::from_utf8(wal_entry.value).map_err(|_| WalError::CorruptedEntry { offset: 0 })?,
+            },
+            OperationType::Delete => Operation::Delete {
+                key: String::from_utf8(wal_entry.key).map_err(|_| WalError::CorruptedEntry { offset: 0 })?,
+            },
         };
         
-        // Verify checksum
-        let data_len = data.len() - 4;
+        Ok(LogEntry {
+            sequence: wal_entry.timestamp,
+            operation,
+        })
+    }
+
+    /// Decode a WAL entry from bytes
+    fn decode_wal_entry(data: &[u8]) -> Result<WALEntry, WalError> {
+        let mut cursor = io::Cursor::new(data);
+        
+        // Read and verify checksum
         let expected_checksum = cursor.read_u32::<LittleEndian>()?;
-        let actual_checksum = calculate_checksum(&data[..data_len]);
+        let actual_checksum = calculate_checksum(&data[4..]);
         
         if expected_checksum != actual_checksum {
             return Err(WalError::ChecksumMismatch {
@@ -256,7 +325,33 @@ impl WriteAheadLog {
             });
         }
         
-        Ok(LogEntry { sequence, operation })
+        // Read timestamp
+        let timestamp = cursor.read_u64::<LittleEndian>()?;
+        
+        // Read operation type
+        let op_type = cursor.read_u8()?;
+        let operation = match op_type {
+            1 => OperationType::Put,
+            2 => OperationType::Delete,
+            _ => return Err(WalError::CorruptedEntry { offset: cursor.position() }),
+        };
+        
+        // Read key
+        let key_len = cursor.read_u32::<LittleEndian>()? as usize;
+        let mut key = vec![0u8; key_len];
+        cursor.read_exact(&mut key)?;
+        
+        // Read value
+        let value_len = cursor.read_u32::<LittleEndian>()? as usize;
+        let mut value = vec![0u8; value_len];
+        cursor.read_exact(&mut value)?;
+        
+        Ok(WALEntry {
+            timestamp,
+            operation,
+            key,
+            value,
+        })
     }
 
     /// Sync data to disk based on sync mode
@@ -316,6 +411,55 @@ impl WriteAheadLog {
                 Ok(entry) => entries.push(entry),
                 Err(WalError::ChecksumMismatch { .. }) => {
                     // Stop reading on checksum error - file might be corrupted
+                    eprintln!("Warning: Checksum mismatch detected, stopping recovery");
+                    break;
+                }
+                Err(e) => return Err(e.into()),
+            }
+        }
+        
+        Ok(entries)
+    }
+
+    /// Recover WAL entries in FerrisDB format
+    pub fn recover_wal_entries(&self) -> Result<Vec<WALEntry>> {
+        let mut entries = Vec::new();
+        let mut file = File::open(&self.path)?;
+        let mut reader = BufReader::new(&mut file);
+        
+        // Read and verify magic number
+        let magic = reader.read_u32::<LittleEndian>()?;
+        if magic != WAL_MAGIC {
+            return Err(WalError::InvalidMagic.into());
+        }
+        
+        // Read version
+        let _version = reader.read_u32::<LittleEndian>()?;
+        
+        // Read entries
+        loop {
+            // Try to read entry length
+            let length = match reader.read_u32::<LittleEndian>() {
+                Ok(len) => len as usize,
+                Err(e) if e.kind() == io::ErrorKind::UnexpectedEof => break,
+                Err(e) => return Err(e.into()),
+            };
+            
+            // Read entry data
+            let mut data = vec![0u8; length];
+            match reader.read_exact(&mut data) {
+                Ok(_) => {},
+                Err(e) if e.kind() == io::ErrorKind::UnexpectedEof => {
+                    eprintln!("Warning: Incomplete entry detected, stopping recovery");
+                    break;
+                }
+                Err(e) => return Err(e.into()),
+            }
+            
+            // Decode entry
+            match Self::decode_wal_entry(&data) {
+                Ok(entry) => entries.push(entry),
+                Err(WalError::ChecksumMismatch { .. }) => {
                     eprintln!("Warning: Checksum mismatch detected, stopping recovery");
                     break;
                 }
@@ -386,6 +530,46 @@ mod tests {
                 }
                 _ => panic!("Expected Set operation"),
             }
+        }
+    }
+
+    #[test]
+    fn test_wal_entry_api() {
+        let dir = tempdir().unwrap();
+        let wal_path = dir.path().join("wal_entry.wal");
+        
+        // Write using WALEntry API
+        {
+            let mut wal = WalBuilder::new(&wal_path).build().unwrap();
+            
+            let entry1 = WALEntry::new_put(
+                b"user:1".to_vec(),
+                b"Alice".to_vec(),
+                100
+            );
+            wal.append_entry(&entry1).unwrap();
+            
+            let entry2 = WALEntry::new_delete(
+                b"user:2".to_vec(),
+                101
+            );
+            wal.append_entry(&entry2).unwrap();
+        }
+        
+        // Recover using WALEntry API
+        {
+            let wal = WalBuilder::new(&wal_path).build().unwrap();
+            let entries = wal.recover_wal_entries().unwrap();
+            
+            assert_eq!(entries.len(), 2);
+            assert_eq!(entries[0].timestamp, 100);
+            assert_eq!(entries[0].operation, OperationType::Put);
+            assert_eq!(entries[0].key, b"user:1");
+            assert_eq!(entries[0].value, b"Alice");
+            
+            assert_eq!(entries[1].timestamp, 101);
+            assert_eq!(entries[1].operation, OperationType::Delete);
+            assert_eq!(entries[1].key, b"user:2");
         }
     }
 }

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use tutorial_02_wal::{Operation, SyncMode, WalBuilder};
+use tutorial_02_wal::{Operation, SyncMode, WalBuilder, WALEntry};
 
 fn main() -> Result<()> {
     println!("🚀 Tutorial 2: Write-Ahead Log Demo\n");
@@ -13,8 +13,8 @@ fn main() -> Result<()> {
         .max_file_size(10 * 1024 * 1024) // 10MB
         .build()?;
     
-    // Demonstrate basic operations
-    println!("\n📝 Writing operations to WAL:");
+    // Demonstrate basic operations (high-level API)
+    println!("\n📝 Writing operations to WAL (String API):");
     
     let seq1 = wal.append(Operation::Set {
         key: "user:1".to_string(),
@@ -33,15 +33,28 @@ fn main() -> Result<()> {
     })?;
     println!("  - Delete temp:session (sequence: {})", seq3);
     
+    // Demonstrate FerrisDB-style API
+    println!("\n📝 Writing with FerrisDB API (Binary):");
+    
+    let entry = WALEntry::new_put(
+        b"config:version".to_vec(),
+        b"1.0.0".to_vec(),
+        seq3 + 1
+    );
+    wal.append_entry(&entry)?;
+    println!("  - Set config:version = 1.0.0 (timestamp: {})", entry.timestamp);
+    
     // Simulate crash and recovery
     println!("\n💥 Simulating crash...");
     drop(wal);
     
     println!("\n🔄 Recovering from WAL:");
     let recovered_wal = WalBuilder::new(wal_path).build()?;
-    let entries = recovered_wal.recover_entries()?;
     
-    println!("\nRecovered {} entries:", entries.len());
+    // Show both recovery methods
+    println!("\nHigh-level recovery (String API):");
+    let entries = recovered_wal.recover_entries()?;
+    println!("Recovered {} entries:", entries.len());
     for entry in &entries {
         match &entry.operation {
             Operation::Set { key, value } => {
@@ -49,6 +62,22 @@ fn main() -> Result<()> {
             }
             Operation::Delete { key } => {
                 println!("  [{}] Delete {}", entry.sequence, key);
+            }
+        }
+    }
+    
+    println!("\nLow-level recovery (Binary API):");
+    let wal_entries = recovered_wal.recover_wal_entries()?;
+    println!("Recovered {} WAL entries:", wal_entries.len());
+    for entry in &wal_entries {
+        let key_str = String::from_utf8_lossy(&entry.key);
+        let value_str = String::from_utf8_lossy(&entry.value);
+        match entry.operation {
+            tutorial_02_wal::OperationType::Put => {
+                println!("  [{}] Put {} = {}", entry.timestamp, key_str, value_str);
+            }
+            tutorial_02_wal::OperationType::Delete => {
+                println!("  [{}] Delete {}", entry.timestamp, key_str);
             }
         }
     }

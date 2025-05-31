@@ -1140,6 +1140,119 @@ appendfsync no      # Like SyncMode::None
   </TabItem>
 </Tabs>
 
+## Comparing with Real FerrisDB
+
+Now let's see how our tutorial WAL compares to the actual FerrisDB implementation:
+
+<Tabs>
+  <TabItem label="Our Tutorial Code">
+
+    ```rust
+    // tutorial-02-wal/src/lib.rs
+    
+    // Simple string-based API for learning
+    pub enum Operation {
+        Set { key: String, value: String },
+        Delete { key: String },
+    }
+    
+    // But also includes the real types!
+    pub type Key = Vec<u8>;
+    pub type Value = Vec<u8>;
+    pub type Timestamp = u64;
+    
+    pub struct WALEntry {
+        pub timestamp: Timestamp,
+        pub operation: OperationType,
+        pub key: Key,
+        pub value: Value,
+    }
+    ```
+
+  </TabItem>
+  
+  <TabItem label="Real FerrisDB Code">
+
+    ```rust
+    // ferrisdb-storage/src/wal/log_entry.rs:5-30
+    
+    use ferrisdb_core::{Key, Value, Timestamp, Operation};
+    
+    /// Each entry represents a single operation
+    /// with checksums for corruption detection
+    pub struct WALEntry {
+        pub timestamp: Timestamp,
+        pub operation: Operation,
+        pub key: Key,
+        pub value: Value,
+    }
+    
+    // ferrisdb-storage/src/wal/writer.rs
+    pub struct WALWriter {
+        file: File,
+        sync_mode: SyncMode,
+        current_size: u64,
+        max_size: u64,
+    }
+    ```
+
+  </TabItem>
+  
+  <TabItem label="Key Differences">
+
+    **What FerrisDB Adds**:
+    
+    1. **Module Organization**:
+       - `mod.rs` - Public API
+       - `log_entry.rs` - Entry types
+       - `writer.rs` - Write operations
+       - `reader.rs` - Recovery logic
+    
+    2. **Core Types**:
+       - Uses `ferrisdb_core` for shared types
+       - `Result<T>` type alias with custom errors
+       - Integration with storage engine
+    
+    3. **Production Features**:
+       - Metrics tracking (write latency, size)
+       - Integration tests with other components
+       - Configurable buffer sizes
+       - Batch write support
+    
+    4. **Error Handling**:
+       - Structured error types in `ferrisdb_core`
+       - Recovery strategies for corruption
+       - Partial write detection
+
+  </TabItem>
+</Tabs>
+
+### Evolution Path
+
+Your tutorial code is already using the same fundamental design as FerrisDB! Here's how to evolve it:
+
+<Steps>
+
+1. **Extract Types** → Move `Key`, `Value`, `Timestamp` to a `core` module
+2. **Split Files** → Separate `writer.rs`, `reader.rs`, `log_entry.rs`
+3. **Add Metrics** → Track write latency, entry count, file size
+4. **Batch Writes** → Group multiple entries for efficiency
+5. **Integration** → Connect to MemTable for full storage engine
+
+</Steps>
+
+<Aside type="tip" title="You're Building Real Database Code!">
+
+The WAL you just built uses:
+- ✅ Same binary format as FerrisDB
+- ✅ Same checksum algorithm (CRC32)
+- ✅ Same sync modes and durability guarantees
+- ✅ Same recovery approach
+
+With minor refactoring, your code could literally replace FerrisDB's WAL!
+
+</Aside>
+
 ## Practice Challenges
 
 <CardGrid>

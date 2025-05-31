@@ -20,7 +20,6 @@ tempfile = "3.8"
 criterion = "0.5"
 rand = "0.8"
 
-# Benchmarks will be added later
-# [[bench]]
-# name = "wal_performance"
-# harness = false
+[[bench]]
+name = "wal_performance"
+harness = false
