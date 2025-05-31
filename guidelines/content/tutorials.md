@@ -280,6 +280,7 @@ Preferred components:
 
 #### ✅ Correct Pattern
 
+<!-- prettier-ignore-start -->
 ```mdx
 <TabItem label="Understanding the Code">
 
@@ -291,9 +292,11 @@ Preferred components:
 
 </TabItem>
 ```
+<!-- prettier-ignore-end -->
 
 #### ❌ Wrong Pattern (Will Be Corrupted)
 
+<!-- prettier-ignore-start -->
 ```mdx
 <TabItem label="Understanding the Code">
   ```rust
@@ -303,6 +306,7 @@ Preferred components:
   ```
 </TabItem>
 ```
+<!-- prettier-ignore-end -->
 
 #### Why This Matters
 
@@ -311,6 +315,7 @@ Preferred components:
 - This is a requirement of MDX, not a bug
 
 **Always add empty lines**:
+
 - After opening `<TabItem>` tag
 - Before closing `</TabItem>` tag
 - Around any other Markdown content inside JSX components
