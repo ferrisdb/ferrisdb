@@ -1,0 +1,140 @@
+---
+title: Current Status
+description: What's actually built in FerrisDB today
+sidebar:
+  order: 2
+---
+
+import { Card, CardGrid, Badge, Aside } from "@astrojs/starlight/components";
+
+<Aside type="tip" title="Radical Transparency">
+  This page shows exactly what exists in FerrisDB today. We believe in documenting our journey
+  honestly - no vaporware, no promises, just reality.
+</Aside>
+
+## What FerrisDB Is Today
+
+FerrisDB is an **educational project** where a CRUD developer (human) and an AI (Claude) are learning to build a distributed database from scratch. We're documenting every step of the journey.
+
+**Current state**: We have basic storage components but no usable database yet.
+
+## Implementation Status
+
+### ✅ Completed Components
+
+<CardGrid>
+  <Card title="Write-Ahead Log (WAL)" icon="document">
+    - Binary format with CRC32 checksums
+    - Configurable sync modes
+    - Proper error handling
+    - ~500 lines of tested code
+  </Card>
+
+<Card title="MemTable (Skip List)" icon="list-format">
+  - Concurrent skip list implementation - Lock-free reads, fine-grained write locks - MVCC support
+  with timestamps - ~450 lines of tested code
+</Card>
+
+  <Card title="SSTable Writer" icon="document">
+    - Basic block format defined
+    - Can write sorted data to disk
+    - Index and footer structures
+    - ~650 lines of tested code
+  </Card>
+</CardGrid>
+
+### 🚧 In Progress
+
+<Card title="SSTable Reader" icon="open-book">
+  <Badge text="SKELETON ONLY" variant="caution" />
+  Structure defined but not functional. Cannot read SSTables yet.
+</Card>
+
+### ❌ Not Started
+
+- **Storage Engine Integration** - Components exist separately, not integrated
+- **Compaction** - No background merging of SSTables
+- **Server** - No network protocol or API
+- **Client Library** - No way to connect to a database
+- **Transactions** - MVCC timestamps exist but no transaction manager
+- **Distribution** - Single-node only, no clustering
+
+## You Can...
+
+### ✅ Today
+
+- Clone and explore the codebase
+- Run tests for individual components
+- Learn from our blog posts
+- Follow our tutorials
+- Read our implementation code
+
+### ❌ Not Yet
+
+- Run a FerrisDB server
+- Store and retrieve data
+- Connect with a client
+- Deploy to production
+- Benchmark performance
+
+## Code Statistics
+
+```bash
+# Actual implementation (not counting tests)
+ferrisdb-storage/src/: ~1,800 lines
+ferrisdb-core/src/: ~200 lines
+ferrisdb-client/src/: ~10 lines (stub)
+ferrisdb-server/src/: ~5 lines (stub)
+```
+
+## Test Coverage
+
+- WAL: 90%+ coverage
+- MemTable: 85%+ coverage
+- SSTable Writer: 80%+ coverage
+- Integration: None (components not integrated)
+
+## What's Next?
+
+We're learning and building in public. Next steps:
+
+1. **Complete SSTable Reader** - Make it actually read files
+2. **Integrate Components** - Create basic storage engine
+3. **Add Compaction** - Background SSTable merging
+4. **Build Server** - Simple key-value API
+
+Follow our [blog](/blog/) to see progress in real-time!
+
+## Try It Yourself
+
+While you can't run FerrisDB as a database yet, you can:
+
+```bash
+# Clone and explore
+git clone https://github.com/ferrisdb/ferrisdb
+cd ferrisdb
+
+# Run component tests
+cargo test -p ferrisdb-storage
+
+# Read the implementation
+cat ferrisdb-storage/src/wal/writer.rs
+```
+
+## The Honest Truth
+
+We're at the beginning of a long journey. FerrisDB today is:
+
+- 📚 **Educational** - Great for learning, not for production
+- 🏗️ **Incomplete** - Basic components, no full system
+- 🌱 **Growing** - Actively developed, check back often
+- 🤝 **Collaborative** - Watch human-AI partnership in action
+
+<Aside type="note">
+  Want a production database? Use PostgreSQL or SQLite. Want to learn how databases work by watching
+  one being built? You're in the right place!
+</Aside>
+
+---
+
+_Last updated: January 31, 2025_

@@ -48,14 +48,17 @@ Redis solves this problem. Today, we'll build our own version!
 
 <CardGrid>
   <Card title="🦀 New Rust Concepts" icon="code">
-    - **Variables**: How Rust handles data - **Mutability**: When data can change - **Structs**:
-    Creating custom types - **HashMap**: Rust's key-value collection - **Option**: Handling missing
-    values
+    - **Variables**: How Rust handles data
+    - **Mutability**: When data can change
+    - **Structs**: Creating custom types
+    - **HashMap**: Rust's key-value collection
+    - **Option**: Handling missing values
   </Card>
 
   <Card title="📚 Database Knowledge" icon="database">
-    - **Key-Value Model**: Simplest database design - **In-Memory Storage**: Trading durability for
-    speed - **Hash Tables**: O(1) performance magic
+    - **Key-Value Model**: Simplest database design
+    - **In-Memory Storage**: Trading durability for speed
+    - **Hash Tables**: O(1) performance magic
   </Card>
 </CardGrid>
 
@@ -81,8 +84,8 @@ Let's create our workspace:
 
 ```bash
 # Create a new Rust project
-cargo new --lib ferrisdb-tutorial-01
-cd ferrisdb-tutorial-01
+cargo new --lib tutorial-01-kv-store
+cd tutorial-01-kv-store
 
 # Open in your editor
 code . # or your preferred editor
@@ -275,9 +278,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_create_store() {
+    fn new_creates_empty_store() {
         let store = KeyValueStore::new();
-        // If this compiles, we're good!
+        assert!(store.is_empty());
+        assert_eq!(store.len(), 0);
     }
 }
 ```
@@ -285,12 +289,13 @@ mod tests {
 Run it:
 
 ```bash
-cargo test test_create_store
+cargo test new_creates_empty_store
 ```
 
-<Aside type="tip" title="✅ Success!">
-  Great! You just created your first Rust struct with a constructor. The test proves our code
-  compiles and runs.
+<Aside type="tip" title="What This Test Proves">
+  This test verifies our constructor creates an empty store. The `assert!` macro checks boolean
+  conditions, while `assert_eq!` compares values for equality. This proves our basic structure
+  works!
 </Aside>
 
 ### Step 4: Storing Values
@@ -417,7 +422,42 @@ Let's add the ability to get values back:
 
 </Aside>
 
-### Step 6: Complete Working Example
+### Step 6: Adding Utility Methods
+
+Let's add some helpful methods to check the store's state:
+
+<Tabs>
+  <TabItem label="Add len() and is_empty()">
+
+    ```rust
+    impl KeyValueStore {
+        // ... previous methods ...
+
+        pub fn len(&self) -> usize {
+            self.data.len()
+        }
+
+        pub fn is_empty(&self) -> bool {
+            self.data.is_empty()
+        }
+    }
+    ```
+
+  </TabItem>
+  
+  <TabItem label="Why These Methods?">
+
+    These utility methods follow Rust conventions:
+
+    - `len()` - Returns the number of entries (like Vec, HashMap, etc.)
+    - `is_empty()` - More readable than `len() == 0`
+
+    **Database insight**: Real databases track metrics like entry count for performance monitoring!
+
+  </TabItem>
+</Tabs>
+
+### Step 7: Complete Working Example
 
 Let's put it all together with a comprehensive test:
 
@@ -427,22 +467,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_complete_functionality() {
-        // Create a new store
+    fn set_stores_value_and_get_retrieves_it() {
         let mut store = KeyValueStore::new();
 
-        // Store some data
+        // Test basic set and get
         store.set("user:1".to_string(), "Alice".to_string());
-        store.set("user:2".to_string(), "Bob".to_string());
-
-        // Retrieve data
         assert_eq!(store.get("user:1"), Some("Alice".to_string()));
-        assert_eq!(store.get("user:2"), Some("Bob".to_string()));
 
-        // Missing keys return None
-        assert_eq!(store.get("user:3"), None);
+        // Test missing key
+        assert_eq!(store.get("user:2"), None);
 
-        // Update existing key
+        // Test overwrite
         store.set("user:1".to_string(), "Alice Smith".to_string());
         assert_eq!(store.get("user:1"), Some("Alice Smith".to_string()));
     }
@@ -454,6 +489,104 @@ Run all tests:
 ```bash
 cargo test
 ```
+
+<Aside type="tip" title="What This Test Teaches">
+This comprehensive test demonstrates three key concepts:
+
+1. **Happy path**: Basic set/get functionality works
+2. **Option&lt;T&gt; handling**: Missing keys return `None` (not crashes!)
+3. **Update behavior**: Setting the same key twice updates the value
+
+This is exactly how real databases like Redis work!
+
+</Aside>
+
+### Step 8: Trying It Out
+
+Let's see our key-value store in action outside of tests:
+
+```rust
+// Create a new file: src/main.rs
+use tutorial_01_kv_store::KeyValueStore;
+
+fn main() {
+    let mut store = KeyValueStore::new();
+
+    // Store some user data
+    store.set("user:1".to_string(), "Alice".to_string());
+    store.set("user:2".to_string(), "Bob".to_string());
+
+    // Retrieve and display
+    println!("Looking up users...");
+
+    match store.get("user:1") {
+        Some(name) => println!("User 1: {}", name),
+        None => println!("User 1 not found"),
+    }
+
+    // Try a missing key
+    match store.get("user:999") {
+        Some(name) => println!("User 999: {}", name),
+        None => println!("User 999 not found"),
+    }
+}
+```
+
+Run it:
+
+```bash
+cargo run
+```
+
+You should see:
+
+```
+Looking up users...
+User 1: Alice
+User 999 not found
+```
+
+### Step 9: Making It Clippy-Compliant
+
+Rust has a helpful tool called `clippy` that suggests improvements. Let's follow one of its recommendations:
+
+<Tabs>
+  <TabItem label="Add Default Implementation">
+
+    ```rust
+    use std::collections::HashMap;
+
+    #[derive(Default)]  // Add this line
+    pub struct KeyValueStore {
+        data: HashMap<String, String>,
+    }
+    ```
+
+    This automatically implements the `Default` trait, which provides a standard way to create an empty store.
+
+  </TabItem>
+  
+  <TabItem label="Why This Matters">
+
+    ```rust
+    // With Default, users can now do:
+    let store = KeyValueStore::default();
+
+    // In addition to:
+    let store = KeyValueStore::new();
+    ```
+
+    It's a Rust convention: if your type has an obvious "empty" or "default" state, implement Default!
+
+    **Bonus**: This satisfies Rust's linter (clippy) and makes your code more idiomatic.
+
+  </TabItem>
+</Tabs>
+
+<Aside type="tip" title="Running Clippy">
+  You can check your code with clippy anytime: ```bash cargo clippy ``` It's like having a Rust
+  expert review your code!
+</Aside>
 
 ### Comparing with Real FerrisDB
 
@@ -481,6 +614,14 @@ cargo test
 
         pub fn get(&self, key: &str) -> Option<String> {
             self.data.get(key).cloned()
+        }
+
+        pub fn len(&self) -> usize {
+            self.data.len()
+        }
+
+        pub fn is_empty(&self) -> bool {
+            self.data.is_empty()
         }
     }
     ```
@@ -533,6 +674,7 @@ You've successfully built your first database component in Rust!
 - ✅ A working key-value store (like a mini Redis)
 - ✅ Set and get operations
 - ✅ Proper handling of missing keys
+- ✅ Utility methods for counting and checking emptiness
 - ✅ Your first Rust struct and methods
 
 ### Rust Concepts You Mastered
@@ -540,7 +682,7 @@ You've successfully built your first database component in Rust!
 - 🦀 **Structs**: Creating custom types
 - 🦀 **Mutability**: Understanding `&mut self` vs `&self`
 - 🦀 **HashMap**: Using Rust's built-in collections
-- 🦀 **`Option<T>`**: Safe handling of nullable values
+- 🦀 **Option&lt;T&gt;**: Safe handling of nullable values
 - 🦀 **Methods**: Adding behavior with `impl` blocks
 
 ### Database Knowledge You Gained
@@ -568,7 +710,7 @@ You've successfully built your first database component in Rust!
 ### Commands We Used
 
 ```bash
-cargo new --lib ferrisdb-tutorial-01
+cargo new --lib tutorial-01-kv-store
 cargo test
 cargo test test_specific_name
 ```

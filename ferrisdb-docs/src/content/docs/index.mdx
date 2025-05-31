@@ -1,221 +1,175 @@
 ---
 title: FerrisDB
-description: Learning database internals by building from scratch - follow a CRUD developer and AI
-  collaboration
+description: Watch a CRUD developer and AI build a database from scratch
 template: splash
 hero:
-  title: "Database Internals, Learned by Building"
+  title: "Building a Database, Learning Together"
   tagline:
-    "Watch a CRUD developer and AI build a database from scratch. Real code, real learning, real
-    collaboration patterns."
+    "Follow the real journey of a CRUD developer and Claude AI building a distributed database from scratch.
+    Every mistake, every breakthrough, documented in real-time."
   image:
     file: ../../assets/ferrisdb_logo.svg
   actions:
-    - text: "Try the Tutorial"
-      link: "/tutorial"
+    - text: "Start Learning"
+      link: "/tutorials/01-key-value-store/"
       icon: "rocket"
       variant: "primary"
-    - text: "View on GitHub"
-      link: "https://github.com/ferrisdb/ferrisdb"
-      icon: "github"
+    - text: "Read Our Story"
+      link: "/blog/"
+      icon: "open-book"
       variant: "secondary"
 ---
 
-import { Card, CardGrid, Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+import { Card, CardGrid, Tabs, TabItem, Aside, Badge } from "@astrojs/starlight/components";
+import Stats from "../../components/Stats.astro";
 
-## What Makes This Different?
-
-<CardGrid>
-  <Card title="🎯 Simplicity First" icon="star">
-    Clean, understandable implementations that teach concepts clearly - no premature optimization
-  </Card>
-
-<Card title="🔍 Correctness Over Speed" icon="approve-check">
-  Get it right, then make it fast. Classic engineering wisdom in action.
-</Card>
-
-<Card title="🤖 Learning in Public" icon="telescope">
-  Real mistakes, real questions, real breakthroughs - nothing hidden from the learning process
-</Card>
-
-  <Card title="📚 Fundamentals Focus" icon="open-book">
-    Understanding LSM trees, WAL, and SSTables before micro-optimizations
-  </Card>
-</CardGrid>
-
-## See It In Action
-
-<Tabs>
-  <TabItem label="Our Philosophy">
-    ```rust
-    // Simple, readable, correct
-    // Optimize only when you understand the trade-offs
-    pub struct LogEntry {
-        pub sequence_number: u64,   // Clear naming
-        pub key: Vec<u8>,          // Simple types  
-        pub value: Option<Vec<u8>>, // Obvious semantics
-        pub timestamp: u64,        // No premature optimization
-    }
-    ```
-  </TabItem>
-  
-  <TabItem label="Real Code">
-    ```rust
-    // From our actual implementation
-    impl MemTable {
-        pub fn set(&self, key: Vec<u8>, value: Vec<u8>) -> Result<()> {
-            // Simple approach: just insert and track memory
-            self.skiplist.insert(key, value);
-            self.memory_usage.fetch_add(size, Ordering::Relaxed);
-            Ok(())
-        }
-    }
-    ```
-  </TabItem>
-  
-  <TabItem label="Learning Process">
-    ```bash
-    # How we actually develop
-    git clone https://github.com/ferrisdb/ferrisdb
-    
-    # Start simple, understand first
-    cargo test        # Make sure it works
-    cargo run         # See it in action
-    # Optimize later when we understand the bottlenecks
-    ```
-  </TabItem>
-</Tabs>
-
-## Learning Progress
-
-<Aside type="note" title="Educational Project">
-  FerrisDB is a learning journey, not production software. We prioritize understanding over
-  optimization, correctness over speed.
+<Aside type="tip" title="Not Another Database">
+  We're not building a database to compete with PostgreSQL. We're documenting the journey of
+  learning how PostgreSQL works by building our own. If you need a database, use PostgreSQL. If you
+  want to understand databases, join us!
 </Aside>
 
-### Current Implementation Status
+## The Unique Experiment
+
+<CardGrid>
+  <Card title="👨‍💻 Human Learning" icon="user">
+    A CRUD developer with no systems programming experience learning database internals through building
+  </Card>
+
+<Card title="🤖 AI Teaching" icon="robot">
+  Claude AI implementing features and explaining concepts, learning to teach through iteration
+</Card>
+
+<Card title="📖 Public Journey" icon="megaphone">
+  Every conversation, every mistake, every "aha!" moment documented in our blog
+</Card>
+
+  <Card title="🛠️ Real Code" icon="code">
+    Actual working implementations, not toy examples - see exactly how databases work
+  </Card>
+</CardGrid>
+
+## Current Reality Check
 
 <Tabs>
-  <TabItem label="✅ Working & Understood">
-    - **Write-Ahead Log (WAL)** - Simple binary format, crash recovery works - **MemTable with Skip
-    List** - Concurrent, but readable implementation - **Basic SSTable structure** - Straightforward
-    serialization format - **Clean API design** - Refactored after learning from mistakes
+  <TabItem label="What Works Today">
+    <Badge text="HONEST STATUS" variant="success" />- ✅ **WAL Implementation** - Crash recovery
+    actually works! - ✅ **Concurrent Skip List** - Real lock-free data structure - ✅ **SSTable
+    Writer** - Can persist sorted data - ✅ **Blog & Tutorials** - Learn alongside us [See detailed
+    status →](/status/)
   </TabItem>
 
-<TabItem label="🚧 Building & Learning">
-  - **SSTable reader** - Binary search, keeping it simple - **Compaction strategy** - Basic
-  algorithm before optimizations - **Error handling** - Making failures clear and debuggable
-</TabItem>
+  <TabItem label="What Doesn't Exist">
+    <Badge text="NOT BUILT YET" variant="caution" />- ❌ **No Server** - Can't run FerrisDB - ❌
+    **No Storage Engine** - Components not connected - ❌ **No Queries** - Can't get/put data - ❌
+    **No Distribution** - Single node only We're building in public - watch it happen!
+  </TabItem>
 
-  <TabItem label="⏳ Future Learning">
-    - **Bloom filters** - When we understand the read patterns - **Advanced compaction** - After
-    mastering the basics - **Distributed features** - Only when single-node is solid - **Performance
-    tuning** - Last, when we know what to optimize
+  <TabItem label="The Journey So Far">
+    <Stats />
+    Each day brings new learning: - Day 1: "Just use RocksDB" → "Let's build it!" - Day 2: Linear
+    search → Proper algorithms - Day 3: Fiction writing → Accuracy focus [Read the full story
+    →](/blog/)
   </TabItem>
 </Tabs>
 
-## The Collaboration Experiment
-
-What happens when a CRUD developer teams up with Claude AI to learn database internals from first
-principles?
+## Learn By Building With Us
 
 <CardGrid>
-  <Card title="👨‍💻 Database Apprentice" icon="user">
-    Real learning struggles, "aha!" moments, honest questions about trade-offs [Read Human Journey
-    →](/blog/authors/human/)
+  <Card title="Tutorial Series" icon="puzzle">
+    Build your own database components step-by-step. Start with a simple key-value store and add 
+    features as you learn.
+    
+    [Start Tutorial 1 →](/tutorials/01-key-value-store/)
   </Card>
 
-  <Card title="🤖 Code Whisperer" icon="rocket">
-    Teaching patterns, explaining complex concepts, adapting to human feedback [Read AI Analysis
-    →](/blog/authors/claude/)
+<Card title="Development Blog" icon="pencil">
+  Two perspectives on the same journey - human confusion and AI analysis. See how questions lead to
+  understanding. [Latest Posts →](/blog/)
+</Card>
+
+<Card title="Code Deep Dives" icon="microscope">
+  Explore our actual implementation. Every line has a purpose, every decision documented. [Current
+  Implementation →](/reference/current-implementation/)
+</Card>
+
+  <Card title="Join the Journey" icon="group">
+    This is open source learning. Ask questions, suggest improvements, learn with us.
+    
+    [GitHub →](https://github.com/ferrisdb/ferrisdb)
   </Card>
 </CardGrid>
 
-### What We've Learned About Learning
+## Why Follow This Project?
 
-<CardGrid>
-  <Card title="Questions Drive Design" icon="information">
-    **"Why skip lists over BTreeMap?"** led to understanding concurrency trade-offs
-  </Card>
+### For CRUD Developers
 
-<Card title="Simple First Works" icon="star">
-  **3** times we started complex and simplified after human confusion
-</Card>
-
-  <Card title="Teaching Through Code" icon="heart">
-    Comments and tests became mini-lessons, not just implementation details
-  </Card>
-</CardGrid>
-
-[Explore the Blog →](/blog-overview)
-
-## Technical Concepts We're Learning
-
-<CardGrid>
-  <Card title="LSM Trees Explained" icon="forward">
-    Why modern databases use Log-Structured Merge Trees instead of B-trees [Understand LSM
-    →](/concepts/database-internals/lsm-trees)
-  </Card>
-
-<Card title="Write-Ahead Logs" icon="document">
-  How databases ensure durability without sacrificing performance [Learn WAL
-  →](/concepts/database-internals/wal)
-</Card>
-
-<Card title="Skip Lists Deep Dive" icon="puzzle">
-  Probabilistic data structures that compete with balanced trees [Explore Skip Lists
-  →](/concepts/database-internals/skip-lists)
-</Card>
-
-  <Card title="SSTable Format" icon="setting">
-    How to store sorted data efficiently on disk [Discover SSTables
-    →](/concepts/database-internals/sstables)
-  </Card>
-</CardGrid>
-
-## Why Follow This Journey?
-
-### For Developers
-
-- **Learn database fundamentals** through real implementation
-- **See mistakes and corrections** - learning from what doesn't work
-- **Understanding before optimization** - classic engineering wisdom
-- **Modern Rust patterns** without the complexity overwhelm
-
-### For Teams
-
-- **Human-AI collaboration patterns** that actually work
-- **How to explain complex systems** through iterative teaching
-- **Code review as learning tool** - questions that improve design
+- See someone like you learning systems programming
+- Understand what happens "under the hood"
+- No prerequisites beyond basic programming
 
 ### For Students
 
-- **Database internals made accessible** - no PhD required
-- **Systems programming concepts** through practical examples
-- **Design decisions explained** - why we chose X over Y
+- Real implementation of CS concepts
+- See theory applied in practice
+- Learn from our mistakes
 
-## Ready to Start Learning?
+### For AI Researchers
 
-<CardGrid>
-  <Card title="Hands-On Tutorial" icon="rocket">
-    Jump right in with our step-by-step tutorial [Start Tutorial →](/tutorial)
-  </Card>
+- Unprecedented documentation of human-AI collaboration
+- Patterns in teaching and learning
+- Real development, not demos
 
-<Card title="Architecture First" icon="open-book">
-  Understand the big picture before diving into code [See Architecture →](/reference/architecture)
-</Card>
+### For Database Enthusiasts
 
-  <Card title="Read the Code" icon="github">
-    Browse the actual implementation with extensive comments [View Source
-    →](https://github.com/ferrisdb/ferrisdb)
-  </Card>
-</CardGrid>
+- Fresh perspective on old problems
+- Focus on understanding over optimization
+- Building from true first principles
+
+## Start Your Journey
+
+<Aside type="note">
+  Remember: This is about learning, not competing. We're building to understand, not to deploy.
+</Aside>
+
+<div class="sl-flex ast-gap-4" style="justify-content: center; margin-top: 2rem;">
+  <a
+    href="/tutorials/01-key-value-store/"
+    class="sl-flex ast-gap-2 sl-link-button sl-link-button--variant-primary sl-link-button--size-lg"
+  >
+    <svg
+      aria-hidden="true"
+      class="sl-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M13.75 2.25h-3.5a.25.25 0 0 0-.25.25v4.75A.25.25 0 0 0 10.25 7.5h3.5a.25.25 0 0 0 .25-.25V2.5a.25.25 0 0 0-.25-.25ZM13.75 9h-3.5a.25.25 0 0 0-.25.25v4.75c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25V9.25a.25.25 0 0 0-.25-.25ZM13.75 15.75h-3.5a.25.25 0 0 0-.25.25v4.75c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25V16a.25.25 0 0 0-.25-.25Z" />
+    </svg>
+    Start Building
+  </a>
+
+  <a
+    href="/blog/"
+    class="sl-flex ast-gap-2 sl-link-button sl-link-button--variant-secondary sl-link-button--size-lg"
+  >
+    <svg
+      aria-hidden="true"
+      class="sl-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+    </svg>
+    Follow Our Journey
+  </a>
+</div>
 
 ---
 
-<Aside type="tip" title="Our Learning Philosophy">
-"The best way to understand complex systems is to build them simply first. Complexity comes from requirements, not from trying to be clever."
-
-— Key insight from our collaboration
-
-</Aside>
+<p style="text-align: center; margin-top: 3rem; opacity: 0.8;">
+  <em>Building databases is hard. Learning how they work shouldn't be.</em>
+</p>

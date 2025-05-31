@@ -12,6 +12,29 @@ Performance considerations and optimization strategies for FerrisDB.
 3. **Document trade-offs** - Explain why optimizations were made
 4. **Keep it understandable** - Complex optimizations need clear docs
 
+## Performance Claims Require Proof
+
+**MANDATORY RULE**: Any performance claim in code, comments, or documentation MUST be backed by benchmarks.
+
+### Examples of Claims That Need Benchmarks
+
+- "This provides O(1) lookups" → Benchmark showing constant time with varying sizes
+- "10x faster than the previous implementation" → Comparative benchmark
+- "Optimized for cache efficiency" → Cache miss rate measurements
+- "Lock-free for better concurrency" → Concurrent operation benchmarks
+- "Zero-copy implementation" → Memory allocation benchmarks
+
+### Unsubstantiated Claims Will Be Rejected
+
+```rust
+// ❌ REJECTED: Claim without proof
+/// This skip list provides O(log n) operations with better cache locality
+
+// ✅ ACCEPTED: Claim with benchmark reference
+/// This skip list provides O(log n) operations with better cache locality
+/// See benches/skiplist_performance.rs for measurements
+```
+
 ## Benchmarking
 
 ### Writing Benchmarks

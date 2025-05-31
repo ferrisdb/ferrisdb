@@ -24,6 +24,7 @@ Implement basic expiration for entries.
 - Implement `set_with_ttl(key, value, duration)`
 - Expired entries should not be returned by `get()`
 - Add `cleanup_expired()` method
+- Regular `set()` should store entries without expiration
 
 **Hint:** You'll need to change the internal data structure!
 
@@ -36,6 +37,8 @@ Modify the store to treat keys case-insensitively while preserving the original 
 - `get("KEY")` should return the value for `"key"`
 - Store should remember the original casing
 - `keys()` method should return original casings
+- Add `delete()` method that works case-insensitively
+- Add `len()` method to count entries
 
 ## Challenge 4: Add prefix scanning
 
@@ -46,6 +49,8 @@ Implement a method to find all keys with a given prefix.
 - Method: `pub fn scan_prefix(&self, prefix: &str) -> Vec<String>`
 - Should return all keys that start with the prefix
 - Results should be sorted
+- Add `keys()` and `len()` methods for completeness
+- Empty prefix should return all keys
 
 ## Running the Exercises
 

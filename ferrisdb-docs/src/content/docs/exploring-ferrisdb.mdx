@@ -1,0 +1,298 @@
+---
+title: Exploring FerrisDB
+description: Dive into the FerrisDB codebase - build, test, and understand how databases work
+sidebar:
+  order: 3
+---
+
+import { Aside, Card, CardGrid, Steps, Tabs, TabItem, Badge } from "@astrojs/starlight/components";
+
+<Aside type="tip" title="Learning Focus">
+  FerrisDB is a codebase for learning, not a database you can run. This guide helps you explore the
+  implementation and understand how databases work internally.
+</Aside>
+
+## What You'll Find
+
+<CardGrid>
+  <Card title="Real Components" icon="puzzle">
+    Working implementations of WAL, MemTable, and SSTable writer
+  </Card>
+
+<Card title="Test Suite" icon="checkmark">
+  Comprehensive tests showing how each component works
+</Card>
+
+  <Card title="Learning Code" icon="open-book">
+    Clear implementations prioritizing understanding over optimization
+  </Card>
+</CardGrid>
+
+## Prerequisites
+
+<CardGrid>
+  <Card title="Rust 1.81+" icon="seti:rust">
+    Install via [rustup.rs](https://rustup.rs/)
+  </Card>
+
+<Card title="Git" icon="github">
+  For cloning the repository
+</Card>
+
+  <Card title="Curiosity" icon="telescope">
+    Desire to understand how databases work
+  </Card>
+</CardGrid>
+
+## Getting Started
+
+<Steps>
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/ferrisdb/ferrisdb.git
+   cd ferrisdb
+   ```
+
+2. **Install Rust toolchain**
+
+   ```bash
+   rustup toolchain install stable
+   rustup component add rustfmt clippy
+   ```
+
+3. **Build the components**
+
+   ```bash
+   cargo build --all
+   ```
+
+4. **Run the tests**
+   ```bash
+   cargo test --all
+   ```
+
+</Steps>
+
+<Aside type="note">
+  First build takes a few minutes. You're compiling a (partial) database from scratch!
+</Aside>
+
+## Understanding the Code Structure
+
+```text
+ferrisdb/
+├── ferrisdb-core/       # Basic types (Key, Value, Error)
+├── ferrisdb-storage/    # The interesting stuff!
+│   ├── src/
+│   │   ├── wal/        # Write-ahead log implementation
+│   │   ├── memtable/   # Concurrent skip list
+│   │   └── sstable/    # File format for persistence
+├── ferrisdb-client/     # Stub only
+├── ferrisdb-server/     # Stub only
+└── ferrisdb-tutorials/  # Hands-on learning
+```
+
+## Exploring Key Components
+
+### 1. Write-Ahead Log (WAL)
+
+<Badge text="FULLY IMPLEMENTED" variant="success" />
+
+The WAL ensures durability - data survives crashes:
+
+```bash
+# See the implementation
+cat ferrisdb-storage/src/wal/writer.rs
+
+# Run WAL-specific tests
+cargo test -p ferrisdb-storage wal::
+
+# Trace a write operation
+RUST_LOG=debug cargo test test_wal_basic -- --nocapture
+```
+
+**What to look for:**
+
+- How entries are encoded in binary format
+- CRC32 checksum calculation
+- fsync calls for durability
+
+### 2. MemTable (Skip List)
+
+<Badge text="FULLY IMPLEMENTED" variant="success" />
+
+A concurrent skip list for in-memory operations:
+
+```bash
+# Explore the skip list
+cat ferrisdb-storage/src/memtable/skip_list.rs
+
+# See concurrent operations in action
+cargo test -p ferrisdb-storage skiplist::tests::test_concurrent
+
+# Understand MVCC (multi-version concurrency)
+grep -n "timestamp" ferrisdb-storage/src/memtable/skip_list.rs
+```
+
+**What to look for:**
+
+- Lock-free reading using crossbeam epoch
+- How versions are ordered by timestamp
+- The clever height selection algorithm
+
+### 3. SSTable Components
+
+<Tabs>
+  <TabItem label="Writer ✅">
+    <Badge text="IMPLEMENTED" variant="success" />
+    ```bash # See how data is written to disk cat ferrisdb-storage/src/sstable/writer.rs # Test
+    SSTable creation cargo test -p ferrisdb-storage test_sstable_writer ``` Creates sorted files
+    with index and footer.
+  </TabItem>
+
+  <TabItem label="Reader ❌">
+    <Badge text="NOT IMPLEMENTED" variant="danger" />
+    ```bash # See the skeleton cat ferrisdb-storage/src/sstable/reader.rs ``` Structure exists but
+    can't read files yet.
+  </TabItem>
+</Tabs>
+
+## Learning Exercises
+
+### Exercise 1: Trace a Write
+
+```bash
+# Add debug prints to understand flow
+echo 'println!("WAL write: {:?}", entry);' >> ferrisdb-storage/src/wal/writer.rs
+
+# Run and see the output
+cargo test test_wal_basic -- --nocapture
+
+# Don't forget to remove your prints!
+git checkout ferrisdb-storage/src/wal/writer.rs
+```
+
+### Exercise 2: Measure Performance
+
+```bash
+# Run benchmarks (if any exist)
+cargo bench --all
+
+# Time the tests
+time cargo test -p ferrisdb-storage
+
+# Check binary size
+cargo bloat --release -p ferrisdb-storage
+```
+
+### Exercise 3: Find TODOs
+
+```bash
+# What's left to implement?
+grep -r "TODO" ferrisdb-storage/src/
+
+# What's not implemented?
+grep -r "unimplemented!" ferrisdb-storage/src/
+```
+
+## Common Patterns to Study
+
+<CardGrid>
+  <Card title="Error Handling" icon="warning">
+    Look for `Result<T>` and `?` operator usage throughout the codebase
+  </Card>
+
+<Card title="Concurrency" icon="puzzle">
+  See how `Arc`, `Mutex`, and lock-free structures are used
+</Card>
+
+<Card title="Binary Encoding" icon="document">
+  Understand how data is serialized for disk storage
+</Card>
+
+  <Card title="Testing Patterns" icon="checkmark">
+    Learn from comprehensive test suites for each component
+  </Card>
+</CardGrid>
+
+## Development Tips
+
+### Running Tests Effectively
+
+```bash
+# Run all tests
+cargo test --all
+
+# Run specific test
+cargo test test_name
+
+# See println! output
+cargo test -- --nocapture
+
+# Run tests in single thread (for debugging)
+RUST_TEST_THREADS=1 cargo test
+
+# Use nextest for better output
+cargo install cargo-nextest
+cargo nextest run --all
+```
+
+### Code Exploration Tools
+
+```bash
+# Generate and view documentation
+cargo doc --all --no-deps --open
+
+# See dependency tree
+cargo tree -p ferrisdb-storage
+
+# Find a type definition
+grep -r "struct SkipList" ferrisdb-storage/src/
+```
+
+## What You Can't Do (Yet)
+
+<Aside type="caution">
+  Remember, FerrisDB isn't a working database yet. You cannot: - Start a server - Connect with a
+  client - Store and retrieve data - Run benchmarks against a running system
+</Aside>
+
+## Contributing Your Learning
+
+Found something interesting? Share it!
+
+1. **Document your learning** in an issue
+2. **Fix a TODO** you found
+3. **Add a test** for an edge case
+4. **Improve comments** where you got confused
+
+## Next Steps
+
+<CardGrid>
+  <Card title="Start Tutorial" icon="rocket">
+    Build your own components in our [tutorial series](/tutorials/01-key-value-store/)
+  </Card>
+
+<Card title="Read the Blog" icon="pencil">
+  See how we built these components in our [development blog](/blog/)
+</Card>
+
+<Card title="Pick a Component" icon="magnifier">
+  Deep dive into WAL, MemTable, or SSTable implementation
+</Card>
+
+  <Card title="Join Discussion" icon="comment">
+    Ask questions and share insights on [GitHub](https://github.com/ferrisdb/ferrisdb/issues)
+  </Card>
+</CardGrid>
+
+---
+
+<p style="text-align: center; margin-top: 2rem;">
+  <em>
+    Remember: The goal isn't to use FerrisDB, it's to understand how databases work by exploring one
+    being built.
+  </em>
+</p>

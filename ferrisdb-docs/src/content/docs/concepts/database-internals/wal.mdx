@@ -76,14 +76,30 @@ Let's understand WAL through a familiar example - ATM withdrawals:
 
 <Tabs>
   <TabItem label="Without WAL">
-    ```text 1. Customer withdraws $100 2. Update balance in memory: $1000 → $900 3. Power failure!
-    💥 4. Server restarts 5. Balance shows $1000 (memory lost) 6. Customer has cash but account
-    shows no withdrawal! ```
+
+    ```text
+    1. Customer withdraws $100
+    2. Update balance in memory: $1000 → $900
+    3. Power failure! 💥
+    4. Server restarts
+    5. Balance shows $1000 (memory lost)
+    6. Customer has cash but account shows no withdrawal!
+    ```
+
   </TabItem>
   <TabItem label="With WAL">
-    ```text 1. Customer withdraws $100 2. Write to WAL: "Account 123: -$100 at 2:30 PM" 3. Update
-    balance in memory: $1000 → $900 4. Power failure! 💥 5. Server restarts 6. Read WAL: "Oh, there
-    was a $100 withdrawal" 7. Replay transaction: $1000 → $900 8. Balance correctly shows $900 ```
+
+    ```text
+    1. Customer withdraws $100
+    2. Write to WAL: "Account 123: -$100 at 2:30 PM"
+    3. Update balance in memory: $1000 → $900
+    4. Power failure! 💥
+    5. Server restarts
+    6. Read WAL: "Oh, there was a $100 withdrawal"
+    7. Replay transaction: $1000 → $900
+    8. Balance correctly shows $900
+    ```
+
   </TabItem>
 </Tabs>
 

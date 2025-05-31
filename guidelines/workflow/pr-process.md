@@ -132,6 +132,36 @@ None / List any breaking changes here
 - Update documentation in the same PR as code changes
 - Include before/after examples for API changes
 
+## PR Review Checklist
+
+Before approving any PR, verify these mandatory requirements:
+
+### ✅ Testing Standards (MANDATORY)
+
+- [ ] **Test Names**: Descriptive names that explain behavior (not `test_get()`)
+- [ ] **100% Coverage**: All code paths tested (exemptions must be justified)
+- [ ] **Public API**: All public methods have comprehensive tests
+- [ ] **Concurrent Tests**: Added if code uses Arc, Mutex, channels, or claims thread-safety
+- [ ] **Benchmarks**: Present if PR makes performance claims
+- [ ] **Error Cases**: All Result::Err paths tested
+- [ ] **Edge Cases**: Boundary conditions tested
+- [ ] **Exemptions**: Any coverage exemptions properly annotated and justified
+
+### ✅ Performance Claims (MANDATORY)
+
+- [ ] **No Unsubstantiated Claims**: All performance assertions backed by benchmarks
+- [ ] **Benchmark Quality**: Realistic workloads, multiple data sizes
+- [ ] **Comparison Fairness**: "X% faster" claims use equivalent test conditions
+
+### ✅ Code Quality Standards
+
+- [ ] **No Clippy Warnings**: `cargo clippy --all-targets --all-features -- -D warnings` passes
+- [ ] **Formatted**: `cargo fmt --all -- --check` passes
+- [ ] **Documentation**: Public APIs documented
+- [ ] **No Unwrap**: Library code uses proper error handling
+
+**Performance claims without benchmarks will be automatically rejected.**
+
 ## Claude's PR Review Process
 
 When asked to review a PR, Claude follows this structured approach:
@@ -145,6 +175,7 @@ When asked to review a PR, Claude follows this structured approach:
 
 2. **Review Code Changes** 🤖
 
+   - **FIRST**: Check mandatory testing and performance standards above
    - Examine commit diffs carefully
    - Search for similar patterns in other databases or Rust projects
    - Verify against Rust idioms and database design patterns

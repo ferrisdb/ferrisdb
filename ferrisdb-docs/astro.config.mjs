@@ -22,65 +22,53 @@ export default defineConfig({
 			},
 			sidebar: [
 				{
-					label: 'Quick Start',
+					label: 'Start Here',
 					items: [
-						{ label: 'Why FerrisDB?', slug: 'index' },
-						{ label: 'Install & Run', slug: 'getting-started' },
-						{ label: 'First Queries', slug: 'tutorial' },
+						{ label: 'Our Story', slug: 'index' },
+						{ label: 'Current Status', slug: 'status' },
+						{ label: 'Exploring the Code', slug: 'exploring-ferrisdb' },
 					],
 				},
 				{
 					label: 'Learn by Building',
-					badge: { text: 'NEW', variant: 'success' },
+					badge: { text: 'TUTORIALS', variant: 'success' },
 					items: [
 						{ label: 'Tutorial 1: Key-Value Store', slug: 'tutorials/01-key-value-store' },
-						{ label: 'More Tutorials Coming Soon', slug: 'tutorials/01-key-value-store' },
 					],
 				},
 				{
-					label: 'How It Works',
-					items: [
-						{ label: 'Architecture Overview', slug: 'reference/architecture' },
-						{ label: 'LSM Trees Explained', slug: 'concepts/database-internals/lsm-trees' },
-						{ label: 'Performance Analysis', slug: 'benchmarks' },
-					],
-				},
-				{
-					label: 'Development Blog',
+					label: 'The Journey',
 					items: [
 						{ label: 'Blog Overview', slug: 'blog-overview' },
 						{ label: 'All Posts', link: '/blog' },
-						{ label: '👨‍💻 Database Apprentice', link: '/blog/authors/human' },
-						{ label: '🤖 Code Whisperer', link: '/blog/authors/claude' },
+						{ label: '👨‍💻 Human Perspective', link: '/blog/authors/human' },
+						{ label: '🤖 AI Perspective', link: '/blog/authors/claude' },
 					],
 				},
 				{
-					label: 'Deep Dive',
+					label: 'Deep Dives',
 					collapsed: true,
 					items: [
-						{ label: 'Storage Engine', slug: 'reference/storage-engine' },
+						{ label: 'Current Implementation', slug: 'reference/current-implementation' },
 						{ label: 'Future Architecture', slug: 'reference/future-architecture' },
 						{
-							label: 'Database Internals',
+							label: 'Database Concepts',
 							autogenerate: { directory: 'concepts/database-internals' },
 						},
 						{
 							label: 'Rust Patterns',
 							autogenerate: { directory: 'concepts/rust-patterns' },
 						},
-						{
-							label: 'API Reference',
-							autogenerate: { directory: 'reference/api' },
-						},
-						{ label: 'Configuration', slug: 'reference/configuration' },
 					],
 				},
 				{
-					label: 'Contributing',
+					label: 'Get Involved',
 					collapsed: true,
 					items: [
-						{ label: 'Guides', autogenerate: { directory: 'guides' } },
-						{ label: 'Project Info', autogenerate: { directory: 'project' } },
+						{ label: 'How We Work', slug: 'project/how-we-work' },
+						{ label: 'Roadmap', slug: 'project/roadmap' },
+						{ label: 'FAQ', slug: 'project/faq' },
+						{ label: 'GitHub', link: 'https://github.com/ferrisdb/ferrisdb' },
 					],
 				},
 			],

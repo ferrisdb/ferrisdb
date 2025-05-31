@@ -1,0 +1,227 @@
+---
+title: Current Implementation
+description: What we've actually built in FerrisDB's storage layer
+sidebar:
+  badge:
+    text: FACTUAL
+    variant: success
+---
+
+import { Aside, Card, CardGrid, Tabs, TabItem, Badge } from "@astrojs/starlight/components";
+
+<Aside type="tip">
+  This document describes what we've ACTUALLY implemented, not what we plan to build. For our vision
+  and plans, see [Future Architecture](/reference/future-architecture/).
+</Aside>
+
+## What Exists Today
+
+We've implemented three core components of an LSM-tree storage engine, but they're not yet integrated into a working system.
+
+## Implemented Components
+
+### 1. Write-Ahead Log (WAL) ✅
+
+We have a complete WAL implementation that ensures durability.
+
+<Tabs>
+  <TabItem label="What Works">
+    - Binary format with little-endian encoding
+    - CRC32 checksums for corruption detection
+    - Configurable sync modes (None, Normal, Full)
+    - Size-based rotation (returns error when limit reached)
+    - Proper error handling and recovery
+  </TabItem>
+  
+  <TabItem label="Implementation">
+    ```rust
+    // Actual format we use
+    pub struct WALEntry {
+        pub key: Vec<u8>,
+        pub value: Option<Vec<u8>>,  // None for deletes
+        pub timestamp: u64,
+        pub operation: Operation,
+    }
+    
+    // Binary layout: [length:4][crc:4][data:varies]
+    ```
+  </TabItem>
+  
+  <TabItem label="Code Location">
+    - `ferrisdb-storage/src/wal/writer.rs` - Writes entries
+    - `ferrisdb-storage/src/wal/reader.rs` - Reads and recovers
+    - `ferrisdb-storage/src/wal/log_entry.rs` - Entry format
+  </TabItem>
+</Tabs>
+
+### 2. MemTable (Skip List) ✅
+
+We have a concurrent skip list that serves as our in-memory write buffer.
+
+<CardGrid>
+  <Card title="Features Implemented" icon="approve-check">
+    - Lock-free reads using crossbeam epoch - Fine-grained locking for writes - MVCC with timestamp
+    ordering - Max height of 12 levels - ~450 lines of tested code
+  </Card>
+
+  <Card title="Performance Characteristics" icon="rocket">
+    - O(log n) insert/lookup - Concurrent reads don't block - Keys ordered by (user_key, timestamp
+    DESC) - No size limit enforcement yet
+  </Card>
+</CardGrid>
+
+### 3. SSTable Writer ✅
+
+We can write sorted data to disk in SSTable format.
+
+```text
+Our SSTable Format:
+┌─────────────┐
+│ Data Blocks │ - Series of sorted entries
+├─────────────┤
+│ Index Block │ - First key of each data block
+├─────────────┤
+│ Bloom Filter│ - Placeholder (just zeros)
+├─────────────┤
+│   Footer    │ - Offsets and checksums
+└─────────────┘
+```
+
+<Aside type="caution">
+  The SSTable Reader exists but is NOT functional. We can write SSTables but can't read them back
+  yet.
+</Aside>
+
+## What's NOT Implemented
+
+### Missing Core Features
+
+<CardGrid>
+  <Card title="SSTable Reader" icon="cancel">
+    - Structure defined - Cannot actually read files - No block cache - No bloom filter support
+  </Card>
+
+  <Card title="Storage Engine" icon="cancel">
+    - Components not integrated - No flush from MemTable to SSTable - No read path implementation -
+    No manifest/version tracking
+  </Card>
+
+  <Card title="Compaction" icon="cancel">
+    - No background threads - No merging of SSTables - No garbage collection - No level management
+  </Card>
+</CardGrid>
+
+### Missing Infrastructure
+
+- **No Server** - Can't accept network connections
+- **No Client** - Can't connect to a database
+- **No API** - No way to get/put data
+- **No Configuration** - Hardcoded values only
+
+## Code Statistics
+
+```bash
+# Component sizes (excluding tests)
+WAL:           ~500 lines
+MemTable:      ~450 lines
+SSTable Writer: ~650 lines
+SSTable Reader: ~200 lines (non-functional)
+Core Types:    ~200 lines
+---
+Total:         ~2,000 lines of actual implementation
+```
+
+## You Can Run
+
+```bash
+# Clone the repo
+git clone https://github.com/ferrisdb/ferrisdb
+cd ferrisdb
+
+# Run component tests
+cargo test -p ferrisdb-storage
+
+# Specific component tests
+cargo test wal::    # WAL tests
+cargo test memtable # MemTable tests
+cargo test sstable  # SSTable tests
+```
+
+## You Cannot Run
+
+```bash
+# These don't exist:
+ferrisdb-server           # No server binary
+ferrisdb-client connect   # No client
+ferrisdb bench            # No benchmarks
+ferrisdb --config         # No configuration
+```
+
+## Current Architecture Reality
+
+Instead of the distributed system in our vision, here's what actually exists:
+
+```text
+What We Have:
+┌─────────────────────────────┐
+│     Individual Components   │
+│  ┌─────┐ ┌─────┐ ┌───────┐ │
+│  │ WAL │ │MemT│ │SSTable│ │
+│  └─────┘ └─────┘ └───────┘ │
+│   (not connected together)  │
+└─────────────────────────────┘
+
+What We Don't Have:
+- Storage Engine connecting them
+- Network layer
+- Transaction system
+- Distribution/replication
+- Query processing
+```
+
+## Honest Assessment
+
+### What's Good
+
+- Clean, well-tested component implementations
+- Good foundation for learning
+- Real concurrent data structures
+- Proper error handling
+
+### What's Missing
+
+- Components aren't integrated
+- Can't actually store/retrieve data
+- No persistence beyond WAL
+- Long way from a "database"
+
+### For Learners
+
+This is **perfect** if you want to:
+
+- Understand how databases work internally
+- See real concurrent Rust code
+- Follow a database being built from scratch
+- Learn alongside us
+
+This is **not** for you if you need:
+
+- A working database
+- Production storage
+- Benchmarkable performance
+- Distributed features
+
+## Next Steps
+
+Watch our journey as we:
+
+1. Make SSTable Reader actually work
+2. Connect components into a storage engine
+3. Add a simple get/put API
+4. Build from there!
+
+Follow our [blog](/blog/) to see each step of the process.
+
+---
+
+_Last updated: January 31, 2025_

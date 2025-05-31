@@ -12,17 +12,17 @@ impl KeyValueStore {
             data: HashMap::new(),
         }
     }
-    
+
     pub fn set(&mut self, key: String, value: String) {
         self.data.insert(key, value);
     }
-    
+
     pub fn get(&self, key: &str) -> Option<String> {
         self.data.get(key).cloned()
     }
-    
+
     /// Removes a key-value pair from the store
-    /// 
+    ///
     /// Returns the value if the key existed, None otherwise
     pub fn delete(&mut self, key: &str) -> Option<String> {
         // HashMap's remove() method does exactly what we need!
@@ -34,59 +34,59 @@ impl KeyValueStore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
-    fn test_delete_existing_key() {
+    fn delete_existing_key_returns_old_value() {
         let mut store = KeyValueStore::new();
         store.set("key1".to_string(), "value1".to_string());
-        
+
         // Delete should return the old value
         assert_eq!(store.delete("key1"), Some("value1".to_string()));
-        
+
         // Key should no longer exist
         assert_eq!(store.get("key1"), None);
     }
-    
+
     #[test]
-    fn test_delete_missing_key() {
+    fn delete_missing_key_returns_none() {
         let mut store = KeyValueStore::new();
-        
+
         // Deleting non-existent key should return None
         assert_eq!(store.delete("missing"), None);
     }
-    
+
     #[test]
-    fn test_delete_twice() {
+    fn delete_same_key_twice_returns_none_second_time() {
         let mut store = KeyValueStore::new();
         store.set("key1".to_string(), "value1".to_string());
-        
+
         // First delete returns the value
         assert_eq!(store.delete("key1"), Some("value1".to_string()));
-        
+
         // Second delete returns None
         assert_eq!(store.delete("key1"), None);
     }
-    
+
     #[test]
     fn test_delete_empty_key() {
         let mut store = KeyValueStore::new();
         store.set("".to_string(), "empty_key_value".to_string());
-        
+
         // Should work with empty keys too
         assert_eq!(store.delete(""), Some("empty_key_value".to_string()));
     }
 }
 
 // Additional discussion for learners:
-// 
+//
 // This solution is simple because HashMap already provides the exact
 // functionality we need. In real databases, delete operations are more
 // complex because they need to:
-// 
+//
 // 1. Maintain consistency across multiple data structures
 // 2. Handle concurrent deletes
 // 3. Update indexes
 // 4. Possibly tombstone the entry instead of removing it
 // 5. Trigger compaction or cleanup processes
-// 
+//
 // We'll explore these concepts in future tutorials!

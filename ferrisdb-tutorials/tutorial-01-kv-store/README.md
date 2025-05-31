@@ -10,6 +10,7 @@ A working key-value store that can:
 - Retrieve values by key
 - Handle missing keys safely
 - Count stored entries
+- Check if store is empty
 
 ## 🦀 Rust Concepts You'll Learn
 

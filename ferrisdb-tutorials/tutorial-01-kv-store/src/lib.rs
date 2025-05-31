@@ -108,14 +108,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_create_store() {
+    fn new_creates_empty_store() {
         let store = KeyValueStore::new();
         assert!(store.is_empty());
         assert_eq!(store.len(), 0);
     }
 
     #[test]
-    fn test_set_and_get() {
+    fn set_stores_value_and_get_retrieves_it() {
         let mut store = KeyValueStore::new();
 
         // Test basic set and get
@@ -131,7 +131,7 @@ mod tests {
     }
 
     #[test]
-    fn test_multiple_entries() {
+    fn multiple_entries_are_stored_independently() {
         let mut store = KeyValueStore::new();
 
         store.set("user:1".to_string(), "Alice".to_string());
@@ -142,5 +142,76 @@ mod tests {
         assert_eq!(store.get("user:1"), Some("Alice".to_string()));
         assert_eq!(store.get("user:2"), Some("Bob".to_string()));
         assert_eq!(store.get("user:3"), Some("Charlie".to_string()));
+    }
+
+    #[test]
+    fn default_creates_empty_store() {
+        let store = KeyValueStore::default();
+        assert!(store.is_empty());
+        assert_eq!(store.len(), 0);
+    }
+
+    #[test]
+    fn is_empty_returns_false_after_adding_entries() {
+        let mut store = KeyValueStore::new();
+        assert!(store.is_empty());
+
+        store.set("key".to_string(), "value".to_string());
+        assert!(!store.is_empty());
+    }
+
+    #[test]
+    fn len_increases_with_new_entries() {
+        let mut store = KeyValueStore::new();
+        assert_eq!(store.len(), 0);
+
+        store.set("key1".to_string(), "value1".to_string());
+        assert_eq!(store.len(), 1);
+
+        store.set("key2".to_string(), "value2".to_string());
+        assert_eq!(store.len(), 2);
+    }
+
+    #[test]
+    fn len_unchanged_when_overwriting_existing_key() {
+        let mut store = KeyValueStore::new();
+
+        store.set("key".to_string(), "value1".to_string());
+        assert_eq!(store.len(), 1);
+
+        store.set("key".to_string(), "value2".to_string());
+        assert_eq!(store.len(), 1);
+        assert_eq!(store.get("key"), Some("value2".to_string()));
+    }
+
+    #[test]
+    fn handles_empty_string_keys_and_values() {
+        let mut store = KeyValueStore::new();
+
+        store.set("".to_string(), "".to_string());
+        assert_eq!(store.get(""), Some("".to_string()));
+        assert_eq!(store.len(), 1);
+    }
+
+    #[test]
+    fn handles_unicode_keys_and_values() {
+        let mut store = KeyValueStore::new();
+
+        store.set("🦀".to_string(), "🚀".to_string());
+        store.set("测试".to_string(), "тест".to_string());
+
+        assert_eq!(store.get("🦀"), Some("🚀".to_string()));
+        assert_eq!(store.get("测试"), Some("тест".to_string()));
+        assert_eq!(store.len(), 2);
+    }
+
+    #[test]
+    fn get_returns_none_for_missing_keys() {
+        let store = KeyValueStore::new();
+        assert_eq!(store.get("nonexistent"), None);
+
+        let mut store = KeyValueStore::new();
+        store.set("existing".to_string(), "value".to_string());
+        assert_eq!(store.get("different"), None);
     }
 }

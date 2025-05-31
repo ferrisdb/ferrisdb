@@ -18,21 +18,23 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 
 ### 🎨 Content Creation
 
-- [Website Design](content/website-design.md) - Visual design and Jekyll configuration
-- [Website Design - Starlight](content/website-design-starlight.md) - **NEW** Astro Starlight design standards
-- [Blogging Guidelines](content/blogging.md) - General blog post standards
+- [Content Strategy](content/content-strategy.md) - **START HERE** - Our content philosophy and principles
+- [Tutorial Guidelines](content/tutorials.md) - "Learn by Building" series structure
+- [Blogging Guidelines](content/blogging.md) - Development journey documentation
 - [Claude's Blog Voice](content/claude-blog-voice.md) - AI perspective and personality
-- [Database Concepts Articles](content/database-concepts-articles.md) - Technical article structure
+- [Website Design - Starlight](content/website-design-starlight.md) - Astro Starlight design standards
 - [Rust by Example](content/rust-by-example.md) - Educational article format
+- [Database Concepts Articles](content/database-concepts-articles.md) - _Being phased out - merged into tutorials_
 
 ### 🔄 Development Workflow
 
+- [Workflow README](workflow/) - Index of all workflow guidelines
 - [Testing Standards](workflow/testing.md) - Test requirements and coverage
 - [Common Commands](workflow/commands.md) - Frequently used commands
 - [Git Workflow](workflow/git-workflow.md) - Branching and commit standards
 - [PR Process](workflow/pr-process.md) - Pull request and review policies
-- [Website Maintenance](workflow/website-maintenance.md) - Maintaining Jekyll docs site
-- [Website Maintenance - Starlight](workflow/website-maintenance-starlight.md) - **NEW** Maintaining Astro Starlight site
+- [Website Maintenance - Simplified](workflow/website-maintenance-simple.md) - ✅ **PRIMARY** - Daily content updates
+- [Starlight Technical Reference](workflow/starlight-technical-reference.md) - 📖 Technical reference (not daily use)
 
 ### 🏗️ Technical Architecture
 
@@ -63,17 +65,20 @@ This workflow is documented honestly in our blog posts, showing real conversatio
 
 ## Project Overview
 
-FerrisDB is a distributed, transactional key-value database inspired by FoundationDB, implemented in Rust. This project serves as both a learning exercise and a demonstration of human-AI collaboration in software development.
+FerrisDB is an educational project where a CRUD developer and an AI (Claude) are building a distributed database from scratch. The goal is not to create another production database, but to document the journey of learning database internals and Rust through building one.
+
+**What makes us unique**: We're the only project transparently documenting every step of human-AI collaboration in building complex systems software.
 
 ## Key Principles
 
-1. **Educational First**: Every decision should make learning easier
-2. **Accuracy Always**: Verify technical details against codebase and git history
-3. **Transparency**: Document real progress, real mistakes, real learning
-4. **Quality Code**: Follow Rust best practices and idioms
-5. **Real Collaboration**: Show actual human-AI workflow, not idealized version
-6. **Documentation**: Keep everything well-documented and accessible
-7. **Visual Clarity**: Use ASCII diagrams and tables to enhance understanding
+1. **Journey Over Destination**: The process of building matters more than the final product
+2. **Educational First**: Every decision should make learning easier
+3. **Radical Transparency**: Document real progress, real mistakes, real learning
+4. **Factual Content**: Clearly distinguish what's built vs. what's planned
+5. **Story-Driven**: Technical content needs narrative context
+6. **Quality Code**: Follow Rust best practices and idioms
+7. **Real Collaboration**: Show actual human-AI workflow, not idealized version
+8. **No Premature Documentation**: Don't document features that don't exist
 
 ## Guidelines as Source of Truth
 

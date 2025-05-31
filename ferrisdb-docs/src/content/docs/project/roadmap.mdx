@@ -1,240 +1,210 @@
 ---
-title: Roadmap
-description: FerrisDB development roadmap and progress tracking
+title: Development Roadmap
+description: FerrisDB's journey from components to distributed database
+sidebar:
+  badge:
+    text: JOURNEY
+    variant: note
 ---
 
-import { Aside, Card, CardGrid, Steps } from "@astrojs/starlight/components";
+import { Aside, Card, CardGrid, Tabs, TabItem, Badge } from "@astrojs/starlight/components";
 import Stats from "../../../components/Stats.astro";
 
-Building a distributed, transactional key-value database from scratch.
+<Aside type="tip" title="Journey Documentation">
+  This roadmap shows our learning journey, not promises. We're building to understand, discovering
+  what works through implementation. Follow our [blog](/blog/) to see real-time progress!
+</Aside>
 
 **Current Status**: <Stats />
 
-## 🏗️ Storage Engine Foundation
+## Our Building Journey
 
-The core storage components that handle persistence and data organization.
+<Tabs>
+  <TabItem label="✅ What We've Built">
+    <Badge text="IMPLEMENTED" variant="success" />
+    ### Storage Components - **Write-Ahead Log** - Binary format with CRC32 checksums - **MemTable**
+    - Concurrent skip list with MVCC timestamps - **SSTable Writer** - Can persist sorted data to
+    disk ### Learning Outputs - **6 Blog Posts** - Documenting our daily journey - **1 Tutorial** -
+    Build your own key-value store - **~2,000 lines** - Of actual implementation code - **25+
+    Tests** - Showing how components work
+  </TabItem>
+
+  <TabItem label="🚧 What We're Building">
+    <Badge text="IN PROGRESS" variant="caution" />
+    ### Current Focus - **SSTable Reader** - Make it actually read files - **Storage Engine** -
+    Connect components together - **Basic Operations** - Simple get/put interface ### This Week's
+    Goals - Complete SSTable reader implementation - Write integration tests - Document learning in
+    blog posts
+  </TabItem>
+
+  <TabItem label="📋 What We Dream About">
+    <Badge text="FUTURE EXPLORATION" variant="note" />
+    ### Near Future (Months) - Compaction strategies - Block cache for performance - Bloom filters
+    for efficiency - Compression support ### Far Future (Someday) - Transactions with MVCC -
+    Distribution with Raft - Network protocol - Production optimizations
+  </TabItem>
+</Tabs>
+
+## Phase 1: Storage Foundation 🏗️
+
+**Goal**: Understand how databases persist data reliably
 
 <CardGrid>
-  <Card title="Completed" icon="approve-check">
-    - ✅ Write-Ahead Log (WAL) - ✅ MemTable (Skip List) - ✅ SSTable format - ✅ SSTable reader -
-    ✅ Basic error handling
+  <Card title="Completed ✅" icon="approve-check">
+    - WAL for durability
+    - MemTable for fast writes
+    - SSTable writer
+    - Binary encoding
+    - Error handling patterns
   </Card>
 
-<Card title="In Progress" icon="rocket">
-  - 🔄 SSTable writer improvements - 🔄 Integration tests
+<Card title="In Progress 🚧" icon="rocket">
+  - SSTable reader - Component integration - Storage engine API - More comprehensive tests
 </Card>
 
-  <Card title="Planned" icon="document">
-    - ⏳ Compaction - ⏳ Bloom filters - ⏳ Block cache - ⏳ Compression (LZ4/Snappy)
+  <Card title="Next Up 📋" icon="document">
+    - Compaction logic
+    - Manifest files
+    - Recovery process
+    - Performance metrics
   </Card>
 </CardGrid>
 
-## 🔄 Basic Operations
+## Phase 2: Database Operations 🔧
 
-Essential database operations for reading and writing data.
+**Goal**: Make it actually work like a database
 
-<Steps>
+### What This Means
 
-1. **Get/Put/Delete operations** - Core CRUD functionality
-2. **Batch writes** - Atomic multi-key updates
-3. **Range queries** - Scan between key boundaries
-4. **Prefix scans** - Find all keys with common prefix
-5. **Reverse iteration** - Backward traversal support
+- `get(key) -> Option<value>`
+- `put(key, value) -> Result<()>`
+- `delete(key) -> Result<()>`
+- `scan(start, end) -> Iterator`
 
-</Steps>
+### Learning Challenges
 
-## 🎯 ACID Transactions
+- How to integrate components efficiently
+- When to flush MemTable to disk
+- How to merge multiple data sources
+- Error handling across layers
 
 <Aside type="note">
-  ACID (Atomicity, Consistency, Isolation, Durability) transactions are essential for maintaining
-  data integrity in concurrent environments.
+  Each operation seems simple but requires coordinating multiple components. This is where we'll
+  really understand database complexity!
 </Aside>
 
-### Foundation Phase
+## Phase 3: Advanced Storage 📊
 
-- ⏳ MVCC (Multi-Version Concurrency Control) foundation
-- ⏳ Snapshot isolation
-- ⏳ Optimistic concurrency control
+**Goal**: Understand optimization techniques
 
-### Advanced Phase
+### Topics to Explore
 
-- ⏳ Transaction protocol design
-- ⏳ Conflict detection algorithms
-- ⏳ Serializable isolation level
+- **Compaction**: Why and how databases merge files
+- **Caching**: Block cache design and trade-offs
+- **Bloom Filters**: Probabilistic data structures
+- **Compression**: Space vs. CPU trade-offs
 
-## 🌐 Distribution Layer
+### Why These Matter
 
-Scaling FerrisDB across multiple nodes for fault tolerance and performance.
+Real databases spend most complexity here. Understanding these optimizations teaches:
 
-### Consensus & Coordination
+- Why databases make certain trade-offs
+- How to think about system performance
+- When optimization actually matters
 
-- ⏳ Raft consensus protocol
-- ⏳ Leader election
-- ⏳ Configuration management
+## Phase 4: Transactions 🔄
 
-### Data Distribution
+**Goal**: ACID properties and isolation levels
 
-- ⏳ Consistent hashing
-- ⏳ Data partitioning (sharding)
-- ⏳ Auto-rebalancing
+<Aside type="caution">
+  This is where things get really interesting (and complex). We'll learn why distributed systems
+  papers are full of transaction algorithms!
+</Aside>
 
-### Distributed Transactions
+### Learning Path
 
-- ⏳ Two-phase commit (2PC)
-- ⏳ Distributed deadlock detection
-- ⏳ Cross-shard queries
+1. **MVCC Basics** - We already have timestamps!
+2. **Snapshot Isolation** - Read consistency
+3. **Write Conflicts** - Detection and resolution
+4. **Transaction Manager** - Coordinating it all
 
-## 📊 Performance & Monitoring
+## Phase 5: Distribution 🌐
 
-Making FerrisDB observable and performant.
+**Goal**: Scale beyond a single machine
+
+### The Dream
+
+- **Consensus**: Raft protocol implementation
+- **Sharding**: Data distribution strategies
+- **Replication**: Fault tolerance
+- **Coordination**: Distributed transactions
+
+### The Reality
+
+This might remain a dream, but planning it teaches us about:
+
+- CAP theorem in practice
+- Network partition handling
+- Consistency vs. availability trade-offs
+
+## How We Work
 
 <CardGrid>
-  <Card title="Metrics" icon="information">
-    - Request latency tracking - Throughput monitoring - Resource utilization - Error rate tracking
+  <Card title="Human Assigns" icon="user">
+    "Let's implement SSTable reader"
   </Card>
 
-<Card title="Profiling" icon="magnifier">
-  - CPU profiling - Memory profiling - I/O analysis - Lock contention
+<Card title="AI Implements" icon="robot">
+  Code + explanation of decisions
 </Card>
 
-  <Card title="Benchmarks" icon="rocket">
-    - YCSB compliance - Comparison benchmarks - Stress testing - Load testing
+<Card title="Human Reviews" icon="magnifier">
+  Questions lead to understanding
+</Card>
+
+  <Card title="Both Learn" icon="puzzle">
+    Document insights in blog
   </Card>
 </CardGrid>
 
-## 🔧 Operations & Management
+## Success Metrics
 
-Tools for running and managing FerrisDB.
+### What Success Looks Like
 
-### CLI Client
+- **Understanding** > Performance
+- **Learning** > Features
+- **Journey** > Destination
 
-```bash
-ferrisdb> get user:123
-ferrisdb> put user:123 {"name": "Alice"}
-ferrisdb> scan user: user:~
-```
+### How We Measure
 
-### Management Features
+- Blog posts documenting insights
+- Tutorials teaching others
+- Code that explains itself
+- Questions that lead to "aha!" moments
 
-- ⏳ Backup/restore functionality
-- ⏳ Import/export tools
-- ⏳ Configuration management
-- ⏳ Health checks and diagnostics
+## Get Involved
 
-## 🚀 Client & API
+<Card title="Follow the Journey" icon="telescope">
+  - **Read**: [Our blog](/blog/) for daily progress - **Learn**:
+  [Tutorials](/tutorials/01-key-value-store/) to build your own - **Explore**: [Current
+  code](/reference/current-implementation/) with comments - **Contribute**:
+  [GitHub](https://github.com/ferrisdb/ferrisdb) - questions welcome!
+</Card>
 
-Building robust client libraries and protocols.
+## The Honest Truth
 
-### Protocol Design
+We don't know if we'll build a distributed database. We might get stuck on transactions. We might
+discover that compaction is harder than expected. **That's the point.**
 
-- ⏳ Binary protocol specification
-- ⏳ Protocol versioning
-- ⏳ Backward compatibility
+This roadmap isn't a promise - it's a learning adventure. Join us to discover:
 
-### Client Features
-
-- ⏳ Rust client library
-- ⏳ Connection pooling
-- ⏳ Automatic retry logic
-- ⏳ Load balancing
-- ⏳ Circuit breakers
-
-## 🛡️ Production Readiness
-
-<Aside type="caution">
-  Remember: FerrisDB is an educational project. These features are for learning production patterns,
-  not for actual production use!
-</Aside>
-
-### Reliability
-
-- ⏳ Comprehensive error handling
-- ⏳ Graceful shutdown
-- ⏳ Resource limits and quotas
-
-### Security
-
-- ⏳ Authentication framework
-- ⏳ Authorization (ACLs)
-- ⏳ Encryption at rest
-- ⏳ TLS support
-
-### Testing
-
-- ⏳ Chaos testing framework
-- ⏳ Fault injection
-- ⏳ Network partition simulation
-
-## 📚 Documentation & Examples
-
-Comprehensive learning materials.
-
-### Technical Documentation
-
-- 🔄 Architecture documentation
-- ⏳ API reference
-- ⏳ Deployment guide
-- ⏳ Performance tuning guide
-
-### Educational Content
-
-- ✅ Database concepts articles
-- ✅ Rust by example tutorials
-- 🔄 Human-AI collaboration blog
-- ⏳ Interactive demos
-- ⏳ Video tutorials
-
-## 🎓 Educational Priorities
-
-What we're focusing on for maximum learning value:
-
-1. **Clear code over clever code** - Every optimization explained
-2. **Real patterns, simplified** - Production techniques in understandable form
-3. **Mistakes as learning** - Document what didn't work and why
-4. **Progressive complexity** - Start simple, add features incrementally
-
-## Timeline
-
-<Aside type="tip">
-  We don't have strict deadlines - learning takes the time it takes! But here's our rough plan:
-</Aside>
-
-### Month 1-2: Foundation ✅
-
-- Core storage engine
-- Basic operations
-- Initial documentation
-
-### Month 3-4: Transactions 🔄
-
-- MVCC implementation
-- Transaction protocol
-- Isolation levels
-
-### Month 5-6: Distribution
-
-- Consensus protocol
-- Sharding
-- Replication
-
-### Month 7+: Polish
-
-- Performance optimization
-- Client libraries
-- Advanced features
-
-## How You Can Help
-
-Want to contribute to the roadmap?
-
-1. **Pick an unimplemented feature** - Check items marked with ⏳
-2. **Open an issue** - Discuss your approach
-3. **Submit a PR** - Include tests and documentation
-4. **Help with reviews** - Learn by reviewing others' code
-
-Remember: This is a learning project. Quality and understanding matter more than speed!
+- How databases really work
+- Why certain designs win
+- What makes systems programming hard
+- How human-AI collaboration can tackle complex problems
 
 ---
 
-Last updated: Check [ROADMAP.md](https://github.com/ferrisdb/ferrisdb/blob/main/ROADMAP.md) for the
-latest status.
+<p style="text-align: center; margin-top: 2rem;">
+  <em>The journey of a thousand miles begins with a single `cargo test`</em>
+</p>

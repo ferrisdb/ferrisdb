@@ -49,6 +49,10 @@ Start with: [Content README](guidelines/content/) → Choose your content type:
 
 Review: [Technical README](guidelines/technical/) → [Architecture](guidelines/technical/architecture.md) → [Invariants](guidelines/technical/invariants.md)
 
+#### 🎯 Content Strategists
+
+Start with: [Content Strategy](guidelines/content/content-strategy.md) → [Information Architecture](guidelines/content/information-architecture.md)
+
 #### 🌐 Website Maintainers
 
 Follow: [Website Design](guidelines/content/website-design.md) → [Website Maintenance](guidelines/workflow/website-maintenance.md)
@@ -73,14 +77,15 @@ I follow ALL guidelines, especially:
 
 ### Content & Writing Tasks
 
+- **"Review our content strategy"** → [Content Strategy](guidelines/content/content-strategy.md) **START HERE**
 - **"Write a blog post"** → [Blogging Guidelines](guidelines/content/blogging.md)
 - **"Write as Claude"** → [Claude's Blog Voice](guidelines/content/claude-blog-voice.md)
 - **"Create a tutorial"** → [Tutorial Guidelines](guidelines/content/tutorials.md) + **DOGFOOD IT!**
-- **"Create a database concept"** → [Database Concepts Articles](guidelines/content/database-concepts-articles.md)
-- **"Explain Rust concepts"** → [Rust by Example](guidelines/content/rust-by-example.md)
-- **"Update the website"** → [Website Design (Starlight)](guidelines/content/website-design-starlight.md)
-- **"Update FAQ.md"** → [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md#faq-specific-maintenance)
-- **"Update statistics"** → [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md) + [Commands](guidelines/workflow/commands.md#statistics-and-metrics)
+- **"Update the website"** → [Website Maintenance - Simplified](guidelines/workflow/website-maintenance-simple.md)
+- **"Debug Starlight issues"** → [Starlight Technical Reference](guidelines/workflow/starlight-technical-reference.md)
+- **"Check what's actually built"** → Update Current Status page (be honest!)
+- **"Document our journey"** → Blog post showing real progress
+- **"Organize content"** → [Information Architecture](guidelines/content/information-architecture.md)
 
 ### Process & Workflow Tasks
 
@@ -95,6 +100,7 @@ I follow ALL guidelines, especially:
 - **"Work on storage"** → [Storage Engine Guidelines](guidelines/technical/storage-engine.md)
 - **"Consider security"** → [Security Practices](guidelines/technical/security.md)
 - **"Check invariants"** → [System Invariants](guidelines/technical/invariants.md)
+- **"Organize website content"** → [Information Architecture](guidelines/content/information-architecture.md)
 
 ## 📁 Project Structure
 

@@ -6,6 +6,10 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 
+[[bin]]
+name = "tutorial-01-kv-store"
+path = "src/main.rs"
+
 [dependencies]
 
 [dev-dependencies]
