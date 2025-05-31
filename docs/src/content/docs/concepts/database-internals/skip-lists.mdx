@@ -23,10 +23,10 @@ This is the concurrency challenge every modern database faces. In traditional sy
 users try to write data:
 
 <Aside type="danger" title="Real-world problems CRUD developers face">
-  - **Lock contention**: Users wait in a virtual queue, like a single bathroom at a party
-  - **Deadlocks**: Two users waiting for each other, like two cars at a narrow bridge
-  - **Slow response times**: Your API endpoints timeout during traffic spikes
-  - **Wasted server resources**: CPUs sit idle while threads wait for locks
+  - **Lock contention**: Users wait in a virtual queue, like a single bathroom at a party -
+  **Deadlocks**: Two users waiting for each other, like two cars at a narrow bridge - **Slow
+  response times**: Your API endpoints timeout during traffic spikes - **Wasted server resources**:
+  CPUs sit idle while threads wait for locks
 </Aside>
 
 The traditional solution uses locks (mutexes) to ensure only one thread modifies data at a time:

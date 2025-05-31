@@ -38,9 +38,9 @@ the entire folder, add your single document, and put it back - for every single 
 cabinet is across the building (representing disk storage), this gets incredibly slow!
 
 <Aside type="caution" title="Why this matters for CRUD developers">
-  - **Slow write performance**: Your API endpoints that create/update data become bottlenecks
-  - **Lock contention**: Multiple users trying to write at once wait in line
-  - **Poor scalability**: Adding more users makes the problem exponentially worse
+  - **Slow write performance**: Your API endpoints that create/update data become bottlenecks -
+  **Lock contention**: Multiple users trying to write at once wait in line - **Poor scalability**:
+  Adding more users makes the problem exponentially worse
 </Aside>
 
 LSM-Trees solve this by completely rethinking how databases handle writes.
@@ -78,7 +78,7 @@ graph LR
     MemTable -->|"Flush when full"| SSTable2[SSTable 2<br/>Immutable File]
     SSTable1 -->|Compaction| SSTable3[Merged SSTable]
     SSTable2 -->|Compaction| SSTable3
-    
+
     style WAL fill:#f9f,stroke:#333,stroke-width:2px
     style MemTable fill:#9ff,stroke:#333,stroke-width:2px
     style SSTable1 fill:#ff9,stroke:#333,stroke-width:2px
@@ -161,9 +161,9 @@ pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
 3. **Full detection**: Signals when it's time to "give orders to the kitchen" (flush to disk)
 
 <Aside type="note" title="Why a Skip List?">
-  - **O(log n) operations**: Finding items in a million-entry list takes only ~20 steps
-  - **Lock-free reads**: Multiple threads can read without blocking each other
-  - **Ordered iteration**: Essential for creating sorted files and range queries
+  - **O(log n) operations**: Finding items in a million-entry list takes only ~20 steps -
+  **Lock-free reads**: Multiple threads can read without blocking each other - **Ordered
+  iteration**: Essential for creating sorted files and range queries
 </Aside>
 
 #### Component 2: SSTables - Immutable Sorted Files
@@ -217,9 +217,9 @@ pub struct SSTableEntry {
   </TabItem>
 
 <TabItem label="Disadvantages">
-  - ⚠️ **Read amplification**: May need to check multiple SSTables for recent writes
-  - ⚠️ **Write amplification**: Data gets written multiple times during compaction
-  - ⚠️ **Space amplification**: Multiple versions of data exist until compaction
+  - ⚠️ **Read amplification**: May need to check multiple SSTables for recent writes - ⚠️ **Write
+  amplification**: Data gets written multiple times during compaction - ⚠️ **Space amplification**:
+  Multiple versions of data exist until compaction
 </TabItem>
 
   <TabItem label="When to use alternatives">
