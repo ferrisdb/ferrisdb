@@ -97,40 +97,57 @@ Let's start with the simplest possible key-value store:
 
 <Tabs>
   <TabItem label="Write This Code">
-    ```rust // In src/lib.rs // A struct is like a class in other languages pub struct KeyValueStore{" "}
-    {
-      // For now, we'll add fields in the next step
+    ```rust
+    // In src/lib.rs
+    // A struct is like a class in other languages
+    pub struct KeyValueStore {
+        // For now, we'll add fields in the next step
     }
     ```
   </TabItem>
 
 <TabItem label="Understanding the Code">
-  ```rust pub struct KeyValueStore{" "}
-  {
-    //│  │     └─ The name of our type
-    //│  └─ Keyword to define a new type
-    //└─ "public" - other code can use this
+  ```rust
+  pub struct KeyValueStore {
+  //│  │     └─ The name of our type
+  //│  └─ Keyword to define a new type
+  //└─ "public" - other code can use this
   }
   ```
 </TabItem>
 
 <TabItem label="If You Know JavaScript">
-  ```javascript // In JavaScript, you might write: class KeyValueStore{" "}
-  {
+  ```javascript
+  // In JavaScript, you might write:
+  class KeyValueStore {
     // fields go here
   }
-  // Or with modern JS: const KeyValueStore = class{" "}
-  {
+  
+  // Or with modern JS:
+  const KeyValueStore = class {
     // implementation
-  }
-  ; ``` **Key differences**: - Rust uses `struct` instead of `class` - `pub` makes it public (like
-  `export`) - No inheritance in Rust (we'll use traits later)
+  };
+  ```
+  
+  **Key differences**: 
+  - Rust uses `struct` instead of `class`
+  - `pub` makes it public (like `export`)
+  - No inheritance in Rust (we'll use traits later)
 </TabItem>
 
   <TabItem label="If You Know Python">
-    ```python # In Python, you might write: class KeyValueStore: def __init__(self): # Initialize
-    here pass ``` **Key differences**: - Rust separates data (`struct`) from methods (`impl`) - No
-    `self` in the struct definition - Types are defined at compile time
+    ```python
+    # In Python, you might write:
+    class KeyValueStore:
+        def __init__(self):
+            # Initialize here
+            pass
+    ```
+    
+    **Key differences**:
+    - Rust separates data (`struct`) from methods (`impl`)
+    - No `self` in the struct definition
+    - Types are defined at compile time
   </TabItem>
 </Tabs>
 
