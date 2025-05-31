@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - 'docs/**'
+      - 'ferrisdb-docs/**'
       - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
@@ -24,63 +24,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          ruby-version: '3.1'
-          bundler-cache: true
-          working-directory: ./docs
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ferrisdb-docs/package-lock.json
           
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
         
-      - name: Clear Jekyll cache
+      - name: Install dependencies
         run: |
-          cd docs
-          rm -rf .jekyll-cache _site .sass-cache
-          echo "✅ Jekyll cache cleared"
+          cd ferrisdb-docs
+          npm ci
+          echo "✅ Dependencies installed"
           
-      - name: Build with Jekyll
+      - name: Build with Astro
         run: |
-          cd docs
-          # Try building up to 3 times in case of transient failures
-          for i in 1 2 3; do
-            if bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --strict_front_matter; then
-              echo "✅ Jekyll build succeeded on attempt $i"
-              break
-            else
-              echo "⚠️  Jekyll build failed on attempt $i"
-              if [ $i -eq 3 ]; then
-                echo "❌ Jekyll build failed after 3 attempts"
-                exit 1
-              fi
-              sleep 2
-            fi
-          done
+          cd ferrisdb-docs
+          # Build the Starlight site
+          npm run build
+          echo "✅ Starlight build succeeded"
         env:
-          JEKYLL_ENV: production
+          NODE_ENV: production
           
       - name: Verify build output
         run: |
-          cd docs/_site
-          # Check that index.html exists and contains HTML, not raw markdown
+          cd ferrisdb-docs/dist
+          # Check that index.html exists and is valid
           if [ ! -f "index.html" ]; then
             echo "ERROR: index.html not generated"
             exit 1
           fi
-          # More thorough check for markdown patterns
-          if grep -E "^#{1,6}\s|^\*\s|^-\s|^\d+\.\s|^\`\`\`" index.html; then
-            echo "ERROR: Raw markdown detected in built HTML"
-            echo "First 50 lines of index.html:"
-            head -50 index.html
+          # Check for common Astro/Starlight build artifacts
+          if [ ! -d "_astro" ]; then
+            echo "ERROR: Astro assets directory not found"
             exit 1
           fi
-          # Check for Liquid syntax that wasn't processed
-          if grep -E "\{\%|%\}|\{\{|\}\}" index.html; then
-            echo "ERROR: Unprocessed Liquid syntax detected"
-            echo "First 50 lines of index.html:"
-            head -50 index.html
+          # Basic HTML validation - ensure it's not empty
+          if [ ! -s "index.html" ]; then
+            echo "ERROR: index.html is empty"
             exit 1
           fi
           echo "✅ Build verification passed"
@@ -88,7 +73,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs/_site
+          path: ./ferrisdb-docs/dist
 
   deploy:
     environment:
