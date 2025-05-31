@@ -1,0 +1,222 @@
+---
+title: FerrisDB
+description:
+  Learning database internals by building from scratch - follow a CRUD developer and AI
+  collaboration
+template: splash
+hero:
+  title: "Database Internals, Learned by Building"
+  tagline:
+    "Watch a CRUD developer and AI build a database from scratch. Real code, real learning, real
+    collaboration patterns."
+  image:
+    file: ../../assets/ferrisdb_logo.svg
+  actions:
+    - text: "Try the Tutorial"
+      link: "/tutorial"
+      icon: "rocket"
+      variant: "primary"
+    - text: "View on GitHub"
+      link: "https://github.com/ferrisdb/ferrisdb"
+      icon: "github"
+      variant: "secondary"
+---
+
+import { Card, CardGrid, Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+
+## What Makes This Different?
+
+<CardGrid>
+  <Card title="🎯 Simplicity First" icon="star">
+    Clean, understandable implementations that teach concepts clearly - no premature optimization
+  </Card>
+
+<Card title="🔍 Correctness Over Speed" icon="approve-check">
+  Get it right, then make it fast. Classic engineering wisdom in action.
+</Card>
+
+<Card title="🤖 Learning in Public" icon="telescope">
+  Real mistakes, real questions, real breakthroughs - nothing hidden from the learning process
+</Card>
+
+  <Card title="📚 Fundamentals Focus" icon="open-book">
+    Understanding LSM trees, WAL, and SSTables before micro-optimizations
+  </Card>
+</CardGrid>
+
+## See It In Action
+
+<Tabs>
+  <TabItem label="Our Philosophy">
+    ```rust
+    // Simple, readable, correct
+    // Optimize only when you understand the trade-offs
+    pub struct LogEntry {
+        pub sequence_number: u64,   // Clear naming
+        pub key: Vec<u8>,          // Simple types  
+        pub value: Option<Vec<u8>>, // Obvious semantics
+        pub timestamp: u64,        // No premature optimization
+    }
+    ```
+  </TabItem>
+  
+  <TabItem label="Real Code">
+    ```rust
+    // From our actual implementation
+    impl MemTable {
+        pub fn set(&self, key: Vec<u8>, value: Vec<u8>) -> Result<()> {
+            // Simple approach: just insert and track memory
+            self.skiplist.insert(key, value);
+            self.memory_usage.fetch_add(size, Ordering::Relaxed);
+            Ok(())
+        }
+    }
+    ```
+  </TabItem>
+  
+  <TabItem label="Learning Process">
+    ```bash
+    # How we actually develop
+    git clone https://github.com/ferrisdb/ferrisdb
+    
+    # Start simple, understand first
+    cargo test        # Make sure it works
+    cargo run         # See it in action
+    # Optimize later when we understand the bottlenecks
+    ```
+  </TabItem>
+</Tabs>
+
+## Learning Progress
+
+<Aside type="note" title="Educational Project">
+  FerrisDB is a learning journey, not production software. We prioritize understanding over
+  optimization, correctness over speed.
+</Aside>
+
+### Current Implementation Status
+
+<Tabs>
+  <TabItem label="✅ Working & Understood">
+    - **Write-Ahead Log (WAL)** - Simple binary format, crash recovery works - **MemTable with Skip
+    List** - Concurrent, but readable implementation - **Basic SSTable structure** - Straightforward
+    serialization format - **Clean API design** - Refactored after learning from mistakes
+  </TabItem>
+
+<TabItem label="🚧 Building & Learning">
+  - **SSTable reader** - Binary search, keeping it simple - **Compaction strategy** - Basic
+  algorithm before optimizations - **Error handling** - Making failures clear and debuggable
+</TabItem>
+
+  <TabItem label="⏳ Future Learning">
+    - **Bloom filters** - When we understand the read patterns - **Advanced compaction** - After
+    mastering the basics - **Distributed features** - Only when single-node is solid - **Performance
+    tuning** - Last, when we know what to optimize
+  </TabItem>
+</Tabs>
+
+## The Collaboration Experiment
+
+What happens when a CRUD developer teams up with Claude AI to learn database internals from first
+principles?
+
+<CardGrid>
+  <Card title="👨‍💻 Database Apprentice" icon="user">
+    Real learning struggles, "aha!" moments, honest questions about trade-offs [Read Human Journey
+    →](/blog/authors/human/)
+  </Card>
+
+  <Card title="🤖 Code Whisperer" icon="rocket">
+    Teaching patterns, explaining complex concepts, adapting to human feedback [Read AI Analysis
+    →](/blog/authors/claude/)
+  </Card>
+</CardGrid>
+
+### What We've Learned About Learning
+
+<CardGrid>
+  <Card title="Questions Drive Design" icon="information">
+    **"Why skip lists over BTreeMap?"** led to understanding concurrency trade-offs
+  </Card>
+
+<Card title="Simple First Works" icon="star">
+  **3** times we started complex and simplified after human confusion
+</Card>
+
+  <Card title="Teaching Through Code" icon="heart">
+    Comments and tests became mini-lessons, not just implementation details
+  </Card>
+</CardGrid>
+
+[Explore the Blog →](/blog-overview)
+
+## Technical Concepts We're Learning
+
+<CardGrid>
+  <Card title="LSM Trees Explained" icon="forward">
+    Why modern databases use Log-Structured Merge Trees instead of B-trees [Understand LSM
+    →](/concepts/database-internals/lsm-trees)
+  </Card>
+
+<Card title="Write-Ahead Logs" icon="document">
+  How databases ensure durability without sacrificing performance [Learn WAL
+  →](/concepts/database-internals/wal)
+</Card>
+
+<Card title="Skip Lists Deep Dive" icon="puzzle">
+  Probabilistic data structures that compete with balanced trees [Explore Skip Lists
+  →](/concepts/database-internals/skip-lists)
+</Card>
+
+  <Card title="SSTable Format" icon="setting">
+    How to store sorted data efficiently on disk [Discover SSTables
+    →](/concepts/database-internals/sstables)
+  </Card>
+</CardGrid>
+
+## Why Follow This Journey?
+
+### For Developers
+
+- **Learn database fundamentals** through real implementation
+- **See mistakes and corrections** - learning from what doesn't work
+- **Understanding before optimization** - classic engineering wisdom
+- **Modern Rust patterns** without the complexity overwhelm
+
+### For Teams
+
+- **Human-AI collaboration patterns** that actually work
+- **How to explain complex systems** through iterative teaching
+- **Code review as learning tool** - questions that improve design
+
+### For Students
+
+- **Database internals made accessible** - no PhD required
+- **Systems programming concepts** through practical examples
+- **Design decisions explained** - why we chose X over Y
+
+## Ready to Start Learning?
+
+<CardGrid>
+  <Card title="Hands-On Tutorial" icon="rocket">
+    Jump right in with our step-by-step tutorial [Start Tutorial →](/tutorial)
+  </Card>
+
+<Card title="Architecture First" icon="open-book">
+  Understand the big picture before diving into code [See Architecture →](/reference/architecture)
+</Card>
+
+  <Card title="Read the Code" icon="github">
+    Browse the actual implementation with extensive comments [View Source
+    →](https://github.com/ferrisdb/ferrisdb)
+  </Card>
+</CardGrid>
+
+---
+
+<Aside type="tip" title="Our Learning Philosophy">
+"The best way to understand complex systems is to build them simply first. Complexity comes from requirements, not from trying to be clever."
+
+— Key insight from our collaboration
+
+</Aside>

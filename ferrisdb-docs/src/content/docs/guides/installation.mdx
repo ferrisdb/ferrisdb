@@ -1,0 +1,161 @@
+---
+title: Installation Guide
+description: Detailed installation instructions for different platforms
+---
+
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+This guide covers installing FerrisDB and its dependencies on various platforms.
+
+## Platform-Specific Instructions
+
+<Tabs>
+  <TabItem label="macOS">
+    <Steps>
+      1. **Install Homebrew** (if not already installed) ```bash /bin/bash -c "$(curl -fsSL
+      https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" ``` 2. **Install Rust**
+      ```bash curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh source $HOME/.cargo/env
+      ``` 3. **Install build tools** ```bash brew install git ``` 4. **Clone and build FerrisDB**
+      ```bash git clone https://github.com/ferrisdb/ferrisdb.git cd ferrisdb cargo build --release
+      ```
+    </Steps>
+  </TabItem>
+
+<TabItem label="Ubuntu/Debian">
+  <Steps>
+    1. **Update package manager** ```bash sudo apt update ``` 2. **Install dependencies** ```bash
+    sudo apt install -y build-essential git curl ``` 3. **Install Rust** ```bash curl --proto
+    '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh source $HOME/.cargo/env ``` 4. **Clone and
+    build FerrisDB** ```bash git clone https://github.com/ferrisdb/ferrisdb.git cd ferrisdb cargo
+    build --release ```
+  </Steps>
+</TabItem>
+
+  <TabItem label="Windows">
+    <Steps>
+      1. **Install Visual Studio Build Tools** - Download from [Visual
+      Studio](https://visualstudio.microsoft.com/downloads/) - Select "Desktop development with C++"
+      2. **Install Rust** - Download and run [rustup-init.exe](https://win.rustup.rs/) - Follow the
+      prompts 3. **Install Git** - Download from [git-scm.com](https://git-scm.com/download/win) 4.
+      **Clone and build FerrisDB** ```powershell git clone https://github.com/ferrisdb/ferrisdb.git
+      cd ferrisdb cargo build --release ```
+    </Steps>
+  </TabItem>
+</Tabs>
+
+## Verify Installation
+
+After installation, verify everything is working:
+
+```bash
+# Check Rust version
+rustc --version
+# Should show: rustc 1.81.0 or later
+
+# Check Cargo
+cargo --version
+
+# Run FerrisDB tests
+cd ferrisdb
+cargo test --all
+```
+
+<Aside type="tip">If tests pass, congratulations! You have FerrisDB running locally.</Aside>
+
+## Docker Installation (Alternative)
+
+<Aside type="note">
+  Docker support is planned but not yet available. This section will be updated when Docker images
+  are published.
+</Aside>
+
+```bash
+# Future Docker command (not yet available)
+docker run -p 8080:8080 ferrisdb/ferrisdb:latest
+```
+
+## Development Dependencies
+
+If you plan to contribute to FerrisDB, install additional tools:
+
+### Code Quality Tools
+
+```bash
+# Rust formatting and linting
+rustup component add rustfmt clippy
+
+# Fast test runner
+cargo install cargo-nextest
+
+# Watch for changes
+cargo install cargo-watch
+```
+
+### Documentation Tools
+
+```bash
+# For the documentation site
+npm install -g prettier
+
+# For generating Rust docs
+cargo doc --all --no-deps
+```
+
+### Performance Tools
+
+```bash
+# Benchmarking
+cargo install cargo-bench
+
+# Profiling (Linux/macOS)
+cargo install flamegraph
+
+# Binary size analysis
+cargo install cargo-bloat
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**"cargo: command not found"**
+
+- Run `source $HOME/.cargo/env` or restart your terminal
+
+**"error: linker `cc` not found"**
+
+- Install build tools for your platform (see platform-specific instructions)
+
+**"RUST_BACKTRACE=1 for a backtrace"**
+
+- This is not an error! It's suggesting how to get more debug info:
+  ```bash
+  RUST_BACKTRACE=1 cargo test
+  ```
+
+**Slow first build**
+
+- The first build downloads all dependencies. Use `--release` for faster runtime:
+  ```bash
+  cargo build --release
+  ```
+
+### Getting Help
+
+If you encounter issues:
+
+1. Check the [FAQ](/project/faq/)
+2. Search [existing issues](https://github.com/ferrisdb/ferrisdb/issues)
+3. Open a new issue with:
+   - Your platform (OS, Rust version)
+   - Complete error message
+   - Steps to reproduce
+
+## Next Steps
+
+Now that you have FerrisDB installed:
+
+- [Explore the codebase](/getting-started/)
+- [Run examples and benchmarks](/getting-started/#running-examples)
+- [Learn about the architecture](/reference/architecture/)
+- [Contribute your first PR](https://github.com/ferrisdb/ferrisdb/blob/main/CONTRIBUTING.md)

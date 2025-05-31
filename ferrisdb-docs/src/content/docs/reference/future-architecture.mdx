@@ -1,0 +1,305 @@
+---
+title: Future Architecture Explorations
+description: Advanced concepts and research directions for FerrisDB evolution
+---
+
+import { Aside, Card, CardGrid, Tabs, TabItem, Badge, Steps } from "@astrojs/starlight/components";
+
+This page documents interesting architectural patterns and advanced concepts we might explore as
+FerrisDB evolves from an educational project toward production-ready capabilities.
+
+## 🔄 Separation of Storage and Compute
+
+<Card title="Concept" icon="puzzle">
+Completely decouple storage nodes from compute nodes for independent scaling and cost optimization.
+
+- **Storage layer**: Pure data persistence (database-aware object storage)
+- **Compute layer**: Query processing, transactions, caching
+- **Benefits**: Independent scaling, cost optimization, multi-tenant isolation
+- **Examples**: Snowflake, Amazon Aurora, CockroachDB Serverless
+
+**Learning value**: Understanding modern cloud-native database architecture patterns.
+
+</Card>
+
+## 🌐 Shared-Nothing vs Shared-Storage
+
+<Tabs>
+  <TabItem label="Current: Shared-Nothing">
+    - Each node owns data shards - Data locality for performance - Simpler consistency model -
+    Traditional distributed database approach
+  </TabItem>
+
+  <TabItem label="Alternative: Shared-Storage">
+    - All nodes access common storage pool - Multiple compute nodes can read/write same data -
+    Enables instant failover and load balancing - Storage becomes the single source of truth -
+    Trade-offs in consistency, performance, and complexity
+  </TabItem>
+</Tabs>
+
+## 📝 Log-Structured Everything
+
+<Aside type="tip" title="Beyond LSM-trees">
+  Make the entire system log-based for maximum consistency and auditability.
+</Aside>
+
+<CardGrid>
+  <Card title="Log as Database" icon="document">
+    All operations are immutable log entries
+  </Card>
+
+<Card title="Materialized Views" icon="table">
+  Derive tables and indexes from the log
+</Card>
+
+<Card title="Time Travel" icon="history">
+  Query any point in history naturally
+</Card>
+
+  <Card title="Benefits" icon="rocket">
+    Perfect audit trail, simplified backup/restore, event sourcing
+  </Card>
+</CardGrid>
+
+**Research areas:**
+
+- Log compaction strategies
+- Efficient materialized view maintenance
+- Query optimization over log structures
+
+## 📊 HTAP (Hybrid Transactional/Analytical)
+
+**Goal**: Single system handles both OLTP and OLAP workloads efficiently.
+
+<Tabs>
+  <TabItem label="Architecture">
+    - **Columnar storage**: For analytical queries - **Row storage**: For transactional workloads -
+    **Automatic routing**: Query optimizer chooses optimal storage format - **Real-time analytics**:
+    Fresh data available immediately
+  </TabItem>
+
+  <TabItem label="Implementation">
+    - Dual storage formats with synchronization - Adaptive storage layouts based on access patterns
+    - Vectorized execution for analytical queries
+  </TabItem>
+</Tabs>
+
+## 🎯 Multi-Model Architecture
+
+**Progressive approach**: Support multiple data models while learning optimal integration patterns.
+
+<Steps>
+
+### Phase 1: Layered Implementation
+
+```text
+Document API  →  LSM Storage Engine
+Graph API     →  LSM Storage Engine
+TimeSeries    →  LSM Storage Engine
+```
+
+### Phase 2: Hybrid Integration
+
+- Native JSON document support in storage format
+- Specialized indexing for different models
+- Cross-model query capabilities
+
+### Phase 3: Unified Multi-Model
+
+- Storage engine natively understands multiple data types
+- Atomic transactions across all models
+- Optimized storage layouts per data type
+
+</Steps>
+
+**Models to explore:**
+
+<CardGrid>
+  <Card title="Document Store" icon="document">
+    JSON/BSON with rich querying
+  </Card>
+
+<Card title="Graph Database" icon="puzzle">
+  Relationships and graph traversals
+</Card>
+
+<Card title="Time Series" icon="graph">
+  Optimized for metrics and IoT data
+</Card>
+
+  <Card title="Search Engine" icon="magnifier">
+    Full-text search and indexing
+  </Card>
+</CardGrid>
+
+## 🚀 Consensus-Free Coordination
+
+**Beyond Raft**: Explore alternative coordination mechanisms for better performance.
+
+<Tabs>
+  <TabItem label="Approaches">
+    - **CRDTs**: Conflict-free replicated data types for eventual consistency - **Calvin-style**:
+    Deterministic transaction scheduling - **Clock synchronization**: Spanner-style global ordering
+    - **Hybrid approaches**: Combine techniques based on workload characteristics
+  </TabItem>
+
+  <TabItem label="Benefits">
+    - Lower latency for global operations - Better partition tolerance - Reduced coordination
+    overhead - Workload-specific optimization
+  </TabItem>
+</Tabs>
+
+## 🌊 Streaming Architecture
+
+**Real-time data processing**: Built-in stream processing capabilities.
+
+<CardGrid>
+  <Card title="Change Streams" icon="information">
+    Real-time data change notifications
+  </Card>
+
+<Card title="Materialized Views" icon="table">
+  Continuously updated query results
+</Card>
+
+<Card title="Event Sourcing" icon="list">
+  Store events, compute state on demand
+</Card>
+
+  <Card title="Stream Integration" icon="puzzle">
+    Native Kafka/Pulsar compatibility
+  </Card>
+</CardGrid>
+
+**Use cases:**
+
+- Real-time analytics and dashboards
+- Event-driven microservices integration
+- Live data synchronization between systems
+
+## 🌍 Multi-Region/Multi-Cloud
+
+**Global distribution**: Advanced topology management for worldwide deployments.
+
+<Aside type="caution" title="Challenges to explore">
+  - Network partition handling - Latency-aware query routing - Compliance and data sovereignty -
+  Cost optimization across regions
+</Aside>
+
+- **Region-aware partitioning**: Data gravity and compliance requirements
+- **Cross-region transactions**: Global consistency with performance optimization
+- **Cloud portability**: Seamless operation across AWS/GCP/Azure
+- **Edge caching**: Bringing data closer to users
+
+## 🧠 Adaptive/Self-Tuning Systems
+
+**Machine learning integration**: Systems that optimize themselves based on workload patterns.
+
+<Tabs>
+  <TabItem label="Features">
+    - **Auto-compaction**: ML-driven compaction strategies - **Query optimization**: Learn from
+    historical query patterns - **Resource allocation**: Dynamic memory/CPU allocation - **Anomaly
+    detection**: Automatic performance issue detection
+  </TabItem>
+
+  <TabItem label="Research Areas">
+    - Reinforcement learning for database tuning - Workload prediction and preparation - Automated
+    schema optimization - Performance regression detection
+  </TabItem>
+</Tabs>
+
+## ⚡ Serverless Database
+
+**Pay-per-query model**: True serverless database with instant scaling.
+
+<CardGrid>
+  <Card title="Instant Startup" icon="rocket">
+    Cold start in milliseconds
+  </Card>
+
+<Card title="Auto-scaling" icon="graph">
+  Scale to zero, scale to millions
+</Card>
+
+<Card title="Function Integration" icon="seti:code">
+  Native serverless function support
+</Card>
+
+  <Card title="Cost Model" icon="currency">
+    Pay only for storage and compute used
+  </Card>
+</CardGrid>
+
+**Technical challenges:**
+
+- Warm/cold state management
+- Connection pooling and management
+- Resource scheduling and allocation
+- Billing and metering accuracy
+
+## 🎓 Learning Priority
+
+**Ranked by educational value:**
+
+<Steps>
+
+1. **Log-structured everything** - Fundamental paradigm shift
+2. **HTAP architecture** - Combines multiple database concepts
+3. **Multi-model architecture** - Progressive complexity building
+4. **Separation of storage/compute** - Modern cloud patterns
+5. **Consensus-free coordination** - Cutting-edge distributed systems
+
+</Steps>
+
+## 📚 Research Resources
+
+### Academic Papers
+
+<CardGrid>
+  <Card title="LSM-Tree Paper" icon="document">
+    "The Log-Structured Merge-Tree (LSM-Tree)" - O'Neil et al.
+  </Card>
+
+<Card title="Spanner Paper" icon="document">
+  "Spanner: Google's Globally Distributed Database" - Corbett et al.
+</Card>
+
+  <Card title="Calvin Paper" icon="document">
+    "Calvin: Fast Distributed Transactions for Partitioned Database Systems" - Thomson et al.
+  </Card>
+</CardGrid>
+
+### Industry Examples
+
+<Tabs>
+  <TabItem label="Multi-Model">
+    - **FoundationDB**: Multi-model with ACID guarantees - **YugabyteDB**: Multi-model with
+    PostgreSQL compatibility
+  </TabItem>
+
+<TabItem label="HTAP">
+  - **TiDB**: HTAP with TiKV storage and TiFlash analytics - **ClickHouse**: Columnar database with
+  real-time capabilities
+</TabItem>
+
+<TabItem label="Cloud-Native">
+  - **CockroachDB**: Global consistency with clock synchronization - **Snowflake**: Separation of
+  storage and compute
+</TabItem>
+
+  <TabItem label="Real-Time">
+    - **Apache Pinot**: Real-time analytics database - **TimescaleDB**: Time-series on PostgreSQL
+  </TabItem>
+</Tabs>
+
+<Aside type="note">
+  This document will evolve as we explore these concepts and discover new architectural patterns.
+  Each exploration builds on the fundamental knowledge gained from implementing the core LSM-tree
+  storage engine.
+</Aside>
+
+## Navigation
+
+- [← Architecture Overview](/reference/architecture/)
+- [→ Storage Engine Details](/reference/storage-engine/)
+- [→ Getting Started](/getting-started/)

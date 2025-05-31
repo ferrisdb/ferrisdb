@@ -1,0 +1,25 @@
+:root {
+  /* FerrisDB Brand Colors */
+  --sl-color-accent: #ff6b35;
+  --sl-color-accent-low: #ff8a5b;
+  --sl-color-accent-high: #e55a2b;
+  
+  /* Adjust text colors for better contrast with orange */
+  --sl-color-text-accent: var(--sl-color-accent-high);
+  
+  /* Optional: Adjust selection color to match brand */
+  --sl-color-bg-accent: #ff6b3520;
+}
+
+/* Dark mode adjustments */
+:root[data-theme="dark"] {
+  --sl-color-accent: #ff8a5b;
+  --sl-color-accent-low: #ff6b35;
+  --sl-color-accent-high: #ffaa7f;
+}
+
+/* Optional: Custom selection colors */
+::selection {
+  background-color: var(--sl-color-bg-accent);
+  color: var(--sl-color-text-accent);
+}

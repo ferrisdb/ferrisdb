@@ -1,0 +1,240 @@
+---
+title: Roadmap
+description: FerrisDB development roadmap and progress tracking
+---
+
+import { Aside, Card, CardGrid, Steps } from "@astrojs/starlight/components";
+import Stats from "../../../components/Stats.astro";
+
+Building a distributed, transactional key-value database from scratch.
+
+**Current Status**: <Stats />
+
+## 🏗️ Storage Engine Foundation
+
+The core storage components that handle persistence and data organization.
+
+<CardGrid>
+  <Card title="Completed" icon="approve-check">
+    - ✅ Write-Ahead Log (WAL) - ✅ MemTable (Skip List) - ✅ SSTable format - ✅ SSTable reader -
+    ✅ Basic error handling
+  </Card>
+
+<Card title="In Progress" icon="rocket">
+  - 🔄 SSTable writer improvements - 🔄 Integration tests
+</Card>
+
+  <Card title="Planned" icon="document">
+    - ⏳ Compaction - ⏳ Bloom filters - ⏳ Block cache - ⏳ Compression (LZ4/Snappy)
+  </Card>
+</CardGrid>
+
+## 🔄 Basic Operations
+
+Essential database operations for reading and writing data.
+
+<Steps>
+
+1. **Get/Put/Delete operations** - Core CRUD functionality
+2. **Batch writes** - Atomic multi-key updates
+3. **Range queries** - Scan between key boundaries
+4. **Prefix scans** - Find all keys with common prefix
+5. **Reverse iteration** - Backward traversal support
+
+</Steps>
+
+## 🎯 ACID Transactions
+
+<Aside type="note">
+  ACID (Atomicity, Consistency, Isolation, Durability) transactions are essential for maintaining
+  data integrity in concurrent environments.
+</Aside>
+
+### Foundation Phase
+
+- ⏳ MVCC (Multi-Version Concurrency Control) foundation
+- ⏳ Snapshot isolation
+- ⏳ Optimistic concurrency control
+
+### Advanced Phase
+
+- ⏳ Transaction protocol design
+- ⏳ Conflict detection algorithms
+- ⏳ Serializable isolation level
+
+## 🌐 Distribution Layer
+
+Scaling FerrisDB across multiple nodes for fault tolerance and performance.
+
+### Consensus & Coordination
+
+- ⏳ Raft consensus protocol
+- ⏳ Leader election
+- ⏳ Configuration management
+
+### Data Distribution
+
+- ⏳ Consistent hashing
+- ⏳ Data partitioning (sharding)
+- ⏳ Auto-rebalancing
+
+### Distributed Transactions
+
+- ⏳ Two-phase commit (2PC)
+- ⏳ Distributed deadlock detection
+- ⏳ Cross-shard queries
+
+## 📊 Performance & Monitoring
+
+Making FerrisDB observable and performant.
+
+<CardGrid>
+  <Card title="Metrics" icon="information">
+    - Request latency tracking - Throughput monitoring - Resource utilization - Error rate tracking
+  </Card>
+
+<Card title="Profiling" icon="magnifier">
+  - CPU profiling - Memory profiling - I/O analysis - Lock contention
+</Card>
+
+  <Card title="Benchmarks" icon="rocket">
+    - YCSB compliance - Comparison benchmarks - Stress testing - Load testing
+  </Card>
+</CardGrid>
+
+## 🔧 Operations & Management
+
+Tools for running and managing FerrisDB.
+
+### CLI Client
+
+```bash
+ferrisdb> get user:123
+ferrisdb> put user:123 {"name": "Alice"}
+ferrisdb> scan user: user:~
+```
+
+### Management Features
+
+- ⏳ Backup/restore functionality
+- ⏳ Import/export tools
+- ⏳ Configuration management
+- ⏳ Health checks and diagnostics
+
+## 🚀 Client & API
+
+Building robust client libraries and protocols.
+
+### Protocol Design
+
+- ⏳ Binary protocol specification
+- ⏳ Protocol versioning
+- ⏳ Backward compatibility
+
+### Client Features
+
+- ⏳ Rust client library
+- ⏳ Connection pooling
+- ⏳ Automatic retry logic
+- ⏳ Load balancing
+- ⏳ Circuit breakers
+
+## 🛡️ Production Readiness
+
+<Aside type="caution">
+  Remember: FerrisDB is an educational project. These features are for learning production patterns,
+  not for actual production use!
+</Aside>
+
+### Reliability
+
+- ⏳ Comprehensive error handling
+- ⏳ Graceful shutdown
+- ⏳ Resource limits and quotas
+
+### Security
+
+- ⏳ Authentication framework
+- ⏳ Authorization (ACLs)
+- ⏳ Encryption at rest
+- ⏳ TLS support
+
+### Testing
+
+- ⏳ Chaos testing framework
+- ⏳ Fault injection
+- ⏳ Network partition simulation
+
+## 📚 Documentation & Examples
+
+Comprehensive learning materials.
+
+### Technical Documentation
+
+- 🔄 Architecture documentation
+- ⏳ API reference
+- ⏳ Deployment guide
+- ⏳ Performance tuning guide
+
+### Educational Content
+
+- ✅ Database concepts articles
+- ✅ Rust by example tutorials
+- 🔄 Human-AI collaboration blog
+- ⏳ Interactive demos
+- ⏳ Video tutorials
+
+## 🎓 Educational Priorities
+
+What we're focusing on for maximum learning value:
+
+1. **Clear code over clever code** - Every optimization explained
+2. **Real patterns, simplified** - Production techniques in understandable form
+3. **Mistakes as learning** - Document what didn't work and why
+4. **Progressive complexity** - Start simple, add features incrementally
+
+## Timeline
+
+<Aside type="tip">
+  We don't have strict deadlines - learning takes the time it takes! But here's our rough plan:
+</Aside>
+
+### Month 1-2: Foundation ✅
+
+- Core storage engine
+- Basic operations
+- Initial documentation
+
+### Month 3-4: Transactions 🔄
+
+- MVCC implementation
+- Transaction protocol
+- Isolation levels
+
+### Month 5-6: Distribution
+
+- Consensus protocol
+- Sharding
+- Replication
+
+### Month 7+: Polish
+
+- Performance optimization
+- Client libraries
+- Advanced features
+
+## How You Can Help
+
+Want to contribute to the roadmap?
+
+1. **Pick an unimplemented feature** - Check items marked with ⏳
+2. **Open an issue** - Discuss your approach
+3. **Submit a PR** - Include tests and documentation
+4. **Help with reviews** - Learn by reviewing others' code
+
+Remember: This is a learning project. Quality and understanding matter more than speed!
+
+---
+
+Last updated: Check [ROADMAP.md](https://github.com/ferrisdb/ferrisdb/blob/main/ROADMAP.md) for the
+latest status.

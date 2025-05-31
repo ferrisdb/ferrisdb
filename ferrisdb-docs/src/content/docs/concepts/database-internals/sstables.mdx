@@ -1,0 +1,509 @@
+---
+title: SSTable Format Design
+description: How databases organize and access data on disk for optimal performance
+sidebar:
+  badge:
+    text: Intermediate
+    variant: tip
+---
+
+import { Aside, Card, Steps } from "@astrojs/starlight/components";
+
+How databases organize and access data on disk for optimal performance.
+
+**Difficulty:** 📙 Intermediate • **Reading time:** 30 minutes
+
+## The Problem & Why It Matters
+
+Imagine you're building a web application that needs to store millions of user profiles, product
+listings, or transaction records. Your in-memory cache (MemTable) is getting full, and you need to
+save this data to disk. But here's the challenge:
+
+**Real-world problems CRUD developers face:**
+
+- **Slow queries**: Finding one record among millions takes forever
+- **Huge files**: Loading entire datasets into memory crashes your server
+- **Disk costs**: Storing uncompressed data gets expensive fast
+- **Recovery time**: Restarting your app takes hours to reload data
+
+Traditional approaches have painful trade-offs:
+
+1. **CSV/JSON files**: Easy to debug but terribly slow to search
+2. **Binary dumps**: Fast to write but impossible to query without loading everything
+3. **Regular databases**: Add complexity and another point of failure
+
+SSTable (Sorted String Table) solves these problems elegantly. Think of it as a phone book for your
+data - organized, indexed, and easy to search without reading every page.
+
+## Conceptual Overview
+
+### The Core Idea
+
+SSTables are like a well-organized library:
+
+**Without SSTables** (pile of books):
+
+- To find a book, check every single one
+- Moving books around is a nightmare
+- No way to know if a book exists without searching
+
+**With SSTables** (organized library):
+
+- Books sorted alphabetically on shelves (data blocks)
+- Card catalog tells you which shelf (index)
+- Quick reference list of all books (bloom filter)
+- Information desk with library stats (footer)
+
+### Visual Architecture
+
+```text
+┌─────────────────┐
+│   Data Block 1  │  ← "A-C" authors (sorted books)
+├─────────────────┤
+│   Data Block 2  │  ← "D-F" authors
+├─────────────────┤
+│   Data Block 3  │  ← "G-M" authors
+├─────────────────┤
+│   Data Block 4  │  ← "N-Z" authors
+├─────────────────┤
+│   Index Block   │  ← Card catalog (which shelf has what)
+├─────────────────┤
+│  Bloom Filter   │  ← Quick "do we have this?" check
+├─────────────────┤
+│     Footer      │  ← Information desk (where everything is)
+└─────────────────┘
+```
+
+**Key principles:**
+
+1. **Immutability**: Once written, never changed (like printed books)
+2. **Block-based**: Read only what you need, not the whole file
+3. **Binary format**: Compact and efficient, not human-readable
+
+## FerrisDB Implementation Deep Dive
+
+### Core Data Structures
+
+Let's examine how FerrisDB structures SSTable data:
+
+```rust
+// ferrisdb-storage/src/sstable/mod.rs:180-204
+pub struct SSTableEntry {
+    /// The internal key (user_key + timestamp)
+    pub key: InternalKey,
+    /// The value associated with this key version
+    pub value: Value,
+}
+
+pub struct InternalKey {
+    /// The user-provided key
+    pub user_key: UserKey,
+    /// When this version was written (for MVCC)
+    pub timestamp: u64,
+    /// Type of operation (Put or Delete)
+    pub key_type: KeyType,
+}
+```
+
+<Aside type="note">
+  **Why timestamps?** They enable Multi-Version Concurrency Control (MVCC), allowing multiple
+  versions of the same key to coexist. This is how databases handle concurrent updates without
+  locks!
+</Aside>
+
+### Block Format
+
+Each data block in FerrisDB follows this structure:
+
+```rust
+// Conceptual structure (not actual code)
+struct DataBlock {
+    entries: Vec<Entry>,        // Sorted key-value pairs
+    restarts: Vec<u32>,        // Restart points for compression
+    num_restarts: u32,         // How many restart points
+}
+```
+
+**The magic of restart points:**
+
+Instead of storing full keys, we use prefix compression:
+
+```text
+Full keys:            Compressed:
+user:1234     →      user:1234 (restart point)
+user:1235     →      5 (shared=7, non_shared=1)
+user:1236     →      6 (shared=7, non_shared=1)
+```
+
+This reduces storage by 60-80% for typical workloads!
+
+### Binary Format Details
+
+<Steps>
+
+1. **Data Entry Encoding**
+
+   ```text
+   [shared_key_len: varint][non_shared_key_len: varint][value_len: varint]
+   [non_shared_key_bytes][value_bytes]
+   ```
+
+2. **Block Trailer**
+
+   ```text
+   [restart_offset_1][restart_offset_2]...[restart_offset_n]
+   [num_restarts: u32]
+   ```
+
+3. **Footer Format**
+   ```text
+   [index_block_handle: BlockHandle]
+   [bloom_filter_handle: BlockHandle]
+   [magic_number: u64]
+   ```
+
+</Steps>
+
+### Real-World Example
+
+Let's say you're storing user session data:
+
+```rust
+// Your application code
+db.put("session:abc123", SessionData {
+    user_id: "user:42",
+    expires_at: "2024-12-31",
+    permissions: vec!["read", "write"],
+});
+```
+
+Here's how it flows through the system:
+
+1. **MemTable** buffers the write in memory
+2. When full, **flush to SSTable**:
+   - Sort all entries by key
+   - Group into 4KB blocks
+   - Compress with prefix encoding
+   - Build index of block locations
+   - Generate bloom filter
+   - Write footer with metadata
+
+The result? A compact, searchable file that can find any key with just 2-3 disk reads!
+
+## Performance Characteristics
+
+### Read Performance
+
+| Operation    | Time Complexity | Disk Reads          | Notes                             |
+| ------------ | --------------- | ------------------- | --------------------------------- |
+| Point lookup | O(log n)        | 1-3                 | Bloom filter + index + data block |
+| Range scan   | O(k)            | k/entries_per_block | Sequential reads are fast         |
+| Key exists?  | O(1)            | 0-1                 | Bloom filter check first          |
+
+### Write Performance
+
+- **Throughput**: 50-100MB/s (sequential writes)
+- **Latency**: Milliseconds (buffered in MemTable)
+- **Amplification**: 10-30x over time (due to compaction)
+
+### Space Efficiency
+
+- **Compression ratio**: 3-10x (depends on data patterns)
+- **Overhead**: ~1% for index and metadata
+- **Block size**: 4KB default (tunable)
+
+## Common Pitfalls & Solutions
+
+### Pitfall 1: Small Blocks = Many Seeks
+
+**Problem**: 512-byte blocks require excessive disk seeks  
+**Solution**: Use 4KB-16KB blocks (matches OS page size)
+
+### Pitfall 2: No Compression = Huge Files
+
+**Problem**: Storing full keys wastes space  
+**Solution**: Prefix compression within blocks
+
+### Pitfall 3: Loading Entire Index
+
+**Problem**: 1GB SSTable = 10MB index in memory  
+**Solution**: Two-level indexes or partitioned indexes
+
+## Integration with LSM Trees
+
+SSTables are the persistent layer of LSM trees:
+
+```text
+Write Path:
+┌─────────┐     ┌─────────┐     ┌─────────┐
+│  Write  │────▶│MemTable│────▶│ SSTable │
+└─────────┘     └─────────┘     └─────────┘
+                     ↓ (flush when full)
+                ┌─────────┐
+                │ SSTable │ (Level 0)
+                └─────────┘
+
+Read Path:
+┌─────────┐     ┌─────────┐     ┌─────────┐
+│  Read   │────▶│MemTable│────▶│ SSTable │
+└─────────┘     └─────────┘     └─────────┘
+                                 (newest → oldest)
+```
+
+## Testing Your Understanding
+
+<Card title="Quick Check" icon="rocket">
+
+Try answering these questions:
+
+1. Why are keys sorted in an SSTable?
+2. What's the purpose of restart points?
+3. How does a bloom filter speed up lookups?
+4. Why are SSTables immutable?
+
+</Card>
+
+## Implementation Exercise
+
+Try implementing a simple SSTable writer:
+
+```rust
+struct SimpleSSTableWriter {
+    file: File,
+    current_block: Vec<Entry>,
+    index: Vec<IndexEntry>,
+}
+
+impl SimpleSSTableWriter {
+    fn add(&mut self, key: &[u8], value: &[u8]) {
+        // Your code here:
+        // 1. Add to current_block
+        // 2. If block full, flush it
+        // 3. Update index
+    }
+}
+```
+
+## Key Takeaways
+
+1. **SSTables = Sorted + Immutable**: This combination enables efficient reads and simple
+   concurrency
+2. **Block-based structure**: Read only what you need, not the entire file
+3. **Multiple optimizations**: Compression, bloom filters, and indexes work together
+4. **Foundation for LSM trees**: SSTables are the building blocks of modern key-value stores
+
+## Advanced Topics
+
+### Bloom Filters for Existence Checks
+
+Before reading a block, check if the key might exist:
+
+```rust
+// Bloom filter basics
+pub struct BloomFilter {
+    bits: Vec<bool>,
+    hash_count: usize,
+}
+
+impl BloomFilter {
+    pub fn might_contain(&self, key: &[u8]) -> bool {
+        for i in 0..self.hash_count {
+            let hash = self.hash_key(key, i);
+            let bit_pos = hash % self.bits.len();
+
+            if !self.bits[bit_pos] {
+                return false; // Definitely not present
+            }
+        }
+        true // Might be present (or false positive)
+    }
+}
+```
+
+**Bloom filter properties:**
+
+- **Space**: ~10 bits per key for 1% false positive rate
+- **Speed**: O(k) where k = number of hash functions
+- **No false negatives**: If it says "no", the key definitely doesn't exist
+
+### Compression Strategies
+
+FerrisDB can compress blocks before writing:
+
+```rust
+// Block compression options
+pub enum CompressionType {
+    None,
+    Snappy,  // Fast compression, moderate ratio
+    LZ4,     // Very fast, good for real-time
+    Zstd,    // Best ratio, slower
+}
+
+// Compression happens at block level
+fn compress_block(data: &[u8], compression: CompressionType) -> Vec<u8> {
+    match compression {
+        CompressionType::LZ4 => lz4::compress(data),
+        CompressionType::Snappy => snappy::compress(data),
+        // ... etc
+    }
+}
+```
+
+**Compression trade-offs:**
+
+- **LZ4**: 2-4x compression, minimal CPU overhead
+- **Snappy**: Google's choice, balanced performance
+- **Zstd**: 3-5x compression, higher CPU cost
+
+## Hands-On Exploration
+
+### Try It Yourself
+
+**Exercise 1**: Analyze SSTable structure
+
+```bash
+# Create a sample SSTable
+cargo run --example create_sstable -- --entries 1000
+
+# Examine the binary structure
+hexdump -C sample.sst | head -50
+
+# Look for the magic number at the end
+tail -c 40 sample.sst | hexdump -C
+```
+
+**Exercise 2**: Benchmark lookup performance
+
+```rust
+use std::time::Instant;
+
+fn benchmark_sstable_lookups() {
+    let reader = SSTableReader::open("sample.sst").unwrap();
+
+    // Random lookups
+    let start = Instant::now();
+    for _ in 0..1000 {
+        let key = format!("user:{}", rand::random::<u32>() % 1000);
+        reader.get(key.as_bytes(), u64::MAX);
+    }
+    println!("Random lookups: {:?}/op", start.elapsed() / 1000);
+
+    // Sequential scan
+    let start = Instant::now();
+    let mut count = 0;
+    for entry in reader.iter() {
+        count += 1;
+    }
+    println!("Sequential scan: {} entries in {:?}", count, start.elapsed());
+}
+```
+
+### Debugging & Observability
+
+**Key metrics to watch:**
+
+- **Block cache hit rate**: How often we avoid disk reads
+- **Average block fill**: Efficiency of space usage
+- **Bloom filter effectiveness**: False positive rate
+
+**Debugging techniques:**
+
+- **SSTable inspection tool**: `cargo run --bin sstable-dump`
+- **Block analysis**: Check compression ratios and fill rates
+- **Performance profiling**: Identify slow lookups
+
+## Real-World Context
+
+### Industry Comparison
+
+**How other databases implement persistent storage:**
+
+| Database        | Storage Format               | Key Features        |
+| --------------- | ---------------------------- | ------------------- |
+| LevelDB/RocksDB | SSTable with levels          | Leveled compaction  |
+| Cassandra       | SSTables                     | Wide column support |
+| HBase           | StoreFiles (SSTable variant) | HDFS integration    |
+| PostgreSQL      | Heap files with B-tree       | Different approach  |
+
+### Historical Evolution
+
+<Steps>
+
+1. **2006**: Google Bigtable paper introduces SSTable concept
+2. **2011**: LevelDB open-sources SSTable implementation
+3. **2012**: RocksDB adds optimizations for SSDs
+4. **Today**: Cloud-native adaptations for object storage
+
+</Steps>
+
+## Production Pitfalls & Best Practices
+
+### Implementation Pitfalls
+
+<Aside type="danger" title="Pitfall: Forgetting to sort entries">
+  **Problem**: Binary search fails on unsorted data **Solution**: Enforce ordering in writer
+</Aside>
+
+<Aside type="danger" title="Pitfall: Wrong block size">
+  **Problem**: Too small = many seeks, too large = wasted reads **Solution**: 4-16KB sweet spot for
+  most workloads
+</Aside>
+
+<Aside type="danger" title="Pitfall: Missing checksums">
+  **Problem**: Silent data corruption **Solution**: CRC32 per block minimum
+</Aside>
+
+### Production Considerations
+
+**Operational concerns:**
+
+- **File handle limits**: Many SSTables = many open files
+- **Compaction scheduling**: Balance read performance vs I/O load
+- **Backup strategies**: Immutable files make incremental backups easy
+- **Monitoring**: Track SSTable count, sizes, and age distribution
+
+## Summary & Key Takeaways
+
+### Core Concepts Learned
+
+1. **Immutable files enable efficient reads**: No locking, perfect for caching
+2. **Binary format with blocks**: Read only what you need
+3. **Sorted data enables binary search**: O(log n) lookups in large files
+
+### When to Apply This Knowledge
+
+- **Use SSTables when**: Write-once, read-many workloads (logs, time-series)
+- **Consider alternatives when**: Need in-place updates or real-time queries
+- **Implementation complexity**: Moderate - careful binary format handling required
+
+## Further Reading & References
+
+### Related FerrisDB Articles
+
+- [LSM-Trees Explained](/concepts/database-internals/lsm-trees/) - How SSTables fit in the
+  architecture
+- [Understanding WAL](/concepts/database-internals/wal/) - What happens before SSTable
+- [Skip Lists](/concepts/database-internals/skip-lists/) - MemTable implementation
+
+### Academic Papers
+
+- "Bigtable: A Distributed Storage System" (Chang et al., 2006) - Original SSTable design
+- "Log-Structured Merge-Tree" (O'Neil et al., 1996) - Theoretical foundation
+
+### Industry Resources
+
+- [RocksDB SSTable Format](https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format) -
+  Production implementation
+- [LevelDB Implementation Notes](https://github.com/google/leveldb/blob/master/doc/impl.md) -
+  Google's design doc
+
+### FerrisDB Code Exploration
+
+- **SSTable format**: `ferrisdb-storage/src/sstable/mod.rs` - Data structures
+- **Writer implementation**: `ferrisdb-storage/src/sstable/writer.rs` - Creating SSTables
+- **Reader implementation**: `ferrisdb-storage/src/sstable/reader.rs` - Querying SSTables
+- **Integration tests**: `ferrisdb-storage/src/sstable/tests.rs` - Usage examples
+
+---
+
+_Part of the [FerrisDB Learning Journey](/). Built with ❤️ by a human and an AI._

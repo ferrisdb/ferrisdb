@@ -1,0 +1,22 @@
+---
+// Simple stats component
+// TODO: Make these dynamic from git/filesystem
+
+const stats = {
+  days: 3,
+  lines: 1500,
+  tests: 25,
+  posts: 6,
+};
+---
+
+<span class="stats-line">
+  Day {stats.days} of development with {stats.lines.toLocaleString()} lines of Rust code, {stats.tests} passing tests, and {stats.posts} blog posts.
+</span>
+
+<style>
+  .stats-line {
+    font-size: 1.1em;
+    color: var(--sl-color-text);
+  }
+</style>

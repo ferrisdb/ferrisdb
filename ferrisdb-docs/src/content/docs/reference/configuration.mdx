@@ -1,0 +1,256 @@
+---
+title: Configuration Reference
+description: Complete configuration options for FerrisDB server and client
+---
+
+import { Aside, Card, CardGrid, Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Aside type="note">
+  Many of these configuration options are planned features. Current implementation supports basic
+  settings only.
+</Aside>
+
+## Configuration Methods
+
+FerrisDB can be configured through multiple methods, in order of precedence:
+
+1. **Command-line arguments** (highest priority)
+2. **Environment variables**
+3. **Configuration file**
+4. **Default values** (lowest priority)
+
+## Server Configuration
+
+### Basic Settings
+
+<Tabs>
+  <TabItem label="Environment Variables">
+    ```bash # Server settings export FERRISDB_PORT=50051 export FERRISDB_DATA_DIR=/var/lib/ferrisdb
+    export FERRISDB_LOG_LEVEL=info # Storage settings export FERRISDB_MEMTABLE_SIZE_MB=64 export
+    FERRISDB_WAL_SYNC=true export FERRISDB_COMPRESSION=snappy # Performance settings export
+    FERRISDB_MAX_CONNECTIONS=1000 export FERRISDB_WORKER_THREADS=8 ```
+  </TabItem>
+
+<TabItem label="Configuration File">
+  ```toml # ferrisdb.toml [server] port = 50051 bind_address = "0.0.0.0" data_dir =
+  "/var/lib/ferrisdb" max_connections = 1000 worker_threads = 8 [storage] memtable_size_mb = 64
+  max_wal_size_mb = 1024 wal_sync = true compression = "snappy" block_size_kb = 4
+  block_cache_size_mb = 512 [compaction] strategy = "leveled" max_background_jobs = 4
+  level0_file_num_compaction_trigger = 4 [logging] level = "info" format = "json" file =
+  "/var/log/ferrisdb/server.log" max_size_mb = 100 max_files = 10 ```
+</TabItem>
+
+  <TabItem label="Command Line">
+    ```bash ferrisdb-server \ --port 50051 \ --data-dir /var/lib/ferrisdb \ --config
+    /etc/ferrisdb/config.toml \ --log-level debug ```
+  </TabItem>
+</Tabs>
+
+### Storage Configuration
+
+<CardGrid>
+  <Card title="MemTable Settings" icon="setting">
+    - `memtable_size_mb`: Size before flush (default: 64MB) - `max_write_buffer_number`: Max
+    MemTables in memory (default: 2) - `write_buffer_manager`: Shared memory pool config
+  </Card>
+
+<Card title="WAL Settings" icon="document">
+  - `wal_dir`: Separate WAL directory (optional) - `wal_sync`: Sync on every write (default: true) -
+  `wal_bytes_per_sync`: Bytes between syncs - `max_wal_size_mb`: Trigger compaction size
+</Card>
+
+  <Card title="SSTable Settings" icon="server">
+    - `compression`: none, snappy, lz4, zstd - `block_size_kb`: Block size (default: 4KB) -
+    `block_cache_size_mb`: Cache size (default: 512MB) - `bloom_filter_bits_per_key`: Bloom filter
+    size
+  </Card>
+</CardGrid>
+
+### Performance Tuning
+
+```toml
+[performance]
+# Thread pool settings
+worker_threads = 8              # CPU cores by default
+max_connections = 1000          # Concurrent client limit
+
+# Memory management
+max_memory_mb = 8192           # Total memory budget
+block_cache_ratio = 0.4        # 40% for block cache
+memtable_ratio = 0.3           # 30% for MemTables
+index_cache_ratio = 0.2        # 20% for indexes
+
+# I/O settings
+max_background_jobs = 4        # Compaction/flush jobs
+max_file_descriptors = 10000   # OS file handle limit
+direct_io = false              # Bypass OS cache
+```
+
+### Compaction Configuration
+
+<Aside type="tip">
+  Compaction strategy significantly impacts performance. Choose based on your workload: -
+  **Leveled**: Better read performance, more write amplification - **Tiered**: Better write
+  performance, more space amplification
+</Aside>
+
+```toml
+[compaction]
+strategy = "leveled"  # or "tiered"
+
+# Leveled compaction
+level0_file_num_compaction_trigger = 4
+level0_slowdown_writes_trigger = 20
+level0_stop_writes_trigger = 36
+max_bytes_for_level_base = 256  # MB
+max_bytes_for_level_multiplier = 10
+
+# Tiered compaction
+min_merge_width = 4
+max_merge_width = 32
+size_ratio = 1.5
+```
+
+## Client Configuration
+
+### Connection Settings
+
+```rust
+use ferrisdb_client::{Client, Config};
+use std::time::Duration;
+
+let client = Client::builder()
+    .endpoint("localhost:50051")
+    .timeout(Duration::from_secs(30))
+    .retry_policy(RetryPolicy::exponential()
+        .with_max_retries(3)
+        .with_base_delay(Duration::from_millis(100)))
+    .connection_pool_size(10)
+    .keepalive_interval(Duration::from_secs(10))
+    .tls_config(TlsConfig::new()
+        .ca_cert_path("/path/to/ca.crt")
+        .client_cert_path("/path/to/client.crt")
+        .client_key_path("/path/to/client.key"))
+    .build()?;
+```
+
+### Client Options
+
+| Option                 | Type              | Default     | Description             |
+| ---------------------- | ----------------- | ----------- | ----------------------- |
+| `endpoint`             | String            | Required    | Server address          |
+| `timeout`              | Duration          | 30s         | Request timeout         |
+| `retry_policy`         | RetryPolicy       | Exponential | Retry configuration     |
+| `connection_pool_size` | usize             | 10          | Max connections         |
+| `keepalive_interval`   | Duration          | 10s         | Keepalive ping interval |
+| `compression`          | bool              | false       | Enable compression      |
+| `tls_config`           | Option<TlsConfig> | None        | TLS settings            |
+
+## Security Configuration
+
+<Aside type="caution">
+  Security features are planned but not yet implemented. This shows the intended design.
+</Aside>
+
+### Authentication
+
+```toml
+[security]
+auth_enabled = true
+auth_method = "password"  # or "certificate"
+
+[security.users]
+admin = { password_hash = "$2b$12$...", roles = ["admin"] }
+reader = { password_hash = "$2b$12$...", roles = ["read"] }
+```
+
+### TLS Configuration
+
+```toml
+[tls]
+enabled = true
+cert_file = "/etc/ferrisdb/server.crt"
+key_file = "/etc/ferrisdb/server.key"
+ca_file = "/etc/ferrisdb/ca.crt"
+client_auth = "required"  # none, optional, required
+```
+
+## Monitoring Configuration
+
+### Metrics Export
+
+```toml
+[metrics]
+enabled = true
+endpoint = "0.0.0.0:9090"
+format = "prometheus"
+
+[metrics.labels]
+environment = "production"
+region = "us-east-1"
+```
+
+### Logging Configuration
+
+```toml
+[logging]
+# Log level: trace, debug, info, warn, error
+level = "info"
+
+# Format: text, json
+format = "json"
+
+# Output: stdout, file, both
+output = "both"
+
+# File configuration
+file = "/var/log/ferrisdb/server.log"
+max_size_mb = 100
+max_files = 10
+compress = true
+
+# Structured logging fields
+[logging.fields]
+service = "ferrisdb"
+version = "0.1.0"
+```
+
+## Environment-Specific Configs
+
+<Tabs>
+  <TabItem label="Development">
+    ```toml # ferrisdb-dev.toml [server] port = 50051 bind_address = "127.0.0.1" [storage] data_dir
+    = "./data" memtable_size_mb = 16 [logging] level = "debug" format = "text" output = "stdout" ```
+  </TabItem>
+
+<TabItem label="Testing">
+  ```toml # ferrisdb-test.toml [server] port = 0 # Random port [storage] data_dir =
+  "/tmp/ferrisdb-test" memtable_size_mb = 4 wal_sync = false # Faster tests [logging] level = "warn"
+  ```
+</TabItem>
+
+  <TabItem label="Production">
+    ```toml # ferrisdb-prod.toml [server] port = 50051 bind_address = "0.0.0.0" [storage] data_dir =
+    "/var/lib/ferrisdb" memtable_size_mb = 128 wal_sync = true compression = "zstd" [logging] level
+    = "info" format = "json" ```
+  </TabItem>
+</Tabs>
+
+## Configuration Validation
+
+FerrisDB validates configuration on startup:
+
+```bash
+# Validate configuration without starting
+ferrisdb-server --config /etc/ferrisdb/config.toml --validate
+
+# Show effective configuration
+ferrisdb-server --config /etc/ferrisdb/config.toml --show-config
+```
+
+## Default Configuration
+
+Complete default configuration can be found in the repository:
+
+- [Default config](https://github.com/ferrisdb/ferrisdb/blob/main/config/default.toml)
+- [Example configs](https://github.com/ferrisdb/ferrisdb/tree/main/config/examples)

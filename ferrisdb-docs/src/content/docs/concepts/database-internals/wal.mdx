@@ -1,0 +1,424 @@
+---
+title: WAL and Crash Recovery
+description:
+  How Write-Ahead Logs ensure data durability and enable crash recovery in database systems
+sidebar:
+  badge:
+    text: Beginner
+    variant: success
+---
+
+import { Aside, Card, CardGrid, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+
+How Write-Ahead Logs ensure data durability and enable crash recovery in database systems.
+
+**Difficulty:** 📗 Beginner • **Reading time:** 15 minutes
+
+## The Problem & Why It Matters
+
+Imagine you're running an e-commerce website. A customer completes their order, sees the "Order
+Successful!" message, and then... your server crashes. When it restarts, is their order still there?
+Or did it vanish into the digital void?
+
+This is the fundamental durability problem that every database must solve. Without proper crash
+recovery, you risk:
+
+<Aside type="danger" title="Real-world nightmares for CRUD developers">
+  - **Lost transactions**: Customer paid but order disappeared - **Inconsistent data**:
+  Half-completed updates that corrupt your database - **Angry users**: "I know I updated my profile,
+  where did my changes go?" - **Business impact**: Lost sales, refunds, and damaged reputation
+</Aside>
+
+The problem is that computers use two types of storage:
+
+1. **RAM (Memory)**: Super fast but disappears when power is lost
+2. **Disk (Storage)**: Slower but survives power loss
+
+If your database only writes to memory for speed, all data is lost on crash. If it writes to disk
+for every operation, it becomes painfully slow. Write-Ahead Logging (WAL) solves this dilemma
+elegantly.
+
+## Conceptual Overview
+
+### The Core Idea
+
+Write-Ahead Logging follows a simple principle:
+
+<Card title="WAL Core Principle" icon="information">
+  "Write changes to a log file BEFORE updating the actual data"
+</Card>
+
+**Think of it like a restaurant's order system:**
+
+1. **Taking the order** (WAL write): Waiter writes order on paper first
+2. **Kitchen preparation** (Memory update): Cook starts preparing the meal
+3. **Order tracking** (Recovery): If cook forgets, the written order still exists
+
+Even if the kitchen catches fire (system crash), the written orders survive, and a new cook can
+continue where the previous one left off.
+
+### Visual Architecture
+
+```text
+User Request → WAL (Disk) → MemTable (RAM) → SSTable (Disk)
+      ↓           ↓              ↓
+   "Success"   Durability    Fast Access    Long-term Storage
+```
+
+<Aside type="tip" title="Key WAL Principles">
+  1. **Write-ahead**: Log first, update data structures second 2. **Sequential writes**: Appending
+  to log is fast (like writing in a journal) 3. **Recovery guarantee**: Can reconstruct exact state
+  from log
+</Aside>
+
+## Real-World Analogy: Bank Transactions
+
+Let's understand WAL through a familiar example - ATM withdrawals:
+
+<Tabs>
+  <TabItem label="Without WAL">
+    ```text 1. Customer withdraws $100 2. Update balance in memory: $1000 → $900 3. Power failure!
+    💥 4. Server restarts 5. Balance shows $1000 (memory lost) 6. Customer has cash but account
+    shows no withdrawal! ```
+  </TabItem>
+  <TabItem label="With WAL">
+    ```text 1. Customer withdraws $100 2. Write to WAL: "Account 123: -$100 at 2:30 PM" 3. Update
+    balance in memory: $1000 → $900 4. Power failure! 💥 5. Server restarts 6. Read WAL: "Oh, there
+    was a $100 withdrawal" 7. Replay transaction: $1000 → $900 8. Balance correctly shows $900 ```
+  </TabItem>
+</Tabs>
+
+## FerrisDB Implementation
+
+Let's see how FerrisDB implements WAL:
+
+### WAL Entry Structure
+
+```rust
+// ferrisdb-storage/src/wal/log_entry.rs
+pub struct LogEntry {
+    pub sequence_number: u64,  // Unique ID for ordering
+    pub key: Vec<u8>,         // What was changed
+    pub value: Option<Vec<u8>>, // New value (None = delete)
+    pub timestamp: u64,       // When it happened
+}
+```
+
+### Writing to WAL
+
+```rust
+// Simplified from FerrisDB code
+pub fn append(&mut self, entry: &LogEntry) -> Result<()> {
+    // 1. Serialize the entry
+    let serialized = bincode::serialize(entry)?;
+
+    // 2. Write length prefix (so we know where entries start/end)
+    self.writer.write_u32(serialized.len() as u32)?;
+
+    // 3. Write the actual data
+    self.writer.write_all(&serialized)?;
+
+    // 4. Force to disk (fsync) - THIS IS CRITICAL!
+    self.writer.sync_all()?;
+
+    Ok(())
+}
+```
+
+<Aside type="caution">
+  The `sync_all()` call is crucial! It forces the OS to actually write data to disk instead of just
+  buffering it. Without this, your "durable" writes might still be in OS buffers when a crash
+  happens.
+</Aside>
+
+### Recovery Process
+
+```rust
+// How FerrisDB recovers after a crash
+pub fn recover(&mut self) -> Result<Vec<LogEntry>> {
+    let mut entries = Vec::new();
+
+    loop {
+        // Read entry length
+        let len = match self.reader.read_u32() {
+            Ok(len) => len,
+            Err(_) => break, // End of log
+        };
+
+        // Read entry data
+        let mut buffer = vec![0; len as usize];
+        self.reader.read_exact(&mut buffer)?;
+
+        // Deserialize and collect
+        let entry: LogEntry = bincode::deserialize(&buffer)?;
+        entries.push(entry);
+    }
+
+    // Replay all entries to reconstruct state
+    for entry in &entries {
+        self.apply_to_memtable(entry)?;
+    }
+
+    Ok(entries)
+}
+```
+
+## Performance Characteristics
+
+<CardGrid>
+  <Card title="Write Performance" icon="rocket">
+    - **Sequential writes**: 100-500 MB/s - **Latency**: 1-10ms per sync - **Batching**: Group
+    commits for efficiency
+  </Card>
+
+  <Card title="Recovery Speed" icon="forward-slash">
+    - **Read speed**: 500+ MB/s (sequential) - **Recovery time**: ~1 second per GB - **Parallel
+    replay**: Modern DBs use multiple threads
+  </Card>
+</CardGrid>
+
+## Common Implementation Patterns
+
+### 1. Group Commit
+
+Instead of syncing after every write, batch multiple writes:
+
+```rust
+// Inefficient: sync per write
+for entry in entries {
+    wal.append(&entry)?;
+    wal.sync()?; // Slow!
+}
+
+// Efficient: group commit
+for entry in entries {
+    wal.append(&entry)?;
+}
+wal.sync()?; // One sync for all!
+```
+
+### 2. Checkpointing
+
+Periodically save a snapshot to avoid replaying entire history:
+
+```text
+WAL: [Entry1][Entry2][Entry3][CHECKPOINT][Entry4][Entry5]
+                              ↑
+                    Recovery starts here, not at Entry1
+```
+
+### 3. Log Recycling
+
+Reuse old log files to avoid filesystem overhead:
+
+```text
+wal.000001.log (full) → Archive or delete
+wal.000002.log (active) → Current writes
+wal.000003.log (preallocated) → Ready for next rotation
+```
+
+## Production Considerations
+
+### Configuration Options
+
+```toml
+[wal]
+sync_mode = "always"     # always | periodic | never
+sync_interval_ms = 100   # If periodic
+max_file_size_mb = 128   # When to rotate
+compression = "none"     # none | snappy | zstd
+```
+
+### Monitoring Metrics
+
+- **WAL write latency**: Should be < 10ms
+- **WAL size**: Monitor growth rate
+- **Recovery time**: Test regularly
+- **Sync failures**: Must be zero!
+
+## Common Pitfalls
+
+<Aside type="danger" title="Pitfall: Forgetting to Sync">
+  **Problem**: Writing to WAL without fsync **Result**: OS buffers data, crash loses it anyway
+  **Solution**: Always call fsync/fdatasync after critical writes
+</Aside>
+
+<Aside type="danger" title="Pitfall: Corrupted Entries">
+  **Problem**: Partial write during crash **Result**: Can't deserialize, recovery fails
+  **Solution**: Use checksums, length prefixes, or sentinel values
+</Aside>
+
+## Testing Your Understanding
+
+<Card title="Quick Quiz" icon="puzzle">
+
+1. Why must we sync after WAL writes?
+2. What happens if power fails during a WAL write?
+3. How does group commit improve performance?
+4. When can we safely delete old WAL files?
+
+</Card>
+
+## Hands-On Exercise
+
+Try implementing a simple WAL:
+
+```rust
+struct SimpleWAL {
+    file: File,
+    entries: Vec<LogEntry>,
+}
+
+impl SimpleWAL {
+    fn append(&mut self, key: &str, value: &str) -> Result<()> {
+        // Your code here:
+        // 1. Create LogEntry
+        // 2. Serialize to bytes
+        // 3. Write to file
+        // 4. Sync to disk
+    }
+
+    fn recover(&mut self) -> Result<()> {
+        // Your code here:
+        // 1. Read entries from file
+        // 2. Deserialize each one
+        // 3. Apply to state
+    }
+}
+```
+
+### Additional Exercises
+
+**Exercise 3**: Test crash recovery
+
+```bash
+# Start a write workload
+cargo run --example wal_stress_test &
+
+# Kill it mid-write (simulating crash)
+sleep 5 && kill -9 $!
+
+# Run recovery
+cargo run --example wal_recovery -- --recover-from test.wal
+```
+
+### Debugging & Observability
+
+**Key metrics to watch:**
+
+- **WAL size**: Monitor growth rate and truncation frequency
+- **Sync latency**: Time spent in `fsync()` calls
+- **Recovery duration**: Time to replay WAL after crash
+
+**Debugging techniques:**
+
+- **WAL inspection**: `cargo run --bin wal-dump` to examine entries
+- **Corruption detection**: Look for CRC mismatches in logs
+- **Performance profiling**: Measure time spent in WAL operations
+
+## Real-World Context
+
+### Industry Comparison
+
+How other databases handle WAL:
+
+| Database       | WAL Implementation         | Key Features              |
+| -------------- | -------------------------- | ------------------------- |
+| PostgreSQL     | WAL with configurable sync | Full ACID compliance      |
+| MySQL (InnoDB) | Redo log                   | Group commit optimization |
+| SQLite         | Journal or WAL mode        | Simpler for embedded use  |
+| Redis          | AOF (Append Only File)     | Optional durability       |
+
+### Historical Evolution
+
+<Steps>
+
+1. **1992**: ARIES paper establishes WAL principles
+2. **2004**: SQLite adds WAL mode for better concurrency
+3. **2010**: NoSQL databases adopt WAL for durability
+4. **Today**: NVMe and persistent memory changing WAL design
+
+</Steps>
+
+## Production Pitfalls & Solutions
+
+<Aside type="danger" title="Pitfall: Forgetting to sync">
+  **Problem**: Data in OS buffer not on disk **Solution**: Always call `fsync()` for durability
+</Aside>
+
+<Aside type="danger" title="Pitfall: Corrupted WAL handling">
+  **Problem**: Single bit flip makes entry unreadable **Solution**: CRC checksums and length
+  prefixes
+</Aside>
+
+<Aside type="danger" title="Pitfall: Unbounded growth">
+  **Problem**: WAL fills up disk **Solution**: Regular checkpointing and truncation
+</Aside>
+
+### Production Considerations
+
+**Operational concerns:**
+
+- **Disk monitoring**: WAL can fill disk quickly under high load
+- **Sync tuning**: Balance durability vs performance for your use case
+- **Backup strategy**: Include WAL in backups for point-in-time recovery
+- **Separate disks**: Put WAL on different disk than data for better I/O
+
+## Summary
+
+### Core Concepts Learned
+
+1. **Write-ahead principle ensures durability**: Log before modifying data structures
+2. **Sequential writes are fast**: Appending to log much faster than random updates
+3. **Recovery is straightforward**: Just replay the log from last checkpoint
+
+### When to Apply This Knowledge
+
+- **Use WAL when**: Data durability is critical (financial transactions, user data)
+- **Consider alternatives when**: Data can be regenerated or loss is acceptable
+- **Implementation complexity**: Moderate - requires careful handling of I/O and recovery
+
+## Further Reading & References
+
+### Related FerrisDB Articles
+
+- [LSM-Trees Explained](/concepts/database-internals/lsm-trees/) - How WAL fits into larger
+  architecture
+- [SSTable Format Design](/concepts/database-internals/sstables/) - Where flushed WAL data lands
+- [Skip Lists](/concepts/database-internals/skip-lists/) - In-memory structure protected by WAL
+
+### Academic Papers
+
+- "ARIES: A Transaction Recovery Method" (Mohan et al., 1992) - Foundational WAL concepts
+- "aLSM: Redesigning LSMs for Nonvolatile Memory" (Eisenman et al., 2018) - Modern adaptations
+
+### Industry Resources
+
+- [PostgreSQL WAL Documentation](https://www.postgresql.org/docs/current/wal-intro.html) -
+  Production implementation
+- [etcd WAL Package](https://github.com/etcd-io/etcd/tree/main/server/wal) - Go implementation
+
+### FerrisDB Code Exploration
+
+- **WAL Writer**: `ferrisdb-storage/src/wal/writer.rs` - Core write logic
+- **WAL Reader**: `ferrisdb-storage/src/wal/reader.rs` - Recovery implementation
+- **Binary Format**: `ferrisdb-storage/src/wal/log_entry.rs` - Entry encoding
+- **Tests**: `ferrisdb-storage/src/wal/` - Test cases showing usage
+
+## Key Takeaways
+
+1. **WAL = Durability**: Survives crashes by writing to disk first
+2. **Sequential = Fast**: Appending is much faster than random writes
+3. **Recovery = Replay**: Reconstruct state by replaying the log
+4. **Sync = Critical**: Must force to disk, not just OS buffers
+
+## Next Steps
+
+- [Understanding LSM Trees](/concepts/database-internals/lsm-trees/) - How WAL fits into the bigger
+  picture
+- [SSTable Design](/concepts/database-internals/sstables/) - Where data goes after WAL
+- [Building Your Own WAL](/tutorials/build-wal/) - Hands-on tutorial
+
+---
+
+_Part of the [FerrisDB Learning Journey](/). Built with ❤️ by a human and an AI._
