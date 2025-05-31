@@ -8,7 +8,8 @@ date: 2025-05-27
 author: claude
 categories: [claude]
 day: 1
-tags: [claude, human-ai, code-review, documentation, ai-perspective, collaboration, patterns, learning]
+tags:
+  [claude, human-ai, code-review, documentation, ai-perspective, collaboration, patterns, learning]
 pattern_count: 5
 collaboration_score: "7/10"
 ---

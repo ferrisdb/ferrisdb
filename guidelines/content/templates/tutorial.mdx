@@ -2,7 +2,7 @@
 title: "Building [Component]: [Catchy Learning Title]"
 description: "Learn [key Rust concepts] by building FerrisDB's [component] from scratch"
 sidebar:
-  badge: 
+  badge:
     text: "Tutorial N"
     variant: "success"
 # Tracking metadata - MUST be kept up to date
@@ -16,7 +16,7 @@ database_concepts_reinforced:
   - "[Concept] (from Tutorial Y)"
 ---
 
-<!-- 
+<!--
 TUTORIAL TEMPLATE - Building FerrisDB Step by Step
 
 Design Philosophy:
@@ -29,7 +29,7 @@ Design Philosophy:
 IMPORTANT: Final code MUST match real FerrisDB implementation
 -->
 
-import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
 
 ## What We're Building Today
 
@@ -45,14 +45,12 @@ import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/sta
 
 <CardGrid>
   <Card title="🦀 New Rust Concepts" icon="code">
-    - **[Concept 1]**: [One-line description]
-    - **[Concept 2]**: [One-line description]
-    - **[Concept 3]**: [One-line description]
+    - **[Concept 1]**: [One-line description] - **[Concept 2]**: [One-line description] - **[Concept
+    3]**: [One-line description]
   </Card>
-  
+
   <Card title="📚 Database Knowledge" icon="database">
-    - **[DB Concept 1]**: [Why it matters]
-    - **[DB Concept 2]**: [Real-world impact]
+    - **[DB Concept 1]**: [Why it matters] - **[DB Concept 2]**: [Real-world impact]
   </Card>
 </CardGrid>
 
@@ -61,10 +59,12 @@ import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/sta
 <Card title="Before You Start" icon="information">
 
 **Required Tutorials**:
+
 - ✅ [Tutorial 1: Title] - We'll use [concepts] from this
 - ✅ [Tutorial 2: Title] - We'll build on [concepts]
 
 **Concepts You Already Know**:
+
 - Rust: [List from tracking system]
 - Database: [List from tracking system]
 
@@ -86,7 +86,7 @@ cargo add [dependencies]
 ```
 
 <Aside type="tip">
-Following along in the FerrisDB repo? The final code is in `ferrisdb-storage/src/[component]/`
+  Following along in the FerrisDB repo? The final code is in `ferrisdb-storage/src/[component]/`
 </Aside>
 
 ## Let's Build!
@@ -97,42 +97,22 @@ Following along in the FerrisDB repo? The final code is in `ferrisdb-storage/src
 
 <Tabs>
   <TabItem label="Write This Code">
-    ```rust
-    // Start with the simplest possible version
-    // Introduce only ONE new concept
-    
-    [Initial code]
-    ```
+    ```rust // Start with the simplest possible version // Introduce only ONE new concept [Initial
+    code] ```
   </TabItem>
-  
+
   <TabItem label="Understanding the Code">
-    Let's break this down:
-    
-    ```rust
-    // [Line-by-line explanation]
-    ```
+    Let's break this down: ```rust // [Line-by-line explanation] ```
   </TabItem>
-  
+
   <TabItem label="If You Know JavaScript">
-    ```javascript
-    // In JavaScript, you might write:
-    [JS equivalent]
-    ```
-    
-    **Key differences**:
-    - [Difference 1]
-    - [Difference 2]
+    ```javascript // In JavaScript, you might write: [JS equivalent] ``` **Key differences**: -
+    [Difference 1] - [Difference 2]
   </TabItem>
-  
+
   <TabItem label="If You Know Python">
-    ```python
-    # In Python, you might write:
-    [Python equivalent]
-    ```
-    
-    **Key differences**:
-    - [Difference 1]
-    - [Difference 2]
+    ```python # In Python, you might write: [Python equivalent] ``` **Key differences**: -
+    [Difference 1] - [Difference 2]
   </TabItem>
 </Tabs>
 
@@ -145,6 +125,7 @@ Following along in the FerrisDB repo? The final code is in `ferrisdb-storage/src
 **Why Rust does this**: [Brief explanation of the benefit]
 
 📖 **Learn more**: [Official Rust Book - Topic](https://doc.rust-lang.org/book/ch-xx.html)
+
 </Aside>
 
 #### Test What We Built
@@ -155,15 +136,15 @@ Let's prove our code works:
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_step_1() {
         // Arrange
         [setup code]
-        
+
         // Act
         [action code]
-        
+
         // Assert
         assert_eq!(result, expected);
     }
@@ -171,12 +152,13 @@ mod tests {
 ```
 
 Run it:
+
 ```bash
 cargo test test_step_1
 ```
 
 <Aside type="tip" title="✅ Success!">
-Great! You just [what they accomplished]. The test proves our code works correctly.
+  Great! You just [what they accomplished]. The test proves our code works correctly.
 </Aside>
 
 ### Step 2: [Next Incremental Addition]
@@ -190,25 +172,16 @@ We covered **[concept]** in [Tutorial X: Title](link). Quick reminder:
 [One-sentence refresher of the concept]
 
 Need a deeper refresher? Check [Tutorial X, Step Y](link).
+
 </Aside>
 
 <Tabs>
   <TabItem label="Evolve Our Code">
-    ```rust
-    // Building on Step 1, we add:
-    [Code showing the evolution]
-    ```
+    ```rust // Building on Step 1, we add: [Code showing the evolution] ```
   </TabItem>
-  
+
   <TabItem label="What Changed">
-    Here's what we added:
-    
-    ```diff
-    + [New lines]
-    - [Removed lines]
-    ```
-    
-    This change [explains why].
+    Here's what we added: ```diff + [New lines] - [Removed lines] ``` This change [explains why].
   </TabItem>
 </Tabs>
 
@@ -220,27 +193,18 @@ Let's see how our tutorial code compares to the real implementation:
 
 <Tabs>
   <TabItem label="Our Tutorial Code">
-    ```rust
-    // What we built step-by-step
-    [Final tutorial version]
-    ```
+    ```rust // What we built step-by-step [Final tutorial version] ```
   </TabItem>
-  
+
   <TabItem label="Real FerrisDB Code">
-    ```rust
-    // ferrisdb-storage/src/[component]/[file].rs:[lines]
-    [Actual FerrisDB implementation]
+    ```rust // ferrisdb-storage/src/[component]/[file].rs:[lines] [Actual FerrisDB implementation]
     ```
   </TabItem>
-  
+
   <TabItem label="Key Differences">
-    The real implementation adds:
-    
-    - **Error handling**: [Explanation]
-    - **Optimizations**: [What and why]
-    - **Additional features**: [List them]
-    
-    These are important for production but would have made learning harder!
+    The real implementation adds: - **Error handling**: [Explanation] - **Optimizations**: [What and
+    why] - **Additional features**: [List them] These are important for production but would have
+    made learning harder!
   </TabItem>
 </Tabs>
 
@@ -281,21 +245,18 @@ You've successfully built FerrisDB's [component]! Let's celebrate what you achie
 
 <CardGrid>
   <Card title="Ready for More?" icon="rocket">
-    **Next Tutorial**: [Tutorial N+1: Title]
-    
-    You'll learn: [Preview of next concepts]
+    **Next Tutorial**: [Tutorial N+1: Title] You'll learn: [Preview of next concepts]
   </Card>
-  
+
   <Card title="Practice Challenges" icon="puzzle">
-    1. Try adding [feature]
-    2. Benchmark your implementation
-    3. Compare with [alternative approach]
+    1. Try adding [feature] 2. Benchmark your implementation 3. Compare with [alternative approach]
   </Card>
 </CardGrid>
 
 ## Quick Reference
 
 ### Commands Used
+
 ```bash
 # Test specific functionality
 cargo test test_name
@@ -316,7 +277,8 @@ cat ferrisdb-storage/src/[component]/[file].rs
 ---
 
 <Aside type="note" title="📝 Feedback Welcome!">
-Found something confusing? Have questions? Open an issue on GitHub - we want these tutorials to be as clear as possible for CRUD developers learning Rust!
+  Found something confusing? Have questions? Open an issue on GitHub - we want these tutorials to be
+  as clear as possible for CRUD developers learning Rust!
 </Aside>
 
 **Great job completing this tutorial!** 🚀

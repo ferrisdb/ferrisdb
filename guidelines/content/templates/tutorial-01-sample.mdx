@@ -1,8 +1,9 @@
 ---
 title: "Building a Key-Value Store: Your First Database Component"
-description: "Learn Rust basics by building FerrisDB's simplest component - an in-memory key-value store"
+description:
+  "Learn Rust basics by building FerrisDB's simplest component - an in-memory key-value store"
 sidebar:
-  badge: 
+  badge:
     text: "Tutorial 1"
     variant: "success"
 # Tracking metadata
@@ -20,11 +21,12 @@ database_concepts_introduced:
 database_concepts_reinforced: []
 ---
 
-import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
 
 ## What We're Building Today
 
-Today we're building the foundation of FerrisDB - a simple key-value store! Think of it like a super-fast notebook where you can store and retrieve information using a unique key.
+Today we're building the foundation of FerrisDB - a simple key-value store! Think of it like a
+super-fast notebook where you can store and retrieve information using a unique key.
 
 ```mermaid
 graph LR
@@ -36,8 +38,9 @@ graph LR
 ### The Real-World Problem
 
 Every web app needs fast data access. When someone visits your e-commerce site:
+
 - You need their shopping cart (key: `cart:user123`)
-- You need their session (key: `session:abc123`)  
+- You need their session (key: `session:abc123`)
 - You need product details (key: `product:789`)
 
 Redis solves this problem. Today, we'll build our own version!
@@ -46,17 +49,14 @@ Redis solves this problem. Today, we'll build our own version!
 
 <CardGrid>
   <Card title="🦀 New Rust Concepts" icon="code">
-    - **Variables**: How Rust handles data
-    - **Mutability**: When data can change
-    - **Structs**: Creating custom types
-    - **HashMap**: Rust's key-value collection
-    - **Option**: Handling missing values
+    - **Variables**: How Rust handles data - **Mutability**: When data can change - **Structs**:
+    Creating custom types - **HashMap**: Rust's key-value collection - **Option**: Handling missing
+    values
   </Card>
-  
+
   <Card title="📚 Database Knowledge" icon="database">
-    - **Key-Value Model**: Simplest database design
-    - **In-Memory Storage**: Trading durability for speed
-    - **Hash Tables**: O(1) performance magic
+    - **Key-Value Model**: Simplest database design - **In-Memory Storage**: Trading durability for
+    speed - **Hash Tables**: O(1) performance magic
   </Card>
 </CardGrid>
 
@@ -65,6 +65,7 @@ Redis solves this problem. Today, we'll build our own version!
 <Card title="Before You Start" icon="information">
 
 **Required**:
+
 - Rust installed ([rustup.rs](https://rustup.rs))
 - Basic programming knowledge (any language)
 - A text editor
@@ -96,71 +97,56 @@ Let's start with the simplest possible key-value store:
 
 <Tabs>
   <TabItem label="Write This Code">
-    ```rust
-    // In src/lib.rs
-    
-    // A struct is like a class in other languages
-    pub struct KeyValueStore {
-        // For now, we'll add fields in the next step
+    ```rust // In src/lib.rs // A struct is like a class in other languages pub struct KeyValueStore{" "}
+    {
+      // For now, we'll add fields in the next step
     }
     ```
   </TabItem>
-  
+
   <TabItem label="Understanding the Code">
-    ```rust
-    pub struct KeyValueStore {
-    //│  │     └─ The name of our type
-    //│  └─ Keyword to define a new type  
-    //└─ "public" - other code can use this
+    ```rust pub struct KeyValueStore{" "}
+    {
+      //│  │     └─ The name of our type
+      //│  └─ Keyword to define a new type
+      //└─ "public" - other code can use this
     }
     ```
   </TabItem>
-  
+
   <TabItem label="If You Know JavaScript">
-    ```javascript
-    // In JavaScript, you might write:
-    class KeyValueStore {
-        // fields go here
+    ```javascript // In JavaScript, you might write: class KeyValueStore{" "}
+    {
+      // fields go here
     }
-    
-    // Or with modern JS:
-    const KeyValueStore = class {
-        // implementation
-    };
-    ```
-    
-    **Key differences**:
-    - Rust uses `struct` instead of `class`
-    - `pub` makes it public (like `export`)
-    - No inheritance in Rust (we'll use traits later)
+    // Or with modern JS: const KeyValueStore = class{" "}
+    {
+      // implementation
+    }
+    ; ``` **Key differences**: - Rust uses `struct` instead of `class` - `pub` makes it public (like
+    `export`) - No inheritance in Rust (we'll use traits later)
   </TabItem>
-  
+
   <TabItem label="If You Know Python">
-    ```python
-    # In Python, you might write:
-    class KeyValueStore:
-        def __init__(self):
-            # Initialize here
-            pass
-    ```
-    
-    **Key differences**:
-    - Rust separates data (`struct`) from methods (`impl`)
-    - No `self` in the struct definition
-    - Types are defined at compile time
+    ```python # In Python, you might write: class KeyValueStore: def __init__(self): # Initialize
+    here pass ``` **Key differences**: - Rust separates data (`struct`) from methods (`impl`) - No
+    `self` in the struct definition - Types are defined at compile time
   </TabItem>
 </Tabs>
 
 <Aside type="note" title="🦀 New Rust Concept: Structs">
 
 A **struct** is Rust's way of creating custom types. Think of it like:
+
 - A class without inheritance (Java/C#)
 - An object literal with a fixed shape (JavaScript)
 - A dataclass (Python)
 
 **Why structs?** They group related data together with guaranteed memory layout.
 
-📖 **Learn more**: [The Rust Book - Structs](https://doc.rust-lang.org/book/ch05-01-defining-structs.html)
+📖 **Learn more**:
+[The Rust Book - Structs](https://doc.rust-lang.org/book/ch05-01-defining-structs.html)
+
 </Aside>
 
 ### Step 2: Adding Storage with HashMap
@@ -196,15 +182,18 @@ Now let's add actual storage to our struct:
 
 <Aside type="note" title="📚 Database Concept: Hash Tables">
 
-**Hash tables** provide O(1) average-case lookups - that means finding a value is equally fast whether you have 10 items or 10 million!
+**Hash tables** provide O(1) average-case lookups - that means finding a value is equally fast
+whether you have 10 items or 10 million!
 
 Real databases like Redis use hash tables for:
+
 - Session storage
 - Caching
 - Counters
 - Any key-value data
 
 **Trade-off**: No ordering, uses more memory than arrays.
+
 </Aside>
 
 ### Step 3: Creating New Instances
@@ -251,7 +240,7 @@ Let's add a way to create new key-value stores:
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_create_store() {
         let store = KeyValueStore::new();
@@ -261,12 +250,14 @@ mod tests {
 ```
 
 Run it:
+
 ```bash
 cargo test test_create_store
 ```
 
 <Aside type="tip" title="✅ Success!">
-Great! You just created your first Rust struct with a constructor. The test proves our code compiles and runs.
+  Great! You just created your first Rust struct with a constructor. The test proves our code
+  compiles and runs.
 </Aside>
 
 ### Step 4: Storing Values
@@ -309,16 +300,20 @@ Now for the core functionality - storing key-value pairs:
 <Aside type="note" title="🦀 New Rust Concept: Mutability with &mut">
 
 In Rust, data is **immutable by default**. To modify something, you need to:
+
 1. Declare it with `mut` (for variables)
 2. Use `&mut` (for references)
 
-**Think of it like**: 
+**Think of it like**:
+
 - `&self` = "I want to read this"
 - `&mut self` = "I want to read AND write this"
 
 This prevents accidental modifications and data races!
 
-📖 **Learn more**: [The Rust Book - References and Borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
+📖 **Learn more**:
+[The Rust Book - References and Borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
+
 </Aside>
 
 ### Step 5: Retrieving Values
@@ -368,12 +363,15 @@ Let's add the ability to get values back:
 <Aside type="note" title="🦀 New Rust Concept: Option<T>">
 
 `Option<T>` is Rust's way of handling nullable values safely:
+
 - `Some(value)` - We have a value
 - `None` - No value exists
 
 **No more null pointer exceptions!** The compiler forces you to handle both cases.
 
-📖 **Learn more**: [The Rust Book - Option](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html#the-option-enum-and-its-advantages-over-null-values)
+📖 **Learn more**:
+[The Rust Book - Option](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html#the-option-enum-and-its-advantages-over-null-values)
+
 </Aside>
 
 ### Step 6: Complete Working Example
@@ -384,23 +382,23 @@ Let's put it all together with a comprehensive test:
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_complete_functionality() {
         // Create a new store
         let mut store = KeyValueStore::new();
-        
+
         // Store some data
         store.set("user:1".to_string(), "Alice".to_string());
         store.set("user:2".to_string(), "Bob".to_string());
-        
+
         // Retrieve data
         assert_eq!(store.get("user:1"), Some("Alice".to_string()));
         assert_eq!(store.get("user:2"), Some("Bob".to_string()));
-        
+
         // Missing keys return None
         assert_eq!(store.get("user:3"), None);
-        
+
         // Update existing key
         store.set("user:1".to_string(), "Alice Smith".to_string());
         assert_eq!(store.get("user:1"), Some("Alice Smith".to_string()));
@@ -409,6 +407,7 @@ mod tests {
 ```
 
 Run all tests:
+
 ```bash
 cargo test
 ```
@@ -477,7 +476,7 @@ cargo test
 
 ## 🎉 Congratulations!
 
-You've successfully built your first database component in Rust! 
+You've successfully built your first database component in Rust!
 
 ### What You Built
 
@@ -504,21 +503,19 @@ You've successfully built your first database component in Rust!
 
 <CardGrid>
   <Card title="Ready for More?" icon="rocket">
-    **Next Tutorial**: Adding Persistence
-    
-    Learn how to save data to disk so it survives restarts!
+    **Next Tutorial**: Adding Persistence Learn how to save data to disk so it survives restarts!
   </Card>
-  
+
   <Card title="Practice Challenges" icon="puzzle">
-    1. Add a `delete()` method
-    2. Add a `len()` method to count entries
-    3. Make keys case-insensitive
+    1. Add a `delete()` method 2. Add a `len()` method to count entries 3. Make keys
+    case-insensitive
   </Card>
 </CardGrid>
 
 ## Quick Reference
 
 ### Commands We Used
+
 ```bash
 cargo new --lib ferrisdb-tutorial-01
 cargo test
@@ -526,6 +523,7 @@ cargo test test_specific_name
 ```
 
 ### Key Patterns
+
 ```rust
 // Creating a struct
 pub struct Name { field: Type }
@@ -546,7 +544,8 @@ match result {
 ---
 
 <Aside type="note" title="📝 How was this tutorial?">
-We're constantly improving! If anything was confusing, please let us know. Our goal is to make database internals accessible to every developer.
+  We're constantly improving! If anything was confusing, please let us know. Our goal is to make
+  database internals accessible to every developer.
 </Aside>
 
 **Great job! You're now ready for Tutorial 2: Adding Persistence** 🚀

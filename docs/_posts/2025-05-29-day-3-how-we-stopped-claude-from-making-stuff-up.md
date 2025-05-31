@@ -100,6 +100,7 @@ After implementing the commentary system, I realized it needed to be required, n
 **Me**: We should update our guidelines to make collaboration commentary MANDATORY. This is essential data we're collecting.
 
 We updated three key files:
+
 - `git-workflow.md`: Made commentary REQUIRED with bold emphasis
 - `pr-process.md`: MANDATORY for PR descriptions and squash merges
 - `CLAUDE.md`: Emphasized it's essential data that cannot be skipped
@@ -113,11 +114,13 @@ While working on documentation, we discovered another issue:
 **Me**: Sometimes ferrisdb.org displays raw markdown instead of rendered HTML. This is intermittent but concerning.
 
 Claude's investigation revealed multiple causes:
+
 - Jekyll's `{: .class}` syntax fails when on separate lines
 - Mixed markdown/HTML can cause rendering issues
 - Build caches create inconsistent behavior
 
 We implemented a comprehensive fix in `deploy-docs.yml`:
+
 - Clear Jekyll cache before builds
 - Add `--strict_front_matter` flag
 - Implement retry logic for transient failures

@@ -7,7 +7,7 @@ sidebar:
     variant: "tip"
 ---
 
-<!-- 
+<!--
 RUST BY EXAMPLE TEMPLATE - Starlight Format
 
 Design Philosophy Alignment:
@@ -20,7 +20,7 @@ TARGET: CRUD developers who know JS/Python/Java/Go but are new to Rust
 GOAL: Understand Rust concepts through practical database code comparisons
 -->
 
-import { Card, CardGrid, Tabs, TabItem, Aside, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem, Aside, Badge } from "@astrojs/starlight/components";
 
 Understanding [concept] through FerrisDB examples, compared with JavaScript, Python, Java, and Go
 
@@ -28,11 +28,11 @@ Understanding [concept] through FerrisDB examples, compared with JavaScript, Pyt
   <Card title="📗 Difficulty" icon="open-book">
     **[Beginner|Intermediate|Advanced]**
   </Card>
-  
+
   <Card title="⏱️ Reading Time" icon="clock">
     **[X] minutes**
   </Card>
-  
+
   <Card title="🎯 You'll Learn" icon="rocket">
     Why Rust handles [concept] differently
   </Card>
@@ -42,7 +42,8 @@ Understanding [concept] through FerrisDB examples, compared with JavaScript, Pyt
 
 [Explain the specific FerrisDB requirement in plain terms that any programmer understands]
 
-**Example**: "We need to store key-value pairs in memory while allowing multiple threads to read and write safely without data corruption."
+**Example**: "We need to store key-value pairs in memory while allowing multiple threads to read and
+write safely without data corruption."
 
 ## See All Approaches First
 
@@ -140,20 +141,23 @@ pub struct Storage {
 ```
 
 <Aside type="note" title="Key Insight">
-Rust makes thread safety explicit in the type system. You can't accidentally share mutable data between threads.
+  Rust makes thread safety explicit in the type system. You can't accidentally share mutable data
+  between threads.
 </Aside>
 
 ### Why These Choices?
 
 <CardGrid>
   <Card title="Arc (Shared Ownership)" icon="share">
-    Like `shared_ptr` in C++ or strong references in Swift. Allows multiple parts of code to own the same data.
+    Like `shared_ptr` in C++ or strong references in Swift. Allows multiple parts of code to own the
+    same data.
   </Card>
-  
+
   <Card title="RwLock (Read-Write Lock)" icon="lock">
-    Similar to Java's `ReadWriteLock`. Many threads can read simultaneously, but writes are exclusive.
+    Similar to Java's `ReadWriteLock`. Many threads can read simultaneously, but writes are
+    exclusive.
   </Card>
-  
+
   <Card title="Vec<u8> (Byte Arrays)" icon="memory">
     Like `byte[]` in Java or `Buffer` in Node.js. Rust doesn't hide allocation costs.
   </Card>
@@ -165,35 +169,20 @@ Rust makes thread safety explicit in the type system. You can't accidentally sha
 
 <Tabs>
   <TabItem label="Rust ✅">
-    ```rust
-    // This won't compile - Rust prevents data races
-    let storage = Storage::new();
-    let data = storage.data; // Error: cannot move
-    
-    // Must use thread-safe methods
-    storage.get(b"key"); // Safe!
-    ```
+    ```rust // This won't compile - Rust prevents data races let storage = Storage::new(); let data
+    = storage.data; // Error: cannot move // Must use thread-safe methods storage.get(b"key"); //
+    Safe! ```
   </TabItem>
-  
+
   <TabItem label="JavaScript ⚠️">
-    ```javascript
-    // This "works" but has race conditions
-    const storage = new Storage();
-    
-    // Multiple workers accessing same data = 💥
-    worker1.postMessage({ storage });
-    worker2.postMessage({ storage });
+    ```javascript // This "works" but has race conditions const storage = new Storage(); // Multiple
+    workers accessing same data = 💥 worker1.postMessage({storage}); worker2.postMessage({storage});
     ```
   </TabItem>
-  
+
   <TabItem label="Python ⚠️">
-    ```python
-    # Looks safe but GIL doesn't protect everything
-    storage = Storage()
-    
-    # Forgot the lock? Data corruption!
-    storage.data[key] = value  # Race condition
-    ```
+    ```python # Looks safe but GIL doesn't protect everything storage = Storage() # Forgot the lock?
+    Data corruption! storage.data[key] = value # Race condition ```
   </TabItem>
 </Tabs>
 
@@ -208,6 +197,7 @@ fn broken_reference() -> &Vec<u8> {
 ```
 
 **Other languages**:
+
 - **JavaScript/Python**: Garbage collected (with performance cost)
 - **Java**: GC + NullPointerException possibilities
 - **Go**: GC + nil pointer panics
@@ -220,39 +210,37 @@ fn broken_reference() -> &Vec<u8> {
 <Tabs>
   <TabItem label="Operation Costs">
     | Language | Get (µs) | Insert (µs) | Memory/Entry |
-    |----------|----------|-------------|--------------|
-    | Rust     | 0.05     | 0.12        | 48 bytes     |
-    | Go       | 0.08     | 0.15        | 64 bytes     |
-    | Java     | 0.10     | 0.18        | 96 bytes     |
-    | Python   | 0.50     | 0.80        | 128 bytes    |
-    | Node.js  | 0.15     | 0.25        | 80 bytes     |
+    |----------|----------|-------------|--------------| | Rust | 0.05 | 0.12 | 48 bytes | | Go |
+    0.08 | 0.15 | 64 bytes | | Java | 0.10 | 0.18 | 96 bytes | | Python | 0.50 | 0.80 | 128 bytes |
+    | Node.js | 0.15 | 0.25 | 80 bytes |
   </TabItem>
-  
+
   <TabItem label="Why the Differences">
-    - **Rust**: Zero-cost abstractions, no GC overhead
-    - **Go**: Efficient but GC pauses affect P99 latency
-    - **Java**: Object overhead + GC collections
-    - **Python**: Interpreter overhead + GIL contention
-    - **Node.js**: V8 is fast but still has GC
+    - **Rust**: Zero-cost abstractions, no GC overhead - **Go**: Efficient but GC pauses affect P99
+    latency - **Java**: Object overhead + GC collections - **Python**: Interpreter overhead + GIL
+    contention - **Node.js**: V8 is fast but still has GC
   </TabItem>
 </Tabs>
 
 ## When to Use What
 
 ### Choose Rust When:
+
 - ✅ **Performance critical**: Every microsecond matters
 - ✅ **Correctness critical**: Can't afford race conditions
 - ✅ **Resource constrained**: Limited memory/CPU
 - ✅ **Long-running services**: GC pauses unacceptable
 
 ### Choose Others When:
+
 - 🚀 **Rapid prototyping**: Python/JavaScript for quick iteration
 - 👥 **Team expertise**: Java/Go if that's what team knows
 - 📦 **Ecosystem needs**: NPM/PyPI has the libraries you need
 - ⏰ **Time to market**: Rust has a learning curve
 
 <Aside type="caution" title="Honest Trade-off">
-Rust code takes longer to write initially, but you spend less time debugging mysterious crashes at 3 AM.
+  Rust code takes longer to write initially, but you spend less time debugging mysterious crashes at
+  3 AM.
 </Aside>
 
 ## Try It Yourself
@@ -344,14 +332,17 @@ pub fn scan(&self, start: &[u8], end: &[u8]) -> Vec<(Vec<u8>, Vec<u8>)> {
 ## Learn More
 
 ### In FerrisDB
+
 - See this pattern: [`ferrisdb-storage/src/memtable/mod.rs`](link)
 - More examples: [`examples/concurrent_access.rs`](link)
 
 ### Related Concepts
+
 - [Ownership in MemTable Sharing](/rust-by-example/ownership-memtable)
 - [Error Handling Comparison](/rust-by-example/error-handling)
 
 ### For Your Language
+
 - **JavaScript devs**: Think of Rust lifetimes like React hook dependencies
 - **Python devs**: Rust ownership is like context managers but compile-time
 - **Java devs**: Similar to `final` everywhere + no null
@@ -360,5 +351,6 @@ pub fn scan(&self, start: &[u8], end: &[u8]) -> Vec<(Vec<u8>, Vec<u8>)> {
 ---
 
 <Aside type="tip" title="Remember">
-You don't need to master all of Rust to be productive. Start with what you need, and the compiler will guide you.
+  You don't need to master all of Rust to be productive. Start with what you need, and the compiler
+  will guide you.
 </Aside>
