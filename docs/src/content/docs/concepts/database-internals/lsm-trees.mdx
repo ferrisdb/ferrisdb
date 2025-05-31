@@ -38,9 +38,9 @@ the entire folder, add your single document, and put it back - for every single 
 cabinet is across the building (representing disk storage), this gets incredibly slow!
 
 <Aside type="caution" title="Why this matters for CRUD developers">
-  - **Slow write performance**: Your API endpoints that create/update data become bottlenecks -
-  **Lock contention**: Multiple users trying to write at once wait in line - **Poor scalability**:
-  Adding more users makes the problem exponentially worse
+  - **Slow write performance**: Your API endpoints that create/update data become bottlenecks
+  - **Lock contention**: Multiple users trying to write at once wait in line
+  - **Poor scalability**: Adding more users makes the problem exponentially worse
 </Aside>
 
 LSM-Trees solve this by completely rethinking how databases handle writes.
@@ -70,15 +70,20 @@ append to the end).
 
 ### Visual Architecture
 
-```text
-┌─────────────┐    ┌──────────────┐    ┌─────────────┐
-│   WAL       │    │  MemTable    │    │  SSTables   │
-│ (Sequential │ -> │ (In-Memory   │ -> │ (Immutable  │
-│  Write Log) │    │  Skip List)  │    │  Sorted     │
-│             │    │              │    │  Files)     │
-└─────────────┘    └──────────────┘    └─────────────┘
-      ^                    ^                    ^
-   Durability         Fast Writes         Fast Reads
+```mermaid
+graph LR
+    Write[Write Request] --> WAL[WAL<br/>Sequential Write Log]
+    WAL --> MemTable[MemTable<br/>In-Memory Skip List]
+    MemTable -->|"Flush when full"| SSTable1[SSTable 1<br/>Immutable File]
+    MemTable -->|"Flush when full"| SSTable2[SSTable 2<br/>Immutable File]
+    SSTable1 -->|Compaction| SSTable3[Merged SSTable]
+    SSTable2 -->|Compaction| SSTable3
+    
+    style WAL fill:#f9f,stroke:#333,stroke-width:2px
+    style MemTable fill:#9ff,stroke:#333,stroke-width:2px
+    style SSTable1 fill:#ff9,stroke:#333,stroke-width:2px
+    style SSTable2 fill:#ff9,stroke:#333,stroke-width:2px
+    style SSTable3 fill:#9f9,stroke:#333,stroke-width:2px
 ```
 
 **Key principles:**
@@ -156,9 +161,9 @@ pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
 3. **Full detection**: Signals when it's time to "give orders to the kitchen" (flush to disk)
 
 <Aside type="note" title="Why a Skip List?">
-  - **O(log n) operations**: Finding items in a million-entry list takes only ~20 steps -
-  **Lock-free reads**: Multiple threads can read without blocking each other - **Ordered
-  iteration**: Essential for creating sorted files and range queries
+  - **O(log n) operations**: Finding items in a million-entry list takes only ~20 steps
+  - **Lock-free reads**: Multiple threads can read without blocking each other
+  - **Ordered iteration**: Essential for creating sorted files and range queries
 </Aside>
 
 #### Component 2: SSTables - Immutable Sorted Files
@@ -189,13 +194,15 @@ pub struct SSTableEntry {
 
 <CardGrid>
   <Card title="Write Performance Improvement" icon="rocket">
-    - **Traditional B-tree**: O(log n) random I/O operations per write - **LSM-Tree MemTable**: O(1)
-    memory operation per write - **Improvement**: ~100x faster on traditional drives
+    - **Traditional B-tree**: O(log n) random I/O operations per write
+    - **LSM-Tree MemTable**: O(1) memory operation per write
+    - **Improvement**: ~100x faster on traditional drives
   </Card>
 
   <Card title="Read Performance Trade-off" icon="magnifier">
-    - **Best case** (in MemTable): O(log n) memory operation - **Worst case** (oldest SSTable): O(k
-    × log n) where k = levels - **Range queries**: O(n) scan across sorted data
+    - **Best case** (in MemTable): O(log n) memory operation
+    - **Worst case** (oldest SSTable): O(k × log n) where k = levels
+    - **Range queries**: O(n) scan across sorted data
   </Card>
 </CardGrid>
 
@@ -203,22 +210,22 @@ pub struct SSTableEntry {
 
 <Tabs>
   <TabItem label="Advantages">
-    - ✅ **Excellent write performance**: Sequential writes are much faster than random writes - ✅
-    **High write throughput**: Can batch multiple operations efficiently - ✅ **Good compression**:
-    Sequential data on disk compresses well - ✅ **Crash recovery**: WAL ensures no data loss on
-    system failures
+    - ✅ **Excellent write performance**: Sequential writes are much faster than random writes
+    - ✅ **High write throughput**: Can batch multiple operations efficiently
+    - ✅ **Good compression**: Sequential data on disk compresses well
+    - ✅ **Crash recovery**: WAL ensures no data loss on system failures
   </TabItem>
 
 <TabItem label="Disadvantages">
-  - ⚠️ **Read amplification**: May need to check multiple SSTables for recent writes - ⚠️ **Write
-  amplification**: Data gets written multiple times during compaction - ⚠️ **Space amplification**:
-  Multiple versions of data exist until compaction
+  - ⚠️ **Read amplification**: May need to check multiple SSTables for recent writes
+  - ⚠️ **Write amplification**: Data gets written multiple times during compaction
+  - ⚠️ **Space amplification**: Multiple versions of data exist until compaction
 </TabItem>
 
   <TabItem label="When to use alternatives">
-    - **Read-heavy workloads**: Consider B-tree databases if reads far exceed writes - **Small
-    datasets**: Simple data structures might be more appropriate - **Strong consistency needs**:
-    Some LSM implementations sacrifice consistency for performance
+    - **Read-heavy workloads**: Consider B-tree databases if reads far exceed writes
+    - **Small datasets**: Simple data structures might be more appropriate
+    - **Strong consistency needs**: Some LSM implementations sacrifice consistency for performance
   </TabItem>
 </Tabs>
 
@@ -260,13 +267,13 @@ pub fn size_tiered_compaction(&mut self) -> Result<()> {
 
 <CardGrid>
   <Card title="Planned optimizations" icon="rocket">
-    - **Leveled compaction**: More sophisticated merging strategy - **Bloom filters**: Skip reading
-    SSTables that definitely don't contain a key
+    - **Leveled compaction**: More sophisticated merging strategy
+    - **Bloom filters**: Skip reading SSTables that definitely don't contain a key
   </Card>
 
   <Card title="Research directions" icon="magnifier">
-    - **Universal compaction**: Hybrid approach balancing read and write - **Partitioned
-    compaction**: Parallel compaction for better utilization
+    - **Universal compaction**: Hybrid approach balancing read and write
+    - **Partitioned compaction**: Parallel compaction for better utilization
   </Card>
 </CardGrid>
 

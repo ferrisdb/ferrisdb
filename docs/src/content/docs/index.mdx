@@ -53,23 +53,38 @@ import Stats from "../../components/Stats.astro";
 
 <Tabs>
   <TabItem label="What Works Today">
-    <Badge text="HONEST STATUS" variant="success" />- ✅ **WAL Implementation** - Crash recovery
-    actually works! - ✅ **Concurrent Skip List** - Real lock-free data structure - ✅ **SSTable
-    Writer** - Can persist sorted data - ✅ **Blog & Tutorials** - Learn alongside us [See detailed
-    status →](/status/)
+    <Badge text="HONEST STATUS" variant="success" />
+    
+    - ✅ **WAL Implementation** - Crash recovery actually works!
+    - ✅ **Concurrent Skip List** - Real lock-free data structure
+    - ✅ **SSTable Writer & Reader** - Can persist and read sorted data
+    - ✅ **Blog & Tutorials** - Learn alongside us
+    
+    [See detailed status →](/status/)
   </TabItem>
 
 <TabItem label="What Doesn't Exist">
-  <Badge text="NOT BUILT YET" variant="caution" />- ❌ **No Server** - Can't run FerrisDB - ❌ **No
-  Storage Engine** - Components not connected - ❌ **No Queries** - Can't get/put data - ❌ **No
-  Distribution** - Single node only We're building in public - watch it happen!
+  <Badge text="NOT BUILT YET" variant="caution" />
+  
+  - ❌ **No Server** - Can't run FerrisDB
+  - ❌ **No Storage Engine** - Components not connected
+  - ❌ **No Queries** - Can't get/put data
+  - ❌ **No Distribution** - Single node only
+  
+  We're building in public - watch it happen!
 </TabItem>
 
   <TabItem label="The Journey So Far">
     <Stats />
-    Each day brings new learning: - Day 1: "Just use RocksDB" → "Let's build it!" - Day 2: Linear
-    search → Proper algorithms - Day 3: Fiction writing → Accuracy focus [Read the full story
-    →](/blog/)
+    
+    Each day brings new learning:
+    
+    - Day 1: "Just use RocksDB" → "Let's build it!"
+    - Day 2: Linear search → Proper algorithms
+    - Day 3: Fiction writing → Accuracy focus
+    - Day 4: Guidelines chaos → Governance system
+    
+    [Read the full story →](/blog/)
   </TabItem>
 </Tabs>
 
@@ -132,41 +147,19 @@ import Stats from "../../components/Stats.astro";
   Remember: This is about learning, not competing. We're building to understand, not to deploy.
 </Aside>
 
-<div class="sl-flex ast-gap-4" style="justify-content: center; margin-top: 2rem;">
-  <a
-    href="/tutorials/01-key-value-store/"
-    class="sl-flex ast-gap-2 sl-link-button sl-link-button--variant-primary sl-link-button--size-lg"
-  >
-    <svg
-      aria-hidden="true"
-      class="sl-icon"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M13.75 2.25h-3.5a.25.25 0 0 0-.25.25v4.75A.25.25 0 0 0 10.25 7.5h3.5a.25.25 0 0 0 .25-.25V2.5a.25.25 0 0 0-.25-.25ZM13.75 9h-3.5a.25.25 0 0 0-.25.25v4.75c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25V9.25a.25.25 0 0 0-.25-.25ZM13.75 15.75h-3.5a.25.25 0 0 0-.25.25v4.75c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25V16a.25.25 0 0 0-.25-.25Z" />
-    </svg>
-    Start Building
-  </a>
-
-  <a
-    href="/blog/"
-    class="sl-flex ast-gap-2 sl-link-button sl-link-button--variant-secondary sl-link-button--size-lg"
-  >
-    <svg
-      aria-hidden="true"
-      class="sl-icon"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-    </svg>
-    Follow Our Journey
-  </a>
-</div>
+<CardGrid>
+  <Card title="Start Building" icon="rocket">
+    Ready to learn by doing? Start with our first tutorial and build a key-value store from scratch.
+    
+    [Begin Tutorial 1 →](/tutorials/01-key-value-store/)
+  </Card>
+  
+  <Card title="Follow Our Journey" icon="open-book">
+    Read our daily blog posts documenting every breakthrough and mistake as we build a database.
+    
+    [View Blog →](/blog/)
+  </Card>
+</CardGrid>
 
 ---
 

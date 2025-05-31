@@ -182,13 +182,15 @@ pub fn recover(&mut self) -> Result<Vec<LogEntry>> {
 
 <CardGrid>
   <Card title="Write Performance" icon="rocket">
-    - **Sequential writes**: 100-500 MB/s - **Latency**: 1-10ms per sync - **Batching**: Group
-    commits for efficiency
+    - **Sequential writes**: 100-500 MB/s
+    - **Latency**: 1-10ms per sync
+    - **Batching**: Group commits for efficiency
   </Card>
 
   <Card title="Recovery Speed" icon="forward-slash">
-    - **Read speed**: 500+ MB/s (sequential) - **Recovery time**: ~1 second per GB - **Parallel
-    replay**: Modern DBs use multiple threads
+    - **Read speed**: 500+ MB/s (sequential)
+    - **Recovery time**: ~1 second per GB
+    - **Parallel replay**: Modern DBs use multiple threads
   </Card>
 </CardGrid>
 

@@ -30,10 +30,12 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
     - ~500 lines of tested code
   </Card>
 
-<Card title="MemTable (Skip List)" icon="list-format">
-  - Concurrent skip list implementation - Lock-free reads, fine-grained write locks - MVCC support
-  with timestamps - ~450 lines of tested code
-</Card>
+  <Card title="MemTable (Skip List)" icon="list-format">
+    - Concurrent skip list implementation
+    - Lock-free reads, fine-grained write locks
+    - MVCC support with timestamps
+    - ~450 lines of tested code
+  </Card>
 
   <Card title="SSTable Writer" icon="document">
     - Basic block format defined
@@ -41,14 +43,25 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
     - Index and footer structures
     - ~650 lines of tested code
   </Card>
+
+  <Card title="SSTable Reader" icon="open-book">
+    - Binary search for efficient lookups
+    - Block caching for performance
+    - Footer and index parsing
+    - ~400 lines of tested code
+  </Card>
 </CardGrid>
+
+### ✅ Recently Completed
+
+<Card title="SSTable Reader" icon="open-book">
+  <Badge text="COMPLETED" variant="success" />
+  Fully implemented with binary search, block caching, and efficient lookups.
+</Card>
 
 ### 🚧 In Progress
 
-<Card title="SSTable Reader" icon="open-book">
-  <Badge text="SKELETON ONLY" variant="caution" />
-  Structure defined but not functional. Cannot read SSTables yet.
-</Card>
+- **Storage Engine Integration** - Connecting components together
 
 ### ❌ Not Started
 
@@ -81,7 +94,7 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
 
 ```bash
 # Actual implementation (not counting tests)
-ferrisdb-storage/src/: ~1,800 lines
+ferrisdb-storage/src/: ~2,200 lines
 ferrisdb-core/src/: ~200 lines
 ferrisdb-client/src/: ~10 lines (stub)
 ferrisdb-server/src/: ~5 lines (stub)
@@ -92,14 +105,15 @@ ferrisdb-server/src/: ~5 lines (stub)
 - WAL: 90%+ coverage
 - MemTable: 85%+ coverage
 - SSTable Writer: 80%+ coverage
+- SSTable Reader: 85%+ coverage
 - Integration: None (components not integrated)
 
 ## What's Next?
 
 We're learning and building in public. Next steps:
 
-1. **Complete SSTable Reader** - Make it actually read files
-2. **Integrate Components** - Create basic storage engine
+1. **Integrate Components** - Create basic storage engine
+2. **Add Basic API** - Simple get/put operations
 3. **Add Compaction** - Background SSTable merging
 4. **Build Server** - Simple key-value API
 

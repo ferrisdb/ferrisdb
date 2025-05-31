@@ -26,14 +26,18 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 
 <Tabs>
   <TabItem label="Current: Shared-Nothing">
-    - Each node owns data shards - Data locality for performance - Simpler consistency model -
-    Traditional distributed database approach
+    - Each node owns data shards
+    - Data locality for performance
+    - Simpler consistency model
+    - Traditional distributed database approach
   </TabItem>
 
   <TabItem label="Alternative: Shared-Storage">
-    - All nodes access common storage pool - Multiple compute nodes can read/write same data -
-    Enables instant failover and load balancing - Storage becomes the single source of truth -
-    Trade-offs in consistency, performance, and complexity
+    - All nodes access common storage pool
+    - Multiple compute nodes can read/write same data
+    - Enables instant failover and load balancing
+    - Storage becomes the single source of truth
+    - Trade-offs in consistency, performance, and complexity
   </TabItem>
 </Tabs>
 
@@ -73,13 +77,15 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 
 <Tabs>
   <TabItem label="Architecture">
-    - **Columnar storage**: For analytical queries - **Row storage**: For transactional workloads -
-    **Automatic routing**: Query optimizer chooses optimal storage format - **Real-time analytics**:
-    Fresh data available immediately
+    - **Columnar storage**: For analytical queries
+    - **Row storage**: For transactional workloads
+    - **Automatic routing**: Query optimizer chooses optimal storage format
+    - **Real-time analytics**: Fresh data available immediately
   </TabItem>
 
   <TabItem label="Implementation">
-    - Dual storage formats with synchronization - Adaptive storage layouts based on access patterns
+    - Dual storage formats with synchronization
+    - Adaptive storage layouts based on access patterns
     - Vectorized execution for analytical queries
   </TabItem>
 </Tabs>
@@ -136,14 +142,17 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 
 <Tabs>
   <TabItem label="Approaches">
-    - **CRDTs**: Conflict-free replicated data types for eventual consistency - **Calvin-style**:
-    Deterministic transaction scheduling - **Clock synchronization**: Spanner-style global ordering
+    - **CRDTs**: Conflict-free replicated data types for eventual consistency
+    - **Calvin-style**: Deterministic transaction scheduling
+    - **Clock synchronization**: Spanner-style global ordering
     - **Hybrid approaches**: Combine techniques based on workload characteristics
   </TabItem>
 
   <TabItem label="Benefits">
-    - Lower latency for global operations - Better partition tolerance - Reduced coordination
-    overhead - Workload-specific optimization
+    - Lower latency for global operations
+    - Better partition tolerance
+    - Reduced coordination overhead
+    - Workload-specific optimization
   </TabItem>
 </Tabs>
 
@@ -180,8 +189,10 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 **Global distribution**: Advanced topology management for worldwide deployments.
 
 <Aside type="caution" title="Challenges to explore">
-  - Network partition handling - Latency-aware query routing - Compliance and data sovereignty -
-  Cost optimization across regions
+  - Network partition handling
+  - Latency-aware query routing
+  - Compliance and data sovereignty
+  - Cost optimization across regions
 </Aside>
 
 - **Region-aware partitioning**: Data gravity and compliance requirements
@@ -195,14 +206,17 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 
 <Tabs>
   <TabItem label="Features">
-    - **Auto-compaction**: ML-driven compaction strategies - **Query optimization**: Learn from
-    historical query patterns - **Resource allocation**: Dynamic memory/CPU allocation - **Anomaly
-    detection**: Automatic performance issue detection
+    - **Auto-compaction**: ML-driven compaction strategies
+    - **Query optimization**: Learn from historical query patterns
+    - **Resource allocation**: Dynamic memory/CPU allocation
+    - **Anomaly detection**: Automatic performance issue detection
   </TabItem>
 
   <TabItem label="Research Areas">
-    - Reinforcement learning for database tuning - Workload prediction and preparation - Automated
-    schema optimization - Performance regression detection
+    - Reinforcement learning for database tuning
+    - Workload prediction and preparation
+    - Automated schema optimization
+    - Performance regression detection
   </TabItem>
 </Tabs>
 
@@ -272,22 +286,23 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 
 <Tabs>
   <TabItem label="Multi-Model">
-    - **FoundationDB**: Multi-model with ACID guarantees - **YugabyteDB**: Multi-model with
-    PostgreSQL compatibility
+    - **FoundationDB**: Multi-model with ACID guarantees
+    - **YugabyteDB**: Multi-model with PostgreSQL compatibility
   </TabItem>
 
 <TabItem label="HTAP">
-  - **TiDB**: HTAP with TiKV storage and TiFlash analytics - **ClickHouse**: Columnar database with
-  real-time capabilities
+  - **TiDB**: HTAP with TiKV storage and TiFlash analytics
+  - **ClickHouse**: Columnar database with real-time capabilities
 </TabItem>
 
 <TabItem label="Cloud-Native">
-  - **CockroachDB**: Global consistency with clock synchronization - **Snowflake**: Separation of
-  storage and compute
+  - **CockroachDB**: Global consistency with clock synchronization
+  - **Snowflake**: Separation of storage and compute
 </TabItem>
 
   <TabItem label="Real-Time">
-    - **Apache Pinot**: Real-time analytics database - **TimescaleDB**: Time-series on PostgreSQL
+    - **Apache Pinot**: Real-time analytics database
+    - **TimescaleDB**: Time-series on PostgreSQL
   </TabItem>
 </Tabs>
 

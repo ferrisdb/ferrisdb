@@ -22,19 +22,31 @@ import Stats from "../../../components/Stats.astro";
 <Tabs>
   <TabItem label="✅ What We've Built">
     <Badge text="IMPLEMENTED" variant="success" />
-    ### Storage Components - **Write-Ahead Log** - Binary format with CRC32 checksums - **MemTable**
-    - Concurrent skip list with MVCC timestamps - **SSTable Writer** - Can persist sorted data to
-    disk ### Learning Outputs - **6 Blog Posts** - Documenting our daily journey - **1 Tutorial** -
-    Build your own key-value store - **~2,000 lines** - Of actual implementation code - **25+
-    Tests** - Showing how components work
+    ### Storage Components 
+    - **Write-Ahead Log** - Binary format with CRC32 checksums 
+    - **MemTable** - Concurrent skip list with MVCC timestamps 
+    - **SSTable Writer** - Can persist sorted data to disk
+    - **SSTable Reader** - Binary search, block caching, efficient lookups
+    
+    ### Learning Outputs 
+    - **8 Blog Posts** - Documenting our daily journey 
+    - **1 Tutorial** - Build your own key-value store 
+    - **~2,400 lines** - Of actual implementation code 
+    - **30+ Tests** - Showing how components work
   </TabItem>
 
 <TabItem label="🚧 What We're Building">
   <Badge text="IN PROGRESS" variant="caution" />
-  ### Current Focus - **SSTable Reader** - Make it actually read files - **Storage Engine** -
-  Connect components together - **Basic Operations** - Simple get/put interface ### This Week's
-  Goals - Complete SSTable reader implementation - Write integration tests - Document learning in
-  blog posts
+  ### Current Focus 
+  - **Storage Engine** - Connect components together 
+  - **Basic Operations** - Simple get/put interface 
+  - **Integration Tests** - Verify components work together
+  
+  ### This Week's Goals 
+  - Create storage engine that uses all components
+  - Implement basic get/put operations
+  - Write comprehensive integration tests
+  - Document the integration process
 </TabItem>
 
   <TabItem label="📋 What We Dream About">
@@ -53,13 +65,17 @@ import Stats from "../../../components/Stats.astro";
   <Card title="Completed ✅" icon="approve-check">
     - WAL for durability
     - MemTable for fast writes
-    - SSTable writer
+    - SSTable writer & reader
     - Binary encoding
     - Error handling patterns
+    - Block caching
   </Card>
 
 <Card title="In Progress 🚧" icon="rocket">
-  - SSTable reader - Component integration - Storage engine API - More comprehensive tests
+  - Component integration
+  - Storage engine API
+  - Basic get/put operations
+  - Integration tests
 </Card>
 
   <Card title="Next Up 📋" icon="document">

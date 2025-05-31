@@ -1,0 +1,28 @@
+---
+// This component loads mermaid.js on the client side
+---
+
+<script>
+  // Only run on the client side
+  if (typeof window !== 'undefined') {
+    import('mermaid').then(({ default: mermaid }) => {
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+          primaryColor: '#ff6b35',
+          primaryTextColor: '#000',
+          primaryBorderColor: '#ff6b35',
+          lineColor: '#333',
+          secondaryColor: '#f5f5f5',
+          tertiaryColor: '#fff'
+        }
+      });
+      
+      // Run mermaid on any pre.mermaid elements
+      mermaid.run({
+        querySelector: 'pre.mermaid',
+      });
+    });
+  }
+</script>

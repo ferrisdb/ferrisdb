@@ -23,3 +23,19 @@
   background-color: var(--sl-color-bg-accent);
   color: var(--sl-color-text-accent);
 }
+
+/* Center mermaid diagrams */
+pre.mermaid {
+  text-align: center;
+  background: transparent;
+  border: none;
+  margin: 2rem auto;
+  display: block;
+}
+
+/* Ensure the SVG inside is also centered */
+pre.mermaid svg {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}

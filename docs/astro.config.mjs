@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
+import rehypeMermaid from 'rehype-mermaid';
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,6 +21,22 @@ export default defineConfig({
 			editLink: {
 				baseUrl: 'https://github.com/ferrisdb/ferrisdb/edit/main/docs/',
 			},
+			head: [
+				{
+					tag: 'script',
+					attrs: {
+						src: 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js',
+						defer: true,
+					},
+				},
+				{
+					tag: 'script',
+					attrs: {
+						src: '/mermaid-init.js',
+						defer: true,
+					},
+				},
+			],
 			sidebar: [
 				{
 					label: 'Start Here',
@@ -92,4 +109,7 @@ export default defineConfig({
 			],
 		}),
 	],
+	markdown: {
+		rehypePlugins: [[rehypeMermaid, {strategy:'pre-mermaid'}]],
+	},
 });
