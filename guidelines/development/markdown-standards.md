@@ -26,6 +26,24 @@ prettier --check "**/*.md" "**/*.mdx"
 
 **Never skip this step** - it's as important as `cargo fmt` for Rust code!
 
+## 🚨 MANDATORY: Starlight Build Verification
+
+**CRITICAL**: When modifying ANY Starlight site files (ferrisdb-docs/), you MUST build before committing:
+
+```bash
+cd ferrisdb-docs
+npm run build
+```
+
+**Why this is mandatory**:
+
+- Prevents MDX syntax errors that break the documentation site
+- Validates Steps components and other Starlight-specific syntax
+- Ensures the documentation site can actually be deployed
+- Catches build issues early rather than in CI
+
+**Rule**: If you touch ANY file in `ferrisdb-docs/`, you MUST run the build to verify it works!
+
 ## Tool Configuration
 
 ### Prettier Handles Everything

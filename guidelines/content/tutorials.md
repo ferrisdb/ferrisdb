@@ -685,6 +685,58 @@ cargo test
 
 **Why This Happens**: Without line breaks, MDX treats the content as a single line, collapsing bullet points together.
 
+### Steps Component Requirements
+
+**CRITICAL**: Steps components in Starlight must contain only a single ordered list structure.
+
+#### ✅ Correct Pattern
+
+```mdx
+<Steps>
+1. **First Step**
+   Content for step 1 with proper indentation
+
+2. **Second Step**  
+   Content for step 2
+
+3. **Third Step**
+   Content for step 3
+
+{/* prettier-ignore */}
+</Steps>
+```
+
+#### ❌ Wrong Pattern (Will Break Build)
+
+```mdx
+<Steps>
+
+### Step 1: Heading Format
+
+Content here
+
+### Step 2: Another Heading
+
+More content
+
+</Steps>
+```
+
+**Common Issues**:
+
+- Using `###` headings instead of numbered lists
+- Indenting the closing `</Steps>` tag within a list item (prettier does this automatically!)
+- Including multiple child elements instead of single ordered list
+- Forgetting the `{/* prettier-ignore */}` comment before closing tag
+
+**Why the prettier-ignore comment is required**:
+
+- Prettier automatically indents the `</Steps>` closing tag to match list content
+- This breaks MDX parsing because the tag is no longer at the correct scope level
+- The `{/* prettier-ignore */}` comment prevents prettier from reformatting the closing tag
+
+**Always verify** Steps components by running `npm run build` in ferrisdb-docs!
+
 ### Tab Usage Strategy
 
 #### When to Use Tabs

@@ -8,13 +8,21 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 
 ## 🚨 Before You Commit
 
-**MANDATORY for ALL contributors**: After making ANY markdown or MDX changes:
+**MANDATORY for ALL contributors**:
+
+### 1. Format ALL markdown/MDX changes:
 
 ```bash
 prettier --write "**/*.md" "**/*.mdx"
 ```
 
-This is as critical as running `cargo fmt` for Rust code. CI will fail if skipped!
+### 2. Build Starlight if you touched ferrisdb-docs/:
+
+```bash
+cd ferrisdb-docs && npm run build
+```
+
+**Both are as critical as running `cargo fmt` for Rust code. CI will fail if skipped!**
 
 ## Quick Navigation
 
