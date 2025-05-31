@@ -517,13 +517,17 @@ Before committing tutorial changes:
 
 ## MDX-Specific Guidelines
 
-<Aside type="caution" title="🚨 Most Common MDX Error">
+<Aside type="caution" title="🚨 Most Common MDX Errors">
 
-**Writing `Option<T>` without backticks will break your tutorial!**
+**Top MDX build failures in tutorials:**
 
-MDX interprets `<T>` as an HTML tag. ALWAYS use backticks: `` `Option<T>` ``
+1. **Writing `Option<T>` without backticks** - MDX interprets `<T>` as HTML. Use: `` `Option<T>` ``
 
-This is the #1 cause of MDX build failures in tutorials.
+2. **Inline comments in TabItem code blocks** - Use separate lines for comments in bash blocks inside JSX components
+
+3. **Missing empty lines around Markdown in JSX** - Always add empty lines around code blocks, badges, etc. in TabItem/Card components
+
+These cause 90% of Starlight build failures!
 
 </Aside>
 
@@ -616,6 +620,46 @@ pub struct KeyValueStore {
 - After opening `<TabItem>` tag
 - Before closing `</TabItem>` tag
 - Around any other Markdown content inside JSX components
+
+#### 🚨 Inline Comments in Code Blocks
+
+**CRITICAL**: Never use inline comments in bash code blocks inside TabItem components!
+
+##### ❌ Wrong Pattern (Will Break Build)
+
+````mdx
+<TabItem label="Commands">
+  ```bash # This comment breaks MDX parsing
+  cat file.rs # Another comment that corrupts the block
+  cargo test # This also fails
+  ```
+</TabItem>
+````
+
+##### ✅ Correct Pattern
+
+````mdx
+<TabItem label="Commands">
+
+```bash
+# This comment is on its own line
+cat file.rs
+
+# Another comment, properly separated
+cargo test
+
+# This works correctly
+```
+
+</TabItem>
+````
+
+**Why this breaks**: MDX interprets inline comments in code blocks as JSX expressions when inside components, corrupting the entire code block structure.
+
+**Always use**:
+- Comments on separate lines in code blocks
+- Empty lines around code blocks in JSX components
+- Proper line separation for all bash commands
 
 ### Bullet Points in Card Components
 
@@ -1215,6 +1259,7 @@ Before publishing any tutorial:
 - [ ] **MDX Formatting**
 
   - [ ] Empty lines around code blocks in TabItem components
+  - [ ] No inline comments in bash code blocks inside TabItem components
   - [ ] Prettier runs without corrupting code
   - [ ] All special characters properly escaped
   - [ ] Component imports are correct
