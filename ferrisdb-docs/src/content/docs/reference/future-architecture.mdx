@@ -89,27 +89,23 @@ Completely decouple storage nodes from compute nodes for independent scaling and
 **Progressive approach**: Support multiple data models while learning optimal integration patterns.
 
 <Steps>
+1. **Phase 1: Layered Implementation**
+   ```text
+   Document API  →  LSM Storage Engine
+   Graph API     →  LSM Storage Engine
+   TimeSeries    →  LSM Storage Engine
+   ```
 
-### Phase 1: Layered Implementation
+2. **Phase 2: Hybrid Integration**
 
-```text
-Document API  →  LSM Storage Engine
-Graph API     →  LSM Storage Engine
-TimeSeries    →  LSM Storage Engine
-```
+   - Native JSON document support in storage format
+   - Specialized indexing for different models
+   - Cross-model query capabilities
 
-### Phase 2: Hybrid Integration
-
-- Native JSON document support in storage format
-- Specialized indexing for different models
-- Cross-model query capabilities
-
-### Phase 3: Unified Multi-Model
-
-- Storage engine natively understands multiple data types
-- Atomic transactions across all models
-- Optimized storage layouts per data type
-
+3. **Phase 3: Unified Multi-Model**
+   - Storage engine natively understands multiple data types
+   - Atomic transactions across all models
+   - Optimized storage layouts per data type
 </Steps>
 
 **Models to explore:**
