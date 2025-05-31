@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = [
+    "tutorial-01-kv-store",
+    # Future tutorials will be added here
+]
+
+[workspace.package]
+edition = "2021"
+authors = ["FerrisDB Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ferrisdb/ferrisdb"
+
+[workspace.dependencies]
+# Common dependencies for tutorials
