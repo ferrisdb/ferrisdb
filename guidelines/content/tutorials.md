@@ -293,8 +293,10 @@ MDX interprets angle brackets as HTML tags. Always escape:
 
 Required imports:
 
-```javascript
+```mdx
 import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
+
+;
 ```
 
 Preferred components:
@@ -310,30 +312,29 @@ Preferred components:
 
 #### ✅ Correct Pattern
 
-````text
+````mdx
 <TabItem label="Understanding the Code">
 
-  ```rust
-  pub struct KeyValueStore {
-    // Code here
-  }
-````
+```rust
+pub struct KeyValueStore {
+  // Code here
+}
+```
 
 </TabItem>
-```
+````
 
 #### ❌ Wrong Pattern (Will Be Corrupted)
 
-````text
+````mdx
 <TabItem label="Understanding the Code">
-  ```rust
-  pub struct KeyValueStore {
+  ```rust pub struct KeyValueStore{" "}
+  {
     // This will be corrupted by prettier!
   }
-````
-
+  ```
 </TabItem>
-```
+````
 
 #### Why This Matters
 
