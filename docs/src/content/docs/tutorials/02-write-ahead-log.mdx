@@ -1,0 +1,1276 @@
+---
+title: "Building a Write-Ahead Log: Never Lose Data Again"
+description: "Learn how databases survive crashes by building a Write-Ahead Log with checksums and recovery"
+sidebar:
+  badge:
+    text: "Tutorial 2"
+    variant: "success"
+# Tracking metadata
+rust_concepts_introduced:
+  - "File I/O with `std::fs::File`"
+  - "Error handling with `Result<T, E>` and `?` operator"
+  - "Binary serialization with `byteorder`"
+  - "Builder pattern"
+  - "Custom error types with `thiserror`"
+  - "Traits: `Read`, `Write`, `Seek`"
+rust_concepts_reinforced:
+  - "Structs and methods"
+  - "Pattern matching with `match`"
+  - "Ownership and borrowing"
+database_concepts_introduced:
+  - "Write-Ahead Logging (WAL): durability before performance"
+  - "Crash recovery: rebuilding state from logs"
+  - "Binary formats: efficient storage"
+  - "Checksums: data integrity verification"
+  - "fsync modes: performance vs safety trade-offs"
+database_concepts_reinforced:
+  - "Durability: the 'D' in ACID"
+  - "Append-only design"
+---
+
+import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
+
+## The Problem We're Solving
+
+Remember Tutorial 1? We built a key-value store, but it had a fatal flaw:
+
+```rust
+// Tutorial 1's problem:
+let mut store = KeyValueStore::new();
+store.set("important_data", "💰");
+// Program crashes... 💥
+// All data is gone! 😱
+```
+
+Today we fix this by building a **Write-Ahead Log (WAL)** - the same technique used by PostgreSQL, SQLite, and almost every production database!
+
+```mermaid
+graph LR
+    A[Your App] -->|"1. Write to WAL"| B[WAL File]
+    B -->|"2. Crash!"| C[💥]
+    C -->|"3. Recover from WAL"| D[Data Restored!]
+```
+
+### Real-World Impact
+
+Every time you:
+- Make a bank transaction
+- Save a document
+- Update your profile
+
+A WAL ensures your changes survive even if the server loses power mid-operation!
+
+## What You'll Build
+
+<CardGrid>
+  <Card title="🛡️ Durable Storage" icon="shield">
+    - Binary format for efficiency
+    - Checksums for corruption detection
+    - Recovery from any point
+    - Configurable sync modes
+  </Card>
+
+  <Card title="🚀 Production Features" icon="rocket">
+    - Same design as PostgreSQL's WAL
+    - Builder pattern for configuration
+    - Custom error types
+    - Performance benchmarks
+  </Card>
+</CardGrid>
+
+## Prerequisites
+
+<Card title="Before You Start" icon="information">
+
+**Required**:
+- Completed Tutorial 1 (or understand basic Rust)
+- Rust installed ([rustup.rs](https://rustup.rs))
+
+**Time**: ~45 minutes
+
+**New Dependencies** we'll use:
+- `byteorder` - Binary serialization
+- `crc32fast` - Fast checksums
+- `anyhow` & `thiserror` - Error handling
+
+</Card>
+
+## Setup
+
+```bash
+# Clone the tutorial
+git clone https://github.com/ferrisdb/ferrisdb
+cd ferrisdb/ferrisdb-tutorials/tutorial-02-wal
+
+# Or create from scratch
+cargo new --lib tutorial-02-wal
+cd tutorial-02-wal
+```
+
+Add dependencies to `Cargo.toml`:
+
+```toml
+[dependencies]
+byteorder = "1.5"      # Binary serialization
+crc32fast = "1.3"      # Checksums
+anyhow = "1.0"         # Application errors
+thiserror = "2.0"      # Library errors
+
+[dev-dependencies]
+tempfile = "3.8"       # Test helpers
+```
+
+## Let's Build!
+
+### Step 1: Understanding the Problem
+
+Let's first see what happens without durability:
+
+<Tabs>
+  <TabItem label="The Problem">
+
+```rust
+// In src/lib.rs - let's see the problem
+use std::collections::HashMap;
+
+pub struct VolatileStore {
+    data: HashMap<String, String>,
+}
+
+impl VolatileStore {
+    pub fn new() -> Self {
+        Self { data: HashMap::new() }
+    }
+    
+    pub fn set(&mut self, key: String, value: String) {
+        self.data.insert(key, value);
+        // Data is only in memory! 💨
+    }
+}
+
+#[test]
+fn test_volatility_problem() {
+    let mut store = VolatileStore::new();
+    store.set("bank_balance".into(), "1000".into());
+    
+    // Simulate crash
+    drop(store);
+    
+    // Try to recover...
+    let new_store = VolatileStore::new();
+    // The $1000 is gone! 😱
+    assert!(new_store.data.is_empty());
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="The Solution">
+
+```rust
+// What we'll build: durable storage
+pub struct DurableStore {
+    data: HashMap<String, String>,
+    wal: WriteAheadLog,  // ← This saves us!
+}
+
+impl DurableStore {
+    pub fn set(&mut self, key: String, value: String) {
+        // 1. Write to WAL first (durable)
+        self.wal.append(Operation::Set { key, value });
+        
+        // 2. Then update memory (fast)
+        self.data.insert(key, value);
+    }
+    
+    pub fn recover() -> Self {
+        // Rebuild state from WAL
+        let wal = WriteAheadLog::open("data.wal");
+        let mut data = HashMap::new();
+        
+        for entry in wal.recover_entries() {
+            match entry.operation {
+                Operation::Set { key, value } => {
+                    data.insert(key, value);
+                }
+            }
+        }
+        
+        Self { data, wal }
+    }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="📚 Database Concept: Write-Ahead Logging">
+
+**WAL** is the fundamental technique for database durability:
+
+1. **Write-Ahead**: Always write to the log BEFORE modifying data
+2. **Sequential Writes**: Appending is faster than random writes
+3. **Recovery**: Replay the log to rebuild state
+
+This is why databases can claim "no data loss" - the WAL has everything!
+
+</Aside>
+
+### Step 2: Defining Our Data Structures
+
+Let's define what operations we'll log:
+
+<Tabs>
+  <TabItem label="Write the Code">
+
+```rust
+use std::fs::File;
+use std::path::{Path, PathBuf};
+use std::io::{self, Write, Read};
+use anyhow::Result;
+use thiserror::Error;
+
+/// Operations that can be logged
+#[derive(Debug, Clone, PartialEq)]
+pub enum Operation {
+    Set { key: String, value: String },
+    Delete { key: String },
+}
+
+/// A single entry in the WAL
+#[derive(Debug, Clone, PartialEq)]
+pub struct LogEntry {
+    pub sequence: u64,      // Monotonic counter
+    pub operation: Operation,
+}
+
+/// Custom errors for better debugging
+#[derive(Error, Debug)]
+pub enum WalError {
+    #[error("IO error: {0}")]
+    Io(#[from] io::Error),
+    
+    #[error("Checksum mismatch")]
+    ChecksumMismatch,
+    
+    #[error("Corrupted entry at offset {offset}")]
+    CorruptedEntry { offset: u64 },
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Understanding the Design">
+
+```rust
+// Why these fields?
+
+pub struct LogEntry {
+    pub sequence: u64,    // ← Unique ID, helps detect gaps
+    pub operation: Operation, // ← What actually happened
+}
+
+// Why custom errors?
+#[derive(Error, Debug)]  // ← thiserror magic!
+pub enum WalError {
+    // Specific errors help debugging:
+    // "Checksum mismatch" vs generic "Error"
+}
+```
+
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="🦀 New Rust Concept: Custom Error Types">
+
+The `thiserror` crate makes error handling elegant:
+
+```rust
+#[derive(Error, Debug)]
+enum MyError {
+    #[error("Something went wrong: {message}")]
+    Custom { message: String },
+    
+    #[error("IO failed")]
+    Io(#[from] io::Error), // Auto-conversion!
+}
+```
+
+This gives you helpful error messages and `?` operator support!
+
+</Aside>
+
+### Step 3: Basic File Operations
+
+Let's start with simple text-based logging to understand the concept:
+
+<Tabs>
+  <TabItem label="Simple Text WAL">
+
+```rust
+pub struct SimpleWal {
+    file: File,
+    path: PathBuf,
+    next_sequence: u64,
+}
+
+impl SimpleWal {
+    pub fn create<P: AsRef<Path>>(path: P) -> Result<Self> {
+        let path = path.as_ref().to_path_buf();
+        let file = File::create(&path)?;
+        
+        Ok(Self {
+            file,
+            path,
+            next_sequence: 0,
+        })
+    }
+    
+    pub fn append(&mut self, operation: Operation) -> Result<u64> {
+        let entry = LogEntry {
+            sequence: self.next_sequence,
+            operation,
+        };
+        
+        // Simple text format: sequence|operation|key|value
+        let line = match &entry.operation {
+            Operation::Set { key, value } => {
+                format!("{}|SET|{}|{}\n", entry.sequence, key, value)
+            }
+            Operation::Delete { key } => {
+                format!("{}|DELETE|{}\n", entry.sequence, key)
+            }
+        };
+        
+        self.file.write_all(line.as_bytes())?;
+        self.file.sync_all()?; // Force to disk!
+        
+        self.next_sequence += 1;
+        Ok(entry.sequence)
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Test It">
+
+```rust
+#[test]
+fn test_simple_wal() {
+    use tempfile::tempdir;
+    
+    let dir = tempdir().unwrap();
+    let wal_path = dir.path().join("simple.wal");
+    
+    let mut wal = SimpleWal::create(&wal_path).unwrap();
+    
+    // Write some operations
+    wal.append(Operation::Set {
+        key: "user:1".into(),
+        value: "Alice".into(),
+    }).unwrap();
+    
+    // Check the file contents
+    let contents = std::fs::read_to_string(&wal_path).unwrap();
+    assert!(contents.contains("0|SET|user:1|Alice"));
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="The Problem">
+
+```bash
+# Text format wastes space:
+0|SET|user:1|{"name":"Alice","age":30,"email":"alice@example.com"}
+1|SET|user:2|{"name":"Bob","age":25,"email":"bob@example.com"}
+
+# Binary format is compact:
+[4 bytes: length][8 bytes: sequence][1 byte: op][data...]
+```
+
+Text is readable but inefficient. Production databases use binary!
+
+  </TabItem>
+</Tabs>
+
+### Step 4: Binary Serialization
+
+Now let's build a production-grade binary format:
+
+<Tabs>
+  <TabItem label="Binary Format">
+
+```rust
+use byteorder::{LittleEndian, WriteBytesExt, ReadBytesExt};
+
+impl WriteAheadLog {
+    /// Encode an entry to bytes
+    fn encode_entry(&self, entry: &LogEntry) -> Result<Vec<u8>> {
+        let mut buf = Vec::new();
+        
+        // 1. Sequence number (8 bytes)
+        buf.write_u64::<LittleEndian>(entry.sequence)?;
+        
+        // 2. Operation type and data
+        match &entry.operation {
+            Operation::Set { key, value } => {
+                buf.write_u8(1)?; // Operation type: Set
+                
+                // Key length + key
+                buf.write_u32::<LittleEndian>(key.len() as u32)?;
+                buf.write_all(key.as_bytes())?;
+                
+                // Value length + value
+                buf.write_u32::<LittleEndian>(value.len() as u32)?;
+                buf.write_all(value.as_bytes())?;
+            }
+            Operation::Delete { key } => {
+                buf.write_u8(2)?; // Operation type: Delete
+                
+                // Key length + key
+                buf.write_u32::<LittleEndian>(key.len() as u32)?;
+                buf.write_all(key.as_bytes())?;
+            }
+        }
+        
+        Ok(buf)
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Binary Layout">
+
+```
+Set Operation Layout:
+┌─────────┬──────┬────────┬─────────┬───────┬───────────┬─────────┬
+│Sequence │ Type │Key Len │   Key   │Val Len│   Value   │Checksum │
+│8 bytes  │1 byte│4 bytes │N bytes  │4 bytes│ M bytes   │4 bytes  │
+└─────────┴──────┴────────┴─────────┴───────┴───────────┴─────────┘
+
+Delete Operation Layout:
+┌─────────┬──────┬────────┬─────────┬─────────┐
+│Sequence │ Type │Key Len │   Key   │Checksum │
+│8 bytes  │1 byte│4 bytes │N bytes  │4 bytes  │
+└─────────┴──────┴────────┴─────────┴─────────┘
+```
+
+  </TabItem>
+  
+  <TabItem label="Why Binary?">
+
+    **Space Efficiency**:
+    ```
+    Text:   "123456789|SET|user:1|Alice\n" = 28 bytes
+    Binary: [8][1][4][6][5][4] = 28 bytes of data in 22 bytes
+    ```
+
+    **Performance**:
+    - No parsing needed
+    - Fixed-size fields enable seeking
+    - Direct memory mapping possible
+
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="🦀 New Rust Concept: byteorder">
+
+The `byteorder` crate handles endianness (byte ordering):
+
+```rust
+// Write a u32 in little-endian format
+buffer.write_u32::<LittleEndian>(42)?;
+
+// Read it back
+let value = cursor.read_u32::<LittleEndian>()?;
+```
+
+**Why Little-Endian?** It's what x86/x64 CPUs use natively!
+
+</Aside>
+
+### Step 5: Adding Checksums
+
+Let's protect against corruption with checksums:
+
+<Tabs>
+  <TabItem label="Add CRC32">
+
+```rust
+use crc32fast::Hasher;
+
+/// Calculate CRC32 checksum
+fn calculate_checksum(data: &[u8]) -> u32 {
+    let mut hasher = Hasher::new();
+    hasher.update(data);
+    hasher.finalize()
+}
+
+impl WriteAheadLog {
+    fn encode_entry(&self, entry: &LogEntry) -> Result<Vec<u8>> {
+        let mut buf = Vec::new();
+        
+        // ... encode entry data ...
+        
+        // Calculate checksum of everything so far
+        let checksum = calculate_checksum(&buf);
+        buf.write_u32::<LittleEndian>(checksum)?;
+        
+        // Prepend total length for easy reading
+        let mut final_buf = Vec::new();
+        final_buf.write_u32::<LittleEndian>(buf.len() as u32)?;
+        final_buf.extend_from_slice(&buf);
+        
+        Ok(final_buf)
+    }
+    
+    fn decode_entry(data: &[u8]) -> Result<LogEntry, WalError> {
+        // ... decode fields ...
+        
+        // Verify checksum
+        let data_len = data.len() - 4;
+        let expected = cursor.read_u32::<LittleEndian>()?;
+        let actual = calculate_checksum(&data[..data_len]);
+        
+        if expected != actual {
+            return Err(WalError::ChecksumMismatch);
+        }
+        
+        Ok(entry)
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Test Corruption">
+
+```rust
+#[test]
+fn test_checksum_detection() {
+    let mut data = encode_entry(&LogEntry {
+        sequence: 1,
+        operation: Operation::Set {
+            key: "test".into(),
+            value: "data".into(),
+        },
+    }).unwrap();
+    
+    // Corrupt a byte
+    data[10] ^= 0xFF;
+    
+    // Should detect corruption
+    match decode_entry(&data) {
+        Err(WalError::ChecksumMismatch) => {}, // Good!
+        _ => panic!("Should detect corruption"),
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Why Checksums Matter">
+
+    **Real-world corruption sources**:
+    - Disk bit flips
+    - Partial writes during power loss
+    - Network transmission errors
+    - Cosmic rays (seriously!)
+
+    **CRC32 properties**:
+    - Fast: ~3GB/s on modern CPUs
+    - Good error detection
+    - Used by: Ethernet, ZIP files, PNG images
+
+  </TabItem>
+</Tabs>
+
+### Step 6: Building the Complete WAL
+
+Now let's put it all together with proper file handling:
+
+<Tabs>
+  <TabItem label="Complete Implementation">
+
+```rust
+use std::fs::OpenOptions;
+use std::io::{BufReader, BufWriter, Seek, SeekFrom};
+
+pub struct WriteAheadLog {
+    file: BufWriter<File>,
+    path: PathBuf,
+    sync_mode: SyncMode,
+    next_sequence: u64,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum SyncMode {
+    None,       // Fastest, least safe
+    DataOnly,   // Good balance
+    Full,       // Slowest, most safe
+}
+
+const WAL_MAGIC: u32 = 0x57414C21; // "WAL!"
+
+impl WriteAheadLog {
+    pub fn open<P: AsRef<Path>>(path: P, sync_mode: SyncMode) -> Result<Self> {
+        let path = path.as_ref().to_path_buf();
+        let file = OpenOptions::new()
+            .create(true)
+            .read(true)
+            .append(true)
+            .open(&path)?;
+            
+        let mut wal = Self {
+            file: BufWriter::new(file),
+            path,
+            sync_mode,
+            next_sequence: 0,
+        };
+        
+        // Write header if new file
+        if wal.file.get_ref().metadata()?.len() == 0 {
+            wal.write_header()?;
+        } else {
+            // Recover last sequence
+            let entries = wal.recover_entries()?;
+            if let Some(last) = entries.last() {
+                wal.next_sequence = last.sequence + 1;
+            }
+        }
+        
+        Ok(wal)
+    }
+    
+    fn write_header(&mut self) -> Result<()> {
+        self.file.write_u32::<LittleEndian>(WAL_MAGIC)?;
+        self.file.write_u32::<LittleEndian>(1)?; // Version
+        self.sync()?;
+        Ok(())
+    }
+    
+    fn sync(&mut self) -> Result<()> {
+        self.file.flush()?;
+        
+        match self.sync_mode {
+            SyncMode::None => {},
+            SyncMode::DataOnly => {
+                self.file.get_ref().sync_data()?;
+            }
+            SyncMode::Full => {
+                self.file.get_ref().sync_all()?;
+            }
+        }
+        
+        Ok(())
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Magic Numbers">
+
+```rust
+const WAL_MAGIC: u32 = 0x57414C21; // "WAL!"
+
+// Why magic numbers?
+// 1. Identify file type
+// 2. Detect wrong files
+// 3. Version compatibility
+
+// Common magic numbers:
+// PNG:  0x89504E47
+// PDF:  0x25504446
+// ZIP:  0x504B0304
+// ELF:  0x7F454C46
+```
+
+  </TabItem>
+  
+  <TabItem label="Sync Modes Explained">
+
+```rust
+pub enum SyncMode {
+    // Like pressing Ctrl+S but not waiting
+    None,       // ~1000x faster, may lose ~5s of data
+    
+    // Ensures data hits disk, skips metadata
+    DataOnly,   // ~10x faster, good for most uses
+    
+    // Full durability, updates everything
+    Full,       // Baseline speed, maximum safety
+}
+
+// Real-world usage:
+// - Redis: Configurable (appendfsync)
+// - PostgreSQL: Full sync by default
+// - SQLite: Full sync with pragma
+```
+
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="📚 Database Concept: fsync Trade-offs">
+
+The `fsync` system call forces data to disk, but it's slow:
+
+| Mode | Speed | Data Loss Risk | Use Case |
+|------|-------|----------------|----------|
+| None | 1000x | ~5 seconds | Caching, sessions |
+| Data | 10x | Minimal | Most applications |
+| Full | 1x | None | Financial data |
+
+Production databases make this configurable because different data has different value!
+
+</Aside>
+
+### Step 7: Recovery Implementation
+
+The most critical part - recovering from crashes:
+
+<Tabs>
+  <TabItem label="Recovery Logic">
+
+```rust
+impl WriteAheadLog {
+    pub fn recover_entries(&self) -> Result<Vec<LogEntry>> {
+        let mut entries = Vec::new();
+        let mut file = File::open(&self.path)?;
+        let mut reader = BufReader::new(&mut file);
+        
+        // Verify header
+        let magic = reader.read_u32::<LittleEndian>()?;
+        if magic != WAL_MAGIC {
+            return Err(WalError::InvalidMagic.into());
+        }
+        
+        let _version = reader.read_u32::<LittleEndian>()?;
+        
+        // Read entries until EOF or corruption
+        loop {
+            // Read entry length
+            let length = match reader.read_u32::<LittleEndian>() {
+                Ok(len) => len as usize,
+                Err(e) if e.kind() == io::ErrorKind::UnexpectedEof => {
+                    break; // Normal end
+                }
+                Err(e) => return Err(e.into()),
+            };
+            
+            // Read entry data
+            let mut data = vec![0u8; length];
+            reader.read_exact(&mut data)?;
+            
+            // Decode and verify checksum
+            match Self::decode_entry(&data) {
+                Ok(entry) => entries.push(entry),
+                Err(WalError::ChecksumMismatch) => {
+                    eprintln!("Warning: Corruption detected, stopping recovery");
+                    break; // Stop at corruption
+                }
+                Err(e) => return Err(e.into()),
+            }
+        }
+        
+        Ok(entries)
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Recovery Test">
+
+```rust
+#[test]
+fn test_crash_recovery() {
+    let dir = tempdir().unwrap();
+    let wal_path = dir.path().join("test.wal");
+    
+    // Simulate operations before crash
+    {
+        let mut wal = WriteAheadLog::open(&wal_path, SyncMode::Full).unwrap();
+        
+        wal.append(Operation::Set {
+            key: "balance".into(),
+            value: "1000".into(),
+        }).unwrap();
+        
+        wal.append(Operation::Set {
+            key: "balance".into(),
+            value: "1500".into(), // Deposit!
+        }).unwrap();
+        
+        // Crash happens here!
+    }
+    
+    // Recovery after crash
+    {
+        let wal = WriteAheadLog::open(&wal_path, SyncMode::Full).unwrap();
+        let entries = wal.recover_entries().unwrap();
+        
+        assert_eq!(entries.len(), 2);
+        
+        // Replay to get final state
+        let mut state = HashMap::new();
+        for entry in entries {
+            match entry.operation {
+                Operation::Set { key, value } => {
+                    state.insert(key, value);
+                }
+                Operation::Delete { key } => {
+                    state.remove(&key);
+                }
+            }
+        }
+        
+        assert_eq!(state.get("balance"), Some(&"1500".to_string()));
+        println!("✅ Recovery successful! Balance is safe!");
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Recovery Strategies">
+
+    **Full Recovery** (what we built):
+    - Read entire log
+    - Replay all operations
+    - Guarantees consistency
+
+    **Checkpoint + WAL** (advanced):
+    - Periodic snapshots
+    - Only replay since checkpoint
+    - Much faster recovery
+
+    **Parallel Recovery** (PostgreSQL):
+    - Multiple threads
+    - Partition by key
+    - Complex but fast
+
+  </TabItem>
+</Tabs>
+
+### Step 8: Builder Pattern
+
+Let's add a nice API with the builder pattern:
+
+<Tabs>
+  <TabItem label="Builder Implementation">
+
+```rust
+pub struct WalBuilder {
+    path: PathBuf,
+    sync_mode: SyncMode,
+    max_file_size: u64,
+}
+
+impl WalBuilder {
+    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        Self {
+            path: path.as_ref().to_path_buf(),
+            sync_mode: SyncMode::DataOnly,
+            max_file_size: 100 * 1024 * 1024, // 100MB
+        }
+    }
+    
+    pub fn sync_mode(mut self, mode: SyncMode) -> Self {
+        self.sync_mode = mode;
+        self
+    }
+    
+    pub fn max_file_size(mut self, size: u64) -> Self {
+        self.max_file_size = size;
+        self
+    }
+    
+    pub fn build(self) -> Result<WriteAheadLog> {
+        WriteAheadLog::open(self.path, self.sync_mode)
+    }
+}
+
+// Usage:
+let wal = WalBuilder::new("my.wal")
+    .sync_mode(SyncMode::Full)
+    .max_file_size(1024 * 1024 * 1024) // 1GB
+    .build()?;
+```
+
+  </TabItem>
+  
+  <TabItem label="Why Builder Pattern?">
+
+**Without Builder**:
+```rust
+// Confusing positional arguments
+let wal = WriteAheadLog::new(
+    "my.wal",
+    true,      // What's this?
+    false,     // And this?
+    1000000,   // In bytes? KB?
+);
+```
+
+**With Builder**:
+```rust
+// Self-documenting!
+let wal = WalBuilder::new("my.wal")
+    .enable_compression(true)
+    .sync_mode(SyncMode::Full)
+    .max_file_size(1024 * 1024)
+    .build()?;
+```
+
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="🦀 New Rust Concept: Builder Pattern">
+
+The builder pattern is idiomatic Rust for complex initialization:
+
+```rust
+impl Builder {
+    pub fn option(mut self, value: T) -> Self {
+        self.field = value;
+        self  // Return self for chaining!
+    }
+}
+```
+
+**Benefits**:
+- Optional parameters with defaults
+- Validate at build time
+- Method chaining feels natural
+
+</Aside>
+
+## Testing Our WAL
+
+Let's verify our implementation with comprehensive tests:
+
+<Tabs>
+  <TabItem label="Integration Test">
+
+```rust
+#[test]
+fn test_wal_integration() {
+    use tempfile::tempdir;
+    use std::collections::HashMap;
+    
+    let dir = tempdir().unwrap();
+    let wal_path = dir.path().join("integration.wal");
+    
+    // Track expected state
+    let mut expected = HashMap::new();
+    
+    // Phase 1: Initial writes
+    {
+        let mut wal = WalBuilder::new(&wal_path)
+            .sync_mode(SyncMode::Full)
+            .build()
+            .unwrap();
+        
+        // Simulate real usage
+        wal.append(Operation::Set {
+            key: "user:1".into(),
+            value: "Alice".into(),
+        }).unwrap();
+        expected.insert("user:1".to_string(), "Alice".to_string());
+        
+        wal.append(Operation::Set {
+            key: "user:2".into(),
+            value: "Bob".into(),
+        }).unwrap();
+        expected.insert("user:2".to_string(), "Bob".to_string());
+        
+        wal.append(Operation::Delete {
+            key: "user:1".into(),
+        }).unwrap();
+        expected.remove("user:1");
+    }
+    
+    // Phase 2: Recovery and continuation
+    {
+        let mut wal = WalBuilder::new(&wal_path).build().unwrap();
+        let entries = wal.recover_entries().unwrap();
+        
+        // Verify recovery
+        assert_eq!(entries.len(), 3);
+        
+        // Continue operations
+        wal.append(Operation::Set {
+            key: "user:3".into(),
+            value: "Charlie".into(),
+        }).unwrap();
+        expected.insert("user:3".to_string(), "Charlie".to_string());
+    }
+    
+    // Phase 3: Final verification
+    {
+        let wal = WalBuilder::new(&wal_path).build().unwrap();
+        let entries = wal.recover_entries().unwrap();
+        
+        // Replay to verify final state
+        let mut actual = HashMap::new();
+        for entry in entries {
+            match entry.operation {
+                Operation::Set { key, value } => {
+                    actual.insert(key, value);
+                }
+                Operation::Delete { key } => {
+                    actual.remove(&key);
+                }
+            }
+        }
+        
+        assert_eq!(actual, expected);
+        println!("✅ All {} operations recovered correctly!", entries.len());
+    }
+}
+```
+
+  </TabItem>
+  
+  <TabItem label="Performance Test">
+
+```rust
+#[test]
+fn benchmark_sync_modes() {
+    use std::time::Instant;
+    
+    let dir = tempdir().unwrap();
+    let ops = 1000;
+    
+    for mode in [SyncMode::None, SyncMode::DataOnly, SyncMode::Full] {
+        let wal_path = dir.path().join(format!("{:?}.wal", mode));
+        let mut wal = WalBuilder::new(&wal_path)
+            .sync_mode(mode)
+            .build()
+            .unwrap();
+        
+        let start = Instant::now();
+        
+        for i in 0..ops {
+            wal.append(Operation::Set {
+                key: format!("key:{}", i),
+                value: format!("value:{}", i),
+            }).unwrap();
+        }
+        
+        let elapsed = start.elapsed();
+        let ops_per_sec = ops as f64 / elapsed.as_secs_f64();
+        
+        println!("{:?}: {:.0} ops/sec", mode, ops_per_sec);
+    }
+}
+
+// Example output:
+// None: 500,000 ops/sec
+// DataOnly: 50,000 ops/sec  
+// Full: 5,000 ops/sec
+```
+
+  </TabItem>
+</Tabs>
+
+## Real-World Comparison
+
+<Tabs>
+  <TabItem label="Our Implementation">
+
+```rust
+// Our WAL
+let mut wal = WalBuilder::new("data.wal")
+    .sync_mode(SyncMode::DataOnly)
+    .build()?;
+
+wal.append(Operation::Set {
+    key: "user:1".into(),
+    value: "data".into(),
+})?;
+```
+
+  </TabItem>
+  
+  <TabItem label="PostgreSQL">
+
+```sql
+-- PostgreSQL WAL (simplified)
+BEGIN;
+INSERT INTO users VALUES (1, 'data');
+-- Writes to WAL before data pages
+COMMIT;
+
+-- Control with:
+SET synchronous_commit = on;  -- Like SyncMode::Full
+SET synchronous_commit = off; -- Like SyncMode::None
+```
+
+  </TabItem>
+  
+  <TabItem label="SQLite">
+
+```sql
+-- SQLite WAL mode
+PRAGMA journal_mode = WAL;
+
+-- Sync modes
+PRAGMA synchronous = FULL;   -- Like SyncMode::Full
+PRAGMA synchronous = NORMAL; -- Like SyncMode::DataOnly
+PRAGMA synchronous = OFF;    -- Like SyncMode::None
+```
+
+  </TabItem>
+  
+  <TabItem label="Redis">
+
+```
+# Redis AOF (Append Only File)
+appendonly yes
+appendfsync always  # Like SyncMode::Full
+appendfsync everysec # Default, balanced
+appendfsync no      # Like SyncMode::None
+```
+
+  </TabItem>
+</Tabs>
+
+## Practice Challenges
+
+<CardGrid>
+  <Card title="🔧 Challenge 1: Compression" icon="puzzle">
+    
+**Goal**: Add compression to reduce WAL size
+
+**Hints**:
+- Use `flate2` crate for gzip
+- Compress entry data before checksum
+- Add compression flag to header
+
+**Bonus**: Make it optional via builder
+
+  </Card>
+
+  <Card title="🔧 Challenge 2: Rotation" icon="puzzle">
+    
+**Goal**: Rotate to new file when size limit reached
+
+**Hints**:
+- Track current file size
+- Create numbered files: `data.wal.1`, `data.wal.2`
+- Update recovery to read multiple files
+
+**Real-world**: This enables log shipping for replication!
+
+  </Card>
+
+  <Card title="🔧 Challenge 3: Concurrent Reads" icon="puzzle">
+    
+**Goal**: Allow reading while writing
+
+**Hints**:
+- Use `Arc<RwLock<WAL>>`
+- Readers don't block each other
+- Writer has exclusive access
+
+**Learn**: This is how databases achieve high concurrency!
+
+  </Card>
+</CardGrid>
+
+## 🎉 Congratulations!
+
+You've built a production-grade Write-Ahead Log! This is a real achievement!
+
+### What You Built
+
+- ✅ **Binary WAL** with checksums and magic numbers
+- ✅ **Crash recovery** that actually works
+- ✅ **Configurable durability** with sync modes
+- ✅ **Builder pattern** for clean API
+- ✅ **Error handling** with custom types
+
+### Rust Concepts Mastered
+
+- 🦀 **File I/O** with buffering and sync
+- 🦀 **Binary serialization** with byteorder
+- 🦀 **Error handling** with Result and custom errors
+- 🦀 **Builder pattern** for ergonomic APIs
+- 🦀 **Testing** with integration tests
+
+### Database Knowledge Gained
+
+- 📚 **Write-Ahead Logging** fundamentals
+- 📚 **Durability vs Performance** trade-offs
+- 📚 **Crash recovery** techniques
+- 📚 **Binary formats** for efficiency
+- 📚 **Checksums** for integrity
+
+## What's Next?
+
+<Card title="Tutorial 3: Building a Skip List" icon="rocket">
+
+Now that we have durability, let's build a high-performance in-memory data structure - the concurrent skip list that powers FerrisDB's MemTable!
+
+**Preview**: Lock-free reads, probabilistic balancing, and real concurrency!
+
+</Card>
+
+## Quick Reference
+
+### Key Patterns
+
+```rust
+// Binary I/O
+writer.write_u32::<LittleEndian>(value)?;
+let value = reader.read_u32::<LittleEndian>()?;
+
+// Error propagation
+let result = operation()?; // Propagates errors up
+
+// Builder pattern
+let thing = Builder::new()
+    .option(value)
+    .build()?;
+
+// File sync
+file.sync_data()?;  // Data only
+file.sync_all()?;   // Data + metadata
+```
+
+### Commands
+
+```bash
+# Run tests
+cargo test
+
+# Run benchmarks
+cargo bench
+
+# Check with clippy
+cargo clippy
+
+# Format code
+cargo fmt
+```
+
+---
+
+<Aside type="note" title="💭 Reflection">
+
+Building a WAL teaches fundamental database concepts that apply everywhere:
+
+- **Durability**: How databases survive crashes
+- **Performance**: Why databases have so many knobs
+- **Trade-offs**: You can't have everything
+
+This is the same technology protecting your bank account. Pretty cool, right?
+
+</Aside>
+
+**Outstanding work! You've mastered durability - the foundation of reliable databases!** 🚀

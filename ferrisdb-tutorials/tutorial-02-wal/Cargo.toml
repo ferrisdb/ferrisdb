@@ -1,0 +1,26 @@
+[package]
+name = "tutorial-02-wal"
+version = "0.1.0"
+edition = "2021"
+authors = ["FerrisDB Authors"]
+description = "Tutorial 2: Building a Write-Ahead Log"
+
+[dependencies]
+# For binary serialization
+byteorder = "1.5"
+# For checksums
+crc32fast = "1.3"
+# For error handling
+anyhow = "1.0"
+thiserror = "2.0"
+
+[dev-dependencies]
+# For testing
+tempfile = "3.8"
+criterion = "0.5"
+rand = "0.8"
+
+# Benchmarks will be added later
+# [[bench]]
+# name = "wal_performance"
+# harness = false

@@ -51,6 +51,7 @@ export default defineConfig({
 					badge: { text: 'TUTORIALS', variant: 'success' },
 					items: [
 						{ label: 'Tutorial 1: Key-Value Store', slug: 'tutorials/01-key-value-store' },
+						{ label: 'Tutorial 2: Write-Ahead Log', slug: 'tutorials/02-write-ahead-log' },
 					],
 				},
 				{
