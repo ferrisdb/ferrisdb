@@ -144,7 +144,7 @@ let client = Client::builder()
 | `connection_pool_size` | usize             | 10          | Max connections         |
 | `keepalive_interval`   | Duration          | 10s         | Keepalive ping interval |
 | `compression`          | bool              | false       | Enable compression      |
-| `tls_config`           | Option<TlsConfig> | None        | TLS settings            |
+| `tls_config`           | Option&lt;TlsConfig&gt; | None        | TLS settings            |
 
 ## Security Configuration
 

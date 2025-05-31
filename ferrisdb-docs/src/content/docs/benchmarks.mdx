@@ -38,24 +38,52 @@ When we reach the benchmarking phase, we'll focus on:
 
 <Tabs>
   <TabItem label="Write Performance">
-    ```rust // Operations we'll benchmark: // Single writes db.set(key, value)?; // Batch writes
-    db.batch_write(vec![(key1, value1), (key2, value2)])?; // Write amplification during compaction
-    // (How much extra I/O happens during merges) ```
+
+    ```rust
+    // Operations we'll benchmark:
+    
+    // Single writes
+    db.set(key, value)?;
+    
+    // Batch writes
+    db.batch_write(vec![(key1, value1), (key2, value2)])?;
+    
+    // Write amplification during compaction
+    // (How much extra I/O happens during merges)
+    ```
+
   </TabItem>
 
-<TabItem label="Read Performance">
-  ```rust // Point lookups let value = db.get(key)?; // Range scans for (key, value) in
-  db.scan(start_key..end_key){" "}
-  {
-    // Process results
-  }
-  // Read amplification // (How many SSTables we need to check) ```
-</TabItem>
+  <TabItem label="Read Performance">
+
+    ```rust
+    // Point lookups
+    let value = db.get(key)?;
+    
+    // Range scans
+    for (key, value) in db.scan(start_key..end_key) {
+      // Process results
+    }
+    
+    // Read amplification
+    // (How many SSTables we need to check)
+    ```
+
+  </TabItem>
 
   <TabItem label="Memory Usage">
-    ```rust // MemTable memory efficiency let mem_usage = memtable.memory_usage(); // Skip list
-    overhead vs simple HashMap let efficiency = data_size / total_memory; // WAL buffer usage let
-    wal_memory = wal.buffer_size(); ```
+
+    ```rust
+    // MemTable memory efficiency
+    let mem_usage = memtable.memory_usage();
+    
+    // Skip list overhead vs simple HashMap
+    let efficiency = data_size / total_memory;
+    
+    // WAL buffer usage
+    let wal_memory = wal.buffer_size();
+    ```
+
   </TabItem>
 </Tabs>
 
