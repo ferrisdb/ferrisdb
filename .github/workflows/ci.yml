@@ -237,16 +237,18 @@ jobs:
     - name: Run tutorial tests
       run: |
         cd ferrisdb-tutorials
-        cargo test --all --verbose
-
-    - name: Test tutorial exercises
+        # Test all main implementations and solutions
+        # Exclude exercise template tests which contain todo!() for students
+        cargo test --workspace --tests --bins --benches --verbose
+        
+    - name: Verify exercise templates compile
       run: |
         cd ferrisdb-tutorials
-        # Test each tutorial's exercises
+        # Ensure exercise templates compile but don't run their failing tests
         for tutorial in tutorial-*/; do
-          if [ -d "$tutorial/exercises" ]; then
-            echo "Testing exercises in $tutorial"
-            (cd "$tutorial" && cargo test --test exercises || true)
+          if [ -d "$tutorial/examples/exercises" ]; then
+            echo "Verifying exercise compilation in $tutorial"
+            (cd "$tutorial" && cargo check --example exercises)
           fi
         done
 

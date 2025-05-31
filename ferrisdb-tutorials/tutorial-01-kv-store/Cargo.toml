@@ -10,6 +10,12 @@ repository.workspace = true
 name = "tutorial-01-kv-store"
 path = "src/main.rs"
 
+# Exercise templates - run manually with: cargo test --example exercises
+# Not included in regular test runs to avoid CI failures from todo!() implementations
+[[example]]
+name = "exercises"
+path = "examples/exercises.rs"
+
 [dependencies]
 
 [dev-dependencies]
