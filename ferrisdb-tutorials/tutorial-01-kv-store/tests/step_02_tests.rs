@@ -6,7 +6,7 @@ use tutorial_01_kv_store::KeyValueStore;
 fn step_02_struct_with_hashmap() {
     // After Step 2, we have a struct with HashMap field
     let store = KeyValueStore::new();
-    
+
     // We can check it's empty
     assert!(store.is_empty());
     assert_eq!(store.len(), 0);

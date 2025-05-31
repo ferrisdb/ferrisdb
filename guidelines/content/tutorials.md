@@ -369,6 +369,37 @@ Before publishing ANY tutorial:
 5. **Ensure final code matches** between tutorial and implementation
 6. **Document gotchas** in the tutorial's README.md
 
+### Code Quality Requirements
+
+#### Formatting and Linting
+
+All tutorial code MUST pass formatting and linting checks:
+
+```bash
+# Run in ferrisdb-tutorials directory
+cd ferrisdb-tutorials
+
+# Format all code
+cargo fmt --all
+
+# Check formatting (CI will fail if not formatted)
+cargo fmt --all -- --check
+
+# Run clippy
+cargo clippy --all-targets --all-features -- -D warnings
+```
+
+**Important**: Tutorial code is held to the same quality standards as production code!
+
+#### Pre-commit Checklist
+
+Before committing tutorial changes:
+
+- [ ] Run `cargo fmt --all` in `ferrisdb-tutorials/`
+- [ ] Run `cargo clippy` and fix all warnings
+- [ ] Run `cargo test --all` to ensure tests pass
+- [ ] Run `cargo bench` to ensure benchmarks compile
+
 ### Testing Requirements
 
 #### Step-by-Step Tests
@@ -453,6 +484,8 @@ Before publishing any tutorial:
   - [ ] Integration tests for complete implementation
   - [ ] Concurrent tests (if applicable)
   - [ ] Performance benchmarks included
+  - [ ] Code formatted with `cargo fmt --all`
+  - [ ] No clippy warnings
 
 - [ ] **Learning Flow**
 
