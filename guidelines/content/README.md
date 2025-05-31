@@ -60,7 +60,7 @@ Every piece of content should help readers learn and understand database systems
 2. **Use the appropriate template from the templates/ directory** for consistency
 3. **Write with the target audience in mind**
 4. **Include real code and measurements**
-5. **Format with prettier** and **lint with markdownlint**
+5. **Format with prettier** (`prettier --write "**/*.md"`)
 6. **Submit PR with appropriate label**
 
 ## Tutorial Tracking System
@@ -80,17 +80,21 @@ These files are the **source of truth** for ensuring we never assume untaught kn
 All content templates have been migrated to Starlight format and are located in the `templates/` directory:
 
 ### Blog Post Templates
+
 - [Human Blog Post Template](templates/blog-post-human.mdx) - For human perspective blog posts
 - [Claude Blog Post Template](templates/blog-post-claude.mdx) - For AI perspective blog posts
 
-### Article Templates  
+### Article Templates
+
 - [Database Concept Template](templates/database-concept.mdx) - For deep dive technical articles
 - [Rust by Example Template](templates/rust-by-example.mdx) - For Rust learning articles
 
 ### Tutorial Template
+
 - [Tutorial Template](templates/tutorial.mdx) - For "Learn by Building" series with step-by-step component construction
 
 **Note**: These templates follow our new design philosophy:
+
 - Simplicity and correctness first
 - Developer-skeptical design with immediate code access
 - Learning in public with honest limitations

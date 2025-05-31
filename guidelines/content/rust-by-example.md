@@ -244,7 +244,7 @@ type MemTable struct {
 2. Test all code examples in all languages
 3. Verify FerrisDB code references are accurate
 4. Review for balanced language comparisons
-5. Lint with prettier and markdownlint
+5. Format with prettier (`prettier --write "**/*.md"`)
 6. Submit PR with "rust-by-example" label
 
 ## Related Guidelines

@@ -18,11 +18,13 @@ This document tracks the migration of FerrisDB's documentation website from Jeky
 ## Migration Phases
 
 ### Phase 1: Infrastructure Setup ✅ COMPLETE
+
 - [x] Set up Astro Starlight project structure
 - [x] Configure navigation and branding
 - [x] Implement developer-focused homepage
 
 ### Phase 2: Content Migration (IN PROGRESS)
+
 - [x] Migrate blog post templates to MDX
 - [x] Create tutorial template and tracking system
 - [x] Implement first tutorial
@@ -31,6 +33,7 @@ This document tracks the migration of FerrisDB's documentation website from Jeky
 - [ ] Migrate Rust by Example articles
 
 ### Phase 3: Guidelines Update (IN PROGRESS)
+
 - [x] Create Starlight-specific guidelines
 - [x] Mark old guidelines as deprecated
 - [x] Update CLAUDE.md references
@@ -38,19 +41,23 @@ This document tracks the migration of FerrisDB's documentation website from Jeky
 - [ ] Complete update cascade
 
 ### Phase 4: Cleanup (PLANNED)
+
 - [ ] Remove deprecated Jekyll files
 - [ ] Remove old guideline files
 - [ ] Final cross-reference audit
+- [ ] Update deploy-docs.yml workflow for Starlight
 - [ ] Deploy to production
 
 ## File Mapping
 
 ### Deprecated Files (to be removed after migration)
+
 - `guidelines/content/website-design.md` → `guidelines/content/website-design-starlight.md`
 - `guidelines/workflow/website-maintenance.md` → `guidelines/workflow/website-maintenance-starlight.md`
 - Jekyll blog templates → MDX templates in `guidelines/content/templates/`
 
 ### New Files Added
+
 - `guidelines/content/tutorials.md` - Tutorial creation guidelines
 - `guidelines/content/RUST-CONCEPTS-TAUGHT.md` - Concept tracking
 - `guidelines/content/DATABASE-CONCEPTS-TAUGHT.md` - Database concept tracking
@@ -60,11 +67,13 @@ This document tracks the migration of FerrisDB's documentation website from Jeky
 ## Migration Guidelines
 
 ### For Active Development
+
 1. Use only Starlight versions of guidelines
 2. Create new content in MDX format
 3. Follow new tutorial structure for educational content
 
 ### For Existing Content
+
 1. Content will be migrated in batches
 2. Old content remains accessible during migration
 3. URLs will be preserved where possible
@@ -80,6 +89,7 @@ This document tracks the migration of FerrisDB's documentation website from Jeky
 ## Rollback Plan
 
 If critical issues arise:
+
 1. Jekyll site remains deployable
 2. Content is version controlled
 3. Can revert infrastructure changes

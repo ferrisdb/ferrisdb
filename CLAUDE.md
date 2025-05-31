@@ -121,7 +121,6 @@ cargo fmt --all
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test --all
 prettier --write "**/*.md"
-markdownlint-cli2 "**/*.md"
 
 # Create PR
 git checkout -b feature/your-feature

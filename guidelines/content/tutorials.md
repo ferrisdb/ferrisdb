@@ -42,13 +42,9 @@ Every tutorial MUST include these sections in order:
 ### What You'll Learn
 
 <CardGrid>
-  <Card title="🦀 New Rust Concepts">
-    - List 3-5 concepts
-  </Card>
-  
-  <Card title="📚 Database Knowledge">
-    - List 2-3 concepts
-  </Card>
+  <Card title="🦀 New Rust Concepts">- List 3-5 concepts</Card>
+
+  <Card title="📚 Database Knowledge">- List 2-3 concepts</Card>
 </CardGrid>
 ```
 
@@ -62,6 +58,7 @@ Every tutorial MUST include these sections in order:
 **Required Tutorials**: [List with links]
 
 **Concepts You Already Know**:
+
 - Rust: [From tracking system]
 - Database: [From tracking system]
 
@@ -78,35 +75,21 @@ Every tutorial MUST include these sections in order:
 
 Each step follows this pattern:
 
-```mdx
+````mdx
 ### Step N: [Clear Goal]
 
 [Explanation of what and why]
 
 <Tabs>
-  <TabItem label="Write This Code">
-    ```rust
-    // Code to write
-    ```
-  </TabItem>
-  
-  <TabItem label="Understanding the Code">
-    // Line-by-line breakdown
-  </TabItem>
-  
-  <TabItem label="If You Know JavaScript">
-    ```javascript
-    // JS equivalent
-    ```
-    
-    **Key differences**:
-    - [Difference 1]
-    - [Difference 2]
-  </TabItem>
-  
-  <TabItem label="If You Know Python">
-    // Similar pattern
-  </TabItem>
+  <TabItem label="Write This Code">```rust // Code to write ```</TabItem>
+
+<TabItem label="Understanding the Code">// Line-by-line breakdown</TabItem>
+
+<TabItem label="If You Know JavaScript">
+  ```javascript // JS equivalent ``` **Key differences**: - [Difference 1] - [Difference 2]
+</TabItem>
+
+  <TabItem label="If You Know Python">// Similar pattern</TabItem>
 </Tabs>
 
 <Aside type="note" title="🦀 New Rust Concept: [Name]">
@@ -118,6 +101,7 @@ Each step follows this pattern:
 **Why Rust does this**: [Brief benefit]
 
 📖 **Learn more**: [Official Rust Book link]
+
 </Aside>
 
 #### Test What We Built
@@ -128,8 +112,10 @@ fn test_step_n() {
     // Test code
 }
 ```
+````
 
 Run it:
+
 ```bash
 cargo test test_step_n
 ```
@@ -145,18 +131,13 @@ cargo test test_step_n
 ### Comparing with Real FerrisDB
 
 <Tabs>
-  <TabItem label="Our Tutorial Code">
-    // Simplified version
-  </TabItem>
-  
-  <TabItem label="Real FerrisDB Code">
-    // ferrisdb-storage/src/[path]:[lines]
-    // Actual implementation
-  </TabItem>
-  
-  <TabItem label="Key Differences">
-    // Explain what's added for production
-  </TabItem>
+  <TabItem label="Our Tutorial Code">// Simplified version</TabItem>
+
+<TabItem label="Real FerrisDB Code">
+  // ferrisdb-storage/src/[path]:[lines] // Actual implementation
+</TabItem>
+
+  <TabItem label="Key Differences">// Explain what's added for production</TabItem>
 </Tabs>
 ```
 
@@ -166,26 +147,24 @@ cargo test test_step_n
 ## 🎉 Congratulations!
 
 ### What You Built
+
 - ✅ [Specific achievement 1]
 - ✅ [Specific achievement 2]
 
 ### Rust Concepts You Mastered
+
 - 🦀 **[Concept]**: [What they can now do]
 
 ### Database Knowledge You Gained
+
 - 📚 **[Concept]**: [Why it matters]
 
 ## Next Steps
 
 <CardGrid>
-  <Card title="Ready for More?">
-    **Next Tutorial**: [Link]
-  </Card>
-  
-  <Card title="Practice Challenges">
-    1. [Challenge 1]
-    2. [Challenge 2]
-  </Card>
+  <Card title="Ready for More?">**Next Tutorial**: [Link]</Card>
+
+  <Card title="Practice Challenges">1. [Challenge 1] 2. [Challenge 2]</Card>
 </CardGrid>
 ```
 
@@ -214,15 +193,15 @@ When referencing tutorials that don't exist yet, be playful and engaging:
 
 ```mdx
 <Card title="You Found Our Secret! 🤫" icon="puzzle">
-  Tutorial 2 is still in stealth mode. We're adding the final touches!
-  
-  Drop us a star if you want us to hurry up! ⭐
+  Tutorial 2 is still in stealth mode. We're adding the final touches! Drop us a star if you want us
+  to hurry up! ⭐
 </Card>
 ```
 
 Other playful variations:
+
 - "Caught us mid-build!"
-- "You're ahead of us!" 
+- "You're ahead of us!"
 - "Still brewing in our code kitchen"
 - "Coming soon to a codebase near you"
 
@@ -255,6 +234,7 @@ When publishing a new tutorial:
 ### Common Pitfalls to Avoid
 
 #### ❌ Don't Do This:
+
 - Introduce `Result<T, E>`, `?` operator, and custom errors in one step
 - Use advanced Rust features without explanation
 - Show final optimized code first
@@ -262,6 +242,7 @@ When publishing a new tutorial:
 - Use database jargon without definition
 
 #### ✅ Do This Instead:
+
 - Introduce `Result<T, E>` first, then `?` in next step
 - Build up from simple to complex
 - Start with working but simple code
@@ -281,11 +262,15 @@ MDX interprets angle brackets as HTML tags. Always escape:
 ### Component Usage
 
 Required imports:
+
 ```mdx
-import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
+
+;
 ```
 
 Preferred components:
+
 - **Tabs**: For language comparisons and code evolution
 - **Aside**: For concept explanations and tips
 - **Card/CardGrid**: For visual organization
@@ -304,8 +289,8 @@ Preferred components:
 1. Update `RUST-CONCEPTS-TAUGHT.md` with:
    - Concepts introduced (mark with ✅)
    - Concepts reinforced from previous tutorials
-   
 2. Update `DATABASE-CONCEPTS-TAUGHT.md` with:
+
    - Database concepts introduced
    - Real-world examples used
 
@@ -331,12 +316,15 @@ database_concepts_reinforced:
 ## Tutorial Progression Plan
 
 ### Phase 1: Foundation (T1-T3)
+
 Focus: Basic Rust, simple storage concepts
 
-### Phase 2: Core Components (T4-T8)  
+### Phase 2: Core Components (T4-T8)
+
 Focus: Real database structures, intermediate Rust
 
 ### Phase 3: Integration (T9-T10)
+
 Focus: Putting it together, optimization
 
 See `LEARNING-PROGRESS.md` for detailed curriculum.
@@ -349,28 +337,23 @@ Before publishing any tutorial:
   - [ ] All code examples compile and run
   - [ ] Tests pass
   - [ ] Final code matches real FerrisDB patterns
-  
 - [ ] **Learning Flow**
   - [ ] Only one new Rust concept per step
   - [ ] Concepts build on previous tutorials
   - [ ] No unexplained terminology
-  
 - [ ] **Language Comparisons**
   - [ ] JS/Python examples are idiomatic
   - [ ] Comparisons highlight key differences
   - [ ] No language is portrayed negatively
-  
 - [ ] **Accessibility**
   - [ ] Real-world problem is relatable
   - [ ] Explanations use web dev analogies
   - [ ] Success is celebrated
-  
 - [ ] **External Links**
   - [ ] All Rust Book links are valid (test each one)
   - [ ] Documentation links point to stable versions
   - [ ] No broken links to external resources
   - [ ] Links use HTTPS where available
-  
 - [ ] **Tracking**
   - [ ] Metadata is complete
   - [ ] Tracking files updated
@@ -379,6 +362,7 @@ Before publishing any tutorial:
 ### Link Validation Tips
 
 Common external links to verify:
+
 - Rust Book: `https://doc.rust-lang.org/book/`
 - Rust by Example: `https://doc.rust-lang.org/rust-by-example/`
 - Std library docs: `https://doc.rust-lang.org/std/`
@@ -418,6 +402,7 @@ What made Tutorial 1 effective:
 ### "How much should we simplify?"
 
 Start with the simplest possible working version. For example:
+
 - Tutorial version: `HashMap<String, String>`
 - Real version: `Arc<SkipList>` with `Vec<u8>`
 
@@ -440,7 +425,7 @@ Not until Tutorial 7. Build solid foundation first.
 ## Template and Resources
 
 - **Tutorial Template**: [templates/tutorial.mdx](templates/tutorial.mdx)
-- **Tracking Files**: 
+- **Tracking Files**:
   - [RUST-CONCEPTS-TAUGHT.md](RUST-CONCEPTS-TAUGHT.md)
   - [DATABASE-CONCEPTS-TAUGHT.md](DATABASE-CONCEPTS-TAUGHT.md)
   - [LEARNING-PROGRESS.md](LEARNING-PROGRESS.md)
@@ -454,4 +439,4 @@ Not until Tutorial 7. Build solid foundation first.
 
 ---
 
-*Remember: We're teaching CRUD developers to build databases. Every decision should make that journey clearer and more achievable.*
+_Remember: We're teaching CRUD developers to build databases. Every decision should make that journey clearer and more achievable._

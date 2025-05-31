@@ -37,7 +37,7 @@ rustup component add rustfmt clippy
 cargo install cargo-watch cargo-nextest
 
 # Documentation tools
-npm install -g markdownlint-cli2 prettier
+npm install -g prettier
 ```
 
 ### Environment Variables
@@ -69,7 +69,7 @@ cargo watch -x "test --all"
 cargo fmt --all
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test --all
-markdownlint-cli2 "**/*.md"
+prettier --write "**/*.md"
 ```
 
 ### Building & Testing

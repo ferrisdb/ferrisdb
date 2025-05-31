@@ -26,28 +26,25 @@ cd ferrisdb-docs
 **Critical**: ALL progress information MUST come from ROADMAP.md
 
 Update these files:
+
 - `/src/content/docs/index.mdx` - Homepage progress sections
 - `/src/content/docs/project/roadmap.mdx` - Roadmap page
 - `/src/content/docs/project/faq.mdx` - FAQ architecture status
 
 Use Starlight components for better presentation:
+
 ```mdx
 <Tabs>
-  <TabItem label="✅ Completed">
-    - List completed items from ROADMAP.md
-  </TabItem>
-  <TabItem label="🚧 In Progress">
-    - List current work
-  </TabItem>
-  <TabItem label="⏳ Planned">
-    - List future items
-  </TabItem>
+  <TabItem label="✅ Completed">- List completed items from ROADMAP.md</TabItem>
+  <TabItem label="🚧 In Progress">- List current work</TabItem>
+  <TabItem label="⏳ Planned">- List future items</TabItem>
 </Tabs>
 ```
 
 ### 3. Update Collaboration Metrics
 
 Track and update these metrics in homepage:
+
 - **Pattern recognitions**: Count Claude's insights in recent blog posts
 - **Human intuition saves**: Times human review prevented issues
 - **Collaboration score**: Subjective assessment (1-10) of recent work quality
@@ -56,6 +53,7 @@ Track and update these metrics in homepage:
 ### 4. Blog Management
 
 Add new blog posts:
+
 ```bash
 # Create new blog post
 cd ferrisdb-docs/src/content/blog
@@ -65,11 +63,12 @@ cd ferrisdb-docs/src/content/blog
 ```
 
 Ensure proper frontmatter:
+
 ```yaml
 ---
 title: "Day 4: Your Title Here"
 date: 2025-01-30
-authors: [human]  # or [claude]
+authors: [human] # or [claude]
 tags: [development, rust, databases]
 description: Brief description
 excerpt: Short excerpt for listings
@@ -77,6 +76,7 @@ excerpt: Short excerpt for listings
 ```
 
 **Blog Post Checklist**:
+
 - [ ] Title follows compelling hook pattern
 - [ ] Companion post exists (human/Claude pair)
 - [ ] Cross-references included
@@ -99,6 +99,7 @@ npx broken-link-checker http://localhost:4321 --recursive
 ### 2. Content Sync Check
 
 Verify all pages reflect current state:
+
 - Components match implementation
 - No outdated feature claims
 - Progress indicators accurate
@@ -107,6 +108,7 @@ Verify all pages reflect current state:
 ### 3. Component Updates
 
 Check if any reusable components need updates:
+
 - `Stats.astro` - Project statistics
 - Custom blog pages - Author filtering working
 - Navigation - All links functional
@@ -170,6 +172,7 @@ npm run preview
 ### GitHub Actions Deployment
 
 The site deploys automatically on push to main. Monitor the Actions tab for:
+
 - Build success/failure
 - Deployment status
 - Error messages if any
@@ -177,7 +180,8 @@ The site deploys automatically on push to main. Monitor the Actions tab for:
 ### Manual Deployment Check
 
 After deployment:
-1. Visit https://ferrisdb.org
+
+1. Visit <https://ferrisdb.org>
 2. Check latest changes are live
 3. Test navigation and search
 4. Verify blog posts display correctly
@@ -187,11 +191,13 @@ After deployment:
 ### Daily FAQ Updates
 
 1. **Statistics Section in FAQ.mdx**
+
    ```mdx
    **Current Progress**: Day {stats.days} of development with {stats.lines} lines of Rust code, {stats.tests} tests, and {stats.posts} blog posts
    ```
 
 2. **Architecture Status**
+
    - Update checkmarks ✅ for completed components
    - Must match ROADMAP.md exactly
    - Use Badge components for status
@@ -257,21 +263,25 @@ echo "Blog posts: $(ls src/content/blog/*.md | wc -l)"
 ## Specific Update Locations
 
 ### Homepage (`src/content/docs/index.mdx`)
+
 - **Development Progress**: Update `<Tabs>` component with completed/in-progress/planned
 - **Collaboration Metrics**: Update metrics in dedicated section
 - **Educational Resources**: Update `<CardGrid>` with new articles
 
 ### Getting Started (`src/content/docs/getting-started.mdx`)
+
 - **Prerequisites**: Keep current with actual requirements
 - **Quick Start**: Update commands as needed
 - **Learning Paths**: Update `<CardGrid>` when new content available
 
 ### FAQ (`src/content/docs/project/faq.mdx`)
+
 - **Statistics**: Update "Current Progress" line
 - **Architecture**: Update component status badges
 - **Common Questions**: Add new Q&As as they arise
 
 ### Roadmap (`src/content/docs/project/roadmap.mdx`)
+
 - **Progress bars**: Update percentages
 - **Timeline**: Adjust dates if needed
 - **Component status**: Match ROADMAP.md exactly
@@ -281,8 +291,11 @@ echo "Blog posts: $(ls src/content/blog/*.md | wc -l)"
 ### Component Import Management
 
 Ensure consistent imports across MDX files:
+
 ```mdx
-import { Card, CardGrid, Tabs, TabItem, Aside, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem, Aside, Badge } from "@astrojs/starlight/components";
+
+;
 ```
 
 ### Image Management
@@ -298,6 +311,7 @@ find src/assets -name "*.png" -o -name "*.jpg" | xargs ls -lh
 ### Code Block Maintenance
 
 Ensure code blocks have proper language tags and optional titles:
+
 ````mdx
 ```rust title="src/main.rs"
 // Code here
@@ -364,7 +378,7 @@ npm run build
 - [ ] Update FAQ architecture section
 - [ ] Test main user journeys:
   - [ ] New visitor → Getting started
-  - [ ] CRUD developer → Database concepts  
+  - [ ] CRUD developer → Database concepts
   - [ ] Contributor → Development setup
   - [ ] Learner → Rust by example
 - [ ] Review recent deployments

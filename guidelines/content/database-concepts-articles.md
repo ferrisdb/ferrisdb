@@ -236,7 +236,7 @@ Example calculation:
 2. Include actual performance measurements where possible
 3. Test all code examples and exercises
 4. Review for technical accuracy with FerrisDB maintainers
-5. Lint with prettier and markdownlint
+5. Format with prettier (`prettier --write "**/*.md"`)
 6. Submit PR with "database-concepts" label
 
 ## Related Guidelines

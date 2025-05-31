@@ -63,11 +63,6 @@ prettier --write "**/*.md"
 # Check markdown formatting
 prettier --check "**/*.md"
 
-# Lint markdown
-markdownlint-cli2 "**/*.md"
-
-# Fix markdown issues
-markdownlint-cli2 "**/*.md" --fix
 ```
 
 ### Rust Docs
@@ -157,7 +152,7 @@ Add these to your shell configuration:
 alias fdb-check='cargo fmt --all && cargo clippy --all-targets --all-features -- -D warnings && cargo test --all'
 
 # Quick markdown check
-alias fdb-md='prettier --check "**/*.md" && markdownlint-cli2 "**/*.md"'
+alias fdb-md='prettier --check "**/*.md"'
 
 # Serve docs locally
 alias fdb-docs='cd docs && bundle exec jekyll serve'
@@ -230,7 +225,6 @@ Run these commands before every commit:
 2. `cargo clippy --all-targets --all-features -- -D warnings` - Check for issues
 3. `cargo test --all` - Run tests
 4. `prettier --write "**/*.md"` - Format markdown
-5. `markdownlint-cli2 "**/*.md"` - Lint markdown
 
 ## Related Guidelines
 

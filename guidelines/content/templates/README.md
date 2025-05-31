@@ -35,6 +35,7 @@ All templates follow our developer-focused design principles:
 ## Migration from Jekyll
 
 These templates have been migrated from Jekyll to Starlight format:
+
 - Jekyll frontmatter → Starlight blog/MDX frontmatter
 - Liquid syntax → MDX component imports
 - Custom styling → Starlight components (Card, Tabs, Aside, etc.)
@@ -52,7 +53,9 @@ These templates have been migrated from Jekyll to Starlight format:
 Common Starlight components used in templates:
 
 ```mdx
-import { Card, CardGrid, Tabs, TabItem, Aside, Steps, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem, Aside, Steps, Badge } from "@astrojs/starlight/components";
+
+;
 ```
 
 - **Card/CardGrid**: Feature boxes and comparison grids
@@ -66,6 +69,7 @@ import { Card, CardGrid, Tabs, TabItem, Aside, Steps, Badge } from '@astrojs/sta
 The tutorial template includes:
 
 ### Metadata Tracking
+
 ```yaml
 rust_concepts_introduced:
   - "Concept: Description"
@@ -78,13 +82,15 @@ database_concepts_reinforced:
 ```
 
 ### Step Structure
+
 - Clear goal for each step
 - Code tabs for multiple perspectives
-- Concept explanations with familiar analogies  
+- Concept explanations with familiar analogies
 - Immediate testing with celebration
 - Progressive complexity building
 
 ### Integration Points
+
 - Links to tracking files (RUST-CONCEPTS-TAUGHT.md, etc.)
 - Prerequisites from previous tutorials
 - Next tutorial preview

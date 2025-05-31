@@ -41,17 +41,20 @@ Design guidelines for the FerrisDB documentation website using Astro Starlight, 
 ### Navigation Priorities for Developers
 
 **Primary Actions (Most Prominent)**:
+
 - View GitHub repository
 - Try hands-on tutorial
 - See architecture documentation
 - Read real implementation details
 
 **Secondary Actions**:
+
 - Follow development blog
 - Browse database concepts
 - Check current progress/status
 
 **Tertiary Actions**:
+
 - About the project
 - FAQ and contributing
 - Community links
@@ -59,6 +62,7 @@ Design guidelines for the FerrisDB documentation website using Astro Starlight, 
 ### Developer Engagement Metrics
 
 **Technical Engagement Indicators**:
+
 - Time to GitHub repo access from homepage (target: <30 seconds)
 - Tutorial completion rates (measures hands-on appeal)
 - Code-focused navigation patterns
@@ -66,6 +70,7 @@ Design guidelines for the FerrisDB documentation website using Astro Starlight, 
 - Developer retention through implementation phases
 
 **Content Effectiveness Metrics**:
+
 - GitHub stars/forks vs. site visits ratio
 - Blog post engagement showing learning insights
 - Architecture documentation page views
@@ -78,6 +83,7 @@ Design guidelines for the FerrisDB documentation website using Astro Starlight, 
 **IMPORTANT**: Use Starlight's built-in components instead of custom HTML/CSS.
 
 Available components:
+
 - `Card` and `CardGrid` - For feature boxes and grids
 - `Tabs` and `TabItem` - For tabbed content
 - `Steps` - For sequential instructions
@@ -86,32 +92,19 @@ Available components:
 - `Icon` - For inline icons
 
 Example usage:
-```mdx
-import { Card, CardGrid, Tabs, TabItem, Steps, Aside, Badge } from '@astrojs/starlight/components';
 
-<Aside type="note">
-  This replaces Jekyll callouts
-</Aside>
+````mdx
+import { Card, CardGrid, Tabs, TabItem, Steps, Aside, Badge } from "@astrojs/starlight/components";
 
-<Steps>
-1. First step
-2. Second step
-3. Third step
-</Steps>
+<Aside type="note">This replaces Jekyll callouts</Aside>
+
+<Steps>1. First step 2. Second step 3. Third step</Steps>
 
 <Tabs>
-  <TabItem label="Rust">
-    ```rust
-    // Rust code
-    ```
-  </TabItem>
-  <TabItem label="CLI">
-    ```bash
-    cargo run
-    ```
-  </TabItem>
+  <TabItem label="Rust">```rust // Rust code ```</TabItem>
+  <TabItem label="CLI">```bash cargo run ```</TabItem>
 </Tabs>
-```
+````
 
 ### Color Palette
 
@@ -127,6 +120,7 @@ Defined in `src/styles/custom.css`:
 ```
 
 Additional semantic colors available:
+
 - `--sl-color-blue` - For human blog posts
 - `--sl-color-purple` - For Claude blog posts
 - `--sl-color-green` - For success states
@@ -135,6 +129,7 @@ Additional semantic colors available:
 ### Typography
 
 Starlight provides built-in typography scales:
+
 - Headings automatically styled with proper hierarchy
 - Body text optimized for readability
 - Code blocks with syntax highlighting
@@ -145,7 +140,8 @@ Starlight provides built-in typography scales:
 **CRITICAL**: Website content uses Mermaid diagrams for better visual presentation, but ALL Mermaid diagrams MUST be based on corresponding ASCII diagrams in the technical guidelines.
 
 1. **Mermaid in MDX Files**
-   ```mdx
+
+   ````mdx
    ```mermaid
    graph TD
        A[Client] --> B[Server]
@@ -154,6 +150,10 @@ Starlight provides built-in typography scales:
        C --> E[SSTables]
        C --> F[WAL]
    ```
+   ````
+
+   ```
+
    ```
 
 2. **ASCII as Source of Truth**
@@ -166,6 +166,7 @@ Starlight provides built-in typography scales:
 **MANDATORY**: When creating any content that discusses features not yet implemented:
 
 1. **Use Badge Components**
+
    ```mdx
    <Badge text="PLANNED" variant="caution" />
    <Badge text="IN PROGRESS" variant="note" />
@@ -175,7 +176,7 @@ Starlight provides built-in typography scales:
 2. **Use Aside for Status**
    ```mdx
    <Aside type="caution" title="Planned Feature">
-   This section describes planned functionality not yet implemented.
+     This section describes planned functionality not yet implemented.
    </Aside>
    ```
 
@@ -212,22 +213,22 @@ Configured in `astro.config.mjs`:
 ```js
 sidebar: [
   {
-    label: 'Start Here',
+    label: "Start Here",
     items: [
-      { label: 'Introduction', slug: 'index' },
-      { label: 'Getting Started', slug: 'getting-started' },
+      { label: "Introduction", slug: "index" },
+      { label: "Getting Started", slug: "getting-started" },
     ],
   },
   {
-    label: 'Blog',
+    label: "Blog",
     items: [
-      { label: 'All Posts', link: '/blog' },
-      { label: 'Human Perspective', link: '/blog/human' },
-      { label: 'Claude Perspective', link: '/blog/claude' },
+      { label: "All Posts", link: "/blog" },
+      { label: "Human Perspective", link: "/blog/human" },
+      { label: "Claude Perspective", link: "/blog/claude" },
     ],
   },
   // ... other sections
-]
+];
 ```
 
 ## Blog System
@@ -238,7 +239,7 @@ sidebar: [
 ---
 title: "Day 1: Building from Scratch"
 date: 2025-01-27
-authors: [human]  # or [claude]
+authors: [human] # or [claude]
 tags: [development, rust, databases]
 description: Brief description for SEO
 excerpt: Short excerpt for blog listings
@@ -248,15 +249,18 @@ excerpt: Short excerpt for blog listings
 ### Blog File Naming
 
 Use SEO-friendly file names with author and title-derived slugs:
+
 - Pattern: `day-N-author-seo-friendly-slug.md`
 - Human example: `day-1-human-from-just-use-rocksdb-to-building-from-scratch.md`
 - Claude example: `day-1-claude-how-i-learned-humans-say-build-but-mean-teach.md`
 
 This generates URLs like:
+
 - `/blog/day-1-human-from-just-use-rocksdb-to-building-from-scratch/`
 - `/blog/day-1-claude-how-i-learned-humans-say-build-but-mean-teach/`
 
 Benefits:
+
 - Author is clear from the URL
 - SEO-friendly with descriptive keywords
 - Easy to identify perspective without clicking
@@ -265,11 +269,13 @@ Benefits:
 ### Custom Blog Pages
 
 Three custom blog views created in `src/pages/blog/`:
+
 1. `overview.astro` - Combined view of all posts
 2. `human.astro` - Human perspective only
 3. `claude.astro` - Claude perspective only
 
 Each uses:
+
 - Author filtering
 - Color-coded post borders (blue for human, purple for Claude)
 - Consistent metadata display
@@ -293,13 +299,11 @@ Each uses:
 ### Progress Indicators
 
 ```mdx
-<Badge text="COMPLETED" variant="success" /> Phase 1: Basic Functionality
-- [x] Simple WAL with binary encoding
-- [x] Concurrent skip list MemTable
+<Badge text="COMPLETED" variant="success" /> Phase 1: Basic Functionality - [x] Simple WAL with
+binary encoding - [x] Concurrent skip list MemTable
 
-<Badge text="IN PROGRESS" variant="caution" /> Phase 2: Performance
-- [ ] Complete SSTable implementation
-- [ ] Bloom filters
+<Badge text="IN PROGRESS" variant="caution" /> Phase 2: Performance - [ ] Complete SSTable
+implementation - [ ] Bloom filters
 ```
 
 ### Code Examples
@@ -330,9 +334,9 @@ pub struct MemTable {
 title: Page Title
 description: SEO description
 sidebar:
-  order: 1  # Manual ordering
-  badge: New  # Optional badge
-  hidden: false  # Hide from sidebar
+  order: 1 # Manual ordering
+  badge: New # Optional badge
+  hidden: false # Hide from sidebar
 ---
 ```
 
@@ -341,7 +345,7 @@ sidebar:
 Images go in `src/assets/` and are imported:
 
 ```mdx
-import ferrisdbLogo from '../../assets/ferrisdb_logo.svg';
+import ferrisdbLogo from "../../assets/ferrisdb_logo.svg";
 
 <img src={ferrisdbLogo.src} alt="FerrisDB Logo" />
 ```
@@ -365,15 +369,18 @@ import ferrisdbLogo from '../../assets/ferrisdb_logo.svg';
 ## Content Templates
 
 All content templates have been migrated to Starlight MDX format and are located in:
+
 - `/guidelines/content/templates/`
 
 Available templates:
+
 - **blog-post-human.mdx** - Human perspective blog posts
 - **blog-post-claude.mdx** - AI perspective blog posts
 - **database-concept.mdx** - Deep dive technical articles
 - **rust-by-example.mdx** - Rust learning articles
 
 These templates incorporate:
+
 - Developer-focused design principles
 - Starlight component usage
 - Proper frontmatter format
@@ -383,13 +390,13 @@ These templates incorporate:
 
 ### Conversion Patterns
 
-| Jekyll | Starlight |
-|--------|-----------|
+| Jekyll               | Starlight                   |
+| -------------------- | --------------------------- |
 | `{: .fs-6 .fw-300 }` | Remove (use default styles) |
-| `{: .no_toc }` | Remove (not needed) |
-| Liquid loops | Astro components with JS |
-| `callout` blocks | `<Aside>` component |
-| Custom HTML | Starlight components |
+| `{: .no_toc }`       | Remove (not needed)         |
+| Liquid loops         | Astro components with JS    |
+| `callout` blocks     | `<Aside>` component         |
+| Custom HTML          | Starlight components        |
 
 ### Blog Migration
 
@@ -405,6 +412,7 @@ The `ROADMAP.md` file remains the SINGLE source of truth for ALL project progres
 ### Mapping ROADMAP.md to Website Content
 
 **Exact mapping rules**:
+
 1. ✅ Items marked `[x]` → "Available Now" / "What's Working" / "Core Concepts (Available Now)"
 2. 🚧 Items marked `[ ]` in current focus areas → "Currently Building" / "In Progress"
 3. ⏳ Items in later sections → "Coming Soon" / "Coming Next"
@@ -412,6 +420,7 @@ The `ROADMAP.md` file remains the SINGLE source of truth for ALL project progres
 ### Language Guidelines for Progress Updates
 
 **For learner-focused pages (e.g., Getting Started)**:
+
 - Use "why" and "how" framing
 - Explain the purpose of each feature
 - Make it accessible to CRUD developers
@@ -423,6 +432,7 @@ The `ROADMAP.md` file remains the SINGLE source of truth for ALL project progres
   - "Bloom filters" → "Bloom filters - probabilistic data structures for speed"
 
 **For technically accurate pages (e.g., Homepage, Architecture)**:
+
 - Use precise technical terms
 - Include implementation details
 - Mention specific algorithms or data structures
@@ -438,19 +448,10 @@ Use components for better visual presentation:
 ```mdx
 <Tabs>
   <TabItem label="✅ Completed">
-    - Write-Ahead Log (WAL)
-    - MemTable with Skip List
-    - Basic SSTable structure
+    - Write-Ahead Log (WAL) - MemTable with Skip List - Basic SSTable structure
   </TabItem>
-  <TabItem label="🚧 In Progress">
-    - SSTable reader implementation
-    - Compaction strategy
-  </TabItem>
-  <TabItem label="⏳ Planned">
-    - Bloom filters
-    - Block cache
-    - Transactions
-  </TabItem>
+  <TabItem label="🚧 In Progress">- SSTable reader implementation - Compaction strategy</TabItem>
+  <TabItem label="⏳ Planned">- Bloom filters - Block cache - Transactions</TabItem>
 </Tabs>
 ```
 
@@ -496,14 +497,14 @@ export default defineConfig({
       // ... other config
       head: [
         {
-          tag: 'script',
+          tag: "script",
           attrs: {
-            src: 'https://www.googletagmanager.com/gtag/js?id=G-JPW5LY247F',
+            src: "https://www.googletagmanager.com/gtag/js?id=G-JPW5LY247F",
             async: true,
           },
         },
         {
-          tag: 'script',
+          tag: "script",
           content: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -526,34 +527,24 @@ export default defineConfig({
 Update "Try It Now" sections across the site:
 
 **Homepage** - Replace placeholder with actual REPL example:
-```mdx
+
+````mdx
 <Tabs>
   <TabItem label="Docker">
-    ```bash
-    docker run -it ferrisdb/playground
-    
-    ferris> set key "value"
-    OK
-    ferris> get key
-    "value"
+    ```bash docker run -it ferrisdb/playground ferris> set key "value" OK ferris> get key "value"
     ```
   </TabItem>
   <TabItem label="Local">
-    ```bash
-    cargo install ferrisdb
-    ferrisdb-repl
-    
-    ferris> set key "value"
-    OK
-    ```
+    ```bash cargo install ferrisdb ferrisdb-repl ferris> set key "value" OK ```
   </TabItem>
 </Tabs>
-```
+````
 
 ### When Examples are Added
 
 Update with `cargo run --example`:
-```mdx
+
+````mdx
 <Card title="Run Examples" icon="rocket">
   ```bash
   # Basic operations
@@ -561,28 +552,24 @@ Update with `cargo run --example`:
   
   # Concurrent access
   cargo run --example concurrent_writes
-  ```
+````
+
 </Card>
 ```
 
 ### When Server is Ready
 
 Add client connection examples:
-```mdx
+
+````mdx
 <Tabs>
   <TabItem label="Rust">
-    ```rust
-    let client = FerrisClient::connect("localhost:50051").await?;
-    client.set("key", "value").await?;
-    ```
+    ```rust let client = FerrisClient::connect("localhost:50051").await?; client.set("key",
+    "value").await?; ```
   </TabItem>
-  <TabItem label="gRPC">
-    ```bash
-    grpcurl -plaintext localhost:50051 ferrisdb.v1.KV/Set
-    ```
-  </TabItem>
+  <TabItem label="gRPC">```bash grpcurl -plaintext localhost:50051 ferrisdb.v1.KV/Set ```</TabItem>
 </Tabs>
-```
+````
 
 ## Blog Post Maintenance
 
@@ -597,14 +584,17 @@ Add client connection examples:
 ### Companion Post Verification
 
 Each day should have both perspectives with author-prefixed SEO-friendly names:
+
 - Human: `/src/content/blog/day-N-human-seo-title.md`
 - Claude: `/src/content/blog/day-N-claude-seo-title.md`
 
 Example for Day 4:
+
 - Human: `day-4-human-why-compaction-matters-for-performance.md`
 - Claude: `day-4-claude-patterns-in-human-performance-questions.md`
 
 Cross-reference in each post:
+
 ```mdx
 > 🤖 **Claude's perspective**: [Day N: Title](/blog/day-N-claude-seo-slug/)
 > 👤 **Human's perspective**: [Day N: Title](/blog/day-N-human-seo-slug/)
@@ -613,6 +603,7 @@ Cross-reference in each post:
 ### Code Example Verification
 
 All code blocks must:
+
 1. Match actual implementation in the codebase
 2. Include file paths when referencing real code
 3. Be tested before publishing
@@ -629,8 +620,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'ferrisdb-docs/**'
-      - '.github/workflows/deploy-docs.yml'
+      - "ferrisdb-docs/**"
+      - ".github/workflows/deploy-docs.yml"
 ```
 
 ### Build Commands

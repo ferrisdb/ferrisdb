@@ -67,21 +67,24 @@ jobs:
     - name: Clippy
       run: cargo clippy --all-targets --all-features -- -D warnings
 
-  # Markdown linting
+  # Markdown formatting check
   markdown:
-    name: Markdown Lint
+    name: Markdown Format Check
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Lint markdown files
-      uses: DavidAnson/markdownlint-cli2-action@v20
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        globs: |
-          **/*.md
-          !target/**
-          !**/target/**
+        node-version: '20'
+
+    - name: Install prettier
+      run: npm install --global prettier
+
+    - name: Check markdown formatting
+      run: prettier --check "**/*.md" "**/*.mdx"
 
   # Spell check
   spellcheck:

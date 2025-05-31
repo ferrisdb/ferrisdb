@@ -1,6 +1,6 @@
 # Rust Concepts Teaching Tracker
 
-*Source of truth for what Rust concepts have been taught in FerrisDB tutorials*
+_Source of truth for what Rust concepts have been taught in FerrisDB tutorials_
 
 **Purpose**: Track which Rust concepts have been introduced to ensure we don't assume knowledge that hasn't been taught yet.
 
@@ -9,6 +9,7 @@
 ### 🏗️ Basic Language Constructs
 
 #### Variables & Types
+
 - [ ] `let` bindings and immutability
 - [ ] `mut` keyword
 - [ ] Type annotations
@@ -16,6 +17,7 @@
 - [ ] Shadowing
 
 #### Primitive Types
+
 - [ ] Integers (`i32`, `u64`, etc.)
 - [ ] Floating point (`f32`, `f64`)
 - [ ] Boolean (`bool`)
@@ -23,6 +25,7 @@
 - [ ] String slice (`&str`)
 
 #### Compound Types
+
 - [ ] Tuples
 - [ ] Arrays `[T; N]`
 - [ ] Slices `&[T]`
@@ -33,6 +36,7 @@
 ### 🏛️ Structs & Enums
 
 #### Structs
+
 - [ ] Struct definition
 - [ ] Struct instantiation
 - [ ] Field access
@@ -42,6 +46,7 @@
 - [ ] Associated functions
 
 #### Enums
+
 - [ ] Basic enums
 - [ ] Enums with data
 - [ ] `Option<T>`
@@ -54,12 +59,14 @@
 ### 🎯 Functions & Control Flow
 
 #### Functions
+
 - [ ] Function definition
 - [ ] Parameters and return values
 - [ ] Expressions vs statements
 - [ ] Early returns
 
 #### Control Flow
+
 - [ ] `if`/`else`
 - [ ] `loop`
 - [ ] `while`
@@ -70,18 +77,21 @@
 ### 🔑 Ownership & Borrowing
 
 #### Ownership
+
 - [ ] Move semantics
 - [ ] Copy trait
 - [ ] Clone trait
 - [ ] Drop trait
 
 #### Borrowing
+
 - [ ] Immutable references `&T`
 - [ ] Mutable references `&mut T`
 - [ ] Reference rules
 - [ ] Slice references
 
 #### Lifetimes
+
 - [ ] Basic lifetime annotations
 - [ ] Lifetime elision
 - [ ] Static lifetime
@@ -100,6 +110,7 @@
 ### 🧩 Traits & Generics
 
 #### Traits
+
 - [ ] Trait definition
 - [ ] Implementing traits
 - [ ] Derive macros
@@ -107,6 +118,7 @@
 - [ ] Trait bounds
 
 #### Generics
+
 - [ ] Generic functions
 - [ ] Generic structs
 - [ ] Generic enums
@@ -116,6 +128,7 @@
 ### 🔄 Smart Pointers & Concurrency
 
 #### Smart Pointers
+
 - [ ] `Box<T>`
 - [ ] `Rc<T>`
 - [ ] `Arc<T>`
@@ -124,6 +137,7 @@
 - [ ] `RwLock<T>`
 
 #### Concurrency
+
 - [ ] Threads with `std::thread`
 - [ ] Message passing with channels
 - [ ] Shared state with `Arc<Mutex<T>>`
@@ -141,18 +155,21 @@
 ### 🛠️ Advanced Topics
 
 #### Iterators
+
 - [ ] Iterator trait
 - [ ] Common iterator methods
 - [ ] Collecting iterators
 - [ ] Iterator adaptors
 
 #### Closures
+
 - [ ] Closure syntax
 - [ ] Capturing variables
 - [ ] Move closures
 - [ ] Function traits (Fn, FnMut, FnOnce)
 
 #### Unsafe Rust
+
 - [ ] Raw pointers
 - [ ] Unsafe functions
 - [ ] Unsafe blocks
@@ -161,9 +178,11 @@
 ## 📚 Concepts by Tutorial
 
 ### Tutorial 1: Building a Simple Key-Value Store
-*Status: PUBLISHED*
+
+_Status: PUBLISHED_
 
 **Introduced**:
+
 - ✅ `let` bindings and immutability
 - ✅ `mut` keyword
 - ✅ Struct definition
@@ -175,9 +194,11 @@
 **File**: `/ferrisdb-docs/src/content/docs/tutorials/01-key-value-store.mdx`
 
 ### Tutorial 2: Adding Persistence
-*Status: [PLANNED]*
+
+_Status: [PLANNED]_
 
 **Introduced**:
+
 - [ ] `Result<T, E>` type
 - [ ] `?` operator
 - [ ] File I/O basics
@@ -185,21 +206,25 @@
 - [ ] External crates (serde)
 
 **Reinforced**:
+
 - [ ] Error handling patterns
 - [ ] Struct methods
 
 **File**: `tutorials/02-persistence.mdx`
 
 ### Tutorial 3: Write-Ahead Log
-*Status: [PLANNED]*
+
+_Status: [PLANNED]_
 
 **Introduced**:
+
 - [ ] Custom error types
 - [ ] `From` trait
 - [ ] Binary file handling
 - [ ] `Vec<u8>` for byte arrays
 
 **Reinforced**:
+
 - [ ] `Result<T, E>` handling
 - [ ] File I/O patterns
 
@@ -221,13 +246,16 @@
 
 ```markdown
 ### Tutorial N: [Title]
-*Status: [PLANNED|DRAFT|PUBLISHED]*
+
+_Status: [PLANNED|DRAFT|PUBLISHED]_
 
 **Introduced**:
+
 - ✅ Concept name - Brief description of how it's used
 - ✅ Another concept - Context of introduction
 
 **Reinforced**:
+
 - ✅ Previous concept (from Tutorial X) - How it's reinforced
 
 **File**: `tutorials/NN-tutorial-name.mdx`
@@ -235,13 +263,13 @@
 
 ## 📊 Quick Reference Matrix
 
-| Concept | Tutorial First Introduced | Tutorials Reinforced |
-|---------|---------------------------|---------------------|
-| `let` bindings | Tutorial 1 | All subsequent |
-| `Option<T>` | Tutorial 1 | 2, 3, 4, ... |
-| `Result<T, E>` | Tutorial 2 | 3, 4, 5, ... |
-| `?` operator | Tutorial 2 | 3, 4, 5, ... |
-| *...add as tutorials are created...* | | |
+| Concept                              | Tutorial First Introduced | Tutorials Reinforced |
+| ------------------------------------ | ------------------------- | -------------------- |
+| `let` bindings                       | Tutorial 1                | All subsequent       |
+| `Option<T>`                          | Tutorial 1                | 2, 3, 4, ...         |
+| `Result<T, E>`                       | Tutorial 2                | 3, 4, 5, ...         |
+| `?` operator                         | Tutorial 2                | 3, 4, 5, ...         |
+| _...add as tutorials are created..._ |                           |                      |
 
 ## 🎯 Teaching Philosophy
 

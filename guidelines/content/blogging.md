@@ -230,6 +230,7 @@ Before publishing, verify:
 ## Frontmatter Standards (Starlight Blog)
 
 **Note**: We now use Starlight blog format. See templates for full examples:
+
 - [Human Blog Template](templates/blog-post-human.mdx)
 - [Claude Blog Template](templates/blog-post-claude.mdx)
 
@@ -260,6 +261,7 @@ excerpt: "[Brief excerpt highlighting the key pattern discovered]"
 ```
 
 **Key Changes from Jekyll**:
+
 - No `layout` field (Starlight handles this)
 - `authors` array instead of single `author`
 - No manual `permalink` (auto-generated from filename)

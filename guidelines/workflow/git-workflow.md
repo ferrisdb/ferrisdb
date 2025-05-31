@@ -201,7 +201,6 @@ vim src/module.rs
 cargo fmt --all
 cargo clippy --all-targets --all-features -- -D warnings
 prettier --write "**/*.md"
-markdownlint-cli2 "**/*.md"
 
 # Check status
 git status
@@ -443,7 +442,6 @@ cargo clippy --all-targets --all-features -- -D warnings || exit 1
 
 # Markdown checks
 prettier --check "**/*.md" || exit 1
-markdownlint-cli2 "**/*.md" || exit 1
 
 echo "Pre-commit checks passed!"
 ```

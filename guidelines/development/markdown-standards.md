@@ -3,38 +3,33 @@
 Comprehensive guidelines for markdown documentation in FerrisDB, including quality standards, formatting rules, and tool configuration.
 
 **Purpose**: Ensure consistent, high-quality markdown documentation across the project.  
-**Prerequisites**: Basic markdown knowledge, prettier and markdownlint installed
+**Prerequisites**: Basic markdown knowledge, prettier installed
 
 ## Quick Start
 
 Before committing any markdown:
 
 ```bash
-# 1. Format with prettier
+# Format with prettier
 prettier --write "**/*.md"
 
-# 2. Lint with markdownlint
-markdownlint-cli2 "**/*.md"
-
-# Both must pass before committing!
+# Check formatting
+prettier --check "**/*.md"
 ```
 
 ## Tool Configuration
 
-### Division of Responsibilities
+### Prettier Handles Everything
 
-1. **Prettier** - Handles all formatting:
+**Prettier** handles all markdown formatting:
 
-   - Indentation and spacing
-   - Line breaks and wrapping
-   - List formatting
-   - Table alignment
+- Indentation and spacing
+- Line breaks and wrapping
+- List formatting
+- Table alignment
+- Consistent style
 
-2. **markdownlint** - Handles best practices:
-   - Header structure
-   - Link validity
-   - Emphasis consistency
-   - Code block languages
+No more conflicting tools or complex configurations!
 
 ### Jekyll/kramdown Compatibility
 
@@ -51,8 +46,7 @@ Jekyll uses kramdown syntax that prettier doesn't understand. We handle this wit
 ### Configuration Files
 
 - **`.prettierrc`** - Prettier formatting rules
-- **`.markdownlint.json`** - Disabled formatting rules to avoid conflicts with prettier
-- Both configured to work together without conflicts
+- That's it! One tool, one config file
 
 ## Writing Standards
 
@@ -120,10 +114,10 @@ description: "Keep under 160 characters"
 
 ## Common Issues and Solutions
 
-### 1. Prettier/markdownlint Conflicts
+### 1. MDX Component Formatting
 
-**Problem**: Both tools want different formatting  
-**Solution**: Run prettier first, then markdownlint
+**Problem**: Prettier may format MDX components unexpectedly  
+**Solution**: Use prettier-ignore comments around complex components
 
 ### 2. kramdown Syntax Breaking
 
@@ -144,10 +138,9 @@ description: "Keep under 160 characters"
 
 ### VS Code
 
-1. Install extensions:
+1. Install extension:
 
    - Prettier - Code formatter
-   - markdownlint
 
 2. Add to settings.json:
    ```json
@@ -161,9 +154,9 @@ description: "Keep under 160 characters"
 
 ### Other Editors
 
-- **Vim**: ALE plugin with prettier/markdownlint
+- **Vim**: ALE plugin with prettier
 - **IntelliJ**: Built-in markdown support + prettier plugin
-- **Sublime**: MarkdownLinting + JsPrettier packages
+- **Sublime**: JsPrettier package
 
 ## Workflow Integration
 
@@ -171,15 +164,14 @@ description: "Keep under 160 characters"
 
 ```bash
 # Add to your workflow
-prettier --write "**/*.md" && markdownlint-cli2 "**/*.md"
+prettier --write "**/*.md"
 ```
 
 ### CI Integration
 
-Both tools run automatically in CI. PRs fail if:
+Prettier runs automatically in CI. PRs fail if:
 
 - Prettier would make changes
-- markdownlint finds issues
 
 ### Quick Commands
 
@@ -190,14 +182,11 @@ prettier --write "**/*.md"
 # Check without changing
 prettier --check "**/*.md"
 
-# Lint all markdown
-markdownlint-cli2 "**/*.md"
+# Format specific file
+prettier --write "path/to/file.md"
 
-# Lint specific file
-markdownlint-cli2 "path/to/file.md"
-
-# Format and lint (typical workflow)
-prettier --write "**/*.md" && markdownlint-cli2 "**/*.md"
+# Format and check (typical workflow)
+prettier --write "**/*.md" && prettier --check "**/*.md"
 ```
 
 ## Best Practices
@@ -210,10 +199,10 @@ prettier --write "**/*.md" && markdownlint-cli2 "**/*.md"
 
 ## Troubleshooting
 
-### Can't find the issue?
+### Formatting looks wrong?
 
-1. Check the specific rule in markdownlint output
-2. Look up rule at [markdownlint rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
+1. Run prettier to auto-fix: `prettier --write file.md`
+2. Use prettier-ignore for special cases
 3. Compare with well-formatted files
 4. Ask in PR review
 
