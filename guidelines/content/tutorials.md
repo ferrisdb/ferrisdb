@@ -293,7 +293,7 @@ MDX interprets angle brackets as HTML tags. Always escape:
 
 Required imports:
 
-```mdx
+```javascript
 import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
 ```
 
@@ -310,33 +310,30 @@ Preferred components:
 
 #### ✅ Correct Pattern
 
-<!-- prettier-ignore-start -->
-```mdx
+````text
 <TabItem label="Understanding the Code">
 
   ```rust
   pub struct KeyValueStore {
     // Code here
   }
-  ```
+````
 
 </TabItem>
 ```
-<!-- prettier-ignore-end -->
 
 #### ❌ Wrong Pattern (Will Be Corrupted)
 
-<!-- prettier-ignore-start -->
-```mdx
+````text
 <TabItem label="Understanding the Code">
   ```rust
   pub struct KeyValueStore {
     // This will be corrupted by prettier!
   }
-  ```
+````
+
 </TabItem>
 ```
-<!-- prettier-ignore-end -->
 
 #### Why This Matters
 
