@@ -14,6 +14,11 @@
 //! - Consider using std::time::Instant for tracking time
 //! - Think about when to check for expiration
 
+// Allow warnings for educational exercise templates
+#![allow(unused_variables)]
+#![allow(unused_imports)]
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 

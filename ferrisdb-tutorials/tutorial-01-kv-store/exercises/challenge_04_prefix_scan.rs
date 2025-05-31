@@ -12,6 +12,11 @@
 //! - Don't forget to sort the results!
 //! - Think about what happens with an empty prefix
 
+// Allow warnings for educational exercise templates
+#![allow(unused_variables)]
+#![allow(unused_imports)]
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 
 /// A key-value store with prefix scanning

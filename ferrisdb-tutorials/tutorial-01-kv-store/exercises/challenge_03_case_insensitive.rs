@@ -13,6 +13,11 @@
 //! - Consider using `.to_lowercase()` for normalization
 //! - Think about what happens when you set "Key" then "KEY"
 
+// Allow warnings for educational exercise templates
+#![allow(unused_variables)]
+#![allow(unused_imports)]
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 
 /// A case-insensitive key-value store

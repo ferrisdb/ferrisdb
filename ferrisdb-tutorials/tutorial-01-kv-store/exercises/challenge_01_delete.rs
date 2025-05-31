@@ -7,6 +7,10 @@
 //! - Return the old value if the key existed
 //! - Return None if the key didn't exist
 
+// Allow warnings for educational exercise templates
+#![allow(unused_variables)]
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 
 pub struct KeyValueStore {
