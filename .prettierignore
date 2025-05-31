@@ -28,3 +28,7 @@ Cargo.lock
 
 # Don't format these files as they have special Jekyll/Kramdown syntax
 # that prettier incorrectly modifies
+
+# MDX files with complex TabItem code blocks that prettier corrupts
+# TODO: Remove when prettier MDX parser is fixed
+ferrisdb-docs/src/content/docs/tutorials/01-key-value-store.mdx

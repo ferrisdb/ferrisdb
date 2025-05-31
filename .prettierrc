@@ -10,6 +10,13 @@
         "parser": "markdown",
         "proseWrap": "preserve"
       }
+    },
+    {
+      "files": "*.mdx",
+      "options": {
+        "parser": "mdx",
+        "proseWrap": "preserve"
+      }
     }
   ]
 }
