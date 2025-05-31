@@ -265,8 +265,6 @@ Required imports:
 
 ```mdx
 import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from "@astrojs/starlight/components";
-
-;
 ```
 
 Preferred components:
@@ -275,6 +273,47 @@ Preferred components:
 - **Aside**: For concept explanations and tips
 - **Card/CardGrid**: For visual organization
 - **Badge**: For status indicators
+
+### Code Blocks Inside TabItem Components
+
+**CRITICAL**: MDX requires empty lines around Markdown syntax inside JSX components. Without these, prettier will corrupt your code blocks!
+
+#### ✅ Correct Pattern
+
+```mdx
+<TabItem label="Understanding the Code">
+
+  ```rust
+  pub struct KeyValueStore {
+    // Code here
+  }
+  ```
+
+</TabItem>
+```
+
+#### ❌ Wrong Pattern (Will Be Corrupted)
+
+```mdx
+<TabItem label="Understanding the Code">
+  ```rust
+  pub struct KeyValueStore {
+    // This will be corrupted by prettier!
+  }
+  ```
+</TabItem>
+```
+
+#### Why This Matters
+
+- MDX parser needs empty lines to recognize Markdown syntax inside JSX
+- Without empty lines, prettier corrupts code blocks (e.g., `{" "}` artifacts)
+- This is a requirement of MDX, not a bug
+
+**Always add empty lines**:
+- After opening `<TabItem>` tag
+- Before closing `</TabItem>` tag
+- Around any other Markdown content inside JSX components
 
 ## Tracking System Integration
 
@@ -468,6 +507,13 @@ Before publishing any tutorial:
   - [ ] All tests pass
   - [ ] Benchmarks run successfully
   - [ ] README.md with summary and gotchas
+
+- [ ] **MDX Formatting**
+
+  - [ ] Empty lines around code blocks in TabItem components
+  - [ ] Prettier runs without corrupting code
+  - [ ] All special characters properly escaped
+  - [ ] Component imports are correct
   - [ ] Exercises with solutions
 
 - [ ] **Dogfooding Verification**
