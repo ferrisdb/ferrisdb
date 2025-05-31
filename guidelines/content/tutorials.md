@@ -627,6 +627,7 @@ pub struct KeyValueStore {
 
 ##### ❌ Wrong Pattern (Will Break Build)
 
+<!-- prettier-ignore-start -->
 ````mdx
 <TabItem label="Commands">
   ```bash # This comment breaks MDX parsing
@@ -635,6 +636,7 @@ pub struct KeyValueStore {
   ```
 </TabItem>
 ````
+<!-- prettier-ignore-end -->
 
 ##### ✅ Correct Pattern
 
