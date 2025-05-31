@@ -6,6 +6,10 @@ Guidelines for creating educational and engaging content for the FerrisDB projec
 
 ## Content Types
 
+### [Tutorial Guidelines](tutorials.md) 🆕
+
+**"Learn by Building" tutorial series** where CRUD developers build FerrisDB from scratch, learning Rust and database internals incrementally. Features one component per tutorial, one concept per step, with extensive testing and language comparisons.
+
 ### [Blogging Guidelines](blogging.md)
 
 Guidelines for writing engaging blog posts that document the FerrisDB development journey, including format requirements, statistics gathering, and engagement techniques.
@@ -22,9 +26,9 @@ Comprehensive technical articles that explain database concepts through FerrisDB
 
 Educational articles teaching Rust concepts through real FerrisDB code, with comparisons to JavaScript, Python, Java, and Go to help CRUD developers learn Rust.
 
-### [Website Design](website-design.md)
+### [Website Design](website-design-starlight.md)
 
-Design guidelines for the FerrisDB documentation website, covering visual design, content structure, Jekyll configuration, and user experience principles.
+Design guidelines for the FerrisDB documentation website using Astro Starlight, covering visual design, content structure, and user experience principles aligned with developer-focused design.
 
 ## Key Principles
 
@@ -53,18 +57,44 @@ Every piece of content should help readers learn and understand database systems
 ## Content Creation Workflow
 
 1. **Choose appropriate content type** based on your goal
-2. **Use the provided template** for consistency
+2. **Use the appropriate template from the templates/ directory** for consistency
 3. **Write with the target audience in mind**
 4. **Include real code and measurements**
 5. **Format with prettier** and **lint with markdownlint**
 6. **Submit PR with appropriate label**
 
-## Quick Links
+## Tutorial Tracking System
 
-- [Blog Post Template (Human)](../../_posts/human-blog-post-template.md)
-- [Blog Post Template (Claude)](../../_posts/claude-blog-post-template.md)
-- [Database Concepts Template](../../database-concepts/article-template.md)
-- [Rust by Example Template](../../rust-by-example/article-template.md)
+### Concept Tracking Files
+
+For the "Learn by Building" tutorial series, we maintain strict tracking of what's been taught:
+
+- **[RUST-CONCEPTS-TAUGHT.md](RUST-CONCEPTS-TAUGHT.md)** - Tracks all Rust concepts introduced/reinforced per tutorial
+- **[DATABASE-CONCEPTS-TAUGHT.md](DATABASE-CONCEPTS-TAUGHT.md)** - Tracks database concepts with real-world examples
+- **[LEARNING-PROGRESS.md](LEARNING-PROGRESS.md)** - Dashboard showing tutorial dependencies and progress
+
+These files are the **source of truth** for ensuring we never assume untaught knowledge.
+
+## Templates
+
+All content templates have been migrated to Starlight format and are located in the `templates/` directory:
+
+### Blog Post Templates
+- [Human Blog Post Template](templates/blog-post-human.mdx) - For human perspective blog posts
+- [Claude Blog Post Template](templates/blog-post-claude.mdx) - For AI perspective blog posts
+
+### Article Templates  
+- [Database Concept Template](templates/database-concept.mdx) - For deep dive technical articles
+- [Rust by Example Template](templates/rust-by-example.mdx) - For Rust learning articles
+
+### Tutorial Template
+- [Tutorial Template](templates/tutorial.mdx) - For "Learn by Building" series with step-by-step component construction
+
+**Note**: These templates follow our new design philosophy:
+- Simplicity and correctness first
+- Developer-skeptical design with immediate code access
+- Learning in public with honest limitations
+- Show don't tell approach
 
 ## Related Sections
 

@@ -1,5 +1,7 @@
 # Website Maintenance Workflow
 
+**⚠️ DEPRECATED as of 2025-05-31**: This file is being replaced by [website-maintenance-starlight.md](website-maintenance-starlight.md) as part of the migration to Astro Starlight. This file will be removed after the migration is complete. Please use the new Starlight-specific guidelines for all new work.
+
 Step-by-step guide for maintaining the FerrisDB documentation website, including daily updates, FAQ maintenance, and progress tracking.
 
 **Purpose**: Provide systematic workflows for keeping the FerrisDB website accurate and up-to-date.  

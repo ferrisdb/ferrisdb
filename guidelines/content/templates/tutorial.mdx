@@ -1,0 +1,322 @@
+---
+title: "Building [Component]: [Catchy Learning Title]"
+description: "Learn [key Rust concepts] by building FerrisDB's [component] from scratch"
+sidebar:
+  badge: 
+    text: "Tutorial N"
+    variant: "success"
+# Tracking metadata - MUST be kept up to date
+rust_concepts_introduced:
+  - "[Concept]: Brief description"
+rust_concepts_reinforced:
+  - "[Concept] (from Tutorial X)"
+database_concepts_introduced:
+  - "[Concept]: Why it matters"
+database_concepts_reinforced:
+  - "[Concept] (from Tutorial Y)"
+---
+
+<!-- 
+TUTORIAL TEMPLATE - Building FerrisDB Step by Step
+
+Design Philosophy:
+- One component at a time
+- One new Rust concept per step
+- Test everything as we go
+- Compare to familiar languages
+- Celebrate progress
+
+IMPORTANT: Final code MUST match real FerrisDB implementation
+-->
+
+import { Tabs, TabItem, Aside, Steps, Card, CardGrid, Badge } from '@astrojs/starlight/components';
+
+## What We're Building Today
+
+[Clear, visual explanation of the component we're building. Include a simple diagram if helpful.]
+
+### The Real-World Problem
+
+[Explain the problem in terms CRUD developers understand. Use analogies from web development.]
+
+**Example scenario**: [Concrete example showing why this component is needed]
+
+### What You'll Learn
+
+<CardGrid>
+  <Card title="🦀 New Rust Concepts" icon="code">
+    - **[Concept 1]**: [One-line description]
+    - **[Concept 2]**: [One-line description]
+    - **[Concept 3]**: [One-line description]
+  </Card>
+  
+  <Card title="📚 Database Knowledge" icon="database">
+    - **[DB Concept 1]**: [Why it matters]
+    - **[DB Concept 2]**: [Real-world impact]
+  </Card>
+</CardGrid>
+
+## Prerequisites
+
+<Card title="Before You Start" icon="information">
+
+**Required Tutorials**:
+- ✅ [Tutorial 1: Title] - We'll use [concepts] from this
+- ✅ [Tutorial 2: Title] - We'll build on [concepts]
+
+**Concepts You Already Know**:
+- Rust: [List from tracking system]
+- Database: [List from tracking system]
+
+**Time Needed**: ~[X] minutes
+
+</Card>
+
+## Setup
+
+Let's create our workspace for this component:
+
+```bash
+# If following along in your own project
+cargo new --lib ferrisdb-tutorial-[N]
+cd ferrisdb-tutorial-[N]
+
+# Add dependencies we'll need
+cargo add [dependencies]
+```
+
+<Aside type="tip">
+Following along in the FerrisDB repo? The final code is in `ferrisdb-storage/src/[component]/`
+</Aside>
+
+## Let's Build!
+
+### Step 1: [First Small Goal]
+
+[Explain what we're doing and why - keep it simple and clear]
+
+<Tabs>
+  <TabItem label="Write This Code">
+    ```rust
+    // Start with the simplest possible version
+    // Introduce only ONE new concept
+    
+    [Initial code]
+    ```
+  </TabItem>
+  
+  <TabItem label="Understanding the Code">
+    Let's break this down:
+    
+    ```rust
+    // [Line-by-line explanation]
+    ```
+  </TabItem>
+  
+  <TabItem label="If You Know JavaScript">
+    ```javascript
+    // In JavaScript, you might write:
+    [JS equivalent]
+    ```
+    
+    **Key differences**:
+    - [Difference 1]
+    - [Difference 2]
+  </TabItem>
+  
+  <TabItem label="If You Know Python">
+    ```python
+    # In Python, you might write:
+    [Python equivalent]
+    ```
+    
+    **Key differences**:
+    - [Difference 1]
+    - [Difference 2]
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="🦀 New Rust Concept: [Concept Name]">
+
+[Clear explanation for CRUD developers. Use analogies to web development concepts they know.]
+
+**Think of it like**: [Analogy to something familiar]
+
+**Why Rust does this**: [Brief explanation of the benefit]
+
+📖 **Learn more**: [Official Rust Book - Topic](https://doc.rust-lang.org/book/ch-xx.html)
+</Aside>
+
+#### Test What We Built
+
+Let's prove our code works:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_step_1() {
+        // Arrange
+        [setup code]
+        
+        // Act
+        [action code]
+        
+        // Assert
+        assert_eq!(result, expected);
+    }
+}
+```
+
+Run it:
+```bash
+cargo test test_step_1
+```
+
+<Aside type="tip" title="✅ Success!">
+Great! You just [what they accomplished]. The test proves our code works correctly.
+</Aside>
+
+### Step 2: [Next Incremental Addition]
+
+Now let's [what we're adding and why].
+
+<Aside type="caution" title="📚 Database Concept: [Concept Name]">
+
+We covered **[concept]** in [Tutorial X: Title](link). Quick reminder:
+
+[One-sentence refresher of the concept]
+
+Need a deeper refresher? Check [Tutorial X, Step Y](link).
+</Aside>
+
+<Tabs>
+  <TabItem label="Evolve Our Code">
+    ```rust
+    // Building on Step 1, we add:
+    [Code showing the evolution]
+    ```
+  </TabItem>
+  
+  <TabItem label="What Changed">
+    Here's what we added:
+    
+    ```diff
+    + [New lines]
+    - [Removed lines]
+    ```
+    
+    This change [explains why].
+  </TabItem>
+</Tabs>
+
+[Continue pattern for each step...]
+
+### Step N: Matching Real FerrisDB
+
+Let's see how our tutorial code compares to the real implementation:
+
+<Tabs>
+  <TabItem label="Our Tutorial Code">
+    ```rust
+    // What we built step-by-step
+    [Final tutorial version]
+    ```
+  </TabItem>
+  
+  <TabItem label="Real FerrisDB Code">
+    ```rust
+    // ferrisdb-storage/src/[component]/[file].rs:[lines]
+    [Actual FerrisDB implementation]
+    ```
+  </TabItem>
+  
+  <TabItem label="Key Differences">
+    The real implementation adds:
+    
+    - **Error handling**: [Explanation]
+    - **Optimizations**: [What and why]
+    - **Additional features**: [List them]
+    
+    These are important for production but would have made learning harder!
+  </TabItem>
+</Tabs>
+
+### Final Test: Integration
+
+Let's test our complete component:
+
+```rust
+#[test]
+fn test_complete_component() {
+    // Test the full functionality
+    [Comprehensive test]
+}
+```
+
+## 🎉 Congratulations!
+
+You've successfully built FerrisDB's [component]! Let's celebrate what you achieved:
+
+### What You Built
+
+- ✅ A working [component] that [what it does]
+- ✅ [Specific achievement 2]
+- ✅ [Specific achievement 3]
+
+### Rust Concepts You Mastered
+
+- 🦀 **[Concept 1]**: You can now [what they can do]
+- 🦀 **[Concept 2]**: You understand [key insight]
+- 🦀 **[Concept 3]**: You've used [practical application]
+
+### Database Knowledge You Gained
+
+- 📚 **[DB Concept 1]**: You know why [importance]
+- 📚 **[DB Concept 2]**: You understand [trade-off]
+
+## Next Steps
+
+<CardGrid>
+  <Card title="Ready for More?" icon="rocket">
+    **Next Tutorial**: [Tutorial N+1: Title]
+    
+    You'll learn: [Preview of next concepts]
+  </Card>
+  
+  <Card title="Practice Challenges" icon="puzzle">
+    1. Try adding [feature]
+    2. Benchmark your implementation
+    3. Compare with [alternative approach]
+  </Card>
+</CardGrid>
+
+## Quick Reference
+
+### Commands Used
+```bash
+# Test specific functionality
+cargo test test_name
+
+# Run all tests
+cargo test
+
+# See the real implementation
+cat ferrisdb-storage/src/[component]/[file].rs
+```
+
+### Key Takeaways
+
+1. **[Main lesson]**: [Why it matters]
+2. **[Technical insight]**: [How to apply it]
+3. **[Best practice]**: [When to use it]
+
+---
+
+<Aside type="note" title="📝 Feedback Welcome!">
+Found something confusing? Have questions? Open an issue on GitHub - we want these tutorials to be as clear as possible for CRUD developers learning Rust!
+</Aside>
+
+**Great job completing this tutorial!** 🚀

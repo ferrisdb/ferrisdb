@@ -231,10 +231,12 @@ type MemTable struct {
 
 ## Template Usage
 
-- **ALWAYS** use `docs/rust-by-example/article-template.md`
+- **ALWAYS** use the [Rust by Example Template](templates/rust-by-example.mdx)
+- Template now uses Starlight MDX format with component imports
 - Fill in all sections - never leave template placeholders
 - Include actual performance measurements when possible
 - Provide working code examples in all languages
+- Use Starlight components (Card, Tabs, Aside) for comparisons
 
 ## Publishing Process
 

@@ -19,6 +19,7 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 ### 🎨 Content Creation
 
 - [Website Design](content/website-design.md) - Visual design and Jekyll configuration
+- [Website Design - Starlight](content/website-design-starlight.md) - **NEW** Astro Starlight design standards
 - [Blogging Guidelines](content/blogging.md) - General blog post standards
 - [Claude's Blog Voice](content/claude-blog-voice.md) - AI perspective and personality
 - [Database Concepts Articles](content/database-concepts-articles.md) - Technical article structure
@@ -30,7 +31,8 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 - [Common Commands](workflow/commands.md) - Frequently used commands
 - [Git Workflow](workflow/git-workflow.md) - Branching and commit standards
 - [PR Process](workflow/pr-process.md) - Pull request and review policies
-- [Website Maintenance](workflow/website-maintenance.md) - Maintaining docs site
+- [Website Maintenance](workflow/website-maintenance.md) - Maintaining Jekyll docs site
+- [Website Maintenance - Starlight](workflow/website-maintenance-starlight.md) - **NEW** Maintaining Astro Starlight site
 
 ### 🏗️ Technical Architecture
 

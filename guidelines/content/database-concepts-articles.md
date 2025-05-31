@@ -223,10 +223,12 @@ Example calculation:
 
 ## Template Usage
 
-- **ALWAYS** use `docs/database-concepts/article-template.md`
+- **ALWAYS** use the [Database Concept Template](templates/database-concept.mdx)
+- Template now uses Starlight MDX format with component imports
 - Fill in all sections - never leave template placeholders
 - Include all required metadata in frontmatter
 - Follow exact section structure for consistency
+- Use Starlight components (Card, Tabs, Aside) for enhanced presentation
 
 ## Publishing Process
 

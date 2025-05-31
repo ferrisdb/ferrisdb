@@ -75,11 +75,12 @@ I follow ALL guidelines, especially:
 
 - **"Write a blog post"** → [Blogging Guidelines](guidelines/content/blogging.md)
 - **"Write as Claude"** → [Claude's Blog Voice](guidelines/content/claude-blog-voice.md)
+- **"Create a tutorial"** → [Tutorial Guidelines](guidelines/content/tutorials.md)
 - **"Create a database concept"** → [Database Concepts Articles](guidelines/content/database-concepts-articles.md)
 - **"Explain Rust concepts"** → [Rust by Example](guidelines/content/rust-by-example.md)
-- **"Update the website"** → [Website Design](guidelines/content/website-design.md)
-- **"Update FAQ.md"** → [Website Maintenance](guidelines/workflow/website-maintenance.md#faq-specific-maintenance)
-- **"Update statistics"** → [Website Maintenance](guidelines/workflow/website-maintenance.md) + [Commands](guidelines/workflow/commands.md#statistics-and-metrics)
+- **"Update the website"** → [Website Design (Starlight)](guidelines/content/website-design-starlight.md)
+- **"Update FAQ.md"** → [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md#faq-specific-maintenance)
+- **"Update statistics"** → [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md) + [Commands](guidelines/workflow/commands.md#statistics-and-metrics)
 
 ### Process & Workflow Tasks
 
@@ -151,11 +152,16 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 
 ### [Content Creation](guidelines/content/)
 
-- [Website Design](guidelines/content/website-design.md) - Visual standards
+- [Tutorial Guidelines](guidelines/content/tutorials.md) - Learn by Building series
+- [Website Design (Starlight)](guidelines/content/website-design-starlight.md) - Visual standards
 - [Blogging](guidelines/content/blogging.md) - Blog post guidelines
 - [Claude's Voice](guidelines/content/claude-blog-voice.md) - AI perspective
 - [Database Concepts](guidelines/content/database-concepts-articles.md) - Technical articles
 - [Rust by Example](guidelines/content/rust-by-example.md) - Educational content
+- **Tutorial Tracking Files:**
+  - [RUST-CONCEPTS-TAUGHT.md](guidelines/content/RUST-CONCEPTS-TAUGHT.md) - Rust concept tracker
+  - [DATABASE-CONCEPTS-TAUGHT.md](guidelines/content/DATABASE-CONCEPTS-TAUGHT.md) - Database concept tracker
+  - [LEARNING-PROGRESS.md](guidelines/content/LEARNING-PROGRESS.md) - Tutorial progress dashboard
 
 ### [Development Workflow](guidelines/workflow/)
 
@@ -163,6 +169,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 - [Commands](guidelines/workflow/commands.md) - Common commands
 - [Git Workflow](guidelines/workflow/git-workflow.md) - Version control
 - [PR Process](guidelines/workflow/pr-process.md) - Pull requests
+- [Website Maintenance (Starlight)](guidelines/workflow/website-maintenance-starlight.md) - Website updates
 
 ### [Technical Architecture](guidelines/technical/)
 

@@ -1,5 +1,7 @@
 # Website Design Guidelines
 
+**⚠️ DEPRECATED as of 2025-05-31**: This file is being replaced by [website-design-starlight.md](website-design-starlight.md) as part of the migration to Astro Starlight. This file will be removed after the migration is complete. Please use the new Starlight-specific guidelines for all new work.
+
 Design guidelines for the FerrisDB documentation website, focusing on educational value and user engagement.
 
 ## Design Philosophy

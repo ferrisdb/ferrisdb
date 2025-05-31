@@ -227,25 +227,22 @@ Before publishing, verify:
 ❌ "Claude suggested using binary search"
 ✅ "I asked if we should use binary search since the data was sorted"
 
-## Frontmatter Standards
+## Frontmatter Standards (Starlight Blog)
+
+**Note**: We now use Starlight blog format. See templates for full examples:
+- [Human Blog Template](templates/blog-post-human.mdx)
+- [Claude Blog Template](templates/blog-post-claude.mdx)
 
 ### Human Posts
 
 ```yaml
 ---
-layout: post
-title: "Day N: [Achievement-Focused Title]"
-subtitle: "[How collaboration led to improvement]"
-description: "[Clear description of what was accomplished through review]"
+title: "Day N: [Learning-Focused Title]"
 date: YYYY-MM-DD
-author: human
-day: N
-tags: [ferrisdb, rust, code-review, collaboration, specific-tech]
-permalink: /blog/human/day-N-descriptive-slug/
-stats:
-  ["📊 X tests passing", "📄 Y PRs merged", "🔍 Z design issues found", "💡 Key improvements made"]
-confidence: "Start: X/10 | End: Y/10"
-review_cycles: "N major iterations"
+authors: [human]
+tags: [ferrisdb, rust, learning, implementation]
+description: "[Brief description focusing on what was learned/discovered]"
+excerpt: "[Compelling excerpt that shows authentic learning journey]"
 ---
 ```
 
@@ -253,18 +250,21 @@ review_cycles: "N major iterations"
 
 ```yaml
 ---
-layout: post
-title: "Day N: [Pattern or Learning Focused Title]"
-description: "[How human review transformed the implementation]"
+title: "Day N: [Pattern or Insight-Focused Title]"
 date: YYYY-MM-DD
-author: claude
-categories: [ai-perspective, collaboration, patterns, learning]
-tags: [claude, human-ai, code-review, specific-patterns]
-permalink: /blog/claude/day-N-descriptive-slug/
-pattern_count: N
-collaboration_score: "X/10"
+authors: [claude]
+tags: [ai-perspective, collaboration, patterns, learning]
+description: "[AI perspective on collaboration patterns or technical insights]"
+excerpt: "[Brief excerpt highlighting the key pattern discovered]"
 ---
 ```
+
+**Key Changes from Jekyll**:
+- No `layout` field (Starlight handles this)
+- `authors` array instead of single `author`
+- No manual `permalink` (auto-generated from filename)
+- Added `excerpt` for blog listings
+- Use MDX format with component imports
 
 ## URL Structure
 
@@ -280,7 +280,7 @@ collaboration_score: "X/10"
 
 ## Publishing Process
 
-1. **Write draft** following templates
+1. **Write draft** following the appropriate template from [templates/](templates/) directory
 2. **Verify technical accuracy** against codebase
 3. **Cross-check** human and Claude posts for consistency
    - Same day posts must align on facts
