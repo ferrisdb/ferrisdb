@@ -249,6 +249,33 @@ When publishing a new tutorial:
 - Relate everything to web development
 - Define terms like "durability" with examples
 
+### Keeping Tutorial Code in Sync
+
+**CRITICAL**: Tutorial MDX files must stay in sync with the actual implementation!
+
+When making changes:
+
+1. **If clippy suggests improvements** (like adding `#[derive(Default)]`):
+   - Update the implementation in `ferrisdb-tutorials/`
+   - Update ALL code examples in the MDX file
+   - Especially update the "final code" comparison section
+
+2. **Common sync points**:
+   - Step-by-step code examples
+   - Final complete implementation
+   - Comparison with "real" FerrisDB code
+   - Any code shown in Tabs/TabItems
+
+3. **Use this workflow**:
+   ```bash
+   # 1. Fix the implementation
+   cd ferrisdb-tutorials
+   cargo clippy --all-targets --all-features -- -D warnings
+   
+   # 2. Update the MDX to match
+   # 3. Dogfood test the tutorial again
+   ```
+
 ## MDX-Specific Guidelines
 
 ### Escaping Special Characters
@@ -435,14 +462,31 @@ cargo clippy --all-targets --all-features -- -D warnings
 
 **Important**: Tutorial code is held to the same quality standards as production code!
 
+#### Common Clippy Warnings in Tutorials
+
+Be aware of these common clippy suggestions for tutorial code:
+
+1. **Default Implementation**: If you have `new() -> Self` with no parameters, derive Default:
+   ```rust
+   #[derive(Default)]
+   pub struct KeyValueStore {
+       data: HashMap<String, String>,
+   }
+   ```
+
+2. **Unnecessary Clones**: Use references where possible
+3. **Missing Documentation**: Add doc comments to public items
+4. **Unused Results**: Handle or explicitly ignore Results
+
 #### Pre-commit Checklist
 
 Before committing tutorial changes:
 
 - [ ] Run `cargo fmt --all` in `ferrisdb-tutorials/`
-- [ ] Run `cargo clippy` and fix all warnings
+- [ ] Run `cargo clippy --all-targets --all-features -- -D warnings` and fix ALL warnings
 - [ ] Run `cargo test --all` to ensure tests pass
 - [ ] Run `cargo bench` to ensure benchmarks compile
+- [ ] Update tutorial MDX if code structure changes (e.g., adding derives)
 
 ### Testing Requirements
 
