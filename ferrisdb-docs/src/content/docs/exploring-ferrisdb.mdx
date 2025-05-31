@@ -146,16 +146,32 @@ grep -n "timestamp" ferrisdb-storage/src/memtable/skip_list.rs
 
 <Tabs>
   <TabItem label="Writer ✅">
-    <Badge text="IMPLEMENTED" variant="success" />
-    ```bash # See how data is written to disk cat ferrisdb-storage/src/sstable/writer.rs # Test
-    SSTable creation cargo test -p ferrisdb-storage test_sstable_writer ``` Creates sorted files
-    with index and footer.
+
+<Badge text="IMPLEMENTED" variant="success" />
+
+```bash
+# See how data is written to disk
+cat ferrisdb-storage/src/sstable/writer.rs
+
+# Test SSTable creation
+cargo test -p ferrisdb-storage test_sstable_writer
+```
+
+Creates sorted files with index and footer.
+
   </TabItem>
 
   <TabItem label="Reader ❌">
-    <Badge text="NOT IMPLEMENTED" variant="danger" />
-    ```bash # See the skeleton cat ferrisdb-storage/src/sstable/reader.rs ``` Structure exists but
-    can't read files yet.
+
+<Badge text="NOT IMPLEMENTED" variant="danger" />
+
+```bash
+# See the skeleton
+cat ferrisdb-storage/src/sstable/reader.rs
+```
+
+Structure exists but can't read files yet.
+
   </TabItem>
 </Tabs>
 
