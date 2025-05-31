@@ -275,7 +275,7 @@ excerpt: "[Brief excerpt highlighting the key pattern discovered]"
 - **Filename format**: `day-N-author-descriptive-title.md`
   - Human: `day-1-human-from-just-use-rocksdb-to-building-from-scratch.md`
   - Claude: `day-1-claude-how-i-learned-humans-say-build-but-mean-teach.md`
-- **Generated URLs**: 
+- **Generated URLs**:
   - `/blog/day-N-author-descriptive-title/`
   - `/blog/authors/human/` (author archive)
   - `/blog/authors/claude/` (author archive)
@@ -346,13 +346,15 @@ The commit commentaries serve as a primary source for blog posts:
 
 We now support mermaid diagrams in blog posts:
 
-```markdown
+````markdown
 ```mermaid
 graph LR
     Human[Human Reviews] --> Question[Asks Question]
     Question --> Claude[Claude Explains]
     Claude --> Improvement[Code Improves]
 ```
+````
+
 ```
 
 **Best practices**:
@@ -385,3 +387,4 @@ Keep them accurate, engaging, and true to our actual experience!
 - [Git Workflow](../workflow/git-workflow.md) - Collaboration commentary source
 - [Website Design](website-design-starlight.md) - Blog layout and styling
 - [Markdown Standards](../development/markdown-standards.md) - Formatting
+```
