@@ -440,8 +440,8 @@ echo "Running pre-commit checks..."
 cargo fmt --all --check || exit 1
 cargo clippy --all-targets --all-features -- -D warnings || exit 1
 
-# Markdown checks
-prettier --check "**/*.md" || exit 1
+# Markdown and MDX checks (MANDATORY)
+prettier --check "**/*.md" "**/*.mdx" || exit 1
 
 echo "Pre-commit checks passed!"
 ```

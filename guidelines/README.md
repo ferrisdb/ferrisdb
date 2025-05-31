@@ -6,6 +6,16 @@ Welcome to the FerrisDB development guidelines! These documents contain all the 
 
 **IMPORTANT**: See [GOVERNANCE.md](GOVERNANCE.md) for how we maintain these guidelines. It serves as our constitution for information architecture and documentation standards.
 
+## 🚨 Before You Commit
+
+**MANDATORY for ALL contributors**: After making ANY markdown or MDX changes:
+
+```bash
+prettier --write "**/*.md" "**/*.mdx"
+```
+
+This is as critical as running `cargo fmt` for Rust code. CI will fail if skipped!
+
 ## Quick Navigation
 
 ### 📝 Development Standards
