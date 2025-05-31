@@ -329,31 +329,144 @@ Focus: Putting it together, optimization
 
 See `LEARNING-PROGRESS.md` for detailed curriculum.
 
+## Tutorial Codebase Structure
+
+Each tutorial MUST have a corresponding implementation in `ferrisdb-tutorials/`:
+
+```
+ferrisdb-tutorials/
+├── Cargo.toml (workspace)
+├── README.md (overview & learning path)
+├── tutorial-01-kv-store/
+│   ├── Cargo.toml
+│   ├── README.md (summary & key learnings)
+│   ├── src/
+│   │   ├── lib.rs (final implementation)
+│   │   └── step_by_step.rs (commented progression)
+│   ├── tests/
+│   │   ├── step_01_tests.rs (test each step)
+│   │   ├── step_02_tests.rs
+│   │   ├── step_03_tests.rs
+│   │   ├── integration_tests.rs
+│   │   └── concurrent_tests.rs (if applicable)
+│   ├── benches/
+│   │   └── performance.rs (simple benchmarks)
+│   └── exercises/
+│       ├── README.md (challenge descriptions)
+│       ├── challenge_01_delete.rs
+│       └── solutions/
+│           └── challenge_01_solution.rs
+```
+
+### Dogfooding Process (MANDATORY)
+
+Before publishing ANY tutorial:
+
+1. **Create fresh workspace** outside the tutorials directory
+2. **Follow your own tutorial** step by step, copy-pasting code
+3. **Run every test** exactly as instructed in the tutorial
+4. **Fix any issues** in the tutorial immediately
+5. **Ensure final code matches** between tutorial and implementation
+6. **Document gotchas** in the tutorial's README.md
+
+### Testing Requirements
+
+#### Step-by-Step Tests
+
+Each step in the tutorial must have corresponding tests:
+
+```rust
+// tutorial-01-kv-store/tests/step_01_tests.rs
+#[test]
+fn step_01_create_empty_struct() {
+    let store = KeyValueStore::new();
+    // Proves step 1 compiles and runs
+}
+```
+
+#### Concurrent Testing (When Applicable)
+
+For components with concurrency concerns, include concurrent tests:
+
+```rust
+// tutorial-01-kv-store/tests/concurrent_tests.rs
+#[test]
+fn concurrent_access_safety() {
+    use std::sync::Arc;
+    use std::thread;
+    
+    let store = Arc::new(KeyValueStore::new());
+    let handles: Vec<_> = (0..10)
+        .map(|i| {
+            let store = Arc::clone(&store);
+            thread::spawn(move || {
+                // Concurrent operations
+            })
+        })
+        .collect();
+    
+    // Verify no data races or panics
+}
+```
+
+#### Test Coverage Goals
+
+- **Branch Coverage**: Aim for 100% of teaching scenarios
+- **Error Cases**: Show what happens when things go wrong
+- **Edge Cases**: Demonstrate boundary conditions
+
+### Benchmarking
+
+Include simple benchmarks to validate performance claims:
+
+```rust
+// tutorial-01-kv-store/benches/performance.rs
+#[bench]
+fn bench_insert_1000_items(b: &mut Bencher) {
+    // Prove HashMap is actually O(1) average case
+}
+```
+
 ## Quality Checklist
 
 Before publishing any tutorial:
 
+- [ ] **Tutorial Codebase**
+  - [ ] Complete implementation in ferrisdb-tutorials/
+  - [ ] All tests pass
+  - [ ] Benchmarks run successfully
+  - [ ] README.md with summary and gotchas
+  - [ ] Exercises with solutions
+
+- [ ] **Dogfooding Verification**
+  - [ ] Successfully completed tutorial from scratch
+  - [ ] All code blocks compile when copy-pasted
+  - [ ] Tests run as described
+  - [ ] No missing steps or assumptions
+  - [ ] Final code matches implementation
+
 - [ ] **Code Correctness**
-  - [ ] All code examples compile and run
-  - [ ] Tests pass
-  - [ ] Final code matches real FerrisDB patterns
+  - [ ] Step-by-step tests for each phase
+  - [ ] Integration tests for complete implementation
+  - [ ] Concurrent tests (if applicable)
+  - [ ] Performance benchmarks included
+
 - [ ] **Learning Flow**
   - [ ] Only one new Rust concept per step
   - [ ] Concepts build on previous tutorials
   - [ ] No unexplained terminology
+  - [ ] Errors and fixes shown clearly
+
 - [ ] **Language Comparisons**
-  - [ ] JS/Python examples are idiomatic
+  - [ ] JS/Python examples in MDX are idiomatic
   - [ ] Comparisons highlight key differences
   - [ ] No language is portrayed negatively
-- [ ] **Accessibility**
-  - [ ] Real-world problem is relatable
-  - [ ] Explanations use web dev analogies
-  - [ ] Success is celebrated
+
 - [ ] **External Links**
-  - [ ] All Rust Book links are valid (test each one)
+  - [ ] All Rust Book links are valid
   - [ ] Documentation links point to stable versions
   - [ ] No broken links to external resources
-  - [ ] Links use HTTPS where available
+
 - [ ] **Tracking**
   - [ ] Metadata is complete
   - [ ] Tracking files updated
@@ -368,7 +481,13 @@ Common external links to verify:
 - Std library docs: `https://doc.rust-lang.org/std/`
 - Rustup: `https://rustup.rs`
 
-Use a link checker tool or manually verify each link works and points to the intended content.
+## CI Integration
+
+The tutorial codebase should be included in CI to ensure:
+- All tutorial code compiles
+- All tests pass
+- Benchmarks run without errors
+- Code stays in sync with main FerrisDB
 
 ## Testing with Readers
 

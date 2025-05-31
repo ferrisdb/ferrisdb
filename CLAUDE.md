@@ -75,7 +75,7 @@ I follow ALL guidelines, especially:
 
 - **"Write a blog post"** → [Blogging Guidelines](guidelines/content/blogging.md)
 - **"Write as Claude"** → [Claude's Blog Voice](guidelines/content/claude-blog-voice.md)
-- **"Create a tutorial"** → [Tutorial Guidelines](guidelines/content/tutorials.md)
+- **"Create a tutorial"** → [Tutorial Guidelines](guidelines/content/tutorials.md) + **DOGFOOD IT!**
 - **"Create a database concept"** → [Database Concepts Articles](guidelines/content/database-concepts-articles.md)
 - **"Explain Rust concepts"** → [Rust by Example](guidelines/content/rust-by-example.md)
 - **"Update the website"** → [Website Design (Starlight)](guidelines/content/website-design-starlight.md)
@@ -187,6 +187,17 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 3. [Testing](guidelines/workflow/testing.md) - Add tests
 4. [Git Workflow](guidelines/workflow/git-workflow.md) - Commit with commentary
 5. [PR Process](guidelines/workflow/pr-process.md) - Submit for review
+
+### Creating a Tutorial (High Bar!)
+
+1. Write MDX tutorial following [Tutorial Guidelines](guidelines/content/tutorials.md)
+2. Create `ferrisdb-tutorials/tutorial-XX-name/` with full implementation
+3. **DOGFOOD**: Follow your own tutorial step-by-step
+4. Write tests for EVERY step + concurrent tests if applicable
+5. Include benchmarks to prove performance claims
+6. Add exercises with solutions
+7. Update tracking files (RUST-CONCEPTS-TAUGHT.md, etc.)
+8. CI must pass all tutorial tests
 
 ### Writing Content
 

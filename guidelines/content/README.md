@@ -6,9 +6,18 @@ Guidelines for creating educational and engaging content for the FerrisDB projec
 
 ## Content Types
 
-### [Tutorial Guidelines](tutorials.md) 🆕
+### [Tutorial Guidelines](tutorials.md) 🆕 🔥
 
-**"Learn by Building" tutorial series** where CRUD developers build FerrisDB from scratch, learning Rust and database internals incrementally. Features one component per tutorial, one concept per step, with extensive testing and language comparisons.
+**"Learn by Building" tutorial series** where CRUD developers build FerrisDB from scratch, learning Rust and database internals incrementally. 
+
+**NEW HIGH BAR**: Every tutorial must have:
+- Complete working implementation in `ferrisdb-tutorials/`
+- Step-by-step tests + concurrent tests
+- Performance benchmarks
+- Exercises with solutions
+- MANDATORY dogfooding process
+
+Features one component per tutorial, one concept per step, with extensive testing and language comparisons.
 
 ### [Blogging Guidelines](blogging.md)
 
