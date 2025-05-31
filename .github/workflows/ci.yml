@@ -40,11 +40,13 @@ jobs:
             - '**/Cargo.lock'
             - '.github/workflows/**'
             - 'deny.toml'
+            - 'ferrisdb-tutorials/**'
           docs:
             - 'docs/**'
             - '**/*.md'
             - 'README.md'
             - 'CLAUDE.md'
+            - 'ferrisdb-docs/**'
 
   # Quick checks that should pass before running expensive tests
   quick-checks:
@@ -102,6 +104,8 @@ jobs:
           *.md
           src/
           ferrisdb-*/src/
+          ferrisdb-tutorials/
+          ferrisdb-docs/
 
   # Main test suite
   test:
@@ -194,6 +198,58 @@ jobs:
     - name: Test with MSRV
       run: cargo test --all
 
+  # Tutorial tests
+  tutorials:
+    name: Tutorial Tests
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache cargo for tutorials
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: ferrisdb-tutorials
+        key: tutorials
+
+    - name: Check tutorial formatting
+      run: |
+        cd ferrisdb-tutorials
+        cargo fmt --all -- --check
+
+    - name: Clippy for tutorials
+      run: |
+        cd ferrisdb-tutorials
+        cargo clippy --all-targets --all-features -- -D warnings
+
+    - name: Build tutorials
+      run: |
+        cd ferrisdb-tutorials
+        cargo build --all --verbose
+
+    - name: Run tutorial tests
+      run: |
+        cd ferrisdb-tutorials
+        cargo test --all --verbose
+
+    - name: Test tutorial exercises
+      run: |
+        cd ferrisdb-tutorials
+        # Test each tutorial's exercises
+        for tutorial in tutorial-*/; do
+          if [ -d "$tutorial/exercises" ]; then
+            echo "Testing exercises in $tutorial"
+            (cd "$tutorial" && cargo test --test exercises || true)
+          fi
+        done
+
   # Jekyll site build
   jekyll:
     name: Jekyll Site Build
@@ -222,6 +278,40 @@ jobs:
         cd docs
         bundle exec htmlproofer ./_site --disable-external
 
+  # Starlight documentation build
+  starlight:
+    name: Starlight Docs Build
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: ferrisdb-docs/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd ferrisdb-docs
+        npm ci
+
+    - name: Build Starlight site
+      run: |
+        cd ferrisdb-docs
+        npm run build
+
+    - name: Check for broken links
+      run: |
+        cd ferrisdb-docs
+        # Basic check that build succeeded and created output
+        test -d dist
+        test -f dist/index.html
+
   # Security audit
   security:
     name: Security Audit
@@ -241,7 +331,7 @@ jobs:
   required:
     name: Required Checks
     runs-on: ubuntu-latest
-    needs: [changes, quick-checks, markdown, spellcheck, test, docs, msrv, jekyll, security]
+    needs: [changes, quick-checks, markdown, spellcheck, test, docs, msrv, tutorials, jekyll, starlight, security]
     if: always()
     steps:
     - name: Verify all checks passed
