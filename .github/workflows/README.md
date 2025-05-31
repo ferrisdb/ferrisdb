@@ -15,7 +15,7 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
   - Test suite (multiple OS and Rust versions)
   - Documentation build (Rust docs)
   - MSRV testing (1.81.0)
-  - Jekyll site build validation (builds but doesn't deploy)
+  - Starlight docs build validation (builds but doesn't deploy)
   - Security audit
 
 ### Deploy Docs (`deploy-docs.yml`)
@@ -25,7 +25,7 @@ This directory contains all GitHub Actions workflows for the FerrisDB project.
   - Manual workflow dispatch
 - **Purpose**: Build and deploy documentation site to GitHub Pages
 - **Jobs**:
-  - Build Jekyll site with just-the-docs theme
+  - Build Starlight documentation site
   - Deploy to GitHub Pages using Actions
 - **Note**: Requires GitHub Pages source to be set to "GitHub Actions" in repo settings
 
@@ -47,7 +47,7 @@ The workflows are designed to work together without conflicts:
 
 - **CI** validates that the docs build correctly but doesn't deploy
 - **Deploy Docs** only runs after changes are merged to main and actually deploys the site
-- Both use the same Ruby/Jekyll setup for consistency
+- CI validates build, deploy workflow handles actual deployment
 
 ## GitHub Pages Configuration
 
