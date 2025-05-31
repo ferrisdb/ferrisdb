@@ -29,9 +29,9 @@ Understanding [concept] through FerrisDB examples, compared with JavaScript, Pyt
     **[Beginner|Intermediate|Advanced]**
   </Card>
 
-  <Card title="⏱️ Reading Time" icon="clock">
-    **[X] minutes**
-  </Card>
+<Card title="⏱️ Reading Time" icon="clock">
+  **[X] minutes**
+</Card>
 
   <Card title="🎯 You'll Learn" icon="rocket">
     Why Rust handles [concept] differently
@@ -153,10 +153,9 @@ pub struct Storage {
     same data.
   </Card>
 
-  <Card title="RwLock (Read-Write Lock)" icon="lock">
-    Similar to Java's `ReadWriteLock`. Many threads can read simultaneously, but writes are
-    exclusive.
-  </Card>
+<Card title="RwLock (Read-Write Lock)" icon="lock">
+  Similar to Java's `ReadWriteLock`. Many threads can read simultaneously, but writes are exclusive.
+</Card>
 
   <Card title="Vec<u8> (Byte Arrays)" icon="memory">
     Like `byte[]` in Java or `Buffer` in Node.js. Rust doesn't hide allocation costs.
@@ -174,11 +173,11 @@ pub struct Storage {
     Safe! ```
   </TabItem>
 
-  <TabItem label="JavaScript ⚠️">
-    ```javascript // This "works" but has race conditions const storage = new Storage(); // Multiple
-    workers accessing same data = 💥 worker1.postMessage({storage}); worker2.postMessage({storage});
-    ```
-  </TabItem>
+<TabItem label="JavaScript ⚠️">
+  ```javascript // This "works" but has race conditions const storage = new Storage(); // Multiple
+  workers accessing same data = 💥 worker1.postMessage({storage}); worker2.postMessage({storage});
+  ```
+</TabItem>
 
   <TabItem label="Python ⚠️">
     ```python # Looks safe but GIL doesn't protect everything storage = Storage() # Forgot the lock?
