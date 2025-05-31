@@ -5,6 +5,7 @@ Welcome to your first FerrisDB tutorial! In this tutorial, you'll build a simple
 ## 🎯 What You'll Build
 
 A working key-value store that can:
+
 - Store string key-value pairs
 - Retrieve values by key
 - Handle missing keys safely
@@ -80,21 +81,25 @@ tutorial-01-kv-store/
 Each step has corresponding tests:
 
 **Step 1**: Create empty struct
+
 ```rust
 cargo test step_01
 ```
 
 **Step 2**: Add HashMap storage
+
 ```rust
 cargo test step_02
 ```
 
 **Step 3**: Implement set() method
+
 ```rust
 cargo test step_03
 ```
 
 **Complete**: All functionality with get()
+
 ```rust
 cargo test integration
 ```
@@ -142,6 +147,7 @@ This is a learning implementation. A production key-value store would need:
 ## 📈 Next Steps
 
 Ready for more? Continue to:
+
 - **Tutorial 2**: Add persistence to survive restarts
 - **Tutorial 3**: Implement a write-ahead log
 - **Tutorial 4**: Build a thread-safe MemTable
@@ -149,6 +155,7 @@ Ready for more? Continue to:
 ## 🤝 Found an Issue?
 
 If something is confusing or broken:
+
 1. Check you're using Rust 1.81.0 or later
 2. Ensure you've run `cargo test` in this directory
 3. Open an issue with your error message

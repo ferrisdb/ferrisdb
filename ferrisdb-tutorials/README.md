@@ -8,18 +8,18 @@ Make database internals accessible to every developer. If you can build a web ap
 
 ## 📚 Tutorial Series
 
-| Tutorial | Component | Key Concepts | Status |
-|----------|-----------|--------------|--------|
-| [01: Key-Value Store](tutorial-01-kv-store/) | Basic HashMap storage | Rust basics, ownership, testing | ✅ Ready |
-| 02: Persistence | File I/O | Result, error handling, serialization | 🚧 Coming Soon |
-| 03: Write-Ahead Log | Durability | Binary files, crash recovery | 📋 Planned |
-| 04: MemTable | Concurrent storage | Arc, RwLock, concurrency | 📋 Planned |
-| 05: Skip Lists | Ordered storage | Generics, unsafe basics | 📋 Planned |
-| 06: SSTables | On-disk format | Binary encoding, iterators | 📋 Planned |
-| 07: Concurrency | Thread safety | Send/Sync, atomics | 📋 Planned |
-| 08: Compaction | Background tasks | Async, channels | 📋 Planned |
-| 09: Storage Engine | Full integration | API design, modules | 📋 Planned |
-| 10: Performance | Optimization | Benchmarking, profiling | 📋 Planned |
+| Tutorial                                     | Component             | Key Concepts                          | Status         |
+| -------------------------------------------- | --------------------- | ------------------------------------- | -------------- |
+| [01: Key-Value Store](tutorial-01-kv-store/) | Basic HashMap storage | Rust basics, ownership, testing       | ✅ Ready       |
+| 02: Persistence                              | File I/O              | Result, error handling, serialization | 🚧 Coming Soon |
+| 03: Write-Ahead Log                          | Durability            | Binary files, crash recovery          | 📋 Planned     |
+| 04: MemTable                                 | Concurrent storage    | Arc, RwLock, concurrency              | 📋 Planned     |
+| 05: Skip Lists                               | Ordered storage       | Generics, unsafe basics               | 📋 Planned     |
+| 06: SSTables                                 | On-disk format        | Binary encoding, iterators            | 📋 Planned     |
+| 07: Concurrency                              | Thread safety         | Send/Sync, atomics                    | 📋 Planned     |
+| 08: Compaction                               | Background tasks      | Async, channels                       | 📋 Planned     |
+| 09: Storage Engine                           | Full integration      | API design, modules                   | 📋 Planned     |
+| 10: Performance                              | Optimization          | Benchmarking, profiling               | 📋 Planned     |
 
 ## 🚀 Getting Started
 
@@ -63,12 +63,15 @@ Every tutorial in this series:
 ## 📖 Learning Path
 
 ### Phase 1: Foundation (Tutorials 1-3)
+
 Learn basic Rust and simple storage concepts. You'll build confidence with Rust's ownership model and basic I/O.
 
 ### Phase 2: Core Components (Tutorials 4-8)
+
 Build the real database structures. You'll tackle concurrency, data structures, and performance.
 
 ### Phase 3: Integration (Tutorials 9-10)
+
 Put it all together into a working storage engine. You'll see how the pieces fit together.
 
 ## 🤝 Contributing

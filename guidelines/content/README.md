@@ -8,9 +8,10 @@ Guidelines for creating educational and engaging content for the FerrisDB projec
 
 ### [Tutorial Guidelines](tutorials.md) 🆕 🔥
 
-**"Learn by Building" tutorial series** where CRUD developers build FerrisDB from scratch, learning Rust and database internals incrementally. 
+**"Learn by Building" tutorial series** where CRUD developers build FerrisDB from scratch, learning Rust and database internals incrementally.
 
 **NEW HIGH BAR**: Every tutorial must have:
+
 - Complete working implementation in `ferrisdb-tutorials/`
 - Step-by-step tests + concurrent tests
 - Performance benchmarks

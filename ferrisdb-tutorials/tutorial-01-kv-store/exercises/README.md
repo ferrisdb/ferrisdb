@@ -7,6 +7,7 @@ Practice what you've learned with these challenges!
 Implement a method to remove key-value pairs from the store.
 
 **Requirements:**
+
 - Method signature: `pub fn delete(&mut self, key: &str) -> Option<String>`
 - Should return the old value if the key existed
 - Should return `None` if the key didn't exist
@@ -18,6 +19,7 @@ Implement a method to remove key-value pairs from the store.
 Implement basic expiration for entries.
 
 **Requirements:**
+
 - Store expiration time with each entry
 - Implement `set_with_ttl(key, value, duration)`
 - Expired entries should not be returned by `get()`
@@ -30,6 +32,7 @@ Implement basic expiration for entries.
 Modify the store to treat keys case-insensitively while preserving the original key.
 
 **Requirements:**
+
 - `get("KEY")` should return the value for `"key"`
 - Store should remember the original casing
 - `keys()` method should return original casings
@@ -39,6 +42,7 @@ Modify the store to treat keys case-insensitively while preserving the original 
 Implement a method to find all keys with a given prefix.
 
 **Requirements:**
+
 - Method: `pub fn scan_prefix(&self, prefix: &str) -> Vec<String>`
 - Should return all keys that start with the prefix
 - Results should be sorted

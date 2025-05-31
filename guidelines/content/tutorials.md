@@ -394,7 +394,7 @@ For components with concurrency concerns, include concurrent tests:
 fn concurrent_access_safety() {
     use std::sync::Arc;
     use std::thread;
-    
+
     let store = Arc::new(KeyValueStore::new());
     let handles: Vec<_> = (0..10)
         .map(|i| {
@@ -404,7 +404,7 @@ fn concurrent_access_safety() {
             })
         })
         .collect();
-    
+
     // Verify no data races or panics
 }
 ```
@@ -432,6 +432,7 @@ fn bench_insert_1000_items(b: &mut Bencher) {
 Before publishing any tutorial:
 
 - [ ] **Tutorial Codebase**
+
   - [ ] Complete implementation in ferrisdb-tutorials/
   - [ ] All tests pass
   - [ ] Benchmarks run successfully
@@ -439,6 +440,7 @@ Before publishing any tutorial:
   - [ ] Exercises with solutions
 
 - [ ] **Dogfooding Verification**
+
   - [ ] Successfully completed tutorial from scratch
   - [ ] All code blocks compile when copy-pasted
   - [ ] Tests run as described
@@ -446,23 +448,27 @@ Before publishing any tutorial:
   - [ ] Final code matches implementation
 
 - [ ] **Code Correctness**
+
   - [ ] Step-by-step tests for each phase
   - [ ] Integration tests for complete implementation
   - [ ] Concurrent tests (if applicable)
   - [ ] Performance benchmarks included
 
 - [ ] **Learning Flow**
+
   - [ ] Only one new Rust concept per step
   - [ ] Concepts build on previous tutorials
   - [ ] No unexplained terminology
   - [ ] Errors and fixes shown clearly
 
 - [ ] **Language Comparisons**
+
   - [ ] JS/Python examples in MDX are idiomatic
   - [ ] Comparisons highlight key differences
   - [ ] No language is portrayed negatively
 
 - [ ] **External Links**
+
   - [ ] All Rust Book links are valid
   - [ ] Documentation links point to stable versions
   - [ ] No broken links to external resources
@@ -484,6 +490,7 @@ Common external links to verify:
 ## CI Integration
 
 The tutorial codebase should be included in CI to ensure:
+
 - All tutorial code compiles
 - All tests pass
 - Benchmarks run without errors
