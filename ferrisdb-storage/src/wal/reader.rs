@@ -1,12 +1,14 @@
-use super::WALEntry;
+use super::{WALEntry, WALHeader};
+use crate::format::FileHeader;
 use ferrisdb_core::Result;
 use std::fs::File;
-use std::io::{BufReader, Read};
+use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
 
 /// Reader for the Write-Ahead Log
 ///
-/// The WALReader reads entries from a WAL file sequentially. It verifies
+/// The WALReader reads entries from a WAL file sequentially. It first validates
+/// the file header, then reads entries following the header. It verifies
 /// checksums and handles partial entries at the end of the file (which may
 /// occur if the process crashed during a write).
 ///
@@ -31,6 +33,7 @@ use std::path::Path;
 /// ```
 pub struct WALReader {
     reader: BufReader<File>,
+    header: WALHeader,
 }
 
 impl WALReader {
@@ -38,12 +41,32 @@ impl WALReader {
     ///
     /// # Errors
     ///
-    /// Returns an error if the file cannot be opened.
+    /// Returns an error if:
+    /// - The file cannot be opened
+    /// - The header is missing or invalid
+    /// - The file is corrupted
     pub fn new(path: impl AsRef<Path>) -> Result<Self> {
-        let file = File::open(path)?;
+        let mut file = File::open(path)?;
+
+        // Read and validate header
+        let mut header_data = vec![0u8; crate::wal::WAL_HEADER_SIZE];
+        file.read_exact(&mut header_data)?;
+
+        let header = WALHeader::decode(&header_data)?;
+        // validate() is already called in decode()
+
+        // Seek to where entries begin
+        file.seek(SeekFrom::Start(header.entry_start_offset as u64))?;
+
         Ok(Self {
             reader: BufReader::new(file),
+            header,
         })
+    }
+
+    /// Get the WAL file header
+    pub fn header(&self) -> &WALHeader {
+        &self.header
     }
 
     /// Reads the next entry from the WAL
@@ -121,7 +144,8 @@ mod tests {
                     format!("key{}", i).into_bytes(),
                     format!("value{}", i).into_bytes(),
                     i as u64,
-                );
+                )
+                .unwrap();
                 writer.append(&entry).unwrap();
             }
 
@@ -156,8 +180,9 @@ mod tests {
                         format!("value{}", i).into_bytes(),
                         i as u64,
                     )
+                    .unwrap()
                 } else {
-                    WALEntry::new_delete(format!("key{}", i).into_bytes(), i as u64)
+                    WALEntry::new_delete(format!("key{}", i).into_bytes(), i as u64).unwrap()
                 };
                 writer.append(&entry).unwrap();
             }
@@ -171,5 +196,58 @@ mod tests {
         assert_eq!(entries.len(), 5);
         assert_eq!(entries[1].operation, ferrisdb_core::Operation::Delete);
         assert_eq!(entries[1].value, Vec::<u8>::new());
+    }
+
+    #[test]
+    fn test_reader_validates_header() {
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("test.wal");
+
+        // Create WAL with header
+        {
+            let writer = WALWriter::new(&wal_path, SyncMode::Full, 1024 * 1024).unwrap();
+            let entry = WALEntry::new_put(b"test".to_vec(), b"data".to_vec(), 1).unwrap();
+            writer.append(&entry).unwrap();
+        }
+
+        // Reader should read header
+        let reader = WALReader::new(&wal_path).unwrap();
+        let header = reader.header();
+
+        assert_eq!(header.version, crate::wal::WAL_CURRENT_VERSION);
+        assert_eq!(&header.magic, crate::wal::WAL_MAGIC);
+        assert!(header.created_at > 0);
+        assert!(header.file_sequence > 0);
+    }
+
+    #[test]
+    fn test_reader_rejects_file_without_header() {
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("bad.wal");
+
+        // Create file that's too small
+        std::fs::write(&wal_path, b"too small").unwrap();
+
+        let result = WALReader::new(&wal_path);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_reader_rejects_wrong_magic() {
+        use crate::format::FileHeader;
+
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("wrong.wal");
+
+        // Create header with wrong magic
+        let mut header = WALHeader::new(12345);
+        header.magic = *b"WRONGMAG";
+        let data = header.encode();
+        std::fs::write(&wal_path, data).unwrap();
+
+        let result = WALReader::new(&wal_path);
+        assert!(result.is_err());
+        let err = result.err().unwrap();
+        assert!(err.to_string().contains("Invalid WAL magic"));
     }
 }

@@ -83,6 +83,50 @@ Start Here (Story, Status, Vision)
 - Remove speculative documentation
 - Add clear status indicators everywhere
 
+## File Format Standards and Patterns
+
+### Core Patterns Established
+
+1. **Magic Number Convention**: `FDB_XXX\0` pattern for all file formats
+
+   - 8-byte identifier at start of every FerrisDB file
+   - Null-terminated for binary safety
+   - Examples: `FDB_WAL\0`, `FDB_SST\0`, `FDB_MAN\0`
+
+2. **64-Byte Header Standard**:
+
+   - Fixed-size headers for predictable parsing
+   - Version field for forward compatibility
+   - Metadata fields padded for alignment
+   - Reserved bytes for future extensions
+
+3. **CRC32 Checksums**:
+
+   - Data integrity verification for all persistent structures
+   - Calculated over entire records/blocks
+   - Stored in little-endian format
+   - Required for WAL entries, SSTable blocks, manifests
+
+4. **Trait-Based Design**:
+
+   - `Serialize`/`Deserialize` traits for all persistent types
+   - Separation of concerns between format and implementation
+   - Enables testing and alternative implementations
+   - Standard error handling with `FerrisDBError`
+
+5. **Binary Format Documentation**:
+   - Every format requires detailed byte-level documentation
+   - ASCII art diagrams showing structure
+   - Example hex dumps for clarity
+   - Version compatibility notes
+
+### Implementation Requirements
+
+- All file formats must be documented in code
+- Binary compatibility tests required
+- Endianness explicitly specified (little-endian default)
+- Version upgrade paths must be considered
+
 ## Guidelines Health Status
 
 ✅ **Healthy**:
@@ -91,6 +135,7 @@ Start Here (Story, Status, Vision)
 - Technology stack references updated
 - Consistent navigation structure
 - GOVERNANCE.md principles followed
+- File format standards established
 
 ⚠️ **Needs Attention**:
 

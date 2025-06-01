@@ -74,6 +74,8 @@ I follow ALL guidelines, especially:
 - **"Fix formatting"** → [Markdown Standards](guidelines/development/markdown-standards.md)
 - **"Run tests"** → [Testing Standards](guidelines/workflow/testing.md)
 - **"Check performance"** → [Performance Guidelines](guidelines/technical/performance.md)
+- **"Design a storage file"** → [File Format Standards](guidelines/technical/file-formats.md)
+- **"Implement a new component"** → [File Format Standards](guidelines/technical/file-formats.md) + [Architecture](guidelines/technical/architecture.md)
 
 ### Content & Writing Tasks
 
@@ -97,7 +99,7 @@ I follow ALL guidelines, especially:
 ### Architecture & Design Tasks
 
 - **"Design a feature"** → [Architecture Decisions](guidelines/technical/architecture.md)
-- **"Work on storage"** → [Storage Engine Guidelines](guidelines/technical/storage-engine.md)
+- **"Work on storage"** → [Storage Engine Guidelines](guidelines/technical/storage-engine.md) + [File Format Standards](guidelines/technical/file-formats.md)
 - **"Consider security"** → [Security Practices](guidelines/technical/security.md)
 - **"Check invariants"** → [System Invariants](guidelines/technical/invariants.md)
 - **"Organize website content"** → [Information Architecture](guidelines/content/information-architecture.md)
@@ -183,6 +185,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 
 - [Architecture](guidelines/technical/architecture.md) - Design decisions
 - [Storage Engine](guidelines/technical/storage-engine.md) - Storage details
+- [File Format Standards](guidelines/technical/file-formats.md) - Binary format design
 - [Performance](guidelines/technical/performance.md) - Optimization
 - [Security](guidelines/technical/security.md) - Security practices
 - [Invariants](guidelines/technical/invariants.md) - System properties

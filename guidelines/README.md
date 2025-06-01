@@ -61,6 +61,7 @@ cd docs && npm run build
 - [Performance](technical/performance.md) - Optimization and benchmarking
 - [Security](technical/security.md) - Security best practices
 - [System Invariants](technical/invariants.md) - Critical system properties
+- [File Format Standards](technical/file-formats.md) - Binary file format patterns and standards
 
 ## Getting Started
 

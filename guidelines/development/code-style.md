@@ -145,6 +145,84 @@ let file = File::open(&path)
 let file = File::open(&path).unwrap();  // Will panic!
 ```
 
+## Constants and Limits
+
+### Definition Guidelines
+
+Constants should be defined explicitly to improve code clarity and prevent security issues:
+
+- Define operation constants explicitly
+- Define size limits to prevent DoS attacks
+- Group related constants together
+- Document units in constant names or comments
+
+### Examples
+
+```rust
+// Good: Grouped operation constants
+pub const OP_PUT: u8 = 1;
+pub const OP_GET: u8 = 2;
+pub const OP_DELETE: u8 = 3;
+pub const OP_SCAN: u8 = 4;
+
+// Good: Size limits with clear units
+pub const MAX_KEY_SIZE: usize = 1024;        // bytes
+pub const MAX_VALUE_SIZE: usize = 64 * 1024; // 64 KiB
+pub const MAX_BATCH_SIZE: usize = 1000;      // number of operations
+pub const MAX_WAL_SIZE: u64 = 100 * 1024 * 1024; // 100 MiB
+
+// Good: Related constants grouped
+pub mod block {
+    pub const BLOCK_SIZE: usize = 4096;      // 4 KiB
+    pub const BLOCK_HEADER_SIZE: usize = 16; // bytes
+    pub const BLOCK_FOOTER_SIZE: usize = 8;  // bytes
+    pub const MAX_BLOCK_SIZE: usize = 64 * 1024; // 64 KiB
+}
+
+// Good: Time constants with units
+pub const COMPACTION_INTERVAL_SECS: u64 = 300;     // 5 minutes
+pub const FLUSH_TIMEOUT_MILLIS: u64 = 5000;        // 5 seconds
+pub const DEFAULT_TTL_SECS: u64 = 24 * 60 * 60;    // 24 hours
+
+// Bad: Magic numbers without context
+const LIMIT: usize = 1000;  // What kind of limit?
+const SIZE: usize = 4096;   // Size of what? In what units?
+const OP: u8 = 1;          // What operation?
+```
+
+### Usage in Code
+
+```rust
+use crate::constants::{MAX_KEY_SIZE, MAX_VALUE_SIZE, OP_PUT};
+
+pub fn validate_key_value(key: &[u8], value: &[u8]) -> Result<()> {
+    if key.len() > MAX_KEY_SIZE {
+        return Err(Error::KeyTooLarge {
+            size: key.len(),
+            max: MAX_KEY_SIZE,
+        });
+    }
+
+    if value.len() > MAX_VALUE_SIZE {
+        return Err(Error::ValueTooLarge {
+            size: value.len(),
+            max: MAX_VALUE_SIZE,
+        });
+    }
+
+    Ok(())
+}
+
+pub fn encode_operation(op: Operation) -> u8 {
+    match op {
+        Operation::Put(_) => OP_PUT,
+        Operation::Get(_) => OP_GET,
+        Operation::Delete(_) => OP_DELETE,
+        Operation::Scan(_) => OP_SCAN,
+    }
+}
+```
+
 ## Performance Considerations
 
 - Document performance implications in comments
