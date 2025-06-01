@@ -58,6 +58,16 @@ Critical system properties that must be maintained:
 - Error handling principles
 - System state transitions
 
+### [File Format Standards](file-formats.md)
+
+Standardized patterns for persistent file formats:
+
+- Magic number conventions (FDB_XXX\0)
+- 64-byte header design patterns
+- Binary encoding standards
+- Checksum and integrity requirements
+- Documentation and testing standards
+
 ## Navigation
 
 - **For New Contributors**: Start with [Architecture](architecture.md) → [Storage Engine](storage-engine.md)

@@ -28,6 +28,7 @@
 //! ```
 
 pub mod config;
+pub mod format;
 pub mod memtable;
 pub mod sstable;
 pub mod storage_engine;

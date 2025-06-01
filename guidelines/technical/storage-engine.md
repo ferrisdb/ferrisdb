@@ -79,6 +79,54 @@ pub struct LogEntry {
 - Implement log rotation
 - Support recovery from partial writes
 
+### File Format Consistency
+
+All storage files (WAL, SSTable, etc.) must follow consistent formatting standards to ensure reliability, debuggability, and forward compatibility.
+
+**Standard File Header:**
+
+Every storage file must begin with:
+
+```rust
+pub struct FileHeader {
+    pub magic: [u8; 8],        // File type identifier (e.g., b"FERRISDB")
+    pub version: u32,          // Format version number
+    pub checksum: u32,         // Header checksum (CRC32)
+    pub timestamp: u64,        // Creation timestamp (Unix epoch)
+    pub file_id: u128,         // Unique file identifier (UUID)
+}
+```
+
+**Encoding Standards:**
+
+1. **Byte Order**: Little-endian for all multi-byte values
+2. **Strings**: UTF-8 for metadata, raw bytes for keys/values
+3. **Checksums**: CRC32 for all checksums (headers, records, blocks)
+4. **Length Prefixes**: u32 for variable-length fields
+
+**Partial Recovery Support:**
+
+Each file format must support recovery from corruption:
+
+```rust
+pub struct Record {
+    pub length: u32,           // Total record length
+    pub checksum: u32,         // Record checksum
+    pub sequence: u64,         // Monotonic sequence number
+    pub data: Vec<u8>,         // Actual record data
+}
+```
+
+**Guidelines:**
+
+- Records must be self-contained (no references to other records)
+- Each record includes its own checksum
+- Corrupted records can be skipped during recovery
+- File formats must be versioned for upgrades
+- Magic numbers identify file types uniquely
+
+For detailed file format specifications, see [file-formats.md](../file-formats.md).
+
 ### Compaction
 
 Background process to merge SSTables.

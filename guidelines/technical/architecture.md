@@ -137,6 +137,294 @@ Transaction design:
 - Multi-key transactions
 - Deterministic transaction ordering
 
+## Trait-Based File Format Design
+
+### Overview
+
+FerrisDB uses a trait-based approach for designing extensible file formats. This pattern allows for modular composition of functionality while maintaining type safety and clear interfaces.
+
+### Core Traits to Implement
+
+When designing a new file format, implement these traits in order:
+
+#### 1. Required Traits
+
+```rust
+// Define the basic structure
+trait FileFormat {
+    type Header: FileHeader;
+    type Record;
+
+    fn magic_bytes() -> &'static [u8];
+    fn version() -> u32;
+}
+
+// Header operations
+trait FileHeader {
+    fn encode(&self) -> Result<Vec<u8>>;
+    fn decode(bytes: &[u8]) -> Result<Self>;
+    fn size() -> usize;
+}
+
+// File validation
+trait ValidateFile {
+    fn validate(&self) -> Result<()>;
+    fn check_magic_bytes(&self, bytes: &[u8]) -> Result<()>;
+    fn verify_version(&self, version: u32) -> Result<()>;
+}
+```
+
+#### 2. Optional Enhancement Traits
+
+Add these traits based on your file format's requirements:
+
+```rust
+// For checksummed headers
+trait ChecksummedHeader: FileHeader {
+    fn compute_checksum(&self) -> u32;
+    fn verify_checksum(&self, expected: u32) -> Result<()>;
+}
+
+// For rich metadata
+trait FileMetadata {
+    fn created_at(&self) -> SystemTime;
+    fn file_size(&self) -> u64;
+    fn record_count(&self) -> usize;
+    fn compression_type(&self) -> Option<CompressionType>;
+}
+
+// For indexable formats
+trait IndexedFile {
+    type IndexEntry;
+
+    fn build_index(&self) -> Result<Vec<Self::IndexEntry>>;
+    fn lookup(&self, key: &[u8]) -> Result<Option<u64>>;
+}
+```
+
+### Trait Composition Pattern
+
+Start with required traits and compose additional functionality:
+
+```rust
+// Example: SSTable file format
+pub struct SSTableFormat;
+
+impl FileFormat for SSTableFormat {
+    type Header = SSTableHeader;
+    type Record = KeyValue;
+
+    fn magic_bytes() -> &'static [u8] { b"SSTB" }
+    fn version() -> u32 { 1 }
+}
+
+// Compose multiple traits for the header
+pub struct SSTableHeader {
+    // fields...
+}
+
+impl FileHeader for SSTableHeader { /* ... */ }
+impl ChecksummedHeader for SSTableHeader { /* ... */ }
+impl FileMetadata for SSTableHeader { /* ... */ }
+
+// Now you can use all trait methods on SSTableHeader
+```
+
+### Error Handling Best Practices
+
+#### 1. Use Error::Corruption for File Format Errors
+
+```rust
+// Good: Specific corruption error with context
+if header.magic != Self::magic_bytes() {
+    return Err(Error::Corruption(format!(
+        "Invalid magic bytes: expected {:?}, found {:?}",
+        Self::magic_bytes(),
+        header.magic
+    )));
+}
+
+// Bad: Generic error
+if header.magic != Self::magic_bytes() {
+    return Err(Error::Other("Bad magic"));
+}
+```
+
+#### 2. Include Context in Errors
+
+```rust
+impl FileHeader for MyHeader {
+    fn decode(bytes: &[u8]) -> Result<Self> {
+        if bytes.len() < Self::size() {
+            return Err(Error::Corruption(format!(
+                "Header too small: expected {} bytes, got {}",
+                Self::size(),
+                bytes.len()
+            )));
+        }
+
+        // Decode with context
+        let version = u32::from_le_bytes(
+            bytes[4..8].try_into()
+                .map_err(|_| Error::Corruption(
+                    "Failed to decode version field".to_string()
+                ))?
+        );
+
+        // Continue decoding...
+    }
+}
+```
+
+#### 3. Validate During Decode
+
+Always validate data during decoding, not as a separate step:
+
+```rust
+impl FileHeader for MyHeader {
+    fn decode(bytes: &[u8]) -> Result<Self> {
+        let header = Self {
+            // ... decode fields ...
+        };
+
+        // Validate immediately
+        header.validate()?;
+
+        // Verify checksum if applicable
+        if let Some(checksum) = header.checksum {
+            header.verify_checksum(checksum)?;
+        }
+
+        Ok(header)
+    }
+}
+```
+
+### Implementation Example
+
+Here's a complete example of implementing a simple indexed file format:
+
+```rust
+pub struct IndexedLogFormat;
+
+impl FileFormat for IndexedLogFormat {
+    type Header = IndexedLogHeader;
+    type Record = LogEntry;
+
+    fn magic_bytes() -> &'static [u8] { b"ILOG" }
+    fn version() -> u32 { 1 }
+}
+
+pub struct IndexedLogHeader {
+    magic: [u8; 4],
+    version: u32,
+    checksum: u32,
+    created_at: u64,
+    index_offset: u64,
+    record_count: u32,
+}
+
+impl FileHeader for IndexedLogHeader {
+    fn encode(&self) -> Result<Vec<u8>> {
+        let mut buf = Vec::with_capacity(Self::size());
+        buf.extend_from_slice(&self.magic);
+        buf.extend_from_slice(&self.version.to_le_bytes());
+        // ... encode other fields ...
+        Ok(buf)
+    }
+
+    fn decode(bytes: &[u8]) -> Result<Self> {
+        // Decode and validate in one pass
+        let header = Self {
+            magic: bytes[0..4].try_into().unwrap(),
+            version: u32::from_le_bytes(bytes[4..8].try_into().unwrap()),
+            // ... decode other fields ...
+        };
+
+        // Validate magic bytes
+        if &header.magic != IndexedLogFormat::magic_bytes() {
+            return Err(Error::Corruption(format!(
+                "Invalid magic bytes: {:?}", header.magic
+            )));
+        }
+
+        // Verify checksum
+        let computed = header.compute_checksum();
+        if computed != header.checksum {
+            return Err(Error::Corruption(format!(
+                "Checksum mismatch: expected {}, computed {}",
+                header.checksum, computed
+            )));
+        }
+
+        Ok(header)
+    }
+
+    fn size() -> usize { 32 }
+}
+
+impl ChecksummedHeader for IndexedLogHeader {
+    fn compute_checksum(&self) -> u32 {
+        // CRC32 of header fields (excluding checksum itself)
+        crc32::checksum_ieee(&self.encode_without_checksum())
+    }
+
+    fn verify_checksum(&self, expected: u32) -> Result<()> {
+        let computed = self.compute_checksum();
+        if computed != expected {
+            return Err(Error::Corruption(format!(
+                "Header checksum mismatch: expected {}, computed {}",
+                expected, computed
+            )));
+        }
+        Ok(())
+    }
+}
+```
+
+### Testing File Formats
+
+Always test your trait implementations thoroughly:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_header_round_trip() {
+        let header = MyHeader::new();
+        let encoded = header.encode().unwrap();
+        let decoded = MyHeader::decode(&encoded).unwrap();
+        assert_eq!(header, decoded);
+    }
+
+    #[test]
+    fn test_corruption_detection() {
+        let header = MyHeader::new();
+        let mut encoded = header.encode().unwrap();
+
+        // Corrupt the magic bytes
+        encoded[0] = 0xFF;
+
+        let result = MyHeader::decode(&encoded);
+        assert!(matches!(result, Err(Error::Corruption(_))));
+    }
+
+    #[test]
+    fn test_checksum_verification() {
+        let header = ChecksummedHeader::new();
+        let checksum = header.compute_checksum();
+
+        // Should succeed with correct checksum
+        assert!(header.verify_checksum(checksum).is_ok());
+
+        // Should fail with wrong checksum
+        assert!(header.verify_checksum(checksum + 1).is_err());
+    }
+}
+```
+
 ## Non-Goals
 
 Things we explicitly don't optimize for:

@@ -286,6 +286,144 @@ cargo test --doc --package ferrisdb-storage
 - Document deprecations clearly
 - Maintain compatibility notes
 
+## Binary Format Documentation
+
+### Overview
+
+When documenting binary formats (e.g., SSTable format, WAL format, wire protocols), follow these standards to ensure clarity and maintainability.
+
+### Documentation Location
+
+- **Document in code** - Keep binary format documentation close to the implementation
+- Use module-level documentation (`//!`) for overall format description
+- Use struct/enum documentation for specific components
+- Place detailed format tables near the relevant struct definitions
+- **Never** create separate documentation files for binary formats
+
+### Format Tables
+
+Use structured tables with consistent columns:
+
+```rust
+//! ## SSTable Block Format
+//!
+//! | Offset | Size | Field        | Description                    |
+//! |--------|------|--------------|--------------------------------|
+//! | 0      | 4    | magic_number | 0x5354424C ('STBL' in ASCII)  |
+//! | 4      | 4    | version      | Format version (little-endian) |
+//! | 8      | 8    | block_size   | Size of data block in bytes    |
+//! | 16     | 8    | num_entries  | Number of key-value entries    |
+//! | 24     | var  | entries      | Sequential key-value pairs     |
+//! | ...    | 4    | checksum     | CRC32 of all preceding bytes   |
+```
+
+### Visual ASCII Diagrams
+
+Include ASCII diagrams to visualize the binary layout:
+
+````rust
+//! ## WAL Entry Format
+//!
+//! ```text
+//! ┌─────────────┬─────────────┬─────────────┬─────────────┐
+//! │ Magic (4B)  │ Seq No (8B) │ Type (1B)   │ Reserved(3B)│
+//! ├─────────────┴─────────────┴─────────────┴─────────────┤
+//! │ Timestamp (8B)                                         │
+//! ├────────────────────────────────────────────────────────┤
+//! │ Key Length (4B)           │ Value Length (4B)          │
+//! ├────────────────────────────────────────────────────────┤
+//! │ Key Data (variable length)                             │
+//! ├────────────────────────────────────────────────────────┤
+//! │ Value Data (variable length)                           │
+//! ├────────────────────────────────────────────────────────┤
+//! │ CRC32 Checksum (4B)                                    │
+//! └────────────────────────────────────────────────────────┘
+//! ```
+````
+
+### Example: Complete Binary Format Documentation
+
+````rust
+//! # SSTable File Format
+//!
+//! The SSTable (Sorted String Table) file format stores key-value pairs
+//! in sorted order with efficient lookup capabilities.
+//!
+//! ## File Layout
+//!
+//! ```text
+//! ┌──────────────────┐
+//! │   File Header    │ - Magic number, version, metadata
+//! ├──────────────────┤
+//! │   Data Blocks    │ - Compressed key-value entries
+//! ├──────────────────┤
+//! │  Filter Block    │ - Bloom filter for fast lookups
+//! ├──────────────────┤
+//! │   Index Block    │ - Block offsets for binary search
+//! ├──────────────────┤
+//! │     Footer       │ - Pointers to meta blocks
+//! └──────────────────┘
+//! ```
+//!
+//! ## File Header Format
+//!
+//! | Offset | Size | Field         | Description                          |
+//! |--------|------|---------------|--------------------------------------|
+//! | 0      | 8    | magic         | 0x7373746162666462 ('sstabfdb')     |
+//! | 8      | 4    | version       | Format version (currently 1)         |
+//! | 12     | 4    | block_size    | Target uncompressed block size       |
+//! | 16     | 8    | creation_time | Unix timestamp (microseconds)        |
+//! | 24     | 8    | num_entries   | Total number of key-value pairs      |
+//! | 32     | 8    | data_size     | Total size of uncompressed data      |
+//! | 40     | 1    | compression   | Compression type (0=none, 1=snappy)  |
+//! | 41     | 7    | reserved      | Reserved for future use (must be 0)  |
+
+/// Represents an SSTable file header
+#[repr(C)]
+pub struct SSTableHeader {
+    /// Magic number identifying this as an SSTable file
+    pub magic: [u8; 8],
+    /// Format version for backward compatibility
+    pub version: u32,
+    /// Target size for uncompressed data blocks
+    pub block_size: u32,
+    /// File creation timestamp in microseconds since epoch
+    pub creation_time: u64,
+    /// Total number of key-value entries in this SSTable
+    pub num_entries: u64,
+    /// Total size of uncompressed data in bytes
+    pub data_size: u64,
+    /// Compression algorithm used for data blocks
+    pub compression: CompressionType,
+    /// Reserved bytes for future extensions
+    pub reserved: [u8; 7],
+}
+````
+
+### Best Practices
+
+1. **Use fixed-width fonts** in tables for alignment
+2. **Include byte offsets** for every field
+3. **Specify endianness** for multi-byte values
+4. **Document magic numbers** with both hex and ASCII representations
+5. **Show variable-length fields** clearly in diagrams
+6. **Include checksums** and their calculation method
+7. **Version your formats** for future compatibility
+
+### Common Patterns
+
+- **Magic Numbers**: Always at offset 0, include ASCII representation
+- **Version Fields**: Follow magic number, use for compatibility
+- **Length Prefixes**: Document whether they include themselves
+- **Padding/Alignment**: Explicitly show reserved/padding bytes
+- **Checksums**: Specify algorithm and coverage
+
+### Version Documentation
+
+- Note when features were added
+- Document deprecations clearly
+- Maintain compatibility notes
+
 ## Related Guidelines
 
 - [Code Style](code-style.md) - Code formatting standards

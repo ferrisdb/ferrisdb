@@ -317,6 +317,219 @@ fn i_dont_want_to_test_this() { ... }
 
 **Remember**: If you think code needs an exemption, first ask if the code can be refactored to be more testable.
 
+## File Format Testing
+
+When implementing file formats (SSTable, WAL, etc.), comprehensive format testing is MANDATORY.
+
+### Required File Format Tests
+
+1. **Roundtrip Tests**: Ensure encode/decode preserves data exactly
+
+   ```rust
+   #[test]
+   fn format_roundtrip_preserves_data() {
+       let original = create_test_data();
+       let encoded = format.encode(&original)?;
+       let decoded = format.decode(&encoded)?;
+       assert_eq!(original, decoded);
+   }
+   ```
+
+2. **Corruption Detection**: Verify checksum validation works
+
+   ```rust
+   #[test]
+   fn detects_corrupted_checksum() {
+       let mut data = valid_file_data();
+       data[checksum_offset] ^= 0xFF; // Corrupt checksum
+       assert!(matches!(
+           format.decode(&data),
+           Err(Error::ChecksumMismatch { .. })
+       ));
+   }
+
+   #[test]
+   fn detects_corrupted_data() {
+       let mut data = valid_file_data();
+       data[data_offset] ^= 0xFF; // Corrupt data
+       assert!(matches!(
+           format.decode(&data),
+           Err(Error::ChecksumMismatch { .. })
+       ));
+   }
+   ```
+
+3. **Boundary Tests**: Test maximum sizes and empty data
+
+   ```rust
+   #[test]
+   fn handles_empty_file() {
+       assert!(matches!(
+           format.decode(&[]),
+           Err(Error::TruncatedFile { .. })
+       ));
+   }
+
+   #[test]
+   fn handles_maximum_record_size() {
+       let large_record = vec![0u8; MAX_RECORD_SIZE];
+       let encoded = format.encode_record(&large_record)?;
+       let decoded = format.decode_record(&encoded)?;
+       assert_eq!(large_record, decoded);
+   }
+
+   #[test]
+   fn rejects_oversized_record() {
+       let oversized = vec![0u8; MAX_RECORD_SIZE + 1];
+       assert!(matches!(
+           format.encode_record(&oversized),
+           Err(Error::RecordTooLarge { .. })
+       ));
+   }
+   ```
+
+4. **Version Compatibility**: Handle version mismatches gracefully
+
+   ```rust
+   #[test]
+   fn rejects_unsupported_version() {
+       let mut header = valid_header();
+       header.version = 99; // Future version
+       assert!(matches!(
+           format.validate_header(&header),
+           Err(Error::UnsupportedVersion { version: 99, .. })
+       ));
+   }
+
+   #[test]
+   fn accepts_compatible_versions() {
+       for version in MIN_VERSION..=CURRENT_VERSION {
+           let mut header = valid_header();
+           header.version = version;
+           assert!(format.validate_header(&header).is_ok());
+       }
+   }
+   ```
+
+5. **Truncation Tests**: Detect incomplete files
+
+   ```rust
+   #[test]
+   fn detects_truncated_header() {
+       let data = valid_file_data();
+       let truncated = &data[..HEADER_SIZE - 1];
+       assert!(matches!(
+           format.decode(truncated),
+           Err(Error::TruncatedHeader { .. })
+       ));
+   }
+
+   #[test]
+   fn detects_truncated_record() {
+       let mut file = valid_file_data();
+       file.truncate(file.len() - 10); // Remove last 10 bytes
+       assert!(matches!(
+           format.decode(&file),
+           Err(Error::TruncatedRecord { .. })
+       ));
+   }
+   ```
+
+6. **Property-Based Tests**: Use proptest for fuzzing
+
+   ```rust
+   use proptest::prelude::*;
+
+   proptest! {
+       #[test]
+       fn roundtrip_arbitrary_data(
+           key: String,
+           value: Vec<u8>,
+           timestamp: u64
+       ) {
+           let record = Record { key, value, timestamp };
+           let encoded = format.encode(&record)?;
+           let decoded = format.decode(&encoded)?;
+           prop_assert_eq!(record, decoded);
+       }
+
+       #[test]
+       fn never_panics_on_random_input(data: Vec<u8>) {
+           // Should return error, never panic
+           let _ = format.decode(&data);
+       }
+   }
+   ```
+
+7. **Concurrent Access**: Test thread safety for shared formats
+
+   ```rust
+   #[test]
+   fn concurrent_readers_safe() {
+       let file = Arc::new(create_test_file());
+       let mut handles = vec![];
+
+       for _ in 0..10 {
+           let file = Arc::clone(&file);
+           handles.push(thread::spawn(move || {
+               let reader = format.open_reader(&file)?;
+               reader.read_all_records()
+           }));
+       }
+
+       for handle in handles {
+           assert!(handle.join().unwrap().is_ok());
+       }
+   }
+   ```
+
+8. **Header Validation**: Test magic numbers, versions, checksums
+
+   ```rust
+   #[test]
+   fn validates_magic_number() {
+       let mut header = valid_header();
+       header.magic = b"NOPE";
+       assert!(matches!(
+           format.validate_header(&header),
+           Err(Error::InvalidMagic { .. })
+       ));
+   }
+
+   #[test]
+   fn validates_header_checksum() {
+       let mut header = valid_header();
+       header.metadata_size += 1; // Change data
+       assert!(matches!(
+           format.validate_header(&header),
+           Err(Error::HeaderChecksumMismatch { .. })
+       ));
+   }
+   ```
+
+### Test Naming Patterns for File Formats
+
+Follow these patterns for consistency:
+
+- `format_roundtrip_preserves_[data_type]`
+- `detects_corrupted_[component]`
+- `handles_[boundary_condition]`
+- `rejects_[invalid_input]`
+- `concurrent_[operation]_safe`
+- `validates_[field_name]`
+- `recovers_from_[error_condition]`
+
+### Example Test Suite Structure
+
+```
+tests/
+├── format_integrity_tests.rs      // Roundtrip and corruption
+├── format_boundary_tests.rs       // Size limits and edge cases
+├── format_compatibility_tests.rs  // Version handling
+├── format_concurrent_tests.rs     // Thread safety
+└── format_property_tests.rs       // Fuzzing with proptest
+```
+
 ## Continuous Integration
 
 All tests run automatically on:
