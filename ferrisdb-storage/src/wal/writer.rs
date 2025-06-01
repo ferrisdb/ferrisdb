@@ -32,7 +32,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 ///     64 * 1024 * 1024  // 64MB
 /// )?;
 ///
-/// let entry = WALEntry::new_put(b"key".to_vec(), b"value".to_vec(), 1);
+/// let entry = WALEntry::new_put(b"key".to_vec(), b"value".to_vec(), 1)?;
 /// writer.append(&entry)?;
 /// writer.sync()?;
 /// # Ok::<(), ferrisdb_core::Error>(())
