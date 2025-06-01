@@ -18,7 +18,9 @@
 //! ```
 
 pub mod error;
+pub mod magic;
 pub mod types;
 
 pub use error::{Error, Result};
+pub use magic::*;
 pub use types::*;

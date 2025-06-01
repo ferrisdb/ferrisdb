@@ -81,6 +81,10 @@ I follow ALL guidelines, especially:
 - **"Write a blog post"** → [Blogging Guidelines](guidelines/content/blogging.md)
 - **"Write as Claude"** → [Claude's Blog Voice](guidelines/content/claude-blog-voice.md)
 - **"Create a tutorial"** → [Tutorial Guidelines](guidelines/content/tutorials.md) + **DOGFOOD IT!**
+  - Keep it SIMPLE but use FerrisDB names
+  - Gradual progression (no copy-paste-done!)
+  - One concept per step, complete programs
+  - No overengineering or dual APIs!
 - **"Update the website"** → [Website Maintenance - Simplified](guidelines/workflow/website-maintenance-simple.md)
 - **"Debug Starlight issues"** → [Starlight Technical Reference](guidelines/workflow/starlight-technical-reference.md)
 - **"Check what's actually built"** → Update Current Status page (be honest!)

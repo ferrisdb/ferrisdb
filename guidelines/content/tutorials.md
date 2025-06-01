@@ -15,6 +15,50 @@ Comprehensive guidelines for creating FerrisDB's "Learn by Building" tutorial se
 5. **Build Real Code**: Final result must match actual FerrisDB implementation
 6. **Celebrate Progress**: Make learning feel rewarding and achievable
 
+### Critical Tutorial Design Principles
+
+**MANDATORY**: These principles must guide ALL tutorial development:
+
+1. **Keep It Simple, But Consistent**
+   - Use FerrisDB's actual naming (Operation::Put, SyncMode::Normal)
+   - Simplify implementation, NOT the interface
+   - No complex trait gymnastics or overengineering
+   - Goal: Familiarity when reading real FerrisDB code
+
+2. **Gradual Step-by-Step Progression**
+   - Each step should teach ONE thing
+   - Build incrementally - no copy-paste-done
+   - Show problems before solutions
+   - Let students feel the pain before the fix
+
+3. **CRUD Developers Are Smart, Not Systems Programmers**
+   - They can learn binary serialization
+   - They need step-by-step guidance
+   - Show WHY before HOW
+   - Relate to web development concepts
+
+4. **Each Step Is a Complete Program**
+   - Students can run and see results
+   - Not just code snippets - working software
+   - Include main.rs examples for tangible progress
+
+5. **Teaching Through Discovery**
+   ```
+   Step 1: "Let's save to a file" → Simple text
+   Step 2: "Oops, the program crashed!" → Show data loss
+   Step 3: "How do we fix this?" → Introduce fsync
+   Step 4: "It's so slow now!" → Benchmark it
+   Step 5: "Let's make it configurable" → Sync modes
+   Step 6: "Text files are huge!" → Show file size
+   Step 7: "Let's use binary" → Teach serialization
+   Step 8: "How do we detect corruption?" → Add checksums
+   ```
+
+6. **One Clean API, Not Multiple**
+   - Avoid parallel APIs or dual implementations
+   - Use consistent types throughout
+   - Evolution, not revolution
+
 ### Target Audience
 
 - **Primary**: CRUD developers (web developers) with no systems programming experience
@@ -330,6 +374,63 @@ Let's follow one of its recommendations:
 - Relate everything to web development
 - Define terms like "durability" with examples
 - Always use backticks for generic types to prevent MDX parsing errors
+
+### Avoiding Tutorial Overengineering
+
+**CRITICAL**: Tutorials must teach, not showcase clever code!
+
+#### Signs of Overengineering:
+
+1. **Multiple Parallel APIs**
+   ```rust
+   // ❌ DON'T: Create dual APIs
+   impl WAL {
+       pub fn append(&mut self, op: Operation) { }      // String API
+       pub fn append_entry(&mut self, entry: WALEntry) { } // Binary API
+   }
+   ```
+
+2. **Unnecessary Trait Implementations**
+   ```rust
+   // ❌ DON'T: Add traits just to match internal code
+   impl From<OperationType> for u8 { }
+   impl TryFrom<u8> for OperationType { }
+   ```
+
+3. **Complex Type Gymnastics**
+   ```rust
+   // ❌ DON'T: Overcomplicate for "consistency"
+   pub struct LogEntry { operation: Operation }
+   pub struct WALEntry { operation: OperationType }
+   // Two different operation types? Why?!
+   ```
+
+#### Keep It Teaching-Focused:
+
+1. **One Clear API**
+   ```rust
+   // ✅ DO: Single, simple interface
+   pub enum Operation {
+       Put { key: String, value: String },
+       Delete { key: String },
+   }
+   ```
+
+2. **Progressive Enhancement**
+   ```rust
+   // Step 1: Start with strings
+   pub struct WAL {
+       file: File,
+   }
+   
+   // Step N: Evolve to binary (explain why!)
+   // Show the transformation, not both at once
+   ```
+
+3. **Explain Every Addition**
+   - Why add this type?
+   - What problem does it solve?
+   - How does it help the student?
 
 ### Code Synchronization Requirements
 

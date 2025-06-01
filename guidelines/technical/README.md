@@ -4,6 +4,19 @@ Technical architecture and implementation guidelines for the FerrisDB project.
 
 **Purpose**: Index of all technical guidelines covering architecture decisions, system design, and implementation standards.
 
+## Foundational Standards
+
+### [Common Standards](common-standards.md)
+
+Essential standards that MUST be followed across all FerrisDB components:
+
+- Binary encoding and endianness
+- File format structures
+- Timestamp and key formats
+- Error handling patterns
+- Compression and checksum standards
+- Resource limits and naming conventions
+
 ## Core Architecture
 
 ### [Architecture Guidelines](architecture.md)
@@ -25,6 +38,16 @@ Detailed guidelines for implementing FerrisDB's storage engine components:
 - SSTable format and operations
 - Compaction strategies
 - Key encoding and ordering
+
+### [Magic Numbers Standard](magic-numbers.md)
+
+Standard for file signatures and magic numbers across FerrisDB:
+
+- Magic number conventions and format
+- Component-specific magic numbers
+- Implementation guidelines
+- Migration strategies
+- Security considerations
 
 ## Quality Attributes
 

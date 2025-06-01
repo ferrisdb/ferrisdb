@@ -94,8 +94,8 @@
 //! 1. **Sorting**: Entries sorted by (user_key ASC, timestamp DESC)
 //! 2. **Immutability**: SSTables are never modified after creation
 //! 3. **Checksums**: All blocks include CRC32 checksums
-//! 4. **Little Endian**: All multi-byte integers in little-endian format
-//! 5. **Magic Number**: `0x46455252_49534442` ("FERRISDB" in ASCII)
+//! 4. **Little Endian**: All multi-byte integers in little-endian format (including magic)
+//! 5. **Magic Number**: `0x4644425353545F5F` ("FDBSST__" in ASCII)
 //!
 //! # Features
 //!
@@ -107,8 +107,9 @@
 use ferrisdb_core::{Key, Operation, Result, Timestamp, Value};
 use std::fmt;
 
-/// Magic number for SSTable files ("FERRISDB" in ASCII)
-pub const SSTABLE_MAGIC: u64 = 0x46455252_49534442;
+/// Magic number for SSTable files
+/// Uses the standard FerrisDB magic number from ferrisdb_core
+pub use ferrisdb_core::SSTABLE_MAGIC;
 
 /// Default block size (4KB)
 pub const DEFAULT_BLOCK_SIZE: usize = 4096;
@@ -399,10 +400,17 @@ mod tests {
 
     #[test]
     fn test_magic_number_ascii() {
-        // Verify our magic number spells "FERRISDB" in ASCII
+        // Verify our magic number follows the FDB standard
+        // Note: We use from_be_bytes here because the constant is written
+        // in source as big-endian for readability
         let bytes = SSTABLE_MAGIC.to_be_bytes();
         let ascii = std::str::from_utf8(&bytes).unwrap();
-        assert_eq!(ascii, "FERRISDB");
+        assert_eq!(ascii, "FDBSST__");
+        assert!(ascii.starts_with("FDB"));
+        
+        // But in files it's stored as little-endian
+        use ferrisdb_core::magic_to_ascii;
+        assert_eq!(magic_to_ascii(SSTABLE_MAGIC), "FDBSST__");
     }
 
     #[test]

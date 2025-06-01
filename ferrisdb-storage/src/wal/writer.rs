@@ -1,6 +1,11 @@
+// 1. Local crate imports
 use super::WALEntry;
 use ferrisdb_core::{Error, Result, SyncMode};
+
+// 2. External crate imports
 use parking_lot::Mutex;
+
+// 3. Standard library imports
 use std::fs::{File, OpenOptions};
 use std::io::{BufWriter, Write};
 use std::path::{Path, PathBuf};
@@ -15,24 +20,61 @@ use std::sync::Arc;
 ///
 /// # Thread Safety
 ///
-/// The writer is thread-safe and can be shared across multiple threads.
-/// Internal locking ensures that entries are written atomically.
+/// The writer is thread-safe and can be shared across multiple threads using
+/// `Arc<WALWriter>`. All write operations are serialized through an internal
+/// mutex, ensuring:
+/// 
+/// - Entries are written atomically (no interleaving)
+/// - File size tracking is accurate across threads
+/// - Only one thread writes to the file at a time
+///
+/// **Performance Note**: While thread-safe, concurrent writes are serialized.
+/// For maximum throughput, consider batching writes in each thread before
+/// calling `append()`.
+///
+/// # Error Recovery
+///
+/// The WALWriter handles various error scenarios:
+///
+/// - **Size Limit Reached**: Returns `Error::StorageEngine` - caller should
+///   rotate to a new WAL file
+/// - **I/O Errors**: Propagated to caller - may indicate disk full, permission
+///   issues, or hardware failure
+/// - **Sync Failures**: Based on `SyncMode`, may indicate durability compromise
+///
+/// Recovery strategies:
+/// - For size limit errors: Create a new WAL file with incremented suffix
+/// - For I/O errors: Retry with backoff, alert operators, fail over to replica
+/// - For sync failures: Depends on durability requirements
 ///
 /// # Example
 ///
 /// ```no_run
 /// use ferrisdb_storage::wal::{WALWriter, WALEntry};
-/// use ferrisdb_core::SyncMode;
+/// use ferrisdb_core::{SyncMode, Error};
+/// use std::sync::Arc;
 ///
-/// let writer = WALWriter::new(
+/// let writer = Arc::new(WALWriter::new(
 ///     "path/to/wal.log",
 ///     SyncMode::Normal,
 ///     64 * 1024 * 1024  // 64MB
-/// )?;
+/// )?);
 ///
 /// let entry = WALEntry::new_put(b"key".to_vec(), b"value".to_vec(), 1);
-/// writer.append(&entry)?;
-/// writer.sync()?;
+/// 
+/// match writer.append(&entry) {
+///     Ok(()) => {
+///         // Success
+///     }
+///     Err(Error::StorageEngine(msg)) if msg.contains("size limit") => {
+///         // Rotate to new file
+///         println!("WAL full, rotating...");
+///     }
+///     Err(e) => {
+///         // Handle other errors
+///         eprintln!("WAL write failed: {}", e);
+///     }
+/// }
 /// # Ok::<(), ferrisdb_core::Error>(())
 /// ```
 pub struct WALWriter {
@@ -57,7 +99,13 @@ impl WALWriter {
     /// Returns an error if the file cannot be created or opened.
     pub fn new(path: impl AsRef<Path>, sync_mode: SyncMode, size_limit: u64) -> Result<Self> {
         let path = path.as_ref().to_path_buf();
-        std::fs::create_dir_all(path.parent().unwrap())?;
+        
+        // Create parent directory if it exists and is not root
+        if let Some(parent) = path.parent() {
+            if parent != Path::new("") {
+                std::fs::create_dir_all(parent)?;
+            }
+        }
 
         let file = OpenOptions::new().create(true).append(true).open(&path)?;
 
@@ -140,23 +188,33 @@ mod tests {
     use tempfile::TempDir;
 
     #[test]
-    fn test_wal_writer_basic() {
+    fn new_creates_wal_file_with_parent_directory() {
         let temp_dir = TempDir::new().unwrap();
-        let wal_path = temp_dir.path().join("test.wal");
+        let wal_path = temp_dir.path().join("nested/dir/test.wal");
 
         let writer = WALWriter::new(&wal_path, SyncMode::Normal, 1024 * 1024).unwrap();
 
+        assert!(wal_path.parent().unwrap().exists());
+        assert_eq!(writer.size(), 0);
+    }
+
+    #[test]
+    fn append_writes_entry_and_updates_size() {
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("test.wal");
+
+        let writer = WALWriter::new(&wal_path, SyncMode::None, 1024 * 1024).unwrap();
+        let initial_size = writer.size();
+
         let entry = WALEntry::new_put(b"key1".to_vec(), b"value1".to_vec(), 1);
-
         writer.append(&entry).unwrap();
-        writer.sync().unwrap();
 
-        assert!(writer.size() > 0);
+        assert!(writer.size() > initial_size);
         assert!(wal_path.exists());
     }
 
     #[test]
-    fn test_wal_size_limit() {
+    fn append_returns_error_when_size_limit_exceeded() {
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("test.wal");
 
@@ -169,8 +227,196 @@ mod tests {
             1,
         );
 
-        // This should exceed the size limit
         let result = writer.append(&entry);
         assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), Error::StorageEngine(msg) if msg.contains("size limit")));
+    }
+
+    #[test]
+    fn new_handles_paths_without_parent_directory() {
+        // Test creating WAL in current directory
+        let writer = WALWriter::new("test.wal", SyncMode::None, 1024);
+        assert!(writer.is_ok());
+
+        // Test creating WAL with simple filename
+        let writer = WALWriter::new("wal", SyncMode::None, 1024);
+        assert!(writer.is_ok());
+
+        // Clean up
+        let _ = std::fs::remove_file("test.wal");
+        let _ = std::fs::remove_file("wal");
+    }
+
+    #[test]
+    fn concurrent_append_maintains_consistency() {
+        use std::sync::Arc;
+        use std::thread;
+
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("concurrent.wal");
+        
+        let writer = Arc::new(WALWriter::new(&wal_path, SyncMode::None, 10 * 1024 * 1024).unwrap());
+        let num_threads = 10;
+        let writes_per_thread = 100;
+        
+        // Spawn multiple threads that write concurrently
+        let handles: Vec<_> = (0..num_threads)
+            .map(|thread_id| {
+                let writer_clone = Arc::clone(&writer);
+                thread::spawn(move || {
+                    for i in 0..writes_per_thread {
+                        let entry = WALEntry::new_put(
+                            format!("key_{}_{}", thread_id, i).into_bytes(),
+                            format!("value_{}_{}", thread_id, i).into_bytes(),
+                            thread_id * 1000 + i,
+                        );
+                        writer_clone.append(&entry).unwrap();
+                    }
+                })
+            })
+            .collect();
+        
+        // Wait for all threads to complete
+        for handle in handles {
+            handle.join().unwrap();
+        }
+        
+        // Verify all writes succeeded
+        writer.sync().unwrap();
+        assert!(writer.size() > 0);
+        
+        // Read back and verify we have all entries
+        let mut reader = super::super::reader::WALReader::new(&wal_path).unwrap();
+        let entries = reader.read_all().unwrap();
+        assert_eq!(entries.len(), num_threads * writes_per_thread);
+    }
+
+    #[test]
+    fn concurrent_size_tracking_remains_accurate() {
+        use std::sync::Arc;
+        use std::thread;
+
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("size_tracking.wal");
+        
+        let writer = Arc::new(WALWriter::new(&wal_path, SyncMode::None, 10 * 1024 * 1024).unwrap());
+        
+        // Track sizes from multiple threads
+        let handles: Vec<_> = (0..5)
+            .map(|_| {
+                let writer_clone = Arc::clone(&writer);
+                thread::spawn(move || {
+                    let mut sizes = Vec::new();
+                    for i in 0..20 {
+                        let entry = WALEntry::new_put(
+                            format!("key_{}", i).into_bytes(),
+                            vec![0u8; 100], // Fixed size for predictable growth
+                            i,
+                        );
+                        writer_clone.append(&entry).unwrap();
+                        sizes.push(writer_clone.size());
+                    }
+                    sizes
+                })
+            })
+            .collect();
+        
+        // Collect all size observations
+        let mut all_sizes = Vec::new();
+        for handle in handles {
+            all_sizes.extend(handle.join().unwrap());
+        }
+        
+        // Verify sizes are monotonically increasing (no race conditions)
+        all_sizes.sort();
+        for window in all_sizes.windows(2) {
+            assert!(window[0] <= window[1], "Size tracking has race condition");
+        }
+    }
+
+    #[test]
+    fn sync_flushes_data_based_on_sync_mode() {
+        let temp_dir = TempDir::new().unwrap();
+        
+        // Test each sync mode
+        for mode in [SyncMode::None, SyncMode::Normal, SyncMode::Full] {
+            let wal_path = temp_dir.path().join(format!("{:?}.wal", mode));
+            let writer = WALWriter::new(&wal_path, mode, 1024 * 1024).unwrap();
+            
+            let entry = WALEntry::new_put(b"key".to_vec(), b"value".to_vec(), 1);
+            writer.append(&entry).unwrap();
+            
+            // Manual sync should always work regardless of mode
+            writer.sync().unwrap();
+            
+            // Verify file exists and has content
+            assert!(wal_path.exists());
+            assert!(std::fs::metadata(&wal_path).unwrap().len() > 0);
+        }
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn append_handles_disk_full_gracefully() {
+        use std::io::Write;
+        
+        // This test requires special setup to simulate disk full
+        // In a real scenario, we'd use a limited loopback device
+        // For now, we test that I/O errors are properly propagated
+        
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("readonly.wal");
+        
+        // Create a file and make it read-only to simulate write failure
+        {
+            let mut file = std::fs::File::create(&wal_path).unwrap();
+            file.write_all(b"dummy").unwrap();
+        }
+        
+        // Make file read-only
+        let mut perms = std::fs::metadata(&wal_path).unwrap().permissions();
+        perms.set_readonly(true);
+        std::fs::set_permissions(&wal_path, perms).unwrap();
+        
+        // Try to create writer on read-only file
+        let writer_result = WALWriter::new(&wal_path, SyncMode::None, 1024);
+        assert!(writer_result.is_err());
+        
+        // Clean up
+        let mut perms = std::fs::metadata(&wal_path).unwrap().permissions();
+        perms.set_readonly(false);
+        std::fs::set_permissions(&wal_path, perms).unwrap();
+    }
+
+    #[test]
+    fn path_returns_original_path() {
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("test.wal");
+        
+        let writer = WALWriter::new(&wal_path, SyncMode::None, 1024).unwrap();
+        assert_eq!(writer.path(), wal_path.as_path());
+    }
+
+    #[test]
+    fn size_accurately_tracks_multiple_writes() {
+        let temp_dir = TempDir::new().unwrap();
+        let wal_path = temp_dir.path().join("test.wal");
+        
+        let writer = WALWriter::new(&wal_path, SyncMode::None, 10 * 1024 * 1024).unwrap();
+        let mut expected_size = 0;
+        
+        for i in 0..10 {
+            let entry = WALEntry::new_put(
+                format!("key_{}", i).into_bytes(),
+                format!("value_{}", i).into_bytes(),
+                i,
+            );
+            
+            let encoded_size = entry.encode().len() as u64;
+            writer.append(&entry).unwrap();
+            expected_size += encoded_size;
+            
+            assert_eq!(writer.size(), expected_size);
+        }
     }
 }

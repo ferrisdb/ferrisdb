@@ -1,6 +1,9 @@
+// 1. Local crate imports
+use ferrisdb_core::{Error, Key, Operation, Result, Timestamp, Value};
+
+// 2. External crate imports
 use bytes::{Buf, BufMut, BytesMut};
 use crc32fast::Hasher;
-use ferrisdb_core::{Error, Key, Operation, Result, Timestamp, Value};
 
 /// An entry in the Write-Ahead Log
 ///
