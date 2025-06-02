@@ -30,13 +30,5 @@ name = "wal_performance"
 harness = false
 
 [[bench]]
-name = "wal_benchmarks"
-harness = false
-
-[[bench]]
-name = "wal_performance_proofs"
-harness = false
-
-[[bench]]
 name = "bytes_ext_benchmarks"
 harness = false
