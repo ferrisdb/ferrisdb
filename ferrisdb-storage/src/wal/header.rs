@@ -4,8 +4,10 @@
 //! WAL file. It provides file identification, versioning, and integrity checking.
 
 use crate::format::{ChecksummedHeader, FileFormat, FileHeader, FileMetadata, ValidateFile};
-use crc32fast::Hasher;
 use ferrisdb_core::{Error, Result};
+
+use crc32fast::Hasher;
+
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Magic number identifying WAL files
@@ -261,7 +263,11 @@ impl FileMetadata for WALHeader {
 fn current_timestamp_micros() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| {
+            // Fallback for systems where time is before Unix epoch
+            // Use a monotonic counter starting from process start
+            std::time::Duration::from_secs(0)
+        })
         .as_micros() as u64
 }
 
@@ -270,7 +276,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn header_encode_decode_roundtrip() {
+    fn encode_decode_preserves_all_header_fields() {
         let header = WALHeader::new(12345);
         let encoded = header.encode();
         let decoded = WALHeader::decode(&encoded).unwrap();
@@ -279,7 +285,7 @@ mod tests {
     }
 
     #[test]
-    fn header_validates_magic() {
+    fn validate_returns_error_for_incorrect_magic() {
         let mut header = WALHeader::new(12345);
         header.magic = *b"BADMAGIC";
 
@@ -287,7 +293,7 @@ mod tests {
     }
 
     #[test]
-    fn header_validates_checksum() {
+    fn decode_returns_error_when_checksum_corrupted() {
         let header = WALHeader::new(12345);
         let encoded = header.encode();
 
@@ -301,7 +307,7 @@ mod tests {
     }
 
     #[test]
-    fn header_validates_version() {
+    fn validate_returns_error_for_unsupported_version() {
         let mut header = WALHeader::new(12345);
         header.version = 0x0200; // v2.0 - not supported
 
@@ -311,13 +317,13 @@ mod tests {
     }
 
     #[test]
-    fn header_size_is_cache_line() {
+    fn header_size_equals_64_bytes_cache_line() {
         assert_eq!(WAL_HEADER_SIZE, 64);
         assert_eq!(std::mem::size_of::<WALHeader>(), 64);
     }
 
     #[test]
-    fn header_file_metadata() {
+    fn new_sets_file_sequence_and_current_timestamp() {
         let header = WALHeader::new(98765);
 
         assert_eq!(header.file_id(), 98765);

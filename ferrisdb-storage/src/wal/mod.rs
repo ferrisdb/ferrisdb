@@ -166,10 +166,12 @@
 
 mod header;
 mod log_entry;
+mod metrics;
 mod reader;
 mod writer;
 
 pub use header::{WALHeader, WAL_CURRENT_VERSION, WAL_HEADER_SIZE, WAL_MAGIC};
 pub use log_entry::WALEntry;
+pub use metrics::{TimedOperation, WALMetrics};
 pub use reader::WALReader;
 pub use writer::WALWriter;

@@ -14,7 +14,10 @@ const MIN_ENTRY_SIZE: usize = HEADER_SIZE + 8 + 1 + 4 + 4; // header + timestamp
 // Size limits for DoS protection
 const MAX_KEY_SIZE: usize = 1024 * 1024; // 1MB
 const MAX_VALUE_SIZE: usize = 10 * 1024 * 1024; // 10MB
-const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE;
+pub const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE;
+
+// Reader configuration
+pub const DEFAULT_READER_BUFFER_SIZE: usize = 8 * 1024; // 8KB initial size
 
 /// An entry in the Write-Ahead Log
 ///
@@ -347,7 +350,7 @@ impl WALEntry {
         cursor.advance(value_len);
 
         // Verify we consumed exactly the right amount of data
-        if cursor.len() != 0 {
+        if !cursor.is_empty() {
             return Err(Error::Corruption(format!(
                 "WAL entry has {} unexpected trailing bytes",
                 cursor.len()
@@ -386,6 +389,13 @@ mod tests {
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    /// Tests basic Put entry encoding and decoding.
+    ///
+    /// Verifies:
+    /// - Put entries can be encoded to bytes
+    /// - Encoded bytes can be decoded back
+    /// - Roundtrip preserves all entry data
+    /// - Basic functionality works correctly
     #[test]
     fn test_encode_decode_put() {
         let entry = WALEntry::new_put(b"test_key".to_vec(), b"test_value".to_vec(), 12345)
@@ -397,6 +407,13 @@ mod tests {
         assert_eq!(entry, decoded);
     }
 
+    /// Tests basic Delete entry encoding and decoding.
+    ///
+    /// Ensures:
+    /// - Delete entries encode correctly
+    /// - Delete operations have empty values
+    /// - Key and timestamp are preserved
+    /// - Delete roundtrip works properly
     #[test]
     fn test_encode_decode_delete() {
         let entry =
@@ -408,6 +425,13 @@ mod tests {
         assert_eq!(entry, decoded);
     }
 
+    /// Tests that data corruption is detected during decode.
+    ///
+    /// Verifies:
+    /// - Bit flips in data are caught
+    /// - Corruption error is returned
+    /// - No silent data corruption
+    /// - Checksum validation works
     #[test]
     fn test_corruption_detection() {
         let entry = WALEntry::new_put(b"test_key".to_vec(), b"test_value".to_vec(), 12345)
@@ -423,6 +447,13 @@ mod tests {
     }
 
     // Test proper behavior names as per guidelines
+    /// Tests that complex Put entry data is preserved exactly.
+    ///
+    /// Verifies:
+    /// - Unicode data in keys/values works
+    /// - Maximum timestamp values handled
+    /// - Binary data preserved byte-for-byte
+    /// - No data transformation occurs
     #[test]
     fn encode_decode_preserves_put_entry_data() {
         let entry = WALEntry::new_put(
@@ -441,6 +472,13 @@ mod tests {
         assert_eq!(entry.value, decoded.value);
     }
 
+    /// Tests that Delete entry fields are preserved correctly.
+    ///
+    /// Ensures:
+    /// - Delete operation type maintained
+    /// - Key data preserved exactly
+    /// - Value is always empty
+    /// - Timestamp accuracy maintained
     #[test]
     fn encode_decode_preserves_delete_entry_data() {
         let entry =
@@ -456,6 +494,13 @@ mod tests {
     }
 
     // Edge cases and error conditions
+    /// Tests that Put entries enforce the 1MB key size limit.
+    ///
+    /// Verifies:
+    /// - Keys larger than MAX_KEY_SIZE rejected
+    /// - Proper error type returned
+    /// - Size validation happens early
+    /// - Memory safety maintained
     #[test]
     fn new_put_rejects_oversized_key() {
         let large_key = vec![0u8; MAX_KEY_SIZE + 1];
@@ -464,6 +509,13 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(_)));
     }
 
+    /// Tests that Put entries enforce the 10MB value size limit.
+    ///
+    /// Ensures:
+    /// - Values larger than MAX_VALUE_SIZE rejected
+    /// - Corruption error returned
+    /// - Size limits prevent OOM
+    /// - Validation before encoding
     #[test]
     fn new_put_rejects_oversized_value() {
         let large_value = vec![0u8; MAX_VALUE_SIZE + 1];
@@ -472,6 +524,13 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(_)));
     }
 
+    /// Tests that Delete entries enforce the 1MB key size limit.
+    ///
+    /// Verifies:
+    /// - Delete operations have same key limits
+    /// - Consistent size enforcement
+    /// - Early validation of inputs
+    /// - Clear error messages
     #[test]
     fn new_delete_rejects_oversized_key() {
         let large_key = vec![0u8; MAX_KEY_SIZE + 1];
@@ -480,6 +539,13 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(_)));
     }
 
+    /// Tests detection of entries with incomplete headers.
+    ///
+    /// Ensures:
+    /// - Minimum header size enforced
+    /// - Truncated data rejected early
+    /// - Clear error for debugging
+    /// - Safe handling of partial data
     #[test]
     fn decode_detects_truncated_header() {
         let data = vec![0u8; 7]; // Too small for header

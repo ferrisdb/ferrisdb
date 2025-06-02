@@ -1,9 +1,23 @@
-use super::{WALEntry, WALHeader};
+use super::{WALEntry, WALHeader, WALMetrics};
 use crate::format::FileHeader;
+use crate::utils::BytesMutExt;
+use bytes::BytesMut;
 use ferrisdb_core::Result;
 use std::fs::File;
 use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
+use std::sync::Arc;
+
+/// Statistics for the WAL reader buffer management
+#[derive(Debug, Clone)]
+pub struct ReaderStats {
+    /// Peak buffer size reached during reading
+    pub peak_buffer_size: usize,
+    /// Number of buffer resizes that occurred
+    pub buffer_resizes: usize,
+    /// Initial buffer capacity
+    pub initial_capacity: usize,
+}
 
 /// Reader for the Write-Ahead Log
 ///
@@ -34,10 +48,16 @@ use std::path::Path;
 pub struct WALReader {
     reader: BufReader<File>,
     header: WALHeader,
+    buffer: BytesMut,
+    metrics: Arc<WALMetrics>,
+    stats: ReaderStats,
 }
 
 impl WALReader {
-    /// Creates a new WAL reader
+    /// Default initial buffer capacity for reading entries
+    const DEFAULT_BUFFER_CAPACITY: usize = 8 * 1024; // 8KB
+
+    /// Creates a new WAL reader with default buffer capacity
     ///
     /// # Errors
     ///
@@ -46,6 +66,22 @@ impl WALReader {
     /// - The header is missing or invalid
     /// - The file is corrupted
     pub fn new(path: impl AsRef<Path>) -> Result<Self> {
+        Self::with_initial_capacity(path, Self::DEFAULT_BUFFER_CAPACITY)
+    }
+
+    /// Creates a new WAL reader with specified initial buffer capacity
+    ///
+    /// This allows tuning memory usage for different workloads:
+    /// - Small capacity for memory-constrained environments
+    /// - Large capacity for high-throughput reading
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - The file cannot be opened
+    /// - The header is missing or invalid
+    /// - The file is corrupted
+    pub fn with_initial_capacity(path: impl AsRef<Path>, initial_capacity: usize) -> Result<Self> {
         let mut file = File::open(path)?;
 
         // Read and validate header
@@ -58,9 +94,19 @@ impl WALReader {
         // Seek to where entries begin
         file.seek(SeekFrom::Start(header.entry_start_offset as u64))?;
 
+        let metrics = Arc::new(WALMetrics::new());
+        metrics.record_file_opened();
+
         Ok(Self {
             reader: BufReader::new(file),
             header,
+            buffer: BytesMut::with_capacity(initial_capacity),
+            metrics,
+            stats: ReaderStats {
+                peak_buffer_size: 0,
+                buffer_resizes: 0,
+                initial_capacity,
+            },
         })
     }
 
@@ -69,7 +115,17 @@ impl WALReader {
         &self.header
     }
 
-    /// Reads the next entry from the WAL
+    /// Get reader statistics for buffer management
+    pub fn stats(&self) -> ReaderStats {
+        self.stats.clone()
+    }
+
+    /// Get metrics for WAL operations
+    pub fn metrics(&self) -> Arc<WALMetrics> {
+        Arc::clone(&self.metrics)
+    }
+
+    /// Reads the next entry from the WAL using efficient buffer management
     ///
     /// Returns `Ok(None)` when the end of file is reached.
     ///
@@ -85,17 +141,46 @@ impl WALReader {
         match self.reader.read_exact(&mut length_buf) {
             Ok(_) => {}
             Err(e) if e.kind() == std::io::ErrorKind::UnexpectedEof => return Ok(None),
-            Err(e) => return Err(e.into()),
+            Err(e) => {
+                self.metrics.record_read(0, false);
+                return Err(e.into());
+            }
         }
 
         let length = u32::from_le_bytes(length_buf) as usize;
+        let total_size = length + 4; // Include the length field
 
-        // Read the rest of the entry
-        let mut data = vec![0u8; length + 4];
-        data[..4].copy_from_slice(&length_buf);
-        self.reader.read_exact(&mut data[4..])?;
+        // Track buffer capacity before potential resize
+        let capacity_before = self.buffer.capacity();
 
-        Ok(Some(WALEntry::decode(&data)?))
+        // Clear buffer and read entire entry using BytesMutExt
+        self.buffer.clear();
+        self.buffer.extend_from_slice(&length_buf);
+
+        // Read remaining data efficiently
+        match self.buffer.read_exact_from(&mut self.reader, length) {
+            Ok(_) => {
+                // Update statistics
+                let capacity_after = self.buffer.capacity();
+                if capacity_after > capacity_before {
+                    self.stats.buffer_resizes += 1;
+                }
+                if capacity_after > self.stats.peak_buffer_size {
+                    self.stats.peak_buffer_size = capacity_after;
+                }
+
+                // Record successful read
+                self.metrics.record_read(total_size as u64, true);
+
+                // Decode the entry
+                let entry = WALEntry::decode(&self.buffer)?;
+                Ok(Some(entry))
+            }
+            Err(e) => {
+                self.metrics.record_read(total_size as u64, false);
+                Err(e.into())
+            }
+        }
     }
 
     /// Reads all remaining entries from the WAL
