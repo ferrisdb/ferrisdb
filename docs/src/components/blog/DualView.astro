@@ -1,5 +1,6 @@
 ---
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { getCollection } from 'astro:content';
 
 interface Props {
   humanPost: any;
@@ -8,6 +9,22 @@ interface Props {
 }
 
 const { humanPost, claudePost, day } = Astro.props;
+
+// Get all available days to check if next/previous days exist
+const allPosts = await getCollection('docs', (entry) => 
+  entry.id && entry.id.startsWith('blog/day-')
+);
+
+// Extract unique day numbers
+const availableDays = [...new Set(
+  allPosts.map(post => {
+    const match = post.id.match(/day-(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  }).filter(Boolean)
+)].sort((a, b) => a - b);
+
+const hasPreviousDay = availableDays.includes(day - 1);
+const hasNextDay = availableDays.includes(day + 1);
 ---
 
 <div class="dual-view">
@@ -70,12 +87,17 @@ const { humanPost, claudePost, day } = Astro.props;
   
   <div class="navigation">
     <p>
-      {day > 1 && (
+      {hasPreviousDay && (
         <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
       )}
-      {day > 1 && ' | '}
+      {hasPreviousDay && ' | '}
       <a href="/blog/">All Posts</a>
-      | <span style="opacity: 0.5;">Day {day + 1} →</span>
+      {hasNextDay && (
+        <span> | <a href={`/blog/day-${day + 1}/both/`}>Day {day + 1} →</a></span>
+      )}
+      {!hasNextDay && (
+        <span style="opacity: 0.5;"> | Day {day + 1} →</span>
+      )}
     </p>
   </div>
 </div>
