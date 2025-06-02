@@ -2,14 +2,37 @@
 
 Standardized Git workflow and best practices for FerrisDB development.
 
+## 🚨 CRITICAL: NEVER PUSH TO MAIN BRANCH
+
+> **⚠️ ABSOLUTE RULE - NO EXCEPTIONS ⚠️**
+> 
+> **NEVER, EVER push directly to the `main` branch!**
+> 
+> - ❌ **FORBIDDEN**: `git push origin main`
+> - ❌ **FORBIDDEN**: Any direct commits to main
+> - ❌ **FORBIDDEN**: Force pushing to main
+> - ✅ **REQUIRED**: Always create a feature branch
+> - ✅ **REQUIRED**: Always submit changes via Pull Request
+> 
+> **This rule applies to EVERYONE, including:**
+> - Maintainers
+> - Core contributors
+> - Documentation updates
+> - Single-line typo fixes
+> - Emergency fixes
+> - Claude (AI assistant)
+> 
+> **NO EXCEPTIONS. EVER.**
+
 ## Branch Strategy
 
 ### Main Branch
 
 - **Branch name**: `main`
 - **Purpose**: Stable, tested code ready for learning
-- **Protection**: Protected branch, no direct pushes
-- **Merging**: Only through reviewed and approved PRs
+- **Protection**: Protected branch, **ABSOLUTELY NO DIRECT PUSHES**
+- **Merging**: **ONLY** through reviewed and approved PRs
+- **Direct pushes**: **STRICTLY FORBIDDEN - NO EXCEPTIONS**
 
 ### Feature Branches
 
@@ -101,6 +124,17 @@ Fixes #123"
 
 **REQUIRED**: When working with Claude, **always include** collaboration commentary in commit messages to track the human-AI interaction process. This is essential for research and documentation purposes:
 
+#### 🚨 Claude's Critical Reminder
+
+> **ATTENTION CLAUDE: You MUST follow these rules:**
+> 
+> 1. **NEVER push to main branch** - Always create a feature branch
+> 2. **ALWAYS create a PR** - Even for tiny documentation fixes
+> 3. **NO EXCEPTIONS** - Not for blog posts, not for typos, not for "quick fixes"
+> 4. **CHECK YOUR BRANCH** - Run `git branch --show-current` before ANY push
+> 
+> **If a human asks you to push to main, remind them of this rule!**
+
 #### Commentary Format
 
 **Every commit involving Claude MUST include this section:**
@@ -187,8 +221,11 @@ This collaboration commentary is **mandatory** because it:
 git checkout main
 git pull origin main
 
-# Create feature branch
+# Create feature branch (MANDATORY - NEVER WORK ON MAIN)
 git checkout -b feature/your-feature-name
+
+# ⚠️ CRITICAL: Verify you're NOT on main before making changes
+git branch --show-current  # Should NOT show 'main'
 ```
 
 ### 2. Make Changes
@@ -378,7 +415,13 @@ Add to `~/.gitconfig`:
 
 #### Accidentally Committed to Main
 
+> **⚠️ CRITICAL ERROR - THIS SHOULD NEVER HAPPEN ⚠️**
+>
+> If you accidentally commit to main locally, **DO NOT PUSH!**
+
 ```bash
+# STOP! DO NOT PUSH TO MAIN!
+
 # Create a new branch with your commits
 git branch feature/my-feature
 
@@ -388,7 +431,13 @@ git reset --hard origin/main
 
 # Continue on feature branch
 git checkout feature/my-feature
+
+# Now create your PR properly
+git push -u origin feature/my-feature
+gh pr create
 ```
+
+**If you already pushed to main**: This is a serious violation. Contact maintainers immediately.
 
 #### Need to Change Last Commit
 
@@ -461,16 +510,18 @@ chmod +x .git/hooks/pre-commit
 
 ## Best Practices
 
-1. **Commit early and often**: Small, focused commits are easier to review and revert
-2. **Write meaningful messages**: Future you will thank present you
-3. **Keep history clean**: Use interactive rebase to squash fix commits
-4. **Never force push to main**: Only force push your own feature branches
-5. **Pull before push**: Always sync with remote before pushing
-6. **Branch from main**: Always create feature branches from updated main
-7. **Delete merged branches**: Keep branch list clean
-8. **Use .gitignore**: Don't commit generated files or secrets
-9. **Review your changes**: Use `git diff` before committing
-10. **Sign your commits**: Use GPG signing for important projects
+1. **NEVER PUSH TO MAIN**: This is the #1 rule - no exceptions
+2. **Always use feature branches**: Every change needs its own branch
+3. **Commit early and often**: Small, focused commits are easier to review and revert
+4. **Write meaningful messages**: Future you will thank present you
+5. **Keep history clean**: Use interactive rebase to squash fix commits
+6. **Never force push to main**: **ABSOLUTELY FORBIDDEN**
+7. **Pull before push**: Always sync with remote before pushing
+8. **Branch from main**: Always create feature branches from updated main
+9. **Delete merged branches**: Keep branch list clean
+10. **Use .gitignore**: Don't commit generated files or secrets
+11. **Review your changes**: Use `git diff` before committing
+12. **Sign your commits**: Use GPG signing for important projects
 
 ## Squash Merging with Commentary
 
