@@ -94,11 +94,11 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               {humanPost.data.insights && (
                 <div style="margin: 0.5rem 0;">
                   {humanPost.data.insights.questionsAsked && (
-                    <Badge text={`❓ ${humanPost.data.insights.questionsAsked} questions`} variant="note" />
+                    <Badge text={`❓ ${humanPost.data.insights.questionsAsked} questions`} variant="default" />
                   )}
                   {humanPost.data.insights.iterations && (
                     <span style="margin-left: 0.5rem;">
-                      <Badge text={`🔄 ${humanPost.data.insights.iterations} iterations`} variant="note" />
+                      <Badge text={`🔄 ${humanPost.data.insights.iterations} iterations`} variant="default" />
                     </span>
                   )}
                 </div>
@@ -121,11 +121,11 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               {claudePost.data.insights && (
                 <div style="margin: 0.5rem 0;">
                   {claudePost.data.insights.filesModified && (
-                    <Badge text={`📁 ${claudePost.data.insights.filesModified} files`} variant="note" />
+                    <Badge text={`📁 ${claudePost.data.insights.filesModified} files`} variant="default" />
                   )}
                   {claudePost.data.insights.patternsObserved && (
                     <span style="margin-left: 0.5rem;">
-                      <Badge text={`🔍 ${claudePost.data.insights.patternsObserved.length} patterns`} variant="note" />
+                      <Badge text={`🔍 ${claudePost.data.insights.patternsObserved.length} patterns`} variant="default" />
                     </span>
                   )}
                 </div>

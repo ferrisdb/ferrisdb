@@ -70,7 +70,7 @@ if (day) {
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <Badge 
       text={perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'} 
-      variant={perspective === 'human' ? 'note' : 'success'} 
+      variant="default"
     />
     {post.data.date && (
       <span style="color: var(--sl-color-text-accent); font-size: 0.9rem;">
@@ -85,7 +85,7 @@ if (day) {
 
   {day && (
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <Badge text={`Day ${day}`} variant="caution" />
+      <Badge text={`Day ${day}`} variant="default" />
       {companionPost && (
         <a href={`/blog/${companionPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-accent); text-decoration: none; font-weight: 500;">
           {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
