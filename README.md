@@ -198,7 +198,7 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 Standing on the shoulders of giants:
 
 - [FoundationDB](https://apple.github.io/foundationdb/) - Architectural inspiration
-- [RocksDB](http://rocksdb.org/) - LSM-tree wisdom
+- [RocksDB](https://rocksdb.org/) - LSM-tree wisdom
 - The Rust community - Incredible ecosystem and support
 
 Special thanks to all contributors - both human and AI - who are making this experiment possible! 🦀🤖
