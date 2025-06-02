@@ -85,7 +85,7 @@ if (day) {
           <div class="collaboration-day">
             <span class="day-badge">Day {day}</span>
             {companionPost && (
-              <a href={`/${companionPost.id}/`} class="companion-link">
+              <a href={`/blog/${companionPost.id.replace('blog/', '')}/`} class="companion-link">
                 {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
               </a>
             )}
@@ -128,7 +128,7 @@ if (day) {
                   </span>
                 </div>
                 <h4>
-                  <a href={`/${relatedPost.id}/`}>
+                  <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`}>
                     {relatedPost.data.title}
                   </a>
                 </h4>

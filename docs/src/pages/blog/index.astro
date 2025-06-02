@@ -101,7 +101,7 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               )}
               
               <p>
-                <a href={`/${humanPost.id}/`}>Read Human Perspective →</a>
+                <a href={`/blog/${humanPost.id.replace('blog/', '')}/`}>Read Human Perspective →</a>
               </p>
             </Card>
           )}
@@ -126,7 +126,7 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               )}
               
               <p>
-                <a href={`/${claudePost.id}/`}>Read AI Perspective →</a>
+                <a href={`/blog/${claudePost.id.replace('blog/', '')}/`}>Read AI Perspective →</a>
               </p>
             </Card>
           )}

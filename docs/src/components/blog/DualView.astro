@@ -1,4 +1,6 @@
 ---
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
 interface Props {
   humanPost: any;
   claudePost: any;
@@ -9,103 +11,72 @@ const { humanPost, claudePost, day } = Astro.props;
 ---
 
 <div class="dual-view">
-  <div class="dual-view-header">
-    <h1>Day {day}: Dual Perspective</h1>
-    <p>Read both perspectives side-by-side to see how human curiosity and AI implementation work together.</p>
-  </div>
+  <h1>Day {day}: Dual Perspective</h1>
+  <p>Compare human curiosity and AI implementation side-by-side</p>
   
-  <div class="perspective-columns">
-    <article class="perspective-column human-column">
-      <header class="column-header">
-        <div class="perspective-info">
-          <span class="perspective-icon">👨‍💻</span>
-          <div>
-            <h2>Human Perspective</h2>
-            <p>Learning through questions and review</p>
-          </div>
-        </div>
-        <a href={`/blog/${humanPost.slug}/`} class="read-full">Read Full Post →</a>
-      </header>
+  <Aside type="tip">
+    Read both perspectives to see how human questions and AI insights combine to drive our database development forward.
+  </Aside>
+  
+  <CardGrid>
+    <Card title="👨‍💻 Human Perspective" icon="user">
+      <h3>{humanPost.data.title}</h3>
+      <p>{humanPost.data.excerpt}</p>
       
-      <div class="post-content">
-        <h3>{humanPost.data.title}</h3>
-        <div class="post-excerpt">
-          {humanPost.data.excerpt}
+      {humanPost.data.insights && (
+        <div class="insights">
+          {humanPost.data.insights.questionsAsked && (
+            <p><strong>❓ Questions Asked:</strong> {humanPost.data.insights.questionsAsked}</p>
+          )}
+          {humanPost.data.insights.iterations && (
+            <p><strong>🔄 Iterations:</strong> {humanPost.data.insights.iterations}</p>
+          )}
+          {humanPost.data.insights.breakthroughMoment && (
+            <p><strong>💡 Breakthrough:</strong> "{humanPost.data.insights.breakthroughMoment}"</p>
+          )}
         </div>
-        
-        {humanPost.data.insights && (
-          <div class="quick-metrics">
-            {humanPost.data.insights.questionsAsked && (
-              <span class="metric">❓ {humanPost.data.insights.questionsAsked} questions</span>
-            )}
-            {humanPost.data.insights.breakthroughMoment && (
-              <span class="metric">💡 "{humanPost.data.insights.breakthroughMoment}"</span>
-            )}
-          </div>
-        )}
-      </div>
-    </article>
-    
-    <article class="perspective-column claude-column">
-      <header class="column-header">
-        <div class="perspective-info">
-          <span class="perspective-icon">🤖</span>
-          <div>
-            <h2>Claude Perspective</h2>
-            <p>Pattern analysis and implementation insights</p>
-          </div>
-        </div>
-        <a href={`/blog/${claudePost.slug}/`} class="read-full">Read Full Post →</a>
-      </header>
-      
-      <div class="post-content">
-        <h3>{claudePost.data.title}</h3>
-        <div class="post-excerpt">
-          {claudePost.data.excerpt}
-        </div>
-        
-        {claudePost.data.insights && (
-          <div class="quick-metrics">
-            {claudePost.data.insights.filesModified && (
-              <span class="metric">📁 {claudePost.data.insights.filesModified} files modified</span>
-            )}
-            {claudePost.data.insights.keyLearning && (
-              <span class="metric">🎯 "{claudePost.data.insights.keyLearning}"</span>
-            )}
-          </div>
-        )}
-      </div>
-    </article>
-  </div>
-  
-  <div class="collaboration-summary">
-    <h3>🤝 Collaboration Summary</h3>
-    <div class="summary-grid">
-      <div class="summary-item">
-        <span class="summary-label">Focus</span>
-        <span class="summary-value">
-          {humanPost.data.tags?.filter((tag: string) => !['human-perspective', 'ai-perspective'].includes(tag))?.slice(0, 3)?.join(', ') || 'Development'}
-        </span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">Outcome</span>
-        <span class="summary-value">Enhanced FerrisDB capabilities</span>
-      </div>
-    </div>
-  </div>
-  
-  <div class="navigation-footer">
-    <div class="nav-links">
-      {day > 1 && (
-        <a href={`/blog/day-${day - 1}/both/`} class="nav-link prev">
-          ← Day {day - 1}
-        </a>
       )}
-      <a href="/blog/" class="nav-link all">All Posts</a>
-      <a href={`/blog/day-${day + 1}/both/`} class="nav-link next disabled">
-        Day {day + 1} →
-      </a>
-    </div>
+      
+      <p><a href={`/blog/${humanPost.id.replace('blog/', '')}/`}>Read Full Human Post →</a></p>
+    </Card>
+    
+    <Card title="🤖 Claude Perspective" icon="rocket">
+      <h3>{claudePost.data.title}</h3>
+      <p>{claudePost.data.excerpt}</p>
+      
+      {claudePost.data.insights && (
+        <div class="insights">
+          {claudePost.data.insights.filesModified && (
+            <p><strong>📁 Files Modified:</strong> {claudePost.data.insights.filesModified}</p>
+          )}
+          {claudePost.data.insights.patternsObserved && (
+            <p><strong>🔍 Patterns Observed:</strong> {claudePost.data.insights.patternsObserved.length}</p>
+          )}
+          {claudePost.data.insights.keyLearning && (
+            <p><strong>🎯 Key Learning:</strong> "{claudePost.data.insights.keyLearning}"</p>
+          )}
+        </div>
+      )}
+      
+      <p><a href={`/blog/${claudePost.id.replace('blog/', '')}/`}>Read Full Claude Post →</a></p>
+    </Card>
+  </CardGrid>
+
+  <Aside type="note" title="Collaboration Highlights">
+    Day {day} showcased {humanPost.data.insights?.questionsAsked || 0} questions, 
+    {humanPost.data.insights?.iterations || claudePost.data.insights?.filesModified || 0} iterations, 
+    and {claudePost.data.insights?.patternsObserved?.length || 0} collaboration patterns.
+  </Aside>
+  
+  <div class="navigation">
+    <p>
+      {day > 1 && (
+        <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
+      )}
+      {day > 1 && ' | '}
+      <a href="/blog/">All Posts</a>
+      | <span style="opacity: 0.5;">Day {day + 1} →</span>
+    </p>
   </div>
 </div>
 
@@ -113,194 +84,46 @@ const { humanPost, claudePost, day } = Astro.props;
   .dual-view {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem;
   }
 
-  .dual-view-header {
+  .dual-view h1 {
     text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .dual-view > p {
+    text-align: center;
+    color: var(--sl-color-text-accent);
     margin-bottom: 2rem;
   }
 
-  .dual-view-header h1 {
-    margin: 0 0 0.5rem 0;
-    color: var(--sl-color-text);
+  .insights {
+    margin: 1rem 0;
   }
 
-  .dual-view-header p {
-    color: var(--sl-color-text-accent);
-    font-size: 1.1rem;
-    margin: 0;
-  }
-
-  .perspective-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .perspective-column {
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 0.75rem;
-    overflow: hidden;
-  }
-
-  .column-header {
-    padding: 1.5rem;
-    background: var(--sl-color-bg-sidebar);
-    border-bottom: 1px solid var(--sl-color-hairline);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .perspective-info {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .perspective-icon {
-    font-size: 2rem;
-  }
-
-  .perspective-info h2 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.2rem;
-    color: var(--sl-color-text);
-  }
-
-  .perspective-info p {
-    margin: 0;
-    color: var(--sl-color-text-accent);
+  .insights p {
+    margin: 0.5rem 0;
     font-size: 0.9rem;
   }
 
-  .read-full {
-    color: var(--sl-color-accent);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-
-  .read-full:hover {
-    text-decoration: underline;
-  }
-
-  .post-content {
-    padding: 1.5rem;
-  }
-
-  .post-content h3 {
-    margin: 0 0 1rem 0;
-    font-size: 1.1rem;
-    color: var(--sl-color-text);
-  }
-
-  .post-excerpt {
-    color: var(--sl-color-text-accent);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .quick-metrics {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .metric {
-    font-size: 0.8rem;
-    color: var(--sl-color-text-accent);
-    background: var(--sl-color-bg);
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    border: 1px solid var(--sl-color-hairline);
-    width: fit-content;
-  }
-
-  .collaboration-summary {
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .collaboration-summary h3 {
-    margin: 0 0 1rem 0;
-    color: var(--sl-color-text-accent);
-  }
-
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  .summary-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .summary-label {
-    font-size: 0.8rem;
-    color: var(--sl-color-text-accent);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-
-  .summary-value {
-    color: var(--sl-color-text);
-    font-weight: 500;
-  }
-
-  .navigation-footer {
-    border-top: 1px solid var(--sl-color-hairline);
+  .navigation {
+    text-align: center;
+    margin-top: 2rem;
     padding-top: 2rem;
+    border-top: 1px solid var(--sl-color-hairline);
   }
 
-  .nav-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .navigation p {
+    margin: 0;
   }
 
-  .nav-link {
+  .navigation a {
     color: var(--sl-color-accent);
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    border: 1px solid var(--sl-color-accent);
   }
 
-  .nav-link:hover:not(.disabled) {
-    background: var(--sl-color-accent-low);
-  }
-
-  .nav-link.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  @media (max-width: 768px) {
-    .perspective-columns {
-      grid-template-columns: 1fr;
-    }
-
-    .column-header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .nav-links {
-      flex-direction: column;
-      gap: 1rem;
-    }
+  .navigation a:hover {
+    text-decoration: underline;
   }
 </style>
