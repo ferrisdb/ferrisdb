@@ -16,7 +16,6 @@ const MAX_KEY_SIZE: usize = 1024 * 1024; // 1MB
 const MAX_VALUE_SIZE: usize = 10 * 1024 * 1024; // 10MB
 pub const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE;
 
-
 /// An entry in the Write-Ahead Log
 ///
 /// Each entry represents a single operation (Put or Delete) with its
