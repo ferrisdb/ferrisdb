@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.34.3",
@@ -16,5 +17,9 @@
     "rehype-mermaid": "^3.0.0",
     "sharp": "^0.32.5",
     "starlight-blog": "^0.23.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.3"
   }
 }

@@ -45,3 +45,4 @@ docs/book/
 tmp/
 temp/
 *.tmp
+**/proptest-regressions
