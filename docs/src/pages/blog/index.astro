@@ -86,7 +86,7 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
           {humanPost && (
             <Card 
               title={`👨‍💻 Human: Day ${day}`}
-              icon="user"
+              icon="document"
             >
               <h4 style="margin: 0 0 0.5rem 0; font-size: 1rem;">{humanPost.data.title}</h4>
               <p>{humanPost.data.excerpt || humanPost.data.description || 'Human perspective on our database building journey.'}</p>
