@@ -290,6 +290,50 @@ fn read_header(data: &[u8]) -> Result<&[u8; 16]> {
 }
 ```
 
+### Unsafe Code Patterns
+
+When using unsafe code for performance:
+
+1. **Minimize Scope**: Keep unsafe blocks as small as possible
+2. **Document Invariants**: Use SAFETY comments explaining why it's safe
+3. **Test Thoroughly**: Include specific tests for safety invariants
+4. **Error Handling**: Ensure unsafe code doesn't break on error paths
+
+#### Example Pattern: Uninitialized Memory
+
+```rust
+// SAFETY: We're about to read exactly `count` bytes into uninitialized memory.
+// This is safe because:
+// 1. We've reserved at least `count` bytes of capacity
+// 2. We only update the length after a successful read
+// 3. On error, we don't update the length, leaving the buffer unchanged
+unsafe {
+    let dst = self.as_mut_ptr().add(start_len);
+    let uninit_slice = std::slice::from_raw_parts_mut(dst, count);
+
+    match reader.read_exact(uninit_slice) {
+        Ok(()) => {
+            // Only update length after successful read
+            self.set_len(start_len + count);
+            Ok(())
+        }
+        Err(e) => {
+            // Length remains unchanged, no uninitialized memory exposed
+            Err(e)
+        }
+    }
+}
+```
+
+#### Testing Unsafe Code
+
+Always include tests that verify:
+
+- Memory safety under normal conditions
+- Correct behavior on error paths
+- No data corruption on concurrent access
+- Proper handling of edge cases
+
 ## Performance
 
 ### Zero-Copy Operations

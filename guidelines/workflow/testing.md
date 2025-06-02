@@ -201,7 +201,7 @@ FerrisDB targets 100% test coverage because:
 - Databases require exceptional reliability
 - Users trust us with their data
 - Every line of code should be justified and tested
-- High coverage catches more bugs before production
+- High coverage helps us understand and verify our implementation
 
 **Required coverage:**
 
@@ -529,6 +529,24 @@ tests/
 ├── format_concurrent_tests.rs     // Thread safety
 └── format_property_tests.rs       // Fuzzing with proptest
 ```
+
+## Testing Utility Modules
+
+When creating shared utilities (e.g., in a `utils` module):
+
+1. **Comprehensive Test Coverage**: Utilities are used across the codebase, so they need extra thorough testing
+2. **Error Propagation Tests**: Test how utilities handle and propagate various error types
+3. **Safety Tests**: If using unsafe code, include specific tests verifying memory safety
+4. **Performance Claims**: Any performance benefits must be proven with benchmarks
+5. **Example**: See `ferrisdb-storage/src/utils/bytes_ext.rs` for a well-tested utility pattern
+
+### Utility Test Requirements
+
+- Minimum 16 tests covering all scenarios
+- Explicit tests for error conditions
+- Boundary and edge case coverage
+- Thread safety verification if applicable
+- Property-based tests for complex invariants
 
 ## Continuous Integration
 

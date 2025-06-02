@@ -32,6 +32,7 @@ pub mod format;
 pub mod memtable;
 pub mod sstable;
 pub mod storage_engine;
+pub mod utils;
 pub mod wal;
 
 pub use config::StorageConfig;

@@ -28,3 +28,7 @@ env_logger = "0.11"
 [[bench]]
 name = "wal_performance"
 harness = false
+
+[[bench]]
+name = "bytes_ext_benchmarks"
+harness = false

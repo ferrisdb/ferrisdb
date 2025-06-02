@@ -223,6 +223,36 @@ pub fn encode_operation(op: Operation) -> u8 {
 }
 ```
 
+## Extension Traits
+
+When extending external types with new functionality:
+
+```rust
+// Good: Extension trait with clear naming
+pub trait BytesMutExt {
+    fn read_exact_from<R: Read>(&mut self, reader: &mut R, count: usize) -> io::Result<()>;
+}
+
+impl BytesMutExt for BytesMut {
+    fn read_exact_from<R: Read>(&mut self, reader: &mut R, count: usize) -> io::Result<()> {
+        // Implementation
+    }
+}
+
+// Usage
+use crate::utils::BytesMutExt;
+let mut buf = BytesMut::new();
+buf.read_exact_from(&mut reader, 1024)?;
+```
+
+### Extension Trait Guidelines
+
+- Name extension traits with `Ext` suffix
+- Document why the extension is needed
+- Keep extensions focused on a single responsibility
+- Place in a `utils` module if used across multiple modules
+- Test thoroughly as they affect external types
+
 ## Performance Considerations
 
 - Document performance implications in comments
