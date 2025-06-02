@@ -35,6 +35,25 @@ export default defineConfig({
 						defer: true,
 					},
 				},
+				// Google Analytics
+				{
+					tag: 'script',
+					attrs: {
+						src: 'https://www.googletagmanager.com/gtag/js?id=G-JPW5LY247F',
+						async: true,
+					},
+				},
+				{
+					tag: 'script',
+					content: `
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'G-JPW5LY247F', {
+							anonymize_ip: true // GDPR compliance
+						});
+					`,
+				},
 			],
 			sidebar: [
 				{
