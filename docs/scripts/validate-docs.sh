@@ -67,15 +67,16 @@ fi
 echo "✓ Checking MDX syntax..."
 mdx_errors=0
 for file in $(find src/content/docs -name "*.mdx" | head -10); do
-    # Check for unclosed JSX tags
-    if grep -E '<[^/>]+>(?!.*</\1>)' "$file" > /dev/null 2>&1; then
-        echo "  ⚠️  Possible unclosed JSX tag in: $file"
+    # Check for import statements without quotes
+    if grep -E '^import .* from [^"'\''`]' "$file" > /dev/null 2>&1; then
+        echo "  ⚠️  Import statement might be missing quotes in: $file"
         mdx_errors=$((mdx_errors + 1))
     fi
     
-    # Check for invalid import statements
-    if grep -E '^import .* from (?![\"\'\`])' "$file" > /dev/null 2>&1; then
-        echo "  ⚠️  Invalid import statement in: $file"
+    # Check for obvious JSX issues (very basic check to avoid false positives)
+    # Only flag if we see an opening tag at the start of a line with no closing
+    if grep -E '^<[A-Za-z]+[^/>]*>$' "$file" > /dev/null 2>&1; then
+        echo "  ⚠️  Possible unclosed JSX tag in: $file"
         mdx_errors=$((mdx_errors + 1))
     fi
 done
