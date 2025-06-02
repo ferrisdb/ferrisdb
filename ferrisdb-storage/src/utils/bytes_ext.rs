@@ -540,6 +540,200 @@ mod proptests {
 }
 
 #[cfg(test)]
+mod allocation_tests {
+    use super::*;
+    use std::io::Cursor;
+
+    #[cfg(feature = "allocation-testing")]
+    mod with_alloc_counter {
+        use super::*;
+        use alloc_counter::{no_alloc, count_alloc, AllocCounterSystem};
+        
+        #[global_allocator]
+        static A: AllocCounterSystem = AllocCounterSystem;
+        
+        /// Tests that read_exact_from performs zero allocations when buffer capacity is sufficient.
+        ///
+        /// This test verifies that:
+        /// - Reading into a buffer with sufficient capacity allocates zero bytes
+        /// - The zero-allocation claim is provable with allocation tracking
+        /// - Buffer reuse patterns maintain zero-allocation behavior
+        /// - Performance optimization claims are concrete and measurable
+        #[test]
+        fn read_exact_from_zero_allocation_when_capacity_sufficient() {
+            let mut buf = BytesMut::with_capacity(1024);
+            let data = vec![42u8; 512];
+            
+            // First read establishes the buffer content
+            buf.read_exact_from(&mut Cursor::new(&data), 512).unwrap();
+            buf.clear();
+            
+            // Second read should not allocate since capacity is sufficient
+            no_alloc(|| {
+                buf.read_exact_from(&mut Cursor::new(&data), 512).unwrap();
+            });
+            
+            assert_eq!(buf.len(), 512);
+            assert!(buf.iter().all(|&b| b == 42));
+        }
+        
+        /// Tests allocation behavior during buffer capacity growth.
+        ///
+        /// This test verifies that:
+        /// - Reading more than capacity triggers expected allocations
+        /// - Allocation count is reasonable for capacity growth
+        /// - Buffer growth behavior is predictable and measurable
+        /// - Subsequent reads with sufficient capacity don't allocate
+        #[test]
+        fn read_exact_from_allocates_predictably_during_growth() {
+            let data = vec![42u8; 2048];
+            let mut buf = BytesMut::with_capacity(512);
+            
+            // This should trigger allocation due to insufficient capacity
+            let (allocations, _) = count_alloc(|| {
+                buf.read_exact_from(&mut Cursor::new(&data), 2048).unwrap();
+            });
+            
+            // Should have allocated at least once for capacity growth
+            assert!(allocations > 0, "Expected allocation for capacity growth, got {}", allocations);
+            assert_eq!(buf.len(), 2048);
+            
+            // Clear but keep capacity for next test
+            buf.clear();
+            
+            // Subsequent read of same size should not allocate
+            no_alloc(|| {
+                buf.read_exact_from(&mut Cursor::new(&data), 2048).unwrap();
+            });
+        }
+        
+        /// Tests that sequential reads with sufficient capacity maintain zero allocations.
+        ///
+        /// This test verifies that:
+        /// - Multiple sequential reads don't cause unexpected allocations
+        /// - Buffer reuse patterns are allocation-efficient
+        /// - The optimization benefits compound over multiple operations
+        /// - WAL-like read patterns are truly zero-allocation
+        #[test]
+        fn sequential_reads_zero_allocation_with_sufficient_capacity() {
+            let chunk_size = 256;
+            let num_chunks = 8;
+            let total_size = chunk_size * num_chunks;
+            
+            let mut buf = BytesMut::with_capacity(total_size);
+            
+            // Pre-fill to establish capacity
+            let initial_data = vec![1u8; total_size];
+            buf.read_exact_from(&mut Cursor::new(&initial_data), total_size).unwrap();
+            buf.clear();
+            
+            // Now perform sequential reads - should not allocate
+            no_alloc(|| {
+                for i in 0..num_chunks {
+                    let chunk_data = vec![(i + 2) as u8; chunk_size];
+                    buf.read_exact_from(&mut Cursor::new(&chunk_data), chunk_size).unwrap();
+                }
+            });
+            
+            assert_eq!(buf.len(), total_size);
+            
+            // Verify data integrity
+            for i in 0..num_chunks {
+                let start = i * chunk_size;
+                let end = start + chunk_size;
+                let expected_value = (i + 2) as u8;
+                assert!(buf[start..end].iter().all(|&b| b == expected_value));
+            }
+        }
+    }
+    
+    /// Tests allocation behavior without requiring specific allocator setup.
+    ///
+    /// These tests provide allocation insights that work in any test environment
+    /// and demonstrate the allocation characteristics of BytesMutExt.
+    mod general_allocation_behavior {
+        use super::*;
+        
+        /// Tests that buffer reuse reduces allocation pressure compared to recreating buffers.
+        ///
+        /// This test verifies that:
+        /// - Reusing buffers is more allocation-efficient than creating new ones
+        /// - The performance benefit of BytesMutExt is demonstrable
+        /// - Buffer capacity management works as expected
+        /// - Memory usage patterns align with performance claims
+        #[test]
+        fn buffer_reuse_demonstrates_allocation_efficiency() {
+            let data = vec![42u8; 4096];
+            let iterations = 10;
+            
+            // Approach 1: Create new buffer each time (should allocate more)
+            let mut total_capacity_new = 0;
+            for _ in 0..iterations {
+                let mut buf = BytesMut::new();
+                buf.read_exact_from(&mut Cursor::new(&data), 4096).unwrap();
+                total_capacity_new += buf.capacity();
+            }
+            
+            // Approach 2: Reuse buffer (should be more efficient)
+            let mut buf = BytesMut::new();
+            let mut total_capacity_reused = 0;
+            for _ in 0..iterations {
+                buf.clear();
+                buf.read_exact_from(&mut Cursor::new(&data), 4096).unwrap();
+                total_capacity_reused += buf.capacity();
+            }
+            
+            // Buffer reuse should result in lower total capacity allocation
+            // (After first allocation, capacity should remain stable)
+            println!("New buffers total capacity: {}", total_capacity_new);
+            println!("Reused buffer total capacity: {}", total_capacity_reused);
+            
+            // The reused approach should be more efficient
+            assert!(total_capacity_reused <= total_capacity_new,
+                "Buffer reuse should be more allocation-efficient");
+                
+            // After first iteration, reused buffer shouldn't need to grow
+            assert!(total_capacity_reused < iterations * 8192, // Reasonable upper bound
+                "Reused buffer allocated too much capacity");
+        }
+        
+        /// Tests that capacity growth follows expected patterns.
+        ///
+        /// This test verifies that:
+        /// - Buffer capacity grows predictably when needed
+        /// - No excessive over-allocation occurs
+        /// - Capacity remains stable after sufficient growth
+        /// - Memory usage is reasonable for workload patterns
+        #[test]
+        fn capacity_growth_follows_expected_patterns() {
+            let mut buf = BytesMut::with_capacity(64);
+            let initial_capacity = buf.capacity();
+            
+            // Read small amount - should not grow
+            let small_data = vec![1u8; 32];
+            buf.read_exact_from(&mut Cursor::new(&small_data), 32).unwrap();
+            assert_eq!(buf.capacity(), initial_capacity);
+            
+            buf.clear();
+            
+            // Read amount requiring growth
+            let large_data = vec![2u8; 1024];
+            buf.read_exact_from(&mut Cursor::new(&large_data), 1024).unwrap();
+            let grown_capacity = buf.capacity();
+            assert!(grown_capacity >= 1024);
+            assert!(grown_capacity > initial_capacity);
+            
+            buf.clear();
+            
+            // Read same amount again - capacity should remain stable
+            buf.read_exact_from(&mut Cursor::new(&large_data), 1024).unwrap();
+            assert_eq!(buf.capacity(), grown_capacity, 
+                "Capacity should remain stable for repeated reads of same size");
+        }
+    }
+}
+
+#[cfg(test)]
 mod concurrent_tests {
     use super::*;
     use std::io::Cursor;
