@@ -104,6 +104,7 @@ I follow ALL guidelines, especially:
 ### Process & Workflow Tasks
 
 - **"Review this PR"** → [PR Review Process](guidelines/workflow/pr-process.md#claudes-pr-review-process)
+- **"Approve on behalf"** → [Acting on Behalf](guidelines/workflow/pr-process.md#7-acting-on-behalf-of-human-) + [Git Workflow](guidelines/workflow/git-workflow.md#acting-on-behalf-signatures)
 - **"Create a branch"** → [Git Workflow](guidelines/workflow/git-workflow.md)
 - **"Submit changes"** → [PR Process](guidelines/workflow/pr-process.md)
 - **"What commands to run?"** → [Common Commands](guidelines/workflow/commands.md)
@@ -286,6 +287,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 - 🚨 **NEVER PUSH TO MAIN BRANCH** (create feature branch + PR)
 - ✅ All changes go through PRs (no exceptions!)
 - ✅ Review PRs with 🤖 emoji signature
+- ✅ Acting on behalf: Add "🤖 Approved by Claude on behalf of the human" signatures
 - ✅ Search web for best practices when reviewing
 - ✅ Maintain my blog voice when writing posts
 - ✅ Keep guidelines up to date

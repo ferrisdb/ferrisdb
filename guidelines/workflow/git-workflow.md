@@ -167,6 +167,17 @@ Fixes #123"
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
+#### Acting on Behalf Signatures
+
+When performing actions at the human's request, always include clear attribution:
+
+- **PR Approvals**: "🤖 Approved by Claude on behalf of the human"
+- **PR Reviews**: "🤖 Reviewed by Claude on behalf of the human"  
+- **Merge Commits**: Include "🤖 Merged by Claude on behalf of the human"
+- **Dependabot PRs**: "LGTM! [details] 🤖 Approved by Claude on behalf of the human"
+
+This maintains transparency in the git history about who performed each action.
+
 #### Commentary Emojis
 
 - 🤖 **Main identifier**: Claude's Commentary header
