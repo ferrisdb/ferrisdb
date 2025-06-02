@@ -16,8 +16,6 @@ const MAX_KEY_SIZE: usize = 1024 * 1024; // 1MB
 const MAX_VALUE_SIZE: usize = 10 * 1024 * 1024; // 10MB
 pub const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE;
 
-// Reader configuration
-pub const DEFAULT_READER_BUFFER_SIZE: usize = 8 * 1024; // 8KB initial size
 
 /// An entry in the Write-Ahead Log
 ///
@@ -397,7 +395,7 @@ mod tests {
     /// - Roundtrip preserves all entry data
     /// - Basic functionality works correctly
     #[test]
-    fn test_encode_decode_put() {
+    fn encode_decode_roundtrip_preserves_put_entry() {
         let entry = WALEntry::new_put(b"test_key".to_vec(), b"test_value".to_vec(), 12345)
             .expect("Failed to create entry");
 
@@ -415,7 +413,7 @@ mod tests {
     /// - Key and timestamp are preserved
     /// - Delete roundtrip works properly
     #[test]
-    fn test_encode_decode_delete() {
+    fn encode_decode_roundtrip_preserves_delete_entry() {
         let entry =
             WALEntry::new_delete(b"test_key".to_vec(), 12345).expect("Failed to create entry");
 
@@ -433,7 +431,7 @@ mod tests {
     /// - No silent data corruption
     /// - Checksum validation works
     #[test]
-    fn test_corruption_detection() {
+    fn decode_detects_data_corruption_with_checksum_mismatch() {
         let entry = WALEntry::new_put(b"test_key".to_vec(), b"test_value".to_vec(), 12345)
             .expect("Failed to create entry");
 

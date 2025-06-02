@@ -216,7 +216,7 @@ mod tests {
     use tempfile::TempDir;
 
     #[test]
-    fn test_wal_reader_writer_integration() {
+    fn reader_and_writer_maintain_data_integrity() {
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("test.wal");
 
@@ -250,7 +250,7 @@ mod tests {
     }
 
     #[test]
-    fn test_wal_reader_iterator() {
+    fn iterator_yields_entries_in_write_order() {
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("test.wal");
 
@@ -284,7 +284,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reader_validates_header() {
+    fn new_validates_wal_header_format() {
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("test.wal");
 
@@ -306,7 +306,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reader_rejects_file_without_header() {
+    fn new_rejects_files_with_insufficient_header_data() {
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("bad.wal");
 
@@ -318,7 +318,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reader_rejects_wrong_magic() {
+    fn new_rejects_files_with_invalid_magic_number() {
         use crate::format::FileHeader;
 
         let temp_dir = TempDir::new().unwrap();
