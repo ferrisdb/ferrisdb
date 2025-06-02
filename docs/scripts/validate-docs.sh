@@ -86,11 +86,17 @@ if [ "$mdx_errors" -gt 0 ]; then
 fi
 
 # Quick Astro syntax check (if available)
-if command -v npx &> /dev/null; then
+# Note: astro check requires @astrojs/check and typescript packages
+# In CI, we skip this check since packages can't be auto-installed
+if [ "$CI" = "true" ]; then
+    echo "ℹ️  Skipping Astro check in CI environment"
+    echo "    (Full type checking happens during build in deploy-docs.yml)"
+elif command -v npx &> /dev/null && [ -f "node_modules/@astrojs/check/package.json" ]; then
     echo "✓ Running Astro check..."
     npx astro check || echo "  ℹ️  Astro check completed with warnings"
 else
-    echo "⚠️  Skipping Astro check (npx not available)"
+    echo "ℹ️  Skipping Astro check (dependencies not installed)"
+    echo "    Run 'npm install @astrojs/check typescript' to enable"
 fi
 
 echo "✅ Documentation validation complete!"
