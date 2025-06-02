@@ -354,9 +354,9 @@ mod tests {
         } else {
             "/proc/nonexistent/test.wal" // /proc typically doesn't allow file creation
         };
-        
+
         let result = WALWriter::new(invalid_path, SyncMode::Full, 1024 * 1024);
-        
+
         // Should fail due to invalid path
         assert!(result.is_err());
         if let Err(e) = result {
