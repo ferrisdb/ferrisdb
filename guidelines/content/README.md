@@ -100,6 +100,7 @@ For the "Learn by Building" tutorial series, we maintain strict tracking of what
 - **[DATABASE-CONCEPTS-TAUGHT.md](DATABASE-CONCEPTS-TAUGHT.md)** - 🗄️ **Database Tracking**: Database concepts mapped to tutorials
 
 **How they work together**:
+
 1. Check LEARNING-PROGRESS.md for tutorial dependencies and current status
 2. Use RUST-CONCEPTS-TAUGHT.md to see exactly which Rust features are available
 3. Reference DATABASE-CONCEPTS-TAUGHT.md for database concepts already covered
@@ -139,4 +140,5 @@ All content templates have been migrated to Starlight format and are located in 
 - [Website Maintenance](../workflow/website-maintenance-simple.md) - Keeping content updated
 
 ---
+
 _Last updated: 2025-06-01_
