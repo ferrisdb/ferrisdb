@@ -63,40 +63,24 @@ if [ "$errors" -gt 0 ]; then
     exit 1
 fi
 
-# Check for common MDX syntax issues
-echo "✓ Checking MDX syntax..."
-mdx_errors=0
-for file in $(find src/content/docs -name "*.mdx" | head -10); do
-    # Check for import statements without quotes
-    if grep -E '^import .* from [^"'\''`]' "$file" > /dev/null 2>&1; then
-        echo "  ⚠️  Import statement might be missing quotes in: $file"
-        mdx_errors=$((mdx_errors + 1))
-    fi
-    
-    # Check for obvious JSX issues (very basic check to avoid false positives)
-    # Only flag if we see an opening tag at the start of a line with no closing
-    if grep -E '^<[A-Za-z]+[^/>]*>$' "$file" > /dev/null 2>&1; then
-        echo "  ⚠️  Possible unclosed JSX tag in: $file"
-        mdx_errors=$((mdx_errors + 1))
-    fi
-done
+# MDX syntax checking is handled by Astro check
+# Skip manual MDX validation to avoid false positives
 
-if [ "$mdx_errors" -gt 0 ]; then
-    echo "⚠️  Found $mdx_errors potential MDX syntax issues (non-blocking)"
-fi
-
-# Quick Astro syntax check (if available)
-# Note: astro check requires @astrojs/check and typescript packages
-# In CI, we skip this check since packages can't be auto-installed
-if [ "$CI" = "true" ]; then
-    echo "ℹ️  Skipping Astro check in CI environment"
-    echo "    (Full type checking happens during build in deploy-docs.yml)"
-elif command -v npx &> /dev/null && [ -f "node_modules/@astrojs/check/package.json" ]; then
-    echo "✓ Running Astro check..."
-    npx astro check || echo "  ℹ️  Astro check completed with warnings"
+# Run Astro type checking
+echo "✓ Running Astro check..."
+if command -v npm &> /dev/null; then
+    # Use npm run check which will work after npm ci in CI
+    npm run check || {
+        exit_code=$?
+        if [ "$exit_code" -eq 1 ]; then
+            echo "  ℹ️  Astro check found type warnings (non-blocking)"
+        else
+            echo "  ❌ Astro check failed"
+            exit $exit_code
+        fi
+    }
 else
-    echo "ℹ️  Skipping Astro check (dependencies not installed)"
-    echo "    Run 'npm install @astrojs/check typescript' to enable"
+    echo "  ⚠️  npm not available, skipping type check"
 fi
 
 echo "✅ Documentation validation complete!"
