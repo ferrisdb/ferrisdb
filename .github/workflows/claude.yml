@@ -24,6 +24,44 @@ jobs:
       issues: read
       id-token: write
     steps:
+      - name: Check if user is a maintainer
+        id: maintainer_check
+        run: |
+          # Get the username of the event actor
+          case "${{ github.event_name }}" in
+            "issue_comment"|"pull_request_review_comment")
+              USERNAME="${{ github.event.comment.user.login }}"
+              ;;
+            "pull_request_review")
+              USERNAME="${{ github.event.review.user.login }}"
+              ;;
+            "issues")
+              USERNAME="${{ github.event.issue.user.login }}"
+              ;;
+            *)
+              echo "Unknown event type: ${{ github.event_name }}"
+              exit 1
+              ;;
+          esac
+          
+          echo "Checking if user '$USERNAME' is a maintainer..."
+          
+          # Get repository maintainers using GitHub API
+          MAINTAINERS=$(curl -s -H "Authorization: token ${{ github.token }}" \
+            "https://api.github.com/repos/${{ github.repository }}/collaborators?permission=maintain" | \
+            jq -r '.[].login')
+          
+          # Check if the user is in the maintainers list
+          if echo "$MAINTAINERS" | grep -qx "$USERNAME"; then
+            echo "✅ User '$USERNAME' is a maintainer"
+            echo "is_maintainer=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ User '$USERNAME' is not a maintainer"
+            echo "is_maintainer=false" >> $GITHUB_OUTPUT
+            echo "::error::Only maintainers can trigger Claude. User '$USERNAME' is not authorized."
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
