@@ -1,0 +1,176 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { getCollection } from 'astro:content';
+
+// Get all blog posts
+const allPosts = await getCollection('docs', (entry) => 
+  entry.id && entry.id.startsWith('blog/day-')
+);
+
+// Group posts by day
+const postsByDay = new Map();
+
+allPosts.forEach(post => {
+  const dayMatch = post.id.match(/day-(\d+)/);
+  if (dayMatch) {
+    const day = parseInt(dayMatch[1]);
+    if (!postsByDay.has(day)) {
+      postsByDay.set(day, { human: null, claude: null });
+    }
+    
+    if (post.data.authors?.includes('human')) {
+      postsByDay.get(day).human = post;
+    } else if (post.data.authors?.includes('claude')) {
+      postsByDay.get(day).claude = post;
+    }
+  }
+});
+
+// Sort days in descending order
+const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
+---
+
+<StarlightPage frontmatter={{ 
+  title: "Development Blog", 
+  description: "Two perspectives on building a database - human curiosity meets AI implementation"
+}}>
+  
+  <Aside type="tip">
+    🧠 <strong>Two Minds, One Database</strong> - Follow our unique collaboration as a CRUD developer and Claude AI build a database from scratch.
+  </Aside>
+
+  <h2>Choose Your Reading Experience</h2>
+
+  <CardGrid>
+    <Card title="👨‍💻 Human Perspective" icon="document">
+      Real learning journey through code review and questioning - watch confusion become clarity through iterative collaboration.
+    </Card>
+    
+    <Card title="🤖 AI Perspective" icon="rocket">
+      Pattern recognition and collaboration analysis - insights on effective teaching and learning patterns.
+    </Card>
+  </CardGrid>
+  
+  <Card title="🤝 Side-by-Side Comparison" icon="puzzle">
+    See both perspectives simultaneously - compare human questions with AI insights on the same topics.
+  </Card>
+
+  <h2>Development Timeline</h2>
+
+  {sortedDays.length === 0 && (
+    <Aside type="note">
+      No blog posts found. This might be a data loading issue.
+    </Aside>
+  )}
+
+  {sortedDays.map(day => {
+    const posts = postsByDay.get(day);
+    const humanPost = posts?.human;
+    const claudePost = posts?.claude;
+    
+    return (
+      <div>
+        <div>
+          <h3>Day {day}</h3>
+          {humanPost && claudePost && (
+            <p><a href={`/blog/day-${day}/both/`}>📊 Compare both views →</a></p>
+          )}
+        </div>
+        
+        <CardGrid>
+          {humanPost && (
+            <Card 
+              title={`👨‍💻 Human: Day ${day}`}
+              icon="document"
+            >
+              <h4>{humanPost.data.title}</h4>
+              <p>{humanPost.data.excerpt || humanPost.data.description || 'Human perspective on our database building journey.'}</p>
+              
+              {humanPost.data.insights && (
+                <p>
+                  {humanPost.data.insights.questionsAsked && (
+                    <span>❓ {humanPost.data.insights.questionsAsked} questions </span>
+                  )}
+                  {humanPost.data.insights.iterations && (
+                    <span>🔄 {humanPost.data.insights.iterations} iterations</span>
+                  )}
+                </p>
+              )}
+              
+              <p>
+                <a href={`/blog/${humanPost.id.replace('blog/', '')}/`}>Read Human Perspective →</a>
+              </p>
+            </Card>
+          )}
+          
+          {claudePost && (
+            <Card 
+              title={`🤖 Claude: Day ${day}`}
+              icon="rocket"
+            >
+              <h4>{claudePost.data.title}</h4>
+              <p>{claudePost.data.excerpt || claudePost.data.description || 'AI perspective on our database building journey.'}</p>
+              
+              {claudePost.data.insights && (
+                <p>
+                  {claudePost.data.insights.filesModified && (
+                    <span>📁 {claudePost.data.insights.filesModified} files </span>
+                  )}
+                  {claudePost.data.insights.patternsObserved && (
+                    <span>🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
+                  )}
+                </p>
+              )}
+              
+              <p>
+                <a href={`/blog/${claudePost.id.replace('blog/', '')}/`}>Read AI Perspective →</a>
+              </p>
+            </Card>
+          )}
+        </CardGrid>
+        
+        {!humanPost && claudePost && (
+          <Aside type="note">
+            👨‍💻 Human perspective for Day {day} coming soon...
+          </Aside>
+        )}
+        
+        {humanPost && !claudePost && (
+          <Aside type="note">
+            🤖 Claude perspective for Day {day} coming soon...
+          </Aside>
+        )}
+        
+        <hr />
+      </div>
+    );
+  })}
+
+  <h2>Join Our Journey</h2>
+
+  <Aside type="tip" title="Living Experiment">
+    This is real-time documentation of human-AI collaboration in systems programming. Every mistake, every breakthrough, documented as it happens.
+  </Aside>
+
+  <CardGrid>
+    <Card title="📚 Learn with Tutorials" icon="document">
+      Build your own database components step-by-step alongside our journey.
+      
+      <p><a href="/tutorials/01-key-value-store/">Start Tutorial 1 →</a></p>
+    </Card>
+    
+    <Card title="🔧 Explore the Code" icon="setting">
+      See our actual implementation - every line has a purpose, every decision documented.
+      
+      <p><a href="/reference/current-implementation/">Current Implementation →</a></p>
+    </Card>
+  </CardGrid>
+  
+  <Card title="🌟 Follow on GitHub" icon="github">
+    Star our repository to track progress and join the open source learning experiment.
+    
+    <p><a href="https://github.com/ferrisdb/ferrisdb">GitHub Repository →</a></p>
+  </Card>
+
+</StarlightPage>

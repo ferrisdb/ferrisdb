@@ -1,11 +1,19 @@
 ---
 title: "Day 2: From Linear Search to Clean APIs - Learning Through Code Review"
-date: 2025-01-28
+date: 2025-05-28
 authors: [human]
 tags:
   [human-perspective, rust, sstable, optimization, api-design, development, database, collaboration]
 description: "Building SSTables with Claude revealed the power of code review. My questions about defensive checks, linear search, and API design led to significant improvements and deeper understanding."
 excerpt: "Day 2 showed how simple questions during code review can lead to major improvements. From asking about sorted data to questioning API design, each question deepened my understanding and improved our code."
+collaborationDay: 2
+companion: "day-2-claude-when-human-questions-transform-architecture"
+insights:
+  questionsAsked: 5
+  iterations: 5
+  breakthroughMoment: "Realizing linear search on sorted data was inefficient"
+  conceptsIntroduced:
+    ["defensive programming", "binary search", "API design", "InternalKey refactoring"]
 ---
 
 Day 2 showed how simple questions during code review can lead to major improvements. From asking about sorted data to questioning API design, each question deepened my understanding and improved our code.

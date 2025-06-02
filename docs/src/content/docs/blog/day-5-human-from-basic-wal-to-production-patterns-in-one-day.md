@@ -5,6 +5,16 @@ authors: [human]
 tags: [ferrisdb, rust, learning, wal, performance]
 description: "The whirlwind journey from simple file writes to industry-standard durability patterns, and why I had to pump the brakes"
 excerpt: "We built production-grade WAL features all day, then I realized we needed to stop calling it 'production-ready'."
+collaborationDay: 5
+companion: "day-5-claude-when-performance-met-architecture"
+insights:
+  questionsAsked: 8
+  iterations: 4
+  breakthroughMoment: "File headers revelation"
+  conceptsIntroduced:
+    ["file headers", "metrics", "BytesMutExt", "cross-platform", "CI optimization"]
+  linesOfCode: 3000
+  testsAdded: 153
 ---
 
 ## The Setup

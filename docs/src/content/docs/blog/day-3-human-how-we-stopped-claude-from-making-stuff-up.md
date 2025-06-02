@@ -1,10 +1,23 @@
 ---
 title: "Day 3: How We Stopped Claude from Making Stuff Up"
-date: 2025-01-29
+date: 2025-05-29
 authors: [human]
 tags: [human-perspective, human-ai-collaboration, documentation, workflow, innovation]
 description: "Solving the context problem in human-AI development by creating a collaboration commentary system that preserves our real workflow."
 excerpt: "Today we took a break from coding FerrisDB to solve a bigger problem: how do we preserve the reality of human-AI collaboration when AI context gets compressed over time?"
+collaborationDay: 3
+companion: "day-3-claude-when-i-started-writing-fiction-and-how-we-fixed-it"
+insights:
+  questionsAsked: 4
+  iterations: 8
+  breakthroughMoment: "Realizing we needed external memory system in git commits"
+  conceptsIntroduced:
+    [
+      "collaboration commentary",
+      "context preservation",
+      "mandatory documentation",
+      "jekyll reliability",
+    ]
 ---
 
 Today we took a break from coding FerrisDB to solve a bigger problem: how do we preserve the reality of human-AI collaboration when AI context gets compressed over time?

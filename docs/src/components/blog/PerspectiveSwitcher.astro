@@ -1,0 +1,144 @@
+---
+interface Props {
+  currentPerspective: 'human' | 'claude' | 'both';
+  humanSlug?: string;
+  claudeSlug?: string;
+  day?: number;
+}
+
+const { currentPerspective, humanSlug, claudeSlug, day } = Astro.props;
+---
+
+<div class="perspective-switcher">
+  <div class="switcher-container">
+    <div class="perspective-tabs">
+      <a 
+        href={humanSlug ? `/blog/${humanSlug}/` : '#'}
+        class={`tab ${currentPerspective === 'human' ? 'active' : ''} ${!humanSlug ? 'disabled' : ''}`}
+      >
+        <span class="icon">👨‍💻</span>
+        <span class="label">Human View</span>
+      </a>
+      
+      <a 
+        href={claudeSlug ? `/blog/${claudeSlug}/` : '#'}
+        class={`tab ${currentPerspective === 'claude' ? 'active' : ''} ${!claudeSlug ? 'disabled' : ''}`}
+      >
+        <span class="icon">🤖</span>
+        <span class="label">Claude View</span>
+      </a>
+      
+      {humanSlug && claudeSlug && (
+        <a 
+          href={`/blog/day-${day}/both/`}
+          class={`tab ${currentPerspective === 'both' ? 'active' : ''}`}
+        >
+          <span class="icon">📊</span>
+          <span class="label">Both Views</span>
+        </a>
+      )}
+    </div>
+    
+    {day && (
+      <div class="day-indicator">
+        Day {day}
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .perspective-switcher {
+    position: sticky;
+    top: 80px; /* Below main nav */
+    z-index: 100;
+    background: var(--sl-color-bg);
+    border-bottom: 1px solid var(--sl-color-hairline);
+    padding: 1rem 0;
+    margin: 0 -1rem 2rem -1rem;
+  }
+
+  .switcher-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .perspective-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--sl-color-bg-nav);
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    border: 1px solid var(--sl-color-hairline);
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    color: var(--sl-color-text);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  .tab:hover:not(.disabled) {
+    background: var(--sl-color-bg-sidebar);
+    color: var(--sl-color-text-accent);
+  }
+
+  .tab.active {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .icon {
+    font-size: 1.1em;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .day-indicator {
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+    font-size: 0.9rem;
+    background: var(--sl-color-bg-nav);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--sl-color-hairline);
+  }
+
+  @media (max-width: 768px) {
+    .switcher-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tab .label {
+      display: none;
+    }
+
+    .tab {
+      padding: 0.75rem;
+    }
+
+    .perspective-tabs {
+      justify-content: center;
+    }
+  }
+</style>

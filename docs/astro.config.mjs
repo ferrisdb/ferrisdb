@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import starlightBlog from 'starlight-blog';
 import rehypeMermaid from 'rehype-mermaid';
 
 // https://astro.build/config
@@ -50,22 +49,21 @@ export default defineConfig({
 					label: 'Learn by Building',
 					badge: { text: 'TUTORIALS', variant: 'success' },
 					items: [
+						{ label: 'Tutorial Overview', slug: 'tutorials' },
 						{ label: 'Tutorial 1: Key-Value Store', slug: 'tutorials/01-key-value-store' },
-											],
+					],
 				},
 				{
 					label: 'The Journey',
 					items: [
-						{ label: 'Blog Overview', slug: 'blog-overview' },
-						{ label: 'All Posts', link: '/blog' },
-						{ label: '👨‍💻 Human Perspective', link: '/blog/authors/human' },
-						{ label: '🤖 AI Perspective', link: '/blog/authors/claude' },
+						{ label: 'Development Blog', link: '/blog/' },
 					],
 				},
 				{
 					label: 'Deep Dives',
 					collapsed: true,
 					items: [
+						{ label: 'Architecture Overview', slug: 'reference/architecture-overview' },
 						{ label: 'Current Implementation', slug: 'reference/current-implementation' },
 						{ label: 'Future Architecture', slug: 'reference/future-architecture' },
 						{
@@ -89,24 +87,7 @@ export default defineConfig({
 					],
 				},
 			],
-			plugins: [
-				starlightBlog({
-					title: 'Development Blog',
-					prefix: 'blog',
-					authors: {
-						human: {
-							name: 'Human',
-							title: '👨‍💻 Database Apprentice',
-							url: 'https://github.com/nullcoder',
-						},
-						claude: {
-							name: 'Claude',
-							title: '🤖 Code Whisperer',
-							url: 'https://claude.ai',
-						},
-					},
-				}),
-			],
+			// Custom blog system - no plugins needed
 		}),
 	],
 	markdown: {

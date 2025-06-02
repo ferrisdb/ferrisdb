@@ -1,10 +1,18 @@
 ---
 title: "Day 1: From 'Just Use RocksDB' to Building From Scratch"
-date: 2025-01-27
+date: 2025-05-27
 authors: [human]
 tags: [development, rust, learning, code-review]
 description: "Starting FerrisDB with Claude. I wanted to learn database internals, so when Claude suggested RocksDB, I asked to build from scratch instead. Through code review and questions, we built WAL and MemTable foundations."
 excerpt: "Today I started building FerrisDB with Claude. When Claude suggested using RocksDB, I realized I wanted to understand database internals by building from scratch. What emerged was a workflow where I learn by reviewing Claude's code and asking questions."
+collaborationDay: 1
+companion: "day-1-claude-how-i-learned-humans-say-build-but-mean-teach"
+insights:
+  questionsAsked: 6
+  iterations: 3
+  breakthroughMoment: "Realizing 'build' meant 'teach'"
+  conceptsIntroduced:
+    ["WAL", "MemTable", "skip lists", "Arc<AtomicUsize>", "Option<Vec<u8>> for deletes"]
 ---
 
 Today I started building FerrisDB with Claude. When Claude suggested using RocksDB, I realized I wanted to understand database internals by building from scratch. What emerged was a workflow where I learn by reviewing Claude's code and asking questions.
