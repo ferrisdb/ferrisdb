@@ -405,9 +405,7 @@ mod tests {
                 }
 
                 let remaining = self.fail_after - self.bytes_read;
-                let to_read = remaining
-                    .min(buf.len())
-                    .min(self.data.len() - self.bytes_read);
+                let to_read = remaining.min(buf.len()).min(self.data.len() - self.bytes_read);
 
                 buf[..to_read]
                     .copy_from_slice(&self.data[self.bytes_read..self.bytes_read + to_read]);

@@ -3,6 +3,82 @@
 //! The WAL provides durability by persisting all write operations to disk
 //! before they are applied to the in-memory data structures.
 //!
+//! ## Test Coverage
+//!
+//! The WAL module has comprehensive test coverage including:
+//! - **Unit tests**: All public APIs are tested with normal and edge cases
+//! - **Error condition tests**: Invalid inputs, oversized data, corrupted files
+//! - **Boundary tests**: Maximum sizes, empty data, minimum buffer sizes
+//! - **Corruption detection tests**: Checksum validation, truncation handling
+//! - **Property-based tests**: Arbitrary inputs tested with proptest
+//! - **Concurrent tests**: Thread safety and race condition testing
+//! - **Performance benchmarks**: Proving O(1) append and O(n) read complexity
+//!
+//! Run tests with:
+//! ```bash
+//! cargo test --package ferrisdb-storage wal
+//! cargo test --test wal_format_tests
+//! cargo test --test wal_property_tests
+//! cargo bench --bench wal_performance_proofs
+//! ```
+//!
+//! ## Performance Optimizations
+//!
+//! The WAL reader uses `BytesMut` from the `bytes` crate for efficient buffer management:
+//! - Zero-copy buffer resizing with minimal allocations
+//! - Reusable buffers across multiple entry reads
+//! - Automatic capacity growth based on entry sizes
+//! - Performance statistics tracking for monitoring
+//!
+//! Example of monitoring reader performance:
+//! ```no_run
+//! # use ferrisdb_storage::wal::WALReader;
+//! let mut reader = WALReader::new("path/to/wal.log")?;
+//! let entries = reader.read_all()?;
+//!
+//! let stats = reader.stats();
+//! println!("Entries read: {}", stats.entries_read);
+//! println!("Peak buffer size: {} bytes", stats.peak_buffer_size);
+//! println!("Buffer resizes: {}", stats.buffer_resizes);
+//! # Ok::<(), ferrisdb_core::Error>(())
+//! ```
+//!
+//! ## Metrics and Monitoring
+//!
+//! Both reader and writer provide comprehensive metrics for monitoring performance:
+//!
+//! ```no_run
+//! # use ferrisdb_storage::wal::{WALWriter, WALEntry};
+//! # use ferrisdb_core::SyncMode;
+//! let writer = WALWriter::new("wal.log", SyncMode::Full, 64 * 1024 * 1024)?;
+//!
+//! // Write some entries
+//! for i in 0..100 {
+//!     let entry = WALEntry::new_put(
+//!         format!("key{}", i).into_bytes(),
+//!         b"value".to_vec(),
+//!         i
+//!     )?;
+//!     writer.append(&entry)?;
+//! }
+//!
+//! // Check writer metrics
+//! let metrics = writer.metrics();
+//! println!("Writes successful: {}", metrics.writes_total());
+//! println!("Bytes written: {}", metrics.bytes_written());
+//! println!("Average sync time: {:.2}ms", metrics.avg_sync_duration_ms());
+//! println!("Write success rate: {:.1}%", metrics.write_success_rate());
+//!
+//! // Reader metrics work similarly
+//! # use ferrisdb_storage::wal::WALReader;
+//! let mut reader = WALReader::new("wal.log")?;
+//! let entries = reader.read_all()?;
+//!
+//! let reader_metrics = reader.metrics();
+//! println!("Read success rate: {:.1}%", reader_metrics.read_success_rate());
+//! # Ok::<(), ferrisdb_core::Error>(())
+//! ```
+//!
 //! ## File Format Overview
 //!
 //! A WAL file consists of:
@@ -166,10 +242,12 @@
 
 mod header;
 mod log_entry;
+mod metrics;
 mod reader;
 mod writer;
 
 pub use header::{WALHeader, WAL_CURRENT_VERSION, WAL_HEADER_SIZE, WAL_MAGIC};
 pub use log_entry::WALEntry;
-pub use reader::WALReader;
+pub use metrics::{TimedOperation, WALMetrics};
+pub use reader::{ReaderStats, WALReader};
 pub use writer::WALWriter;
