@@ -7,13 +7,13 @@ Welcome! This is the quick reference for FerrisDB development. For detailed guid
 ## 🚨 CRITICAL RULE: NEVER PUSH TO MAIN BRANCH
 
 > **⚠️ ABSOLUTE RULE FOR EVERYONE - NO EXCEPTIONS ⚠️**
-> 
+>
 > **NEVER push directly to the `main` branch!**
-> 
+>
 > - ❌ **FORBIDDEN**: Direct commits/pushes to main
 > - ✅ **REQUIRED**: Always use feature branches + Pull Requests
 > - 👍 **NO EXCEPTIONS**: Not even for typos or "quick fixes"
-> 
+>
 > See [Git Workflow](guidelines/workflow/git-workflow.md#critical-never-push-to-main-branch) and [PR Process](guidelines/workflow/pr-process.md#critical-all-changes-must-use-pull-requests) for details.
 
 ## 📌 Guidelines as Source of Truth
