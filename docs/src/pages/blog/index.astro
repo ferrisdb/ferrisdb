@@ -1,6 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside, LinkButton } from '@astrojs/starlight/components';
 import { getCollection } from 'astro:content';
 
 // Get all blog posts
@@ -75,9 +75,9 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; color: var(--sl-color-accent);">Day {day}</h3>
             {humanPost && claudePost && (
-              <span style="font-size: 0.9rem; color: var(--sl-color-text-accent);">
-                📊 <a href={`/blog/day-${day}/both/`}>Compare both views</a>
-              </span>
+              <LinkButton href={`/blog/day-${day}/both/`} variant="minimal" icon="open-book">
+                Compare both views
+              </LinkButton>
             )}
           </div>
         </div>
