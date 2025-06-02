@@ -1,0 +1,112 @@
+name: ⚡ Performance Issue
+description: Report performance problems in FerrisDB
+title: "[Performance]: "
+labels: ["type:bug", "performance", "status:ready"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a performance issue! Please provide as much detail as possible to help us investigate.
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Performance Issue Description
+      description: Describe the performance problem you're experiencing
+      placeholder: The system becomes slow when...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Reproduction Scenario
+      description: How can we reproduce the performance issue?
+      placeholder: |
+        1. Insert X records
+        2. Run query Y
+        3. Observe performance degradation
+    validations:
+      required: true
+      
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Performance Metrics
+      description: Please provide any measurements or benchmarks
+      placeholder: |
+        - Operation: Write 1000 records
+        - Expected: < 100ms
+        - Actual: 2000ms
+        - CPU usage: 100%
+        - Memory usage: 4GB
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which component has the performance issue?
+      options:
+        - WAL writes
+        - WAL reads
+        - MemTable operations
+        - SSTable compaction
+        - Client operations
+        - Server request handling
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: workload
+    attributes:
+      label: Workload Characteristics
+      description: Describe your workload
+      placeholder: |
+        - Record size: 1KB
+        - Write rate: 1000/sec
+        - Read/write ratio: 80/20
+        - Number of concurrent clients: 10
+      
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: System specifications and configuration
+      placeholder: |
+        - OS: Ubuntu 22.04
+        - CPU: 8 cores
+        - RAM: 16GB
+        - Storage: SSD
+        - Rust version: 1.75.0
+        - FerrisDB version: 
+    validations:
+      required: true
+      
+  - type: textarea
+    id: profile
+    attributes:
+      label: Profiling Data
+      description: If available, please attach profiling data (flamegraphs, perf output, etc.)
+      placeholder: Paste or link to profiling data
+      
+  - type: checkboxes
+    id: benchmarks
+    attributes:
+      label: Benchmarks
+      description: Have you run any benchmarks?
+      options:
+        - label: I've run the included benchmarks
+        - label: I've created custom benchmarks
+        - label: I can provide benchmark code
+        
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

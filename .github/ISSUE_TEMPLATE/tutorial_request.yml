@@ -1,0 +1,92 @@
+name: 📚 Tutorial Request
+description: Request new tutorial content for FerrisDB
+title: "[Tutorial]: "
+labels: ["area:tutorials", "educational", "type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting new tutorial content! FerrisDB is an educational project, and we love creating content that helps people learn database internals.
+        
+  - type: textarea
+    id: topic
+    attributes:
+      label: Tutorial Topic
+      description: What topic would you like to see covered?
+      placeholder: I would like to learn about...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: level
+    attributes:
+      label: Difficulty Level
+      description: What level should this tutorial target?
+      options:
+        - Beginner (new to databases)
+        - Intermediate (familiar with basic concepts)
+        - Advanced (deep dive into internals)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: goals
+    attributes:
+      label: Learning Goals
+      description: What should readers learn from this tutorial?
+      placeholder: |
+        After this tutorial, readers should be able to:
+        - Understand...
+        - Implement...
+        - Apply...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: format
+    attributes:
+      label: Tutorial Format
+      description: What format would work best?
+      options:
+        - Step-by-step implementation guide
+        - Conceptual explanation with diagrams
+        - Interactive coding exercise
+        - Deep dive blog post
+        - Video tutorial (script)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: What should readers know before starting this tutorial?
+      placeholder: |
+        - Basic Rust knowledge
+        - Understanding of...
+        
+  - type: textarea
+    id: examples
+    attributes:
+      label: Real-World Examples
+      description: Any specific examples or use cases that should be covered?
+      placeholder: For example, showing how RocksDB handles...
+      
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you like to help create this tutorial?
+      options:
+        - label: I'm willing to help write this tutorial
+        - label: I can provide technical review
+        - label: I can help with diagrams/visualizations
+        
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
