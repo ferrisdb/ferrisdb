@@ -37,6 +37,41 @@ Performance considerations and optimization strategies for FerrisDB.
 
 ## Benchmarking
 
+### Benchmark Requirements
+
+When claiming performance improvements:
+
+1. **Mandatory Benchmarks**: Use criterion for reliable measurements
+2. **Comparison Baseline**: Always compare against the standard approach
+3. **Multiple Scenarios**: Test small, medium, large, and edge cases
+4. **Document Results**: Include actual percentages in documentation
+
+Example benchmark structure:
+
+```rust
+fn benchmark_feature_small(c: &mut Criterion) {
+    let mut group = c.benchmark_group("feature_small");
+    
+    group.bench_function("standard_approach", |b| {
+        // Baseline implementation
+    });
+    
+    group.bench_function("optimized_approach", |b| {
+        // Your optimization
+    });
+    
+    group.finish();
+}
+
+fn benchmark_feature_large(c: &mut Criterion) {
+    let mut group = c.benchmark_group("feature_large");
+    // Similar structure for large inputs
+}
+
+criterion_group!(benches, benchmark_feature_small, benchmark_feature_large);
+criterion_main!(benches);
+```
+
 ### Writing Benchmarks
 
 Use Criterion.rs for benchmarking:

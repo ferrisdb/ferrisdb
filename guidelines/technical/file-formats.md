@@ -447,6 +447,29 @@ pub fn migrate_v1_to_v2(input_path: &Path, output_path: &Path) -> Result<(), Err
 }
 ```
 
+## Testing Requirements
+
+All file format implementations MUST include comprehensive tests. See [File Format Testing](../workflow/testing.md#file-format-testing) for detailed requirements including:
+
+- Roundtrip tests
+- Corruption detection  
+- Boundary conditions
+- Version compatibility
+- Concurrent access
+- Property-based tests
+- Header validation
+- Truncation handling
+
+Example test suite structure:
+```
+tests/
+├── format_integrity_tests.rs      // Roundtrip and corruption
+├── format_boundary_tests.rs       // Size limits and edge cases
+├── format_compatibility_tests.rs  // Version handling
+├── format_concurrent_tests.rs     // Thread safety
+└── format_property_tests.rs       // Fuzzing with proptest
+```
+
 ## References
 
 - [LevelDB File Formats](https://github.com/google/leveldb/blob/main/doc/table_format.md)

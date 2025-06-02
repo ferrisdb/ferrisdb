@@ -33,6 +33,7 @@ cd docs && npm run build
 - [Documentation](development/documentation.md) - Code documentation standards
 - [Visualization](development/visualization.md) - ASCII diagrams and table standards
 - [Markdown Standards](development/markdown-standards.md) - Markdown formatting, linting, and tools
+- [Utility Modules](development/utility-modules.md) - Creating shared utilities
 
 ### 🎨 Content Creation
 
@@ -85,6 +86,8 @@ This workflow is documented honestly in our blog posts, showing real conversatio
 ## Project Overview
 
 FerrisDB is an educational project where a CRUD developer and an AI (Claude) are building a distributed database from scratch. The goal is not to create another production database, but to document the journey of learning database internals and Rust through building one.
+
+**Important**: This is an educational project focused on learning. While we strive for correctness and good practices, the code is not intended for production use.
 
 **What makes us unique**: We're the only project transparently documenting every step of human-AI collaboration in building complex systems software.
 
