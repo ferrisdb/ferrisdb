@@ -117,24 +117,22 @@ if (day) {
     <div style="margin-top: 3rem;">
       <h3>Related Posts from Day {day}</h3>
       
-      <CardGrid>
-        {relatedPosts.map((relatedPost) => {
-          const relatedPerspective = relatedPost.data.authors?.includes('human') ? 'human' : 'claude';
-          return (
-            <Card 
-              title={relatedPerspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
-              icon={relatedPerspective === 'human' ? 'user' : 'rocket'}
-            >
-              <h4 style="margin: 0 0 0.5rem 0;">
-                <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-text); text-decoration: none;">
-                  {relatedPost.data.title}
-                </a>
-              </h4>
-              <p style="margin: 0; color: var(--sl-color-text-accent);">{relatedPost.data.excerpt}</p>
-            </Card>
-          );
-        })}
-      </CardGrid>
+      {relatedPosts.map((relatedPost) => {
+        const relatedPerspective = relatedPost.data.authors?.includes('human') ? 'human' : 'claude';
+        return (
+          <Card 
+            title={relatedPerspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
+            icon={relatedPerspective === 'human' ? 'user' : 'rocket'}
+          >
+            <h4 style="margin: 0 0 0.5rem 0;">
+              <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-text); text-decoration: none;">
+                {relatedPost.data.title}
+              </a>
+            </h4>
+            <p style="margin: 0; color: var(--sl-color-text-accent);">{relatedPost.data.excerpt}</p>
+          </Card>
+        );
+      })}
       
       {day && (
         <div style="text-align: center; margin-top: 1.5rem;">
