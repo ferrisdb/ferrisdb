@@ -24,6 +24,8 @@ thiserror = "2.0"
 criterion = "0.6"
 proptest = "1.5"
 env_logger = "0.11"
+stats_alloc = "0.1"
+alloc_counter = "0.0.4"
 
 [features]
 default = []
@@ -32,6 +34,7 @@ slow-tests = []
 property-tests = []
 integration-tests = []
 benchmark-tests = []
+allocation-testing = []
 
 [[bench]]
 name = "wal_performance"
@@ -47,4 +50,8 @@ harness = false
 
 [[bench]]
 name = "bytes_ext_benchmarks"
+harness = false
+
+[[bench]]
+name = "bytes_ext_allocation_proof"
 harness = false

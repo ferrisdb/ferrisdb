@@ -22,6 +22,8 @@ rustfmt = "rustfmt"
 clippy = "clippy"
 thiserror = "thiserror"
 nullcoder = "nullcoder"
+alloc = "alloc"
+AllocCounterSystem = "AllocCounterSystem"
 
 # CSS class names used in Rouge syntax highlighting
 nd = "nd"
