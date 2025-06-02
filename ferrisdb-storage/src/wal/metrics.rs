@@ -282,6 +282,14 @@ impl TimedOperation {
 mod tests {
     use super::*;
 
+    /// Tests that write operations are tracked accurately in metrics.
+    ///
+    /// This test verifies that:
+    /// - Successful writes increment the write counter correctly
+    /// - Failed writes increment the failure counter separately
+    /// - Byte counts accumulate accurately across operations
+    /// - Maximum entry size tracking works properly
+    /// - Success rates are calculated correctly from counters
     #[test]
     fn record_write_updates_counters_and_averages_correctly() {
         let metrics = WALMetrics::new();
@@ -301,6 +309,14 @@ mod tests {
         assert_eq!(metrics.write_success_rate(), 75.0);
     }
 
+    /// Tests that read operations and corruption tracking work correctly.
+    ///
+    /// This test verifies that:
+    /// - Successful reads are counted and tracked accurately
+    /// - Failed reads are handled separately from successes
+    /// - Byte counts reflect actual data read successfully
+    /// - Corruption detection increments corruption counters
+    /// - Success rates account for both failed reads and corruptions
     #[test]
     fn record_read_updates_counters_and_tracks_corruption() {
         let metrics = WALMetrics::new();
@@ -320,6 +336,13 @@ mod tests {
         assert!((success_rate - (200.0 / 3.0)).abs() < 0.01);
     }
 
+    /// Tests that sync operations accumulate duration and count correctly.
+    ///
+    /// This test verifies that:
+    /// - Sync operations are counted accurately
+    /// - Duration values accumulate correctly across multiple syncs
+    /// - Average sync duration is calculated properly
+    /// - Performance metrics reflect actual sync behavior
     #[test]
     fn record_sync_accumulates_duration_and_count() {
         let metrics = WALMetrics::new();
@@ -333,6 +356,13 @@ mod tests {
         assert_eq!(metrics.avg_sync_duration_ms(), 20.0);
     }
 
+    /// Tests that metrics reset clears all counters to initial state.
+    ///
+    /// This test verifies that:
+    /// - All write-related counters are reset to zero
+    /// - All read-related counters are reset to zero
+    /// - Sync counters and durations are cleared
+    /// - Metrics can be safely reused after reset
     #[test]
     fn reset_sets_all_counters_to_zero() {
         let metrics = WALMetrics::new();
@@ -351,6 +381,13 @@ mod tests {
         assert_eq!(metrics.sync_total(), 0);
     }
 
+    /// Tests that TimedOperation helper measures elapsed time accurately.
+    ///
+    /// This test verifies that:
+    /// - Timer starts correctly when created
+    /// - Elapsed time reflects actual sleep duration
+    /// - Time measurement has reasonable accuracy
+    /// - Helper utility works for performance tracking
     #[test]
     fn timed_operation_measures_elapsed_time_accurately() {
         let timer = TimedOperation::start();

@@ -215,6 +215,13 @@ mod tests {
     use ferrisdb_core::SyncMode;
     use tempfile::TempDir;
 
+    /// Tests that readers can correctly read data written by writers.
+    ///
+    /// This test verifies that:
+    /// - Entries written by WALWriter can be read by WALReader
+    /// - All entry data (key, value, timestamp, operation) is preserved
+    /// - Entry order is maintained (FIFO)
+    /// - Both individual reads and read_all work correctly
     #[test]
     fn reader_and_writer_maintain_data_integrity() {
         let temp_dir = TempDir::new().unwrap();
@@ -249,6 +256,13 @@ mod tests {
         }
     }
 
+    /// Tests that iterator interface yields entries in correct write order.
+    ///
+    /// This test verifies that:
+    /// - Iterator returns entries in the same order they were written
+    /// - Mixed Put and Delete operations are handled correctly
+    /// - Delete operations have empty values as expected
+    /// - Iterator interface works consistently with read_all
     #[test]
     fn iterator_yields_entries_in_write_order() {
         let temp_dir = TempDir::new().unwrap();
@@ -283,6 +297,13 @@ mod tests {
         assert_eq!(entries[1].value, Vec::<u8>::new());
     }
 
+    /// Tests that WAL reader validates file headers during initialization.
+    ///
+    /// This test verifies that:
+    /// - Reader correctly reads and validates WAL headers
+    /// - Header fields (version, magic, timestamps) are accessible
+    /// - File format validation works during reader creation
+    /// - Headers created by writers are properly recognized
     #[test]
     fn new_validates_wal_header_format() {
         let temp_dir = TempDir::new().unwrap();
@@ -305,6 +326,13 @@ mod tests {
         assert!(header.file_sequence > 0);
     }
 
+    /// Tests that reader rejects files with incomplete header data.
+    ///
+    /// This test verifies that:
+    /// - Files smaller than required header size are rejected
+    /// - Appropriate errors are returned for truncated files
+    /// - Reader initialization fails safely for invalid files
+    /// - No crashes occur when opening malformed files
     #[test]
     fn new_rejects_files_with_insufficient_header_data() {
         let temp_dir = TempDir::new().unwrap();
@@ -317,6 +345,13 @@ mod tests {
         assert!(result.is_err());
     }
 
+    /// Tests that reader rejects files with incorrect magic numbers.
+    ///
+    /// This test verifies that:
+    /// - Files with wrong magic numbers are detected and rejected
+    /// - Appropriate corruption errors are returned
+    /// - File format validation prevents access to invalid files
+    /// - Error messages contain helpful diagnostic information
     #[test]
     fn new_rejects_files_with_invalid_magic_number() {
         use crate::format::FileHeader;

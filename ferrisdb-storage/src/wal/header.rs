@@ -275,6 +275,13 @@ fn current_timestamp_micros() -> u64 {
 mod tests {
     use super::*;
 
+    /// Tests that WAL headers preserve all data through encode/decode cycle.
+    ///
+    /// This test verifies that:
+    /// - All header fields are preserved exactly during roundtrip
+    /// - Magic number, version, and flags remain unchanged
+    /// - Timestamps and file sequences are maintained
+    /// - Checksum validation passes after encoding
     #[test]
     fn encode_decode_preserves_all_header_fields() {
         let header = WALHeader::new(12345);
@@ -284,6 +291,13 @@ mod tests {
         assert_eq!(header, decoded);
     }
 
+    /// Tests that header validation rejects incorrect magic numbers.
+    ///
+    /// This test verifies that:
+    /// - Headers with wrong magic numbers are rejected
+    /// - Validation returns appropriate corruption errors
+    /// - File format integrity is maintained
+    /// - No false positives for invalid headers
     #[test]
     fn validate_returns_error_for_incorrect_magic() {
         let mut header = WALHeader::new(12345);
@@ -292,6 +306,13 @@ mod tests {
         assert!(header.validate().is_err());
     }
 
+    /// Tests that header decoding detects checksum corruption.
+    ///
+    /// This test verifies that:
+    /// - Bit flips in header data are detected during decode
+    /// - Corruption errors are returned for invalid checksums
+    /// - No silent data corruption occurs
+    /// - Checksum validation protects header integrity
     #[test]
     fn decode_returns_error_when_checksum_corrupted() {
         let header = WALHeader::new(12345);
@@ -306,6 +327,13 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(msg) if msg.contains("checksum")));
     }
 
+    /// Tests that header validation rejects unsupported versions.
+    ///
+    /// This test verifies that:
+    /// - Future version numbers are properly rejected
+    /// - Version validation prevents incompatible file access
+    /// - Appropriate error messages are provided
+    /// - Forward compatibility is maintained
     #[test]
     fn validate_returns_error_for_unsupported_version() {
         let mut header = WALHeader::new(12345);
@@ -316,12 +344,26 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(msg) if msg.contains("version")));
     }
 
+    /// Tests that header size equals exactly 64 bytes for cache alignment.
+    ///
+    /// This test verifies that:
+    /// - Header struct size matches expected 64 bytes
+    /// - WAL_HEADER_SIZE constant is accurate
+    /// - Cache line alignment is maintained for performance
+    /// - Memory layout assumptions are validated
     #[test]
     fn header_size_equals_64_bytes_cache_line() {
         assert_eq!(WAL_HEADER_SIZE, 64);
         assert_eq!(std::mem::size_of::<WALHeader>(), 64);
     }
 
+    /// Tests that new headers are initialized with correct sequence and timestamp.
+    ///
+    /// This test verifies that:
+    /// - File sequence number is set correctly
+    /// - Timestamp reflects current time accurately
+    /// - Created timestamp is reasonable (within expected bounds)
+    /// - Header initialization is consistent
     #[test]
     fn new_sets_file_sequence_and_current_timestamp() {
         let header = WALHeader::new(98765);
