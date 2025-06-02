@@ -56,9 +56,8 @@ export default defineConfig({
 				{
 					label: 'The Journey',
 					items: [
-						{ label: 'Blog Overview', slug: 'blog-overview' },
 						{ label: 'Development Blog', link: '/blog/' },
-						{ label: 'Day 5: Dual View', link: '/blog/day-5/both/' },
+						{ label: 'Blog Overview', slug: 'blog-overview' },
 					],
 				},
 				{
