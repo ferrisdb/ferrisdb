@@ -226,7 +226,16 @@ When asked to review a PR, Claude follows this structured approach:
    - Consider architectural implications
    - Share relevant external resources
 
-7. **Review Decision & API Usage** 🤖
+7. **Acting on Behalf of Human** 🤖
+
+   When approving PRs or performing actions at the human's request:
+
+   - Always include clear attribution: "🤖 Reviewed by Claude on behalf of the human"
+   - For dependabot PRs: "🤖 Approved by Claude on behalf of the human"
+   - For any merge actions: Include "🤖" in the merge commit message
+   - This maintains transparency about who performed the action
+
+8. **Review Decision & API Usage** 🤖
    - If reviewing own PR (same GitHub user): Comment with decision
    - If reviewing others' PRs: Use GitHub API for approve/reject/comment
    - Always clearly state decision: APPROVED ✅, REQUEST CHANGES ❌, or COMMENT 💭
