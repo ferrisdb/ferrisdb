@@ -1,6 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { Card, CardGrid, Aside, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -67,11 +67,10 @@ if (day) {
 }}>
   
   <!-- Post Meta -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <Badge 
-      text={perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'} 
-      variant="default"
-    />
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <span style="color: var(--sl-color-text-accent); font-size: 0.9rem;">
+      {perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
+    </span>
     {post.data.date && (
       <span style="color: var(--sl-color-text-accent); font-size: 0.9rem;">
         {new Date(post.data.date).toLocaleDateString('en-US', { 
@@ -85,9 +84,9 @@ if (day) {
 
   {day && (
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <Badge text={`Day ${day}`} variant="default" />
+      <span style="color: var(--sl-color-accent); font-weight: 600;">Day {day}</span>
       {companionPost && (
-        <a href={`/blog/${companionPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-accent); text-decoration: none; font-weight: 500;">
+        <a href={`/blog/${companionPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-accent); text-decoration: none; font-size: 0.9rem;">
           {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
         </a>
       )}
@@ -101,10 +100,11 @@ if (day) {
   )}
   
   {post.data.tags && (
-    <div style="margin-bottom: 2rem;">
+    <div style="margin-bottom: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
       {post.data.tags.map((tag: string) => (
-        <Badge text={tag} variant="default" />
-        <span style="margin-right: 0.5rem;"></span>
+        <span style="color: var(--sl-color-text-accent); font-size: 0.85rem;">
+          #{tag}
+        </span>
       ))}
     </div>
   )}

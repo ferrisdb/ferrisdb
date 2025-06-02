@@ -1,6 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { Card, CardGrid, Aside, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 import { getCollection } from 'astro:content';
 
 // Get all blog posts
@@ -92,14 +92,12 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               <p>{humanPost.data.excerpt || humanPost.data.description || 'Human perspective on our database building journey.'}</p>
               
               {humanPost.data.insights && (
-                <div style="margin: 0.5rem 0;">
+                <div style="margin: 0.5rem 0; display: flex; gap: 1rem; font-size: 0.85rem; color: var(--sl-color-text-accent);">
                   {humanPost.data.insights.questionsAsked && (
-                    <Badge text={`❓ ${humanPost.data.insights.questionsAsked} questions`} variant="default" />
+                    <span>❓ {humanPost.data.insights.questionsAsked} questions</span>
                   )}
                   {humanPost.data.insights.iterations && (
-                    <span style="margin-left: 0.5rem;">
-                      <Badge text={`🔄 ${humanPost.data.insights.iterations} iterations`} variant="default" />
-                    </span>
+                    <span>🔄 {humanPost.data.insights.iterations} iterations</span>
                   )}
                 </div>
               )}
@@ -119,14 +117,12 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               <p>{claudePost.data.excerpt || claudePost.data.description || 'AI perspective on our database building journey.'}</p>
               
               {claudePost.data.insights && (
-                <div style="margin: 0.5rem 0;">
+                <div style="margin: 0.5rem 0; display: flex; gap: 1rem; font-size: 0.85rem; color: var(--sl-color-text-accent);">
                   {claudePost.data.insights.filesModified && (
-                    <Badge text={`📁 ${claudePost.data.insights.filesModified} files`} variant="default" />
+                    <span>📁 {claudePost.data.insights.filesModified} files</span>
                   )}
                   {claudePost.data.insights.patternsObserved && (
-                    <span style="margin-left: 0.5rem;">
-                      <Badge text={`🔍 ${claudePost.data.insights.patternsObserved.length} patterns`} variant="default" />
-                    </span>
+                    <span>🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
                   )}
                 </div>
               )}
