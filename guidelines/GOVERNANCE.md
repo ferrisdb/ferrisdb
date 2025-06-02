@@ -12,6 +12,7 @@ The constitution for maintaining FerrisDB's information architecture and documen
 - Unimplemented features must be marked [PLANNED], [CONCEPTUAL], or [FUTURE]
 - Performance claims require actual measurements
 - Historical accuracy matters - document what really happened
+- **NEVER claim production readiness** - This is an educational project for learning
 
 ### 2. Guidelines as Living Source of Truth
 

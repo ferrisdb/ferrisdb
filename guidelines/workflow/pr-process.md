@@ -290,6 +290,15 @@ All PRs must pass these checks:
 4. **Markdown formatting**: `prettier --check "**/*.md"`
 5. **Documentation build**: `cargo doc --all --no-deps`
 
+## Content Review Requirements
+
+All PRs with documentation or content must verify:
+
+1. **No production-ready claims** - Check for words like "production-ready", "enterprise-grade", "high-performance"
+2. **Educational disclaimers present** - Ensure learning purpose is clear
+3. **Accurate status representation** - Distinguish implemented vs planned
+4. **No misleading comparisons** - Don't claim superiority over production databases
+
 ## Merging Guidelines
 
 1. **Squash merge** for feature branches to keep history clean

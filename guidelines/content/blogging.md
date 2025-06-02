@@ -57,6 +57,19 @@ The operation isn't part of the key's identity...
 
 ## Writing Effective Blog Posts
 
+### Educational Project Disclaimer
+
+**CRITICAL**: Every blog post MUST make clear that FerrisDB is an educational project:
+
+- Include disclaimer in introduction or early in post
+- Never imply production readiness
+- Focus on learning journey, not product features
+- Use phrases like "learning project", "educational database", "teaching tool"
+
+**Example Introduction**:
+
+> Today in our educational database project, we learned how write-ahead logs work by building one from scratch...
+
 ### Implementation Status Requirements
 
 **MANDATORY**: Any blog post discussing features must clearly indicate implementation status:

@@ -179,6 +179,27 @@ Example state diagram:
 
 ## Documentation Honesty
 
+### Educational Project Disclaimer
+
+**CRITICAL**: FerrisDB is an educational project. All documentation MUST:
+
+- **Never claim production readiness** - This is for learning, not production use
+- **Include educational disclaimers** - Make the learning purpose clear
+- **Avoid reliability claims** - Don't imply enterprise-grade robustness
+- **Focus on teaching value** - Emphasize what readers will learn
+
+**Required Disclaimers**:
+
+```rust
+/// Educational implementation demonstrating WAL concepts.
+/// Not intended for production use.
+```
+
+```markdown
+> **Educational Note**: This implementation teaches database concepts
+> but is not optimized for production use.
+```
+
 ### Implementation Status
 
 - **Be transparent about implementation status** - Clearly indicate what's implemented vs planned
@@ -194,6 +215,7 @@ Example state diagram:
 - **Document benchmark methodology** - When you do run benchmarks, document the setup and conditions
 - **Avoid misleading claims** - Don't present example numbers as if they were measured results
 - **Update when benchmarks are run** - Replace theoretical numbers with actual measurements once available
+- **Never claim superiority** - Don't compare favorably to production databases
 
 ## Documentation Quality Standards
 

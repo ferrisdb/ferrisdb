@@ -116,6 +116,7 @@ FerrisDB is an educational project where a CRUD developer and an AI (Claude) are
 6. **Quality Code**: Follow Rust best practices and idioms
 7. **Real Collaboration**: Show actual human-AI workflow, not idealized version
 8. **No Premature Documentation**: Don't document features that don't exist
+9. **Never Claim Production-Ready**: This is a learning project - we NEVER claim production readiness, reliability, or performance guarantees
 
 ## Guidelines as Source of Truth
 

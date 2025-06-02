@@ -7,7 +7,7 @@ Standardized Git workflow and best practices for FerrisDB development.
 ### Main Branch
 
 - **Branch name**: `main`
-- **Purpose**: Stable, production-ready code
+- **Purpose**: Stable, tested code ready for learning
 - **Protection**: Protected branch, no direct pushes
 - **Merging**: Only through reviewed and approved PRs
 

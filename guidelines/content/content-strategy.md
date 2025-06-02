@@ -37,7 +37,29 @@ Technical content without narrative context is boring. Every article should answ
 
 ## Content Principles
 
-### 1. Factual vs. Aspirational
+### 1. Never Claim Production-Ready
+
+**CRITICAL**: FerrisDB is an educational project. We MUST:
+
+- Never claim production readiness
+- Never imply reliability guarantees
+- Never suggest performance superiority
+- Always clarify this is for learning, not production use
+- Use disclaimers when discussing implementations
+
+**Good Examples**:
+
+- "We implemented a WAL for learning durability concepts"
+- "Our skip list teaches concurrent data structures"
+- "This shows how databases handle checksums"
+
+**Bad Examples**:
+
+- "Production-ready WAL implementation"
+- "High-performance skip list"
+- "Enterprise-grade storage engine"
+
+### 2. Factual vs. Aspirational
 
 **Factual Content** (must reflect reality):
 
@@ -52,7 +74,7 @@ Technical content without narrative context is boring. Every article should answ
 - Future explorations - what excites us
 - Research notes - papers we're reading
 
-### 2. No Premature Documentation
+### 3. No Premature Documentation
 
 We do NOT create:
 
