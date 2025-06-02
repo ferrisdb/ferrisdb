@@ -71,12 +71,12 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
     
     return (
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0 1rem 0;">
-          <h3 style="margin: 0; color: var(--sl-color-accent);">Day {day}</h3>
+        <div style="margin: 2rem 0 1rem 0;">
+          <h3 style="margin: 0 0 1rem 0; color: var(--sl-color-accent);">Day {day}</h3>
           {humanPost && claudePost && (
-            <a href={`/blog/day-${day}/both/`} style="color: var(--sl-color-accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--sl-color-accent); border-radius: 0.375rem;">
-              📊 Compare Both Views
-            </a>
+            <Aside type="tip">
+              📊 <strong>Dual Perspective Available:</strong> <a href={`/blog/day-${day}/both/`}>Compare both human and AI perspectives side-by-side</a> for Day {day}.
+            </Aside>
           )}
         </div>
         
