@@ -71,15 +71,11 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
     
     return (
       <div>
-        <div style="margin: 2rem 0 1rem 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; color: var(--sl-color-accent);">Day {day}</h3>
-            {humanPost && claudePost && (
-              <a href={`/blog/day-${day}/both/`} style="color: var(--sl-color-accent); text-decoration: none; font-size: 0.9rem; font-weight: 500;">
-                📊 Compare both views →
-              </a>
-            )}
-          </div>
+        <div>
+          <h3>Day {day}</h3>
+          {humanPost && claudePost && (
+            <p><a href={`/blog/day-${day}/both/`}>📊 Compare both views →</a></p>
+          )}
         </div>
         
         <CardGrid>
@@ -88,18 +84,18 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               title={`👨‍💻 Human: Day ${day}`}
               icon="document"
             >
-              <h4 style="margin: 0 0 0.5rem 0; font-size: 1rem;">{humanPost.data.title}</h4>
+              <h4>{humanPost.data.title}</h4>
               <p>{humanPost.data.excerpt || humanPost.data.description || 'Human perspective on our database building journey.'}</p>
               
               {humanPost.data.insights && (
-                <div style="margin: 0.5rem 0; display: flex; gap: 1rem; font-size: 0.85rem; color: var(--sl-color-text-accent);">
+                <p>
                   {humanPost.data.insights.questionsAsked && (
-                    <span>❓ {humanPost.data.insights.questionsAsked} questions</span>
+                    <span>❓ {humanPost.data.insights.questionsAsked} questions </span>
                   )}
                   {humanPost.data.insights.iterations && (
                     <span>🔄 {humanPost.data.insights.iterations} iterations</span>
                   )}
-                </div>
+                </p>
               )}
               
               <p>
@@ -113,18 +109,18 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
               title={`🤖 Claude: Day ${day}`}
               icon="rocket"
             >
-              <h4 style="margin: 0 0 0.5rem 0; font-size: 1rem;">{claudePost.data.title}</h4>
+              <h4>{claudePost.data.title}</h4>
               <p>{claudePost.data.excerpt || claudePost.data.description || 'AI perspective on our database building journey.'}</p>
               
               {claudePost.data.insights && (
-                <div style="margin: 0.5rem 0; display: flex; gap: 1rem; font-size: 0.85rem; color: var(--sl-color-text-accent);">
+                <p>
                   {claudePost.data.insights.filesModified && (
-                    <span>📁 {claudePost.data.insights.filesModified} files</span>
+                    <span>📁 {claudePost.data.insights.filesModified} files </span>
                   )}
                   {claudePost.data.insights.patternsObserved && (
                     <span>🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
                   )}
-                </div>
+                </p>
               )}
               
               <p>
@@ -146,7 +142,7 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
           </Aside>
         )}
         
-        <hr style="margin: 2rem 0; border: 1px solid var(--sl-color-hairline);" />
+        <hr />
       </div>
     );
   })}

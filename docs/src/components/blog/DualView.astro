@@ -27,7 +27,7 @@ const hasPreviousDay = availableDays.includes(day - 1);
 const hasNextDay = availableDays.includes(day + 1);
 ---
 
-<div class="dual-view">
+<div>
   <h1>Day {day}: Dual Perspective</h1>
   <p>Compare human curiosity and AI implementation side-by-side</p>
   
@@ -41,15 +41,15 @@ const hasNextDay = availableDays.includes(day + 1);
       <p>{humanPost.data.excerpt}</p>
       
       {humanPost.data.insights && (
-        <div class="insights">
+        <div>
           {humanPost.data.insights.questionsAsked && (
-            <p><strong>❓ Questions Asked:</strong> {humanPost.data.insights.questionsAsked}</p>
+            <p>❓ <strong>Questions Asked:</strong> {humanPost.data.insights.questionsAsked}</p>
           )}
           {humanPost.data.insights.iterations && (
-            <p><strong>🔄 Iterations:</strong> {humanPost.data.insights.iterations}</p>
+            <p>🔄 <strong>Iterations:</strong> {humanPost.data.insights.iterations}</p>
           )}
           {humanPost.data.insights.breakthroughMoment && (
-            <p><strong>💡 Breakthrough:</strong> "{humanPost.data.insights.breakthroughMoment}"</p>
+            <p>💡 <strong>Breakthrough:</strong> "{humanPost.data.insights.breakthroughMoment}"</p>
           )}
         </div>
       )}
@@ -62,15 +62,15 @@ const hasNextDay = availableDays.includes(day + 1);
       <p>{claudePost.data.excerpt}</p>
       
       {claudePost.data.insights && (
-        <div class="insights">
+        <div>
           {claudePost.data.insights.filesModified && (
-            <p><strong>📁 Files Modified:</strong> {claudePost.data.insights.filesModified}</p>
+            <p>📁 <strong>Files Modified:</strong> {claudePost.data.insights.filesModified}</p>
           )}
           {claudePost.data.insights.patternsObserved && (
-            <p><strong>🔍 Patterns Observed:</strong> {claudePost.data.insights.patternsObserved.length}</p>
+            <p>🔍 <strong>Patterns Observed:</strong> {claudePost.data.insights.patternsObserved.length}</p>
           )}
           {claudePost.data.insights.keyLearning && (
-            <p><strong>🎯 Key Learning:</strong> "{claudePost.data.insights.keyLearning}"</p>
+            <p>🎯 <strong>Key Learning:</strong> "{claudePost.data.insights.keyLearning}"</p>
           )}
         </div>
       )}
@@ -85,67 +85,21 @@ const hasNextDay = availableDays.includes(day + 1);
     and {claudePost.data.insights?.patternsObserved?.length || 0} collaboration patterns.
   </Aside>
   
-  <div class="navigation">
+  <hr />
+  <nav>
     <p>
       {hasPreviousDay && (
         <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
       )}
-      {hasPreviousDay && ' | '}
+      {hasPreviousDay && ' • '}
       <a href="/blog/">All Posts</a>
       {hasNextDay && (
-        <span> | <a href={`/blog/day-${day + 1}/both/`}>Day {day + 1} →</a></span>
+        <span> • <a href={`/blog/day-${day + 1}/both/`}>Day {day + 1} →</a></span>
       )}
       {!hasNextDay && (
-        <span style="opacity: 0.7;"> | To be continued...</span>
+        <span> • To be continued...</span>
       )}
     </p>
-  </div>
+  </nav>
 </div>
 
-<style>
-  .dual-view {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .dual-view h1 {
-    text-align: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .dual-view > p {
-    text-align: center;
-    color: var(--sl-color-text-accent);
-    margin-bottom: 2rem;
-  }
-
-  .insights {
-    margin: 1rem 0;
-  }
-
-  .insights p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-  }
-
-  .navigation {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--sl-color-hairline);
-  }
-
-  .navigation p {
-    margin: 0;
-  }
-
-  .navigation a {
-    color: var(--sl-color-accent);
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .navigation a:hover {
-    text-decoration: underline;
-  }
-</style>

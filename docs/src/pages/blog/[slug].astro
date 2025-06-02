@@ -67,30 +67,26 @@ if (day) {
 }}>
   
   <!-- Post Meta -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-    <span style="color: var(--sl-color-text-accent); font-size: 0.9rem;">
-      {perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
-    </span>
+  <p>
+    {perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
     {post.data.date && (
-      <span style="color: var(--sl-color-text-accent); font-size: 0.9rem;">
-        {new Date(post.data.date).toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        })}
-      </span>
+      <span> • {new Date(post.data.date).toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })}</span>
     )}
-  </div>
+  </p>
 
   {day && (
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <span style="color: var(--sl-color-accent); font-weight: 600;">Day {day}</span>
+    <p>
+      <strong>Day {day}</strong>
       {companionPost && (
-        <a href={`/blog/${companionPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-accent); text-decoration: none; font-size: 0.9rem;">
+        <span> • <a href={`/blog/${companionPost.id.replace('blog/', '')}/`}>
           {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
-        </a>
+        </a></span>
       )}
-    </div>
+    </p>
   )}
   
   {post.data.excerpt && (
@@ -100,13 +96,14 @@ if (day) {
   )}
   
   {post.data.tags && (
-    <div style="margin-bottom: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-      {post.data.tags.map((tag: string) => (
-        <span style="color: var(--sl-color-text-accent); font-size: 0.85rem;">
+    <p>
+      {post.data.tags.map((tag: string, i: number) => (
+        <span>
+          {i > 0 && ' '}
           #{tag}
         </span>
       ))}
-    </div>
+    </p>
   )}
   
   <!-- Post Content -->
@@ -114,7 +111,7 @@ if (day) {
   
   <!-- Related Posts / Companion -->
   {relatedPosts.length > 0 && (
-    <div style="margin-top: 3rem;">
+    <div>
       <h3>Related Posts from Day {day}</h3>
       
       {relatedPosts.map((relatedPost) => {
@@ -122,20 +119,20 @@ if (day) {
         return (
           <Card 
             title={relatedPerspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
-            icon={relatedPerspective === 'human' ? 'user' : 'rocket'}
+            icon={relatedPerspective === 'human' ? 'document' : 'rocket'}
           >
-            <h4 style="margin: 0 0 0.5rem 0;">
-              <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`} style="color: var(--sl-color-text); text-decoration: none;">
+            <h4>
+              <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`}>
                 {relatedPost.data.title}
               </a>
             </h4>
-            <p style="margin: 0; color: var(--sl-color-text-accent);">{relatedPost.data.excerpt}</p>
+            <p>{relatedPost.data.excerpt}</p>
           </Card>
         );
       })}
       
       {day && (
-        <div style="text-align: center; margin-top: 1.5rem;">
+        <div>
           <Card title="📊 Compare Both Views">
             <p>See how human curiosity and AI insights approached the same challenges on Day {day}.</p>
             <p><a href={`/blog/day-${day}/both/`}>Read Both Perspectives Side-by-Side →</a></p>
@@ -146,16 +143,16 @@ if (day) {
   )}
   
   <!-- Navigation -->
-  <hr style="margin: 3rem 0 2rem 0; border: 1px solid var(--sl-color-hairline);" />
-  <nav style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-    {day && day > 1 ? (
-      <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
-    ) : (
-      <span></span>
-    )}
-    
-    <a href="/blog/">All Posts</a>
-    
-    <span style="opacity: 0.7;">To be continued...</span>
+  <hr />
+  <nav>
+    <p>
+      {day && day > 1 && (
+        <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
+      )}
+      {day && day > 1 && ' • '}
+      <a href="/blog/">All Posts</a>
+      {' • '}
+      <span>To be continued...</span>
+    </p>
   </nav>
 </StarlightPage>
