@@ -57,7 +57,6 @@ export default defineConfig({
 					label: 'The Journey',
 					items: [
 						{ label: 'Development Blog', link: '/blog/' },
-						{ label: 'Blog Overview', slug: 'blog-overview' },
 					],
 				},
 				{

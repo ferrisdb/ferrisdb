@@ -1,6 +1,5 @@
 ---
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
-import Pagination from '@astrojs/starlight/components/Pagination.astro';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -29,16 +28,13 @@ const hasNextDay = availableDays.includes(day + 1);
 ---
 
 <div>
-  <h1>Day {day}: Dual Perspective</h1>
-  <p>Compare human curiosity and AI implementation side-by-side</p>
-  
   <Aside type="tip">
     Read both perspectives to see how human questions and AI insights combine to drive our database development forward.
   </Aside>
   
   <CardGrid>
-    <Card title="👨‍💻 Human Perspective" icon="user">
-      <h3>{humanPost.data.title}</h3>
+    <Card title="👨‍💻 Human Perspective" icon="document">
+      <p><strong>{humanPost.data.title}</strong></p>
       <p>{humanPost.data.excerpt}</p>
       
       {humanPost.data.insights && (
@@ -59,7 +55,7 @@ const hasNextDay = availableDays.includes(day + 1);
     </Card>
     
     <Card title="🤖 Claude Perspective" icon="rocket">
-      <h3>{claudePost.data.title}</h3>
+      <p><strong>{claudePost.data.title}</strong></p>
       <p>{claudePost.data.excerpt}</p>
       
       {claudePost.data.insights && (
@@ -86,24 +82,119 @@ const hasNextDay = availableDays.includes(day + 1);
     and {claudePost.data.insights?.patternsObserved?.length || 0} collaboration patterns.
   </Aside>
   
-  <Pagination 
-    labels={{
-      'page.previousLink': 'Previous',
-      'page.nextLink': hasNextDay ? 'Next' : 'To be continued...'
-    }}
-    pagination={{
-      prev: hasPreviousDay ? {
-        href: `/blog/day-${day - 1}/both/`,
-        label: `Day ${day - 1}`
-      } : undefined,
-      next: hasNextDay ? {
-        href: `/blog/day-${day + 1}/both/`,
-        label: `Day ${day + 1}`
-      } : {
-        href: '/blog/',
-        label: 'Back to all posts'
-      }
-    }}
-  />
+  <div class="pagination" data-pagefind-ignore="">
+    <div class="card-grid">
+      {hasPreviousDay ? (
+        <div class="sl-link-card">
+          <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+            <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+          </svg>
+          <span class="sl-flex stack">
+            <a href={`/blog/day-${day - 1}/both/`} rel="prev">
+              <span class="title">Day {day - 1}</span>
+            </a>
+          </span>
+        </div>
+      ) : (
+        <div class="sl-link-card placeholder"></div>
+      )}
+      {hasNextDay ? (
+        <div class="sl-link-card next">
+          <span class="sl-flex stack">
+            <a href={`/blog/day-${day + 1}/both/`} rel="next">
+              <span class="title">Day {day + 1}</span>
+            </a>
+          </span>
+          <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+            <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+          </svg>
+        </div>
+      ) : (
+        <div class="sl-link-card disabled next">
+          <span class="sl-flex stack">
+            <span class="title">To be continued...</span>
+          </span>
+          <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+            <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+          </svg>
+        </div>
+      )}
+    </div>
+  </div>
+  
+  <style>
+    /* Reuse Starlight's pagination CSS */
+    .pagination {
+      margin-top: 3rem;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+      gap: 1rem;
+    }
+    
+    .sl-link-card {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--sl-color-gray-5);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--sl-color-gray-2);
+      box-shadow: var(--sl-shadow-md);
+      margin: 0;
+    }
+    
+    .sl-link-card.placeholder {
+      visibility: hidden;
+    }
+    
+    .sl-link-card.disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    
+    .sl-link-card:hover:not(.disabled) {
+      border-color: var(--sl-color-gray-2);
+    }
+    
+    .sl-link-card.next {
+      justify-content: flex-end;
+      text-align: right;
+      margin: 0;
+    }
+    
+    .sl-flex.stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sl-link-card a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .sl-link-card .title {
+      font-weight: 600;
+      color: var(--sl-color-white);
+    }
+    
+    .sl-link-card .icon {
+      flex-shrink: 0;
+    }
+    
+    /* Flip arrow for previous link */
+    .sl-link-card:first-child .icon {
+      transform: rotate(180deg);
+    }
+    
+    /* Ensure consistent margins for all cards */
+    .card-grid > * {
+      margin: 0 !important;
+    }
+  </style>
 </div>
 

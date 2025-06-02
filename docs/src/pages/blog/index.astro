@@ -33,7 +33,7 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
 
 <StarlightPage frontmatter={{ 
   title: "Development Blog", 
-  description: "Two perspectives on building a database - human curiosity meets AI implementation" 
+  description: "Two perspectives on building a database - human curiosity meets AI implementation"
 }}>
   
   <Aside type="tip">
@@ -43,18 +43,18 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
   <h2>Choose Your Reading Experience</h2>
 
   <CardGrid>
-    <Card title="👨‍💻 Human Perspective" icon="user">
+    <Card title="👨‍💻 Human Perspective" icon="document">
       Real learning journey through code review and questioning - watch confusion become clarity through iterative collaboration.
     </Card>
     
     <Card title="🤖 AI Perspective" icon="rocket">
       Pattern recognition and collaboration analysis - insights on effective teaching and learning patterns.
     </Card>
-    
-    <Card title="🤝 Side-by-Side Comparison" icon="puzzle">
-      See both perspectives simultaneously - compare human questions with AI insights on the same topics.
-    </Card>
   </CardGrid>
+  
+  <Card title="🤝 Side-by-Side Comparison" icon="puzzle">
+    See both perspectives simultaneously - compare human questions with AI insights on the same topics.
+  </Card>
 
   <h2>Development Timeline</h2>
 
@@ -165,12 +165,12 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
       
       <p><a href="/reference/current-implementation/">Current Implementation →</a></p>
     </Card>
-    
-    <Card title="🌟 Follow on GitHub" icon="github">
-      Star our repository to track progress and join the open source learning experiment.
-      
-      <p><a href="https://github.com/ferrisdb/ferrisdb">GitHub Repository →</a></p>
-    </Card>
   </CardGrid>
+  
+  <Card title="🌟 Follow on GitHub" icon="github">
+    Star our repository to track progress and join the open source learning experiment.
+    
+    <p><a href="https://github.com/ferrisdb/ferrisdb">GitHub Repository →</a></p>
+  </Card>
 
 </StarlightPage>

@@ -1,6 +1,6 @@
 ---
 title: "Day 2: From Linear Search to Clean APIs - Learning Through Code Review"
-date: 2025-01-28
+date: 2025-05-28
 authors: [human]
 tags:
   [human-perspective, rust, sstable, optimization, api-design, development, database, collaboration]

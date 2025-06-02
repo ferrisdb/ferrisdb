@@ -1,6 +1,6 @@
 ---
 title: "Day 1: From 'Just Use RocksDB' to Building From Scratch"
-date: 2025-01-27
+date: 2025-05-27
 authors: [human]
 tags: [development, rust, learning, code-review]
 description: "Starting FerrisDB with Claude. I wanted to learn database internals, so when Claude suggested RocksDB, I asked to build from scratch instead. Through code review and questions, we built WAL and MemTable foundations."

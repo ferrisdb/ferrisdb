@@ -1,7 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
-import Pagination from '@astrojs/starlight/components/Pagination.astro';
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -60,11 +59,58 @@ if (day) {
     return match && parseInt(match[1]) === day;
   }));
 }
+
+// Get all available days to check if next/previous days exist
+const allPosts = await getCollection('docs', (entry) => 
+  entry.id && entry.id.startsWith('blog/day-')
+);
+
+// Extract unique day numbers
+const availableDays = [...new Set(
+  allPosts.map(post => {
+    const match = post.id.match(/day-(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  }).filter(Boolean)
+)].sort((a, b) => a - b);
+
+const hasPreviousDay = day && availableDays.includes(day - 1);
+const hasNextDay = day && availableDays.includes(day + 1);
+
+// Get titles for previous and next posts
+let previousDayPosts = null;
+let nextDayPosts = null;
+
+if (hasPreviousDay) {
+  previousDayPosts = allPosts.filter(p => {
+    const match = p.id.match(/day-(\d+)/);
+    return match && parseInt(match[1]) === day - 1;
+  });
+}
+
+if (hasNextDay) {
+  nextDayPosts = allPosts.filter(p => {
+    const match = p.id.match(/day-(\d+)/);
+    return match && parseInt(match[1]) === day + 1;
+  });
+}
+
+// For navigation, determine which post to link to (prefer same perspective)
+const previousPost = previousDayPosts?.find(p => p.data.authors?.includes(perspective)) || 
+                    previousDayPosts?.find(p => p.data.authors?.includes('human')) ||
+                    previousDayPosts?.[0];
+const nextPost = nextDayPosts?.find(p => p.data.authors?.includes(perspective)) || 
+                nextDayPosts?.find(p => p.data.authors?.includes('human')) ||
+                nextDayPosts?.[0];
+
+const previousTitle = previousPost?.data.title || `Day ${day - 1}`;
+const nextTitle = nextPost?.data.title || `Day ${day + 1}`;
+const previousSlug = previousPost?.id.replace('blog/', '');
+const nextSlug = nextPost?.id.replace('blog/', '');
 ---
 
 <StarlightPage frontmatter={{ 
   title: post.data.title, 
-  description: post.data.description 
+  description: post.data.description
 }}>
   
   <!-- Post Meta -->
@@ -115,52 +161,158 @@ if (day) {
     <div>
       <h3>Related Posts from Day {day}</h3>
       
-      {relatedPosts.map((relatedPost) => {
-        const relatedPerspective = relatedPost.data.authors?.includes('human') ? 'human' : 'claude';
-        return (
-          <Card 
-            title={relatedPerspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
-            icon={relatedPerspective === 'human' ? 'document' : 'rocket'}
-          >
-            <h4>
-              <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`}>
-                {relatedPost.data.title}
-              </a>
-            </h4>
-            <p>{relatedPost.data.excerpt}</p>
-          </Card>
-        );
-      })}
-      
-      {day && (
-        <div>
+      <CardGrid>
+        {relatedPosts.map((relatedPost) => {
+          const relatedPerspective = relatedPost.data.authors?.includes('human') ? 'human' : 'claude';
+          return (
+            <Card 
+              title={relatedPerspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
+              icon={relatedPerspective === 'human' ? 'document' : 'rocket'}
+            >
+              <h4>
+                <a href={`/blog/${relatedPost.id.replace('blog/', '')}/`}>
+                  {relatedPost.data.title}
+                </a>
+              </h4>
+              <p>{relatedPost.data.excerpt}</p>
+            </Card>
+          );
+        })}
+        
+        {day && (
           <Card title="📊 Compare Both Views">
             <p>See how human curiosity and AI insights approached the same challenges on Day {day}.</p>
             <p><a href={`/blog/day-${day}/both/`}>Read Both Perspectives Side-by-Side →</a></p>
           </Card>
-        </div>
-      )}
+        )}
+      </CardGrid>
     </div>
   )}
   
-  <!-- Navigation -->
-  <Pagination 
-    labels={{
-      'page.previousLink': 'Previous',
-      'page.nextLink': day && day < 5 ? 'Next' : 'To be continued...'
-    }}
-    pagination={{
-      prev: day && day > 1 ? {
-        href: `/blog/day-${day - 1}/both/`,
-        label: `Day ${day - 1}`
-      } : undefined,
-      next: day && day < 5 ? {
-        href: `/blog/day-${day + 1}/both/`,
-        label: `Day ${day + 1}`
-      } : {
-        href: '/blog/',
-        label: 'Back to all posts'
-      }
-    }}
-  />
+  <!-- Day Navigation -->
+  {day && (
+    <div class="day-pagination" data-pagefind-ignore="">
+      <div class="day-card-grid">
+        {hasPreviousDay ? (
+          <div class="day-link-card">
+            <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+              <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+            </svg>
+            <span class="sl-flex stack">
+              <a href={`/blog/${previousSlug}/`} rel="prev">
+                <span>
+                  Previous<br />
+                  <span class="title">{previousTitle}</span>
+                </span>
+              </a>
+            </span>
+          </div>
+        ) : (
+          <div class="day-link-card placeholder"></div>
+        )}
+        {hasNextDay ? (
+          <div class="day-link-card next">
+            <span class="sl-flex stack">
+              <a href={`/blog/${nextSlug}/`} rel="next">
+                <span>
+                  Next<br />
+                  <span class="title">{nextTitle}</span>
+                </span>
+              </a>
+            </span>
+            <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+              <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+            </svg>
+          </div>
+        ) : (
+          <div class="day-link-card disabled next">
+            <span class="sl-flex stack">
+              <span>
+                Next<br />
+                <span class="title">To be continued...</span>
+              </span>
+            </span>
+            <svg aria-hidden="true" class="icon rtl:flip" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.333em;">
+              <path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path>
+            </svg>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+  
+  <style>
+    /* Day navigation CSS - using different class names to avoid conflicts */
+    .day-pagination {
+      margin-top: 3rem;
+    }
+    
+    .day-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+      gap: 1rem;
+    }
+    
+    .day-link-card {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--sl-color-gray-5);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--sl-color-gray-2);
+      box-shadow: var(--sl-shadow-md);
+      margin: 0;
+    }
+    
+    .day-link-card.placeholder {
+      visibility: hidden;
+    }
+    
+    .day-link-card.disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    
+    .day-link-card:hover:not(.disabled) {
+      border-color: var(--sl-color-gray-2);
+    }
+    
+    .day-link-card.next {
+      justify-content: flex-end;
+      text-align: right;
+      margin: 0;
+    }
+    
+    .day-link-card .sl-flex.stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .day-link-card a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .day-link-card .title {
+      font-weight: 600;
+      color: var(--sl-color-white);
+    }
+    
+    .day-link-card .icon {
+      flex-shrink: 0;
+    }
+    
+    /* Flip arrow for previous link */
+    .day-link-card:first-child .icon {
+      transform: rotate(180deg);
+    }
+    
+    /* Ensure consistent margins for all cards */
+    .day-card-grid > * {
+      margin: 0 !important;
+    }
+  </style>
 </StarlightPage>

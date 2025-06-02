@@ -1,6 +1,6 @@
 ---
 title: "Day 4: Raising the Bar - Governance and Dogfooding"
-date: 2025-01-31
+date: 2025-05-31
 authors: [human]
 tags: [human-perspective, governance, tutorials, dogfooding, philosophy, standards, documentation]
 description: "When documentation becomes philosophy and tutorials become tests - how we raised our standards to an almost brutal level."

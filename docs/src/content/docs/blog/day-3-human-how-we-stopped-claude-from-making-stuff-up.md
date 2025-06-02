@@ -1,6 +1,6 @@
 ---
 title: "Day 3: How We Stopped Claude from Making Stuff Up"
-date: 2025-01-29
+date: 2025-05-29
 authors: [human]
 tags: [human-perspective, human-ai-collaboration, documentation, workflow, innovation]
 description: "Solving the context problem in human-AI development by creating a collaboration commentary system that preserves our real workflow."
