@@ -378,3 +378,7 @@ for item in items {
 - **Next**: [Documentation](documentation.md) - Documenting your code
 - **Also See**: [Testing](../workflow/testing.md) - Writing idiomatic tests
 - **Reference**: [Performance](../technical/performance.md) - Performance best practices
+
+---
+
+_Last updated: 2025-06-01_

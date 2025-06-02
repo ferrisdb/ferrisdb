@@ -247,3 +247,7 @@ prettier --write "**/*.md" && prettier --check "**/*.md"
 - [Documentation](documentation.md) - Writing technical documentation
 - [Visualization](visualization.md) - Creating diagrams and tables
 - [Website Design](../content/website-design-starlight.md) - Starlight-specific requirements
+
+---
+
+_Last updated: 2025-06-01_

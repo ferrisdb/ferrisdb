@@ -530,6 +530,179 @@ tests/
 └── format_property_tests.rs       // Fuzzing with proptest
 ```
 
+## WAL-Specific Testing Patterns
+
+### Required WAL Tests
+
+The Write-Ahead Log requires specialized testing due to its critical role in durability:
+
+#### 1. **Durability Tests**
+
+```rust
+#[test]
+fn wal_survives_process_crash() {
+    let path = temp_dir();
+
+    // Write entries
+    {
+        let mut wal = WALWriter::new(&path)?;
+        wal.append(b"key1", b"value1")?;
+        wal.sync()?;
+        // Simulate crash (drop without close)
+    }
+
+    // Recover and verify
+    let mut reader = WALReader::new(&path)?;
+    let entries: Vec<_> = reader.entries().collect();
+    assert_eq!(entries.len(), 1);
+    assert_eq!(entries[0].key, b"key1");
+}
+```
+
+#### 2. **Sync Mode Testing**
+
+```rust
+#[test]
+fn sync_modes_provide_correct_guarantees() {
+    // NoSync: Fast but no guarantees
+    test_sync_mode(SyncMode::NoSync, |wal| {
+        // May lose recent writes on crash
+    });
+
+    // Sync: Guaranteed durability
+    test_sync_mode(SyncMode::Sync, |wal| {
+        // All synced writes must survive
+    });
+}
+```
+
+#### 3. **Corruption Recovery**
+
+```rust
+#[test]
+fn wal_reader_handles_partial_writes() {
+    let mut file = create_wal_with_entries();
+
+    // Simulate partial write (incomplete entry)
+    file.seek(SeekFrom::End(0))?;
+    file.write_all(&[0xFF; 10])?; // Partial entry
+
+    // Reader should return valid entries, skip corrupted
+    let reader = WALReader::new(file)?;
+    let entries: Result<Vec<_>, _> = reader.entries().collect();
+    assert!(entries.is_ok());
+    assert_eq!(entries.unwrap().len(), expected_valid_count);
+}
+```
+
+#### 4. **Metrics Validation**
+
+```rust
+#[test]
+fn metrics_accurately_track_operations() {
+    let metrics = Arc::new(WALMetrics::new());
+    let mut wal = WALWriter::with_metrics(path, metrics.clone())?;
+
+    wal.append(b"key", b"value")?;
+    assert_eq!(metrics.writes_total(), 1);
+    assert_eq!(metrics.bytes_written(), expected_bytes);
+
+    wal.sync()?;
+    assert_eq!(metrics.syncs_total(), 1);
+}
+```
+
+#### 5. **Concurrent Access Safety**
+
+```rust
+#[test]
+fn concurrent_readers_during_writes() {
+    let path = temp_dir();
+    let writer = Arc::new(Mutex::new(WALWriter::new(&path)?));
+
+    // Start writer thread
+    let writer_handle = {
+        let writer = Arc::clone(&writer);
+        thread::spawn(move || {
+            for i in 0..1000 {
+                writer.lock().unwrap()
+                    .append(&format!("key{}", i), b"value")?;
+            }
+        })
+    };
+
+    // Multiple readers
+    let mut reader_handles = vec![];
+    for _ in 0..5 {
+        let path = path.clone();
+        reader_handles.push(thread::spawn(move || {
+            let reader = WALReader::new(&path)?;
+            reader.entries().count()
+        }));
+    }
+
+    // All operations should succeed
+    writer_handle.join().unwrap()?;
+    for handle in reader_handles {
+        assert!(handle.join().unwrap().is_ok());
+    }
+}
+```
+
+#### 6. **File Rotation Preparation**
+
+```rust
+#[test]
+fn wal_handles_file_boundaries() {
+    // Test that WAL is prepared for future file rotation
+    let mut wal = WALWriter::new(path)?;
+
+    // Write up to file size limit
+    while wal.file_size() < MAX_FILE_SIZE {
+        wal.append(b"key", b"value")?;
+    }
+
+    // Should handle gracefully (future: rotate)
+    assert!(wal.append(b"key", b"value").is_ok());
+}
+```
+
+### WAL Test Organization
+
+As implemented in `ferrisdb-storage/tests/`:
+
+1. **wal_format_tests.rs**: Binary format validation
+2. **wal_integration_tests.rs**: End-to-end workflows
+3. **wal_concurrent_tests.rs**: Thread safety and races
+4. **wal_property_tests.rs**: Fuzzing with PropTest
+
+### PropTest Configuration for WAL
+
+```toml
+# proptest.toml
+[proptest]
+cases = 20               # Reduced for CI
+max_shrink_iters = 50
+timeout = 30000
+
+[proptest.local]
+cases = 256              # Full testing locally
+max_shrink_iters = 1024
+timeout = 60000
+```
+
+### Environment-Aware Testing
+
+```rust
+fn max_test_value_size() -> usize {
+    if std::env::var("CI").is_ok() {
+        1024 * 1024      // 1MB in CI
+    } else {
+        10 * 1024 * 1024 // 10MB locally
+    }
+}
+```
+
 ## Testing Utility Modules
 
 When creating shared utilities (e.g., in a `utils` module):
@@ -548,6 +721,20 @@ When creating shared utilities (e.g., in a `utils` module):
 - Thread safety verification if applicable
 - Property-based tests for complex invariants
 
+## Test Documentation Requirements
+
+Every test function MUST have a doc comment explaining:
+
+```rust
+/// Tests that WAL writer correctly handles concurrent writes
+/// by spawning multiple threads that write simultaneously.
+/// Verifies data integrity and ordering guarantees.
+#[test]
+fn concurrent_writes_maintain_order() {
+    // ...
+}
+```
+
 ## Continuous Integration
 
 All tests run automatically on:
@@ -557,3 +744,14 @@ All tests run automatically on:
 - Nightly for extended test suites
 
 Tests must pass before merging any PR.
+
+### CI-Specific Test Behavior
+
+- Property tests run with reduced cases (20 vs 256)
+- Benchmarks compare against base branch
+- Security audit runs on dependency changes
+- See [CI Optimization](ci-optimization.md) for details
+
+---
+
+_Last updated: 2025-06-01_

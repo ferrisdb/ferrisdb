@@ -95,6 +95,9 @@ I follow ALL guidelines, especially:
 - **"Create a branch"** → [Git Workflow](guidelines/workflow/git-workflow.md)
 - **"Submit changes"** → [PR Process](guidelines/workflow/pr-process.md)
 - **"What commands to run?"** → [Common Commands](guidelines/workflow/commands.md)
+- **"Manage issues"** → [Issue Management](guidelines/workflow/issue-management.md) + [Label System](guidelines/workflow/labels.md)
+- **"Set up automation"** → [GitHub Automation](guidelines/workflow/github-automation.md)
+- **"Optimize CI"** → [CI Optimization](guidelines/workflow/ci-optimization.md)
 
 ### Architecture & Design Tasks
 
@@ -103,6 +106,9 @@ I follow ALL guidelines, especially:
 - **"Consider security"** → [Security Practices](guidelines/technical/security.md)
 - **"Check invariants"** → [System Invariants](guidelines/technical/invariants.md)
 - **"Organize website content"** → [Information Architecture](guidelines/content/information-architecture.md)
+- **"Implement WAL"** → [File Format Standards](guidelines/technical/file-formats.md#wal-file-format-specification) + [Architecture](guidelines/technical/architecture.md#persistence-write-ahead-log)
+- **"Add metrics"** → [Architecture](guidelines/technical/architecture.md#metrics-architecture)
+- **"Test WAL code"** → [Testing Standards](guidelines/workflow/testing.md#wal-specific-testing-patterns)
 
 ## 📁 Project Structure
 

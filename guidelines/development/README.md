@@ -11,6 +11,8 @@ This directory contains all development standards and best practices for FerrisD
 - [Idiomatic Rust](idiomatic-rust.md) - Rust best practices
 - [Markdown Standards](markdown-standards.md) - Formatting, linting, and tools
 - [Visualization](visualization.md) - ASCII diagrams and tables
+- [Utility Modules](utility-modules.md) - Creating shared utilities
+- [Benchmark-Driven Development](benchmark-driven-development.md) - Performance validation
 
 ## Quick Reference
 
@@ -34,3 +36,7 @@ This directory contains all development standards and best practices for FerrisD
 - [Content Creation](../content/) - Writing documentation and articles
 - [Development Workflow](../workflow/) - Development processes
 - [Technical Architecture](../technical/) - System design guidelines
+
+---
+
+_Last updated: 2025-06-01_

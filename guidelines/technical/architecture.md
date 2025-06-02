@@ -34,6 +34,7 @@ FerrisDB is a distributed, transactional key-value database with the following a
      ┌────▼────┐ ┌───▼────┐ ┌───▼────┐
      │MemTable │ │SSTables│ │  WAL   │
      └─────────┘ └────────┘ └────────┘
+     [IMPLEMENTED] [PARTIAL]  [IMPLEMENTED]
 ```
 
 ### Component Boundaries
@@ -101,12 +102,83 @@ During the learning phase:
 
 ### Persistence: Write-Ahead Log
 
-**Design choices:**
+#### Architecture Decisions
 
-- Simple append-only format
-- CRC32 checksums for integrity
-- Synchronous writes by default
-- Binary format for efficiency
+**Header + Entries Format:**
+
+- Fixed 32-byte header with magic number, version, CRC32
+- Variable-length entries with per-entry checksums
+- Self-contained entries for partial recovery
+- Cache-line aligned for performance
+
+**Why This Design:**
+
+1. **Recovery-Oriented**: Can recover partial data from corrupted files
+2. **Streaming-Friendly**: Entries can be read without loading entire file
+3. **Version-Compatible**: Header versioning allows format evolution
+4. **Performance**: Binary format with minimal overhead
+
+**CRC32 Checksums:**
+
+- Header checksum validates file integrity
+- Per-entry checksums enable partial recovery
+- Fast to compute (vs SHA256)
+- Industry standard for databases
+
+**Sync Modes:**
+
+```rust
+pub enum SyncMode {
+    NoSync,    // Best performance, OS page cache
+    Sync,      // fsync() after each write
+    SyncData,  // fdatasync() on Linux
+}
+```
+
+**Size Limits:**
+
+- 4MB max key/value (u32 length fields)
+- No inherent file size limit
+- Future: Automatic rotation at 128MB
+
+#### Implementation Details
+
+**Zero-Copy Operations:**
+
+- Uses BytesMutExt for buffer management
+- Avoids unnecessary allocations
+- 23-33% performance improvement
+
+**Metrics Collection:**
+
+- Atomic counters for all operations
+- Zero-overhead when not used
+- Thread-safe by design
+
+**Error Handling:**
+
+- Never panics on bad input
+- Detailed error context
+- Graceful degradation
+
+#### Future Enhancements
+
+1. **File Rotation**:
+
+   - Size-based (128MB default)
+   - Time-based (hourly option)
+   - Automatic old file cleanup
+
+2. **Compression**:
+
+   - Optional per-entry compression
+   - Snappy/LZ4 for speed
+   - Configurable thresholds
+
+3. **Batch Writes**:
+   - Group small writes
+   - Amortize sync costs
+   - Maintain durability guarantees
 
 ### API: gRPC
 
@@ -425,6 +497,87 @@ mod tests {
 }
 ```
 
+## Metrics Architecture
+
+### Design Principles
+
+**Zero-Overhead Abstraction:**
+
+- Metrics have no cost when not collected
+- Atomic operations for thread safety
+- No allocations in hot paths
+
+**Implementation Pattern:**
+
+```rust
+pub struct Metrics {
+    // Counters
+    operations_total: AtomicU64,
+    operations_failed: AtomicU64,
+
+    // Gauges
+    active_connections: AtomicU64,
+
+    // Histograms (future)
+    latency_micros: AtomicHistogram,
+}
+
+impl Metrics {
+    pub fn record_operation(&self, success: bool) {
+        self.operations_total.fetch_add(1, Ordering::Relaxed);
+        if !success {
+            self.operations_failed.fetch_add(1, Ordering::Relaxed);
+        }
+    }
+}
+```
+
+**Metric Types:**
+
+1. **Counters**: Monotonically increasing values
+2. **Gauges**: Point-in-time measurements
+3. **Histograms**: Distribution of values (future)
+
+**Collection Strategy:**
+
+- Push to monitoring system every 10s
+- Expose via /metrics endpoint
+- Compatible with Prometheus format
+
+## Module Organization
+
+### README Pattern
+
+Every major module should have a README.md with:
+
+1. **Purpose**: What the module does
+2. **Architecture**: ASCII diagrams
+3. **Public API**: Key types and functions
+4. **Examples**: Usage patterns
+5. **Performance**: Benchmarks and characteristics
+6. **Testing**: How to test the module
+
+### Example Structure
+
+```
+ferrisdb-storage/
+├── README.md           # Module overview
+├── src/
+│   ├── lib.rs         # Public API
+│   ├── wal/
+│   │   ├── README.md  # WAL-specific docs
+│   │   ├── mod.rs     # WAL public interface
+│   │   ├── writer.rs  # Implementation
+│   │   └── reader.rs  # Implementation
+│   └── memtable/
+│       ├── README.md  # MemTable docs
+│       └── ...
+├── benches/
+│   └── README.md      # Benchmark guide
+└── tests/
+    └── README.md      # Test guide
+```
+
 ## Non-Goals
 
 Things we explicitly don't optimize for:
@@ -444,3 +597,7 @@ See [System Invariants](invariants.md) for critical properties that must be main
 - [RocksDB Architecture](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview)
 - [FoundationDB Design](https://apple.github.io/foundationdb/)
 - [Apache Cassandra Architecture](https://cassandra.apache.org/doc/latest/architecture/)
+
+---
+
+_Last updated: 2025-06-01_

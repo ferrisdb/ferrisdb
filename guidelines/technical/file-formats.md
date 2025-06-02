@@ -60,6 +60,9 @@ const MAGIC_SNP: &[u8; 8] = b"FDB_SNP\0";    // Snapshot file
 const MAGIC_IDX: &[u8; 8] = b"FDB_IDX\0";    // Index file
 const MAGIC_BLM: &[u8; 8] = b"FDB_BLM\0";    // Bloom filter
 const MAGIC_CMP: &[u8; 8] = b"FDB_CMP\0";    // Compaction state
+
+// Implemented magic number
+pub const WAL_MAGIC: [u8; 8] = *b"FDB_WAL\0";  // Currently implemented in WAL
 ```
 
 ### Magic Number Validation
@@ -168,10 +171,10 @@ All multi-byte values MUST use **little-endian** encoding:
 
 ```rust
 // Writing
-writer.write_u32::<LittleEndian>(value)?;
+writer.write_u32(value)?;  // Using byteorder crate
 
 // Reading
-let value = reader.read_u32::<LittleEndian>()?;
+let value = reader.read_u32()?;  // Using byteorder crate
 ```
 
 ### Variable-Length Data
@@ -185,6 +188,8 @@ All variable-length data MUST be prefixed with its length:
 ```
 
 ```rust
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+
 pub fn write_bytes(writer: &mut impl Write, data: &[u8]) -> io::Result<()> {
     writer.write_u32::<LittleEndian>(data.len() as u32)?;
     writer.write_all(data)?;
@@ -447,6 +452,96 @@ pub fn migrate_v1_to_v2(input_path: &Path, output_path: &Path) -> Result<(), Err
 }
 ```
 
+## WAL File Format Specification
+
+### Overview
+
+The Write-Ahead Log (WAL) uses a header + entries format for durability and recovery.
+
+### WAL Header (32 bytes)
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ Offset │ Size │ Field         │ Description                    │
+├────────┼──────┼───────────────┼────────────────────────────────┤
+│ 0      │ 8    │ magic         │ Magic number (FDB_WAL\0)       │
+│ 8      │ 4    │ version       │ Format version (currently 1)   │
+│ 12     │ 4    │ header_crc    │ CRC32 of bytes 0-11           │
+│ 16     │ 8    │ created_at    │ Creation timestamp (micros)    │
+│ 24     │ 8    │ reserved      │ Reserved for future use        │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### WAL Entry Format
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ Offset │ Size │ Field         │ Description                    │
+├────────┼──────┼───────────────┼────────────────────────────────┤
+│ 0      │ 4    │ key_len       │ Key length in bytes            │
+│ 4      │ 4    │ value_len     │ Value length in bytes          │
+│ 8      │ 1    │ op_type       │ Operation type (Put/Delete)    │
+│ 9      │ 8    │ timestamp     │ Operation timestamp (micros)   │
+│ 17     │ 4    │ crc32         │ CRC32 of entire entry          │
+│ 21     │ N    │ key           │ Key data                       │
+│ 21+N   │ M    │ value         │ Value data (if op_type=Put)    │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### Implementation Details
+
+```rust
+// ferrisdb-storage/src/wal/header.rs
+pub const WAL_HEADER_SIZE: usize = 32;
+pub const WAL_MAGIC: [u8; 8] = *b"FDB_WAL\0";
+pub const WAL_VERSION: u32 = 1;
+
+#[repr(C)]
+pub struct WALHeader {
+    pub magic: [u8; 8],
+    pub version: u32,
+    pub crc32: u32,
+    pub created_at: u64,
+    pub reserved: [u8; 8],
+}
+
+// ferrisdb-storage/src/wal/log_entry.rs
+pub struct LogEntry {
+    pub key: Vec<u8>,
+    pub value: Option<Vec<u8>>,
+    pub op_type: OperationType,
+    pub timestamp: u64,
+    pub crc32: u32,
+}
+
+pub enum OperationType {
+    Put = 1,
+    Delete = 2,
+}
+```
+
+### Size Limits
+
+- Maximum key size: 4MB (to fit in u32 length field)
+- Maximum value size: 4MB (to fit in u32 length field)
+- Maximum file size: OS-dependent (typically 2^63 bytes)
+
+### Sync Modes
+
+The WAL supports three sync modes for durability/performance tradeoffs:
+
+1. **NoSync**: Fastest, relies on OS page cache
+2. **Sync**: Calls fsync() after each write
+3. **SyncData**: Calls fdatasync() after each write (Linux)
+
+### File Rotation
+
+Currently, the WAL creates new files when explicitly closed. Future versions will support:
+
+- Size-based rotation
+- Time-based rotation
+- Automatic cleanup of old files
+
 ## Testing Requirements
 
 All file format implementations MUST include comprehensive tests. See [File Format Testing](../workflow/testing.md#file-format-testing) for detailed requirements including:
@@ -460,15 +555,14 @@ All file format implementations MUST include comprehensive tests. See [File Form
 - Header validation
 - Truncation handling
 
-Example test suite structure:
+Example test suite structure (as implemented for WAL):
 
 ```
-tests/
-├── format_integrity_tests.rs      // Roundtrip and corruption
-├── format_boundary_tests.rs       // Size limits and edge cases
-├── format_compatibility_tests.rs  // Version handling
-├── format_concurrent_tests.rs     // Thread safety
-└── format_property_tests.rs       // Fuzzing with proptest
+ferrisdb-storage/tests/
+├── wal_format_tests.rs         // Format validation and corruption
+├── wal_integration_tests.rs    // End-to-end workflows
+├── wal_concurrent_tests.rs     // Thread safety and races
+└── wal_property_tests.rs       // PropTest fuzzing
 ```
 
 ## References
@@ -477,3 +571,7 @@ tests/
 - [RocksDB File Formats](https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format)
 - [Protocol Buffers Encoding](https://developers.google.com/protocol-buffers/docs/encoding)
 - [Apache Parquet Format](https://parquet.apache.org/docs/file-format/)
+
+---
+
+_Last updated: 2025-06-01_

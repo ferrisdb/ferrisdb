@@ -52,23 +52,38 @@ cd docs && npm run build
 - [Common Commands](workflow/commands.md) - Frequently used commands
 - [Git Workflow](workflow/git-workflow.md) - Branching and commit standards
 - [PR Process](workflow/pr-process.md) - Pull request and review policies
+- [Label System](workflow/labels.md) - **NEW** - Issue label categories and usage
+- [Issue Management](workflow/issue-management.md) - **NEW** - Issue templates and triage
+- [GitHub Automation](workflow/github-automation.md) - **NEW** - CI/CD and automation setup
+- [CI Optimization](workflow/ci-optimization.md) - **UPDATED** - Performance and label triggers
 - [Website Maintenance - Simplified](workflow/website-maintenance-simple.md) - ✅ **PRIMARY** - Daily content updates
 - [Starlight Technical Reference](workflow/starlight-technical-reference.md) - 📖 Technical reference (not daily use)
 
 ### 🏗️ Technical Architecture
 
-- [Architecture Decisions](technical/architecture.md) - Key design choices
+- [Architecture Decisions](technical/architecture.md) - **UPDATED** - WAL design, metrics, module patterns
 - [Storage Engine](technical/storage-engine.md) - Storage implementation guidelines
 - [Performance](technical/performance.md) - Optimization and benchmarking
 - [Security](technical/security.md) - Security best practices
 - [System Invariants](technical/invariants.md) - Critical system properties
-- [File Format Standards](technical/file-formats.md) - Binary file format patterns and standards
+- [File Format Standards](technical/file-formats.md) - **UPDATED** - WAL format specification added
 
 ## Getting Started
 
 1. **New Contributors**: Start with [Code Style](development/code-style.md) and [Git Workflow](workflow/git-workflow.md)
 2. **Content Writers**: Review [Blogging Guidelines](content/blogging.md) or relevant article formats
 3. **Core Developers**: Familiarize yourself with [Architecture Decisions](technical/architecture.md) and [System Invariants](technical/invariants.md)
+
+## Recent Updates
+
+### January 2025
+
+- Added comprehensive **Label System** and **Issue Management** guidelines
+- Created **GitHub Automation** documentation for CI/CD setup
+- Updated **CI Optimization** with label-based test triggers
+- Added **WAL specification** to File Format Standards
+- Enhanced **Architecture** with WAL decisions and metrics patterns
+- Improved **Testing Standards** with WAL-specific patterns
 
 ## Our Human-AI Workflow
 
@@ -130,3 +145,7 @@ This ensures consistency across the entire project and provides a single, reliab
 ---
 
 _These guidelines are maintained collaboratively by humans and Claude 🤖_
+
+---
+
+_Last updated: 2025-06-01_

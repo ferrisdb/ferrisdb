@@ -365,3 +365,7 @@ When reviewing documentation with visualizations:
 - [Markdown Standards](markdown-standards.md) - Formatting diagrams
 - [Website Design](../content/website-design-starlight.md) - Mermaid diagrams for web
 - [Architecture](../technical/architecture.md) - System diagrams
+
+---
+
+_Last updated: 2025-06-01_

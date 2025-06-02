@@ -253,3 +253,7 @@ type MemTable struct {
 - [Database Concepts](database-concepts-articles.md) - Technical depth
 - [Documentation](../development/documentation.md) - Writing standards
 - [Code Style](../development/code-style.md) - Code examples formatting
+
+---
+
+_Last updated: 2025-06-01_

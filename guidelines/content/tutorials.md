@@ -1687,3 +1687,7 @@ Not until Tutorial 7. Build solid foundation first.
 ---
 
 _Remember: We're teaching CRUD developers to build databases. Every decision should make that journey clearer and more achievable._
+
+---
+
+_Last updated: 2025-06-01_

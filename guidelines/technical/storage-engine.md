@@ -7,7 +7,7 @@ Guidelines for working on FerrisDB's LSM-tree storage engine.
 
 ## Storage Engine Components
 
-### MemTable
+### MemTable [IMPLEMENTED]
 
 The in-memory component using a concurrent skip list.
 
@@ -29,9 +29,16 @@ pub trait MemTable: Send + Sync {
 }
 ```
 
-### SSTable (Sorted String Table)
+### SSTable (Sorted String Table) [PARTIAL]
 
 Immutable on-disk files with sorted key-value pairs.
+
+**Current Status:**
+
+- Basic reader/writer [IMPLEMENTED]
+- Data blocks and index blocks [IMPLEMENTED]
+- Bloom filters [PLANNED]
+- Block compression [PLANNED]
 
 **Format:**
 
@@ -56,7 +63,7 @@ Immutable on-disk files with sorted key-value pairs.
 - Compress blocks individually
 - Calculate checksums for data integrity
 
-### Write-Ahead Log (WAL)
+### Write-Ahead Log (WAL) [IMPLEMENTED]
 
 Durability through sequential writes.
 
@@ -127,15 +134,15 @@ pub struct Record {
 
 For detailed file format specifications, see [file-formats.md](../file-formats.md).
 
-### Compaction
+### Compaction [PLANNED]
 
 Background process to merge SSTables.
 
 **Strategies:**
 
-1. **Size-tiered**: Compact similar-sized files
-2. **Leveled**: Maintain level invariants
-3. **Universal**: Balance space and write amplification
+1. **Size-tiered**: Compact similar-sized files [PLANNED]
+2. **Leveled**: Maintain level invariants [FUTURE]
+3. **Universal**: Balance space and write amplification [FUTURE]
 
 **Guidelines:**
 
@@ -239,3 +246,7 @@ impl StorageEngine {
 - [RocksDB Wiki](https://github.com/facebook/rocksdb/wiki)
 - [Building a Database](https://cstack.github.io/db_tutorial/)
 - [The Log-Structured Merge-Tree](https://www.cs.umb.edu/~poneil/lsmtree.pdf)
+
+---
+
+_Last updated: 2025-06-01_

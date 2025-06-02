@@ -267,3 +267,7 @@ fn verify_token(provided: &[u8], expected: &[u8]) -> bool {
 - [Rust Security Guidelines](https://anssi-fr.github.io/rust-guide/)
 - [The Cargo Book - Security](https://doc.rust-lang.org/cargo/reference/security.html)
 - [RustSec Advisory Database](https://rustsec.org/)
+
+---
+
+_Last updated: 2025-06-01_

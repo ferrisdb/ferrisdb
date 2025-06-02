@@ -7,92 +7,94 @@ Critical invariants that must be maintained throughout FerrisDB's implementation
 
 ## Key System Invariants
 
-1. **Transactions must be serializable**
+1. **Transactions must be serializable** [FUTURE]
 
    - All transactions execute as if they ran in some serial order
    - No dirty reads, non-repeatable reads, or phantom reads
    - Isolation level guarantees must be maintained
 
-2. **All writes must be durable before acknowledgment**
+2. **All writes must be durable before acknowledgment** [IMPLEMENTED]
 
    - Data written to WAL before responding to client
    - fsync() called before acknowledging writes
    - No data loss on process crash after acknowledgment
 
-3. **Node failures must not cause data loss**
+3. **Node failures must not cause data loss** [FUTURE]
 
    - Replicated data survives node failures
    - Quorum writes ensure durability
    - Recovery procedures restore full functionality
 
-4. **Reads must see a consistent snapshot**
+4. **Reads must see a consistent snapshot** [PARTIAL]
 
    - Point-in-time consistency for all reads
    - No partial updates visible
    - Snapshot isolation for read transactions
 
-5. **WAL entries must be written before MemTable updates**
+   **Current Status:** MVCC timestamps implemented, full snapshot isolation planned
+
+5. **WAL entries must be written before MemTable updates** [ENFORCED]
 
    - Strict write ordering: WAL → MemTable → Response
    - Recovery relies on this ordering
    - No in-memory updates without persistent log
 
-6. **Timestamps must be monotonically increasing**
+6. **Timestamps must be monotonically increasing** [ENFORCED]
    - No timestamp regression within a node
-   - Lamport timestamps or similar for distributed ordering
+   - Lamport timestamps or similar for distributed ordering [FUTURE]
    - Critical for MVCC correctness
 
 ## Storage Engine Invariants
 
-1. **Keys in MemTable are sorted by (user_key, timestamp DESC)**
+1. **Keys in MemTable are sorted by (user_key, timestamp DESC)** [ENFORCED]
 
    - Enables efficient range scans
    - Latest version appears first
    - Binary search possible on keys
 
-2. **Multiple versions of same key ordered by timestamp**
+2. **Multiple versions of same key ordered by timestamp** [ENFORCED]
 
    - MVCC requires version history
    - Newer versions shadow older ones
    - Timestamp ordering is strict
 
-3. **Delete operations create tombstones (not immediate deletion)**
+3. **Delete operations create tombstones (not immediate deletion)** [ENFORCED]
 
    - Deletes are special write operations
-   - Tombstones removed during compaction
+   - Tombstones removed during compaction [PLANNED]
    - Necessary for distributed consistency
 
-4. **Compaction removes obsolete versions and tombstones**
+4. **Compaction removes obsolete versions and tombstones** [PLANNED]
 
    - Old versions beyond retention removed
    - Tombstones removed after grace period
    - Storage reclamation happens here
 
-5. **All disk writes include checksums**
+5. **All disk writes include checksums** [ENFORCED]
    - Data integrity verification
    - Corruption detection on read
    - Checksum mismatch triggers recovery
 
 ## Concurrency Invariants
 
-1. **Lock-free data structures maintain consistency**
+1. **Lock-free data structures maintain consistency** [PARTIAL]
 
-   - Skip list operations are atomic
-   - No ABA problems in updates
-   - Memory reclamation is safe
+   - Skip list operations are atomic [ENFORCED]
+   - No ABA problems in updates [ENFORCED]
+   - Memory reclamation is safe [Using Arc, no unsafe]
 
-2. **Reference counting prevents use-after-free**
+2. **Reference counting prevents use-after-free** [ENFORCED]
 
    - Arc/Rc for shared ownership
-   - Epoch-based reclamation for lock-free structures
+   - Epoch-based reclamation for lock-free structures [FUTURE]
    - No dangling pointers
 
-3. **Atomic operations for critical counters**
+3. **Atomic operations for critical counters** [ENFORCED]
    - Sequence numbers use atomics
    - Reference counts are atomic
    - Stats counters don't cause races
 
-## Network Protocol Invariants
+## Network Protocol Invariants [FUTURE]
 
 1. **Request ordering preserved per connection**
 
@@ -111,7 +113,7 @@ Critical invariants that must be maintained throughout FerrisDB's implementation
    - Transactions aborted on connection loss
    - No resource leaks
 
-## Distributed System Invariants
+## Distributed System Invariants [FUTURE]
 
 1. **Consensus decisions are permanent**
 
@@ -132,57 +134,57 @@ Critical invariants that must be maintained throughout FerrisDB's implementation
 
 ## Recovery Invariants
 
-1. **WAL replay restores exact state**
+1. **WAL replay restores exact state** [PARTIAL]
 
-   - Deterministic replay process
-   - Same final state as before crash
-   - Idempotent log application
+   - Deterministic replay process [IMPLEMENTED]
+   - Same final state as before crash [IMPLEMENTED]
+   - Idempotent log application [PLANNED]
 
-2. **Checkpoints are consistent snapshots**
+2. **Checkpoints are consistent snapshots** [PLANNED]
 
    - Atomic checkpoint creation
    - All data structures consistent
    - Can restore from checkpoint + WAL
 
-3. **Recovery completes in bounded time**
+3. **Recovery completes in bounded time** [PLANNED]
    - Linear in WAL size
    - Checkpoints limit replay work
    - Progress monitoring possible
 
 ## Performance Invariants
 
-1. **Read latency independent of data size**
+1. **Read latency independent of data size** [PARTIAL]
 
-   - O(log n) lookup in skip list
-   - Index structures maintain efficiency
-   - No full scans for point queries
+   - O(log n) lookup in skip list [ENFORCED]
+   - Index structures maintain efficiency [PARTIAL]
+   - No full scans for point queries [ENFORCED]
 
-2. **Write latency bounded by WAL sync**
+2. **Write latency bounded by WAL sync** [ENFORCED]
 
    - Bottleneck is disk fsync
-   - Batching amortizes sync cost
+   - Batching amortizes sync cost [PLANNED]
    - Predictable latency profile
 
-3. **Memory usage proportional to working set**
-   - Cold data evicted to disk
-   - Compaction controls growth
-   - No unbounded memory growth
+3. **Memory usage proportional to working set** [PARTIAL]
+   - Cold data evicted to disk [PARTIAL]
+   - Compaction controls growth [PLANNED]
+   - No unbounded memory growth [ENFORCED via MemTable limits]
 
 ## Safety Invariants
 
-1. **No undefined behavior in safe code**
+1. **No undefined behavior in safe code** [ENFORCED]
 
-   - All unsafe blocks documented
+   - All unsafe blocks documented [No unsafe code currently]
    - Safety requirements explicit
-   - Fuzzing catches violations
+   - Fuzzing catches violations [Via PropTest]
 
-2. **Resource limits enforced**
+2. **Resource limits enforced** [PARTIAL]
 
-   - Maximum transaction size
-   - Connection count limits
-   - Memory usage bounds
+   - Maximum transaction size [PLANNED]
+   - Connection count limits [FUTURE]
+   - Memory usage bounds [ENFORCED for MemTable]
 
-3. **Error handling never panics**
+3. **Error handling never panics** [ENFORCED]
    - All errors propagated as Result
    - Panics only in true bugs
    - Graceful degradation
@@ -277,3 +279,7 @@ struct Node<K, V> {
 ## Conclusion
 
 These invariants form the foundation of FerrisDB's correctness. Every code change must preserve these properties. When in doubt, err on the side of safety and add more checks rather than fewer.
+
+---
+
+_Last updated: 2025-06-01_

@@ -1,5 +1,9 @@
 # Database Concepts Articles Guidelines
 
+> **⚠️ DEPRECATION NOTICE**: This format is being phased out in favor of the "Learn by Building" tutorial series. Database concepts are now taught through hands-on implementation in tutorials. Existing articles will be migrated into relevant tutorials where concepts can be learned through practical coding.
+>
+> **For new content**: Use the [Tutorial Guidelines](tutorials.md) instead.
+
 Comprehensive technical articles that thoroughly explain database concepts through FerrisDB's implementation. These are the authoritative technical references for understanding database internals.
 
 **Purpose**: Create comprehensive educational articles that explain database concepts using FerrisDB as a concrete example.  
@@ -245,3 +249,7 @@ Example calculation:
 - [Documentation](../development/documentation.md) - Technical writing standards
 - [Architecture](../technical/architecture.md) - System design reference
 - [Website Design](website-design-starlight.md) - Article layout and styling
+
+---
+
+_Last updated: 2025-06-01_

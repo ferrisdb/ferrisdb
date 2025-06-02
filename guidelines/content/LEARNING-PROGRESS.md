@@ -172,3 +172,7 @@ When creating a new tutorial:
 ---
 
 _This dashboard is the source of truth for tutorial planning and progress tracking._
+
+---
+
+_Last updated: 2025-06-01_

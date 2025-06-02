@@ -388,3 +388,7 @@ Keep them accurate, engaging, and true to our actual experience!
 - [Website Design](website-design-starlight.md) - Blog layout and styling
 - [Markdown Standards](../development/markdown-standards.md) - Formatting
 ```
+
+---
+
+_Last updated: 2025-06-01_

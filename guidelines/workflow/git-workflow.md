@@ -528,3 +528,7 @@ git log --grep="🤖" --pretty=full
 - **Before This**: [Testing](testing.md) - Ensure tests pass
 - **Commands**: [Common Commands](commands.md) - Git command reference
 - **For Blog Posts**: [Blogging](../content/blogging.md) - Using commits for blog content
+
+---
+
+_Last updated: 2025-06-01_
