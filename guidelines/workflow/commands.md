@@ -8,7 +8,7 @@ Quick reference for frequently used commands in FerrisDB development.
 ## 🚨 CRITICAL: NEVER PUSH TO MAIN
 
 > **⚠️ WARNING: These commands assume you're on a feature branch!**
-> 
+>
 > - **ALWAYS check your branch first**: `git branch --show-current`
 > - **NEVER run**: `git push origin main`
 > - **ALWAYS use PRs**: See [PR Process](pr-process.md)

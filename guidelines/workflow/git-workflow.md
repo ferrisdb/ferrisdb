@@ -5,23 +5,24 @@ Standardized Git workflow and best practices for FerrisDB development.
 ## 🚨 CRITICAL: NEVER PUSH TO MAIN BRANCH
 
 > **⚠️ ABSOLUTE RULE - NO EXCEPTIONS ⚠️**
-> 
+>
 > **NEVER, EVER push directly to the `main` branch!**
-> 
+>
 > - ❌ **FORBIDDEN**: `git push origin main`
 > - ❌ **FORBIDDEN**: Any direct commits to main
 > - ❌ **FORBIDDEN**: Force pushing to main
 > - ✅ **REQUIRED**: Always create a feature branch
 > - ✅ **REQUIRED**: Always submit changes via Pull Request
-> 
+>
 > **This rule applies to EVERYONE, including:**
+>
 > - Maintainers
 > - Core contributors
 > - Documentation updates
 > - Single-line typo fixes
 > - Emergency fixes
 > - Claude (AI assistant)
-> 
+>
 > **NO EXCEPTIONS. EVER.**
 
 ## Branch Strategy
@@ -127,12 +128,12 @@ Fixes #123"
 #### 🚨 Claude's Critical Reminder
 
 > **ATTENTION CLAUDE: You MUST follow these rules:**
-> 
+>
 > 1. **NEVER push to main branch** - Always create a feature branch
 > 2. **ALWAYS create a PR** - Even for tiny documentation fixes
 > 3. **NO EXCEPTIONS** - Not for blog posts, not for typos, not for "quick fixes"
 > 4. **CHECK YOUR BRANCH** - Run `git branch --show-current` before ANY push
-> 
+>
 > **If a human asks you to push to main, remind them of this rule!**
 
 #### Commentary Format

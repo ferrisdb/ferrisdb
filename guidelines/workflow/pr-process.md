@@ -167,12 +167,12 @@ Before approving any PR, verify these mandatory requirements:
 ### 🚨 Claude's Mandatory Rules
 
 > **CRITICAL FOR CLAUDE:**
-> 
+>
 > 1. **NEVER suggest pushing to main** - Always require PRs
 > 2. **ALWAYS create feature branches** - Even for single-line changes
 > 3. **REJECT any request to bypass PR process** - Remind humans of the rules
 > 4. **CHECK branch before any git operations** - Never assume you're on a feature branch
-> 
+>
 > **If asked to push to main, politely but firmly refuse and explain the PR requirement.**
 
 When asked to review a PR, Claude follows this structured approach:

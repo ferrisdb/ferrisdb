@@ -7,12 +7,13 @@ Guidelines for development processes, collaboration patterns, and maintaining th
 ## 🚨 CRITICAL RULE: ALL CHANGES REQUIRE PULL REQUESTS
 
 > **⚠️ ABSOLUTE REQUIREMENT - NO EXCEPTIONS**
-> 
+>
 > **NEVER push directly to main branch!** Every change, no matter how small, must:
+>
 > 1. Be made on a feature branch
 > 2. Be submitted via Pull Request
 > 3. Pass all CI checks before merging
-> 
+>
 > See [Git Workflow](git-workflow.md#critical-never-push-to-main-branch) and [PR Process](pr-process.md) for mandatory procedures.
 
 ## Workflow Categories
