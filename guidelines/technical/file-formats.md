@@ -452,7 +452,7 @@ pub fn migrate_v1_to_v2(input_path: &Path, output_path: &Path) -> Result<(), Err
 All file format implementations MUST include comprehensive tests. See [File Format Testing](../workflow/testing.md#file-format-testing) for detailed requirements including:
 
 - Roundtrip tests
-- Corruption detection  
+- Corruption detection
 - Boundary conditions
 - Version compatibility
 - Concurrent access
@@ -461,6 +461,7 @@ All file format implementations MUST include comprehensive tests. See [File Form
 - Truncation handling
 
 Example test suite structure:
+
 ```
 tests/
 ├── format_integrity_tests.rs      // Roundtrip and corruption

@@ -51,15 +51,15 @@ Example benchmark structure:
 ```rust
 fn benchmark_feature_small(c: &mut Criterion) {
     let mut group = c.benchmark_group("feature_small");
-    
+
     group.bench_function("standard_approach", |b| {
         // Baseline implementation
     });
-    
+
     group.bench_function("optimized_approach", |b| {
         // Your optimization
     });
-    
+
     group.finish();
 }
 

@@ -310,7 +310,7 @@ When using unsafe code for performance:
 unsafe {
     let dst = self.as_mut_ptr().add(start_len);
     let uninit_slice = std::slice::from_raw_parts_mut(dst, count);
-    
+
     match reader.read_exact(uninit_slice) {
         Ok(()) => {
             // Only update length after successful read
@@ -328,6 +328,7 @@ unsafe {
 #### Testing Unsafe Code
 
 Always include tests that verify:
+
 - Memory safety under normal conditions
 - Correct behavior on error paths
 - No data corruption on concurrent access

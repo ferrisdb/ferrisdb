@@ -8,6 +8,7 @@ Shared utilities require special attention as they're used across the codebase. 
 ## When to Create a Utility
 
 Create a utility when:
+
 - Functionality is needed by multiple modules
 - The implementation involves performance optimizations
 - You're abstracting complex but reusable patterns
@@ -38,6 +39,7 @@ ferrisdb-storage/src/
 ### 1. Documentation
 
 Every utility module must include:
+
 - Module-level documentation explaining purpose
 - README.md with usage examples and design rationale
 - Comprehensive inline documentation for all public APIs
@@ -46,6 +48,7 @@ Every utility module must include:
 ### 2. Testing
 
 Minimum test requirements:
+
 - **16+ tests** covering all scenarios
 - Unit tests for basic functionality
 - Error condition tests
@@ -57,6 +60,7 @@ Minimum test requirements:
 ### 3. Benchmarks
 
 Required if claiming performance benefits:
+
 - Use criterion for reliable measurements
 - Compare against standard approaches
 - Test multiple scenarios (small, medium, large)
@@ -65,6 +69,7 @@ Required if claiming performance benefits:
 ### 4. Safety
 
 If using unsafe code:
+
 - Minimize unsafe blocks
 - Document all safety invariants with SAFETY comments
 - Include specific tests verifying memory safety
@@ -93,6 +98,7 @@ impl BytesMutExt for BytesMut {
 ### Error Handling
 
 Utilities should:
+
 - Use appropriate error types
 - Propagate errors correctly
 - Never panic in normal operation
@@ -101,6 +107,7 @@ Utilities should:
 ### Performance
 
 When optimizing for performance:
+
 - Measure first, optimize second
 - Document performance characteristics
 - Provide benchmarks as proof
@@ -119,6 +126,7 @@ When optimizing for performance:
 ## Maintenance
 
 Utility modules require extra care:
+
 - Keep backward compatibility when possible
 - Update all callers when changing APIs
 - Maintain comprehensive test coverage

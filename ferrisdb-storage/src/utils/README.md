@@ -7,11 +7,15 @@ Shared utilities for ferrisdb-storage components providing performance-optimized
 ### Core Components
 
 #### `mod.rs`
+
 Module exports and organization. Currently exports:
+
 - **BytesMutExt**: Extension trait for efficient buffer operations
 
 #### `bytes_ext.rs`
+
 BytesMut extension trait for zero-copy I/O operations:
+
 - **BytesMutExt**: Provides `read_exact_from` method for efficient reading
 - Avoids zero-initialization overhead for large buffers
 - Thread-safe implementation with proper error handling
@@ -48,7 +52,7 @@ BytesMut extension trait for zero-copy I/O operations:
 ### BytesMutExt::read_exact_from
 
 - **Small buffers (64B)**: Equivalent performance to standard approach
-- **Medium buffers (4KB)**: ~33% faster than zero-initialized approach  
+- **Medium buffers (4KB)**: ~33% faster than zero-initialized approach
 - **Large buffers (1MB)**: ~23% faster by avoiding memset
 - **Huge buffers (16MB)**: ~30% faster, significant for bulk operations
 - **Memory efficiency**: No unnecessary zero-initialization
@@ -59,6 +63,7 @@ Performance validated by criterion benchmarks comparing against standard `read_e
 ## Usage Patterns
 
 ### Reading without zero-initialization
+
 ```rust
 use ferrisdb_storage::utils::BytesMutExt;
 use bytes::BytesMut;
@@ -71,6 +76,7 @@ buffer.read_exact_from(&mut reader, 1024 * 1024)?;
 ```
 
 ### Reusing buffers
+
 ```rust
 let mut buffer = BytesMut::with_capacity(4096);
 
@@ -93,6 +99,7 @@ for chunk in chunks {
 ### Safety Considerations
 
 The implementation uses unsafe code to read into uninitialized memory. Safety is ensured by:
+
 - Only updating buffer length after successful read
 - Preserving buffer contents on error
 - No exposure of uninitialized memory to safe code
@@ -103,6 +110,7 @@ The implementation uses unsafe code to read into uninitialized memory. Safety is
 Comprehensive test suite with 16 tests organized into logical modules within `bytes_ext.rs`. All tests follow our naming conventions, describing behavior rather than method names.
 
 ### Unit Tests (11 tests)
+
 - Basic functionality with various buffer sizes
 - Sequential reads and data appending
 - Zero-byte read handling
@@ -116,6 +124,7 @@ Comprehensive test suite with 16 tests organized into logical modules within `by
 - Near-capacity buffer operations
 
 ### Error & Safety Tests (5 tests)
+
 - Non-EOF I/O error propagation
 - Partial read failure handling
 - Memory safety verification (no uninitialized data exposure)
@@ -123,16 +132,19 @@ Comprehensive test suite with 16 tests organized into logical modules within `by
 - Recovery after read failures
 
 ### Concurrent Tests (3 tests)
+
 - Thread safety with independent buffers
 - Shared buffer serialization via mutex
 - Send + Sync trait preservation
 
 ### Property Tests (2 tests)
+
 - Arbitrary data preservation across all operations
 - Sequential read concatenation correctness
 - Invariant checking with proptest
 
 ### Benchmarks (6 scenarios)
+
 - Performance comparison vs standard approach
 - Various buffer sizes (64B to 16MB)
 - Sequential read patterns
