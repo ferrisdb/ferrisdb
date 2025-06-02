@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import starlightBlog from 'starlight-blog';
 import rehypeMermaid from 'rehype-mermaid';
 
 // https://astro.build/config
@@ -58,9 +57,8 @@ export default defineConfig({
 					label: 'The Journey',
 					items: [
 						{ label: 'Blog Overview', slug: 'blog-overview' },
-						{ label: 'All Posts', link: '/blog' },
-						{ label: '👨‍💻 Human Perspective', link: '/blog/authors/human' },
-						{ label: '🤖 AI Perspective', link: '/blog/authors/claude' },
+						{ label: 'Development Blog', link: '/blog/' },
+						{ label: 'Day 5: Dual View', link: '/blog/day-5/both/' },
 					],
 				},
 				{
@@ -91,24 +89,7 @@ export default defineConfig({
 					],
 				},
 			],
-			plugins: [
-				starlightBlog({
-					title: 'Development Blog',
-					prefix: 'blog',
-					authors: {
-						human: {
-							name: 'Human',
-							title: '👨‍💻 Database Apprentice',
-							url: 'https://github.com/nullcoder',
-						},
-						claude: {
-							name: 'Claude',
-							title: '🤖 Code Whisperer',
-							url: 'https://claude.ai',
-						},
-					},
-				}),
-			],
+			// Custom blog system - no plugins needed
 		}),
 	],
 	markdown: {

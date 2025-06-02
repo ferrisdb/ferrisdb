@@ -1,0 +1,444 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PerspectiveSwitcher from '../../components/blog/PerspectiveSwitcher.astro';
+import CollaborationMetrics from '../../components/blog/CollaborationMetrics.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('docs', (entry) => 
+    entry.slug && entry.slug.startsWith('blog/day-')
+  );
+  
+  return posts.map((post) => ({
+    params: { slug: post.slug.replace('blog/', '') },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'docs'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Extract collaboration data
+const dayMatch = post.slug.match(/day-(\d+)/);
+const day = dayMatch ? parseInt(dayMatch[1]) : null;
+const perspective = post.data.authors?.includes('human') ? 'human' : 'claude';
+
+// Find companion post
+let companionPost = null;
+if (post.data.companion) {
+  const allPosts = await getCollection('docs', (entry) => 
+    entry.slug && entry.slug.startsWith('blog/day-')
+  );
+  companionPost = allPosts.find(p => 
+    p.slug && p.slug.includes(post.data.companion)
+  );
+}
+
+// Get slugs for perspective switcher
+const humanSlug = perspective === 'human' ? 
+  post.slug.replace('blog/', '') : 
+  (companionPost?.slug.replace('blog/', '') || null);
+
+const claudeSlug = perspective === 'claude' ? 
+  post.slug.replace('blog/', '') : 
+  (companionPost?.slug.replace('blog/', '') || null);
+
+// Get related posts (same day)
+const relatedPosts = [];
+if (day) {
+  const allPosts = await getCollection('docs', (entry) => 
+    entry.slug && entry.slug.startsWith('blog/day-') && entry.slug !== post.slug
+  );
+  
+  relatedPosts.push(...allPosts.filter(p => {
+    const match = p.slug.match(/day-(\d+)/);
+    return match && parseInt(match[1]) === day;
+  }));
+}
+---
+
+<StarlightPage frontmatter={{ 
+  title: post.data.title, 
+  description: post.data.description 
+}}>
+  <article class="blog-post">
+    <!-- Perspective Switcher -->
+    <PerspectiveSwitcher 
+      currentPerspective={perspective}
+      humanSlug={humanSlug}
+      claudeSlug={claudeSlug}
+      day={day}
+    />
+    
+    <!-- Post Header -->
+    <header class="post-header">
+      <div class="post-meta">
+        <div class="perspective-info">
+          <span class="perspective-badge {perspective}">
+            {perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
+          </span>
+          <time class="post-date">
+            {new Date(post.data.date).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </time>
+        </div>
+        
+        {day && (
+          <div class="collaboration-day">
+            <span class="day-badge">Day {day}</span>
+            {companionPost && (
+              <a href={`/blog/${companionPost.slug.replace('blog/', '')}/`} class="companion-link">
+                {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+      
+      <h1>{post.data.title}</h1>
+      
+      {post.data.excerpt && (
+        <p class="post-excerpt">{post.data.excerpt}</p>
+      )}
+      
+      {post.data.tags && (
+        <div class="post-tags">
+          {post.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    
+    <!-- Collaboration Metrics -->
+    {post.data.insights && (
+      <CollaborationMetrics insights={post.data.insights} perspective={perspective} />
+    )}
+    
+    <!-- Post Content -->
+    <div class="post-content">
+      <Content />
+    </div>
+    
+    <!-- Related Posts / Companion -->
+    {relatedPosts.length > 0 && (
+      <aside class="related-posts">
+        <h3>Related Posts from Day {day}</h3>
+        <div class="related-grid">
+          {relatedPosts.map((relatedPost) => {
+            const relatedPerspective = relatedPost.data.authors?.includes('human') ? 'human' : 'claude';
+            return (
+              <article class="related-card">
+                <div class="related-header">
+                  <span class="perspective-badge {relatedPerspective}">
+                    {relatedPerspective === 'human' ? '👨‍💻 Human' : '🤖 Claude'}
+                  </span>
+                </div>
+                <h4>
+                  <a href={`/blog/${relatedPost.slug.replace('blog/', '')}/`}>
+                    {relatedPost.data.title}
+                  </a>
+                </h4>
+                <p>{relatedPost.data.excerpt}</p>
+              </article>
+            );
+          })}
+        </div>
+        
+        {relatedPosts.length > 0 && day && (
+          <div class="dual-view-cta">
+            <a href={`/blog/day-${day}/both/`} class="dual-view-link">
+              📊 Read Both Perspectives Side-by-Side
+            </a>
+          </div>
+        )}
+      </aside>
+    )}
+    
+    <!-- Navigation -->
+    <nav class="post-navigation">
+      <div class="nav-links">
+        {day && day > 1 && (
+          <a href={`/blog/day-${day - 1}/both/`} class="nav-link prev">
+            ← Day {day - 1}
+          </a>
+        )}
+        <a href="/blog/" class="nav-link all">All Posts</a>
+        <span class="nav-link next disabled">
+          Day {day ? day + 1 : ''} →
+        </span>
+      </div>
+    </nav>
+  </article>
+</StarlightPage>
+
+<style>
+  .blog-post {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-meta {
+    margin-bottom: 1.5rem;
+  }
+
+  .perspective-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .perspective-badge {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid;
+  }
+
+  .perspective-badge.human {
+    background: rgba(59, 130, 246, 0.1);
+    color: rgb(59, 130, 246);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .perspective-badge.claude {
+    background: rgba(16, 185, 129, 0.1);
+    color: rgb(16, 185, 129);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .post-date {
+    font-size: 0.9rem;
+    color: var(--sl-color-text-accent);
+  }
+
+  .collaboration-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .day-badge {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .companion-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .companion-link:hover {
+    text-decoration: underline;
+  }
+
+  .post-header h1 {
+    margin: 0 0 1rem 0;
+    color: var(--sl-color-text);
+    line-height: 1.3;
+  }
+
+  .post-excerpt {
+    font-size: 1.1rem;
+    color: var(--sl-color-text-accent);
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    font-style: italic;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    background: var(--sl-color-bg-nav);
+    color: var(--sl-color-text-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    border: 1px solid var(--sl-color-hairline);
+  }
+
+  .post-content {
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .post-content :global(h2) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--sl-color-text);
+  }
+
+  .post-content :global(h3) {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--sl-color-text);
+  }
+
+  .post-content :global(p) {
+    margin-bottom: 1rem;
+    color: var(--sl-color-text);
+  }
+
+  .post-content :global(strong) {
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+  }
+
+  .post-content :global(code) {
+    background: var(--sl-color-bg-nav);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+
+  .post-content :global(pre) {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  .related-posts {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .related-posts h3 {
+    margin: 0 0 1.5rem 0;
+    color: var(--sl-color-text-accent);
+  }
+
+  .related-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .related-card {
+    background: var(--sl-color-bg);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  .related-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .related-card h4 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .related-card h4 a {
+    color: var(--sl-color-text);
+    text-decoration: none;
+  }
+
+  .related-card h4 a:hover {
+    color: var(--sl-color-accent);
+  }
+
+  .related-card p {
+    margin: 0;
+    color: var(--sl-color-text-accent);
+    font-size: 0.9rem;
+  }
+
+  .dual-view-cta {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .dual-view-link {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .dual-view-link:hover {
+    opacity: 0.9;
+  }
+
+  .post-navigation {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-top: 2rem;
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--sl-color-accent);
+  }
+
+  .nav-link:hover:not(.disabled) {
+    background: var(--sl-color-accent-low);
+  }
+
+  .nav-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--sl-color-hairline);
+    color: var(--sl-color-text-accent);
+  }
+
+  @media (max-width: 768px) {
+    .perspective-info {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .collaboration-day {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>

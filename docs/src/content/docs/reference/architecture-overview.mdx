@@ -21,21 +21,21 @@ FerrisDB is being built as a distributed, transactional key-value database. Curr
 ### Current Architecture
 
 ```
-┌─────────────────┐
-│ Client Library  │  [PLANNED]
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│  Server (gRPC)  │  [PLANNED]
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│ Storage Engine  │  [IN PROGRESS]
-│   (LSM-tree)    │
-└────────┬────────┘
-         │
-┌────────┼────────┐
-│        │        │
+       ┌─────────────────┐
+       │ Client Library  │  [PLANNED]
+       └────────┬────────┘
+                │
+       ┌────────▼────────┐
+       │  Server (gRPC)  │  [PLANNED]
+       └────────┬────────┘
+                │
+       ┌────────▼────────┐
+       │ Storage Engine  │  [IN PROGRESS]
+       │   (LSM-tree)    │
+       └────────┬────────┘
+                │
+     ┌──────────┼──────────┐
+     │          │          │
 ┌────▼────┐ ┌───▼────┐ ┌───▼────┐
 │MemTable │ │SSTables│ │  WAL   │
 └─────────┘ └────────┘ └────────┘

@@ -1,0 +1,220 @@
+---
+interface Props {
+  insights: any;
+  perspective: 'human' | 'claude';
+}
+
+const { insights, perspective } = Astro.props;
+
+// Extract metrics based on perspective
+const getMetrics = () => {
+  if (perspective === 'human') {
+    return {
+      questionsAsked: insights?.questionsAsked || 0,
+      iterations: insights?.iterations || 0,
+      breakthroughMoment: insights?.breakthroughMoment || null,
+      conceptsIntroduced: insights?.conceptsIntroduced || [],
+      linesOfCode: insights?.linesOfCode || 0,
+      testsAdded: insights?.testsAdded || 0
+    };
+  } else {
+    return {
+      patternsObserved: insights?.patternsObserved || [],
+      collaborationMetrics: insights?.collaborationMetrics || null,
+      keyLearning: insights?.keyLearning || null,
+      filesModified: insights?.filesModified || 0
+    };
+  }
+};
+
+const metrics = getMetrics();
+---
+
+<div class="collaboration-metrics">
+  <div class="metrics-header">
+    <h3>
+      <span class="icon">{perspective === 'human' ? '👨‍💻' : '🤖'}</span>
+      {perspective === 'human' ? 'Human' : 'Claude'} Insights
+    </h3>
+  </div>
+  
+  <div class="metrics-grid">
+    {perspective === 'human' ? (
+      <>
+        {metrics.questionsAsked > 0 && (
+          <div class="metric">
+            <span class="metric-label">Questions Asked</span>
+            <span class="metric-value">{metrics.questionsAsked}</span>
+          </div>
+        )}
+        
+        {metrics.iterations > 0 && (
+          <div class="metric">
+            <span class="metric-label">Iterations</span>
+            <span class="metric-value">{metrics.iterations}</span>
+          </div>
+        )}
+        
+        {metrics.linesOfCode > 0 && (
+          <div class="metric">
+            <span class="metric-label">Code Changes</span>
+            <span class="metric-value">{metrics.linesOfCode.toLocaleString()} lines</span>
+          </div>
+        )}
+        
+        {metrics.testsAdded > 0 && (
+          <div class="metric">
+            <span class="metric-label">Tests Added</span>
+            <span class="metric-value">{metrics.testsAdded}</span>
+          </div>
+        )}
+      </>
+    ) : (
+      <>
+        {metrics.filesModified > 0 && (
+          <div class="metric">
+            <span class="metric-label">Files Modified</span>
+            <span class="metric-value">{metrics.filesModified}</span>
+          </div>
+        )}
+        
+        {metrics.collaborationMetrics && (
+          <div class="metric">
+            <span class="metric-label">Session Stats</span>
+            <span class="metric-value">{metrics.collaborationMetrics}</span>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+  
+  {perspective === 'human' && metrics.breakthroughMoment && (
+    <div class="breakthrough">
+      <span class="breakthrough-label">💡 Breakthrough Moment</span>
+      <span class="breakthrough-text">"{metrics.breakthroughMoment}"</span>
+    </div>
+  )}
+  
+  {perspective === 'claude' && metrics.keyLearning && (
+    <div class="breakthrough">
+      <span class="breakthrough-label">🎯 Key Learning</span>
+      <span class="breakthrough-text">"{metrics.keyLearning}"</span>
+    </div>
+  )}
+  
+  {metrics.conceptsIntroduced && metrics.conceptsIntroduced.length > 0 && (
+    <div class="concepts">
+      <span class="concepts-label">📚 Concepts Introduced</span>
+      <div class="concept-tags">
+        {metrics.conceptsIntroduced.map((concept: string) => (
+          <span class="concept-tag">{concept}</span>
+        ))}
+      </div>
+    </div>
+  )}
+  
+  {metrics.patternsObserved && metrics.patternsObserved.length > 0 && (
+    <div class="concepts">
+      <span class="concepts-label">🔍 Patterns Observed</span>
+      <div class="concept-tags">
+        {metrics.patternsObserved.map((pattern: string) => (
+          <span class="concept-tag">{pattern}</span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .collaboration-metrics {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .metrics-header h3 {
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--sl-color-text-accent);
+    font-size: 1.1rem;
+  }
+
+  .icon {
+    font-size: 1.2em;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    color: var(--sl-color-text-accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .metric-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sl-color-text);
+  }
+
+  .breakthrough, .concepts {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .breakthrough-label, .concepts-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--sl-color-text-accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .breakthrough-text {
+    font-style: italic;
+    color: var(--sl-color-text);
+    font-size: 0.95rem;
+  }
+
+  .concept-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .concept-tag {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid var(--sl-color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

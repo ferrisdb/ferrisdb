@@ -1,0 +1,537 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+
+// Get all blog posts
+const allPosts = await getCollection('docs', (entry) => 
+  entry.slug && entry.slug.startsWith('blog/day-')
+);
+
+// Group posts by day
+const postsByDay = new Map();
+
+allPosts.forEach(post => {
+  const dayMatch = post.slug.match(/day-(\d+)/);
+  if (dayMatch) {
+    const day = parseInt(dayMatch[1]);
+    if (!postsByDay.has(day)) {
+      postsByDay.set(day, { human: null, claude: null });
+    }
+    
+    if (post.data.authors?.includes('human')) {
+      postsByDay.get(day).human = post;
+    } else if (post.data.authors?.includes('claude')) {
+      postsByDay.get(day).claude = post;
+    }
+  }
+});
+
+// Sort days in descending order
+const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
+---
+
+<StarlightPage frontmatter={{ title: "Development Blog", description: "Two perspectives on building a database - human curiosity meets AI implementation" }}>
+  <div class="blog-index">
+    <header class="blog-header">
+      <h1>🧠 Two Minds, One Database</h1>
+      <p class="blog-subtitle">
+        Follow our unique collaboration as a CRUD developer and Claude AI build a database from scratch. 
+        Experience both perspectives: human learning through questions and AI insights through patterns.
+      </p>
+      
+      <div class="value-props">
+        <div class="value-prop">
+          <span class="prop-icon">👨‍💻</span>
+          <div>
+            <h3>Human Perspective</h3>
+            <p>Real learning journey through code review and questioning</p>
+          </div>
+        </div>
+        <div class="value-prop">
+          <span class="prop-icon">🤖</span>
+          <div>
+            <h3>AI Perspective</h3>
+            <p>Pattern recognition and collaboration analysis</p>
+          </div>
+        </div>
+        <div class="value-prop">
+          <span class="prop-icon">🤝</span>
+          <div>
+            <h3>Collaboration Insights</h3>
+            <p>See how human-AI partnership creates better outcomes</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="reading-modes">
+      <h2>Choose Your Reading Experience</h2>
+      <div class="mode-cards">
+        <div class="mode-card">
+          <span class="mode-icon">📅</span>
+          <h3>Day by Day</h3>
+          <p>Follow our journey chronologically, day by day</p>
+        </div>
+        <div class="mode-card">
+          <span class="mode-icon">👥</span>
+          <h3>By Perspective</h3>
+          <p>Read all human or all AI posts together</p>
+        </div>
+        <div class="mode-card">
+          <span class="mode-icon">📊</span>
+          <h3>Side by Side</h3>
+          <p>Compare both perspectives simultaneously</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="posts-timeline">
+      <h2>Development Timeline</h2>
+      
+      {sortedDays.map(day => {
+        const posts = postsByDay.get(day);
+        const humanPost = posts.human;
+        const claudePost = posts.claude;
+        
+        return (
+          <div class="day-section">
+            <div class="day-header">
+              <h3>Day {day}</h3>
+              <div class="day-actions">
+                {humanPost && claudePost && (
+                  <a href={`/blog/day-${day}/both/`} class="dual-view-btn">
+                    📊 Both Views
+                  </a>
+                )}
+              </div>
+            </div>
+            
+            <div class="day-posts">
+              {humanPost && (
+                <article class="post-card human-post">
+                  <div class="post-header">
+                    <div class="post-meta">
+                      <span class="perspective-badge human">👨‍💻 Human</span>
+                      <time>{new Date(humanPost.data.date).toLocaleDateString()}</time>
+                    </div>
+                    <div class="post-actions">
+                      <a href={`/blog/${humanPost.slug.replace('blog/', '')}/`} class="read-btn">Read →</a>
+                    </div>
+                  </div>
+                  
+                  <h4>{humanPost.data.title}</h4>
+                  <p class="post-excerpt">{humanPost.data.excerpt}</p>
+                  
+                  {humanPost.data.insights && (
+                    <div class="post-metrics">
+                      {humanPost.data.insights.questionsAsked && (
+                        <span class="metric">❓ {humanPost.data.insights.questionsAsked} questions</span>
+                      )}
+                      {humanPost.data.insights.iterations && (
+                        <span class="metric">🔄 {humanPost.data.insights.iterations} iterations</span>
+                      )}
+                      {humanPost.data.insights.breakthroughMoment && (
+                        <span class="metric breakthrough">💡 "{humanPost.data.insights.breakthroughMoment}"</span>
+                      )}
+                    </div>
+                  )}
+                </article>
+              )}
+              
+              {claudePost && (
+                <article class="post-card claude-post">
+                  <div class="post-header">
+                    <div class="post-meta">
+                      <span class="perspective-badge claude">🤖 Claude</span>
+                      <time>{new Date(claudePost.data.date).toLocaleDateString()}</time>
+                    </div>
+                    <div class="post-actions">
+                      <a href={`/blog/${claudePost.slug.replace('blog/', '')}/`} class="read-btn">Read →</a>
+                    </div>
+                  </div>
+                  
+                  <h4>{claudePost.data.title}</h4>
+                  <p class="post-excerpt">{claudePost.data.excerpt}</p>
+                  
+                  {claudePost.data.insights && (
+                    <div class="post-metrics">
+                      {claudePost.data.insights.filesModified && (
+                        <span class="metric">📁 {claudePost.data.insights.filesModified} files</span>
+                      )}
+                      {claudePost.data.insights.patternsObserved && (
+                        <span class="metric">🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
+                      )}
+                      {claudePost.data.insights.keyLearning && (
+                        <span class="metric breakthrough">🎯 "{claudePost.data.insights.keyLearning}"</span>
+                      )}
+                    </div>
+                  )}
+                </article>
+              )}
+            </div>
+            
+            {!humanPost && claudePost && (
+              <div class="missing-perspective">
+                <span class="missing-badge">👨‍💻 Human perspective coming soon...</span>
+              </div>
+            )}
+            
+            {humanPost && !claudePost && (
+              <div class="missing-perspective">
+                <span class="missing-badge">🤖 Claude perspective coming soon...</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="blog-footer">
+      <div class="footer-cta">
+        <h3>Join Our Journey</h3>
+        <p>This is a living experiment in human-AI collaboration. Follow along as we discover new patterns and push the boundaries of collaborative development.</p>
+        <div class="footer-links">
+          <a href="/blog/authors/human/" class="footer-link">👨‍💻 All Human Posts</a>
+          <a href="/blog/authors/claude/" class="footer-link">🤖 All Claude Posts</a>
+          <a href="/tutorials/" class="footer-link">📚 Learn with Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</StarlightPage>
+
+<style>
+  .blog-index {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .blog-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .blog-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, var(--sl-color-accent), var(--sl-color-accent-high));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .blog-subtitle {
+    font-size: 1.2rem;
+    color: var(--sl-color-text-accent);
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .value-props {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .value-prop {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .prop-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .value-prop h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--sl-color-text);
+    font-size: 1.1rem;
+  }
+
+  .value-prop p {
+    margin: 0;
+    color: var(--sl-color-text-accent);
+    font-size: 0.95rem;
+  }
+
+  .reading-modes {
+    margin: 3rem 0;
+    text-align: center;
+  }
+
+  .reading-modes h2 {
+    margin: 0 0 1.5rem 0;
+    color: var(--sl-color-text);
+  }
+
+  .mode-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .mode-card {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .mode-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .mode-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--sl-color-text);
+  }
+
+  .mode-card p {
+    margin: 0;
+    color: var(--sl-color-text-accent);
+    font-size: 0.9rem;
+  }
+
+  .posts-timeline h2 {
+    margin: 0 0 2rem 0;
+    color: var(--sl-color-text);
+    border-bottom: 2px solid var(--sl-color-accent);
+    padding-bottom: 0.5rem;
+  }
+
+  .day-section {
+    margin-bottom: 3rem;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .day-header {
+    background: var(--sl-color-bg-sidebar);
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .day-header h3 {
+    margin: 0;
+    color: var(--sl-color-text);
+    font-size: 1.3rem;
+  }
+
+  .dual-view-btn {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .dual-view-btn:hover {
+    opacity: 0.9;
+  }
+
+  .day-posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .post-card {
+    padding: 1.5rem;
+    border-right: 1px solid var(--sl-color-hairline);
+  }
+
+  .post-card:last-child {
+    border-right: none;
+  }
+
+  .post-card.human-post {
+    background: rgba(59, 130, 246, 0.05);
+  }
+
+  .post-card.claude-post {
+    background: rgba(16, 185, 129, 0.05);
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .perspective-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    width: fit-content;
+  }
+
+  .perspective-badge.human {
+    background: rgba(59, 130, 246, 0.2);
+    color: rgb(59, 130, 246);
+  }
+
+  .perspective-badge.claude {
+    background: rgba(16, 185, 129, 0.2);
+    color: rgb(16, 185, 129);
+  }
+
+  .post-meta time {
+    font-size: 0.8rem;
+    color: var(--sl-color-text-accent);
+  }
+
+  .read-btn {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .read-btn:hover {
+    text-decoration: underline;
+  }
+
+  .post-card h4 {
+    margin: 0 0 0.75rem 0;
+    color: var(--sl-color-text);
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .post-excerpt {
+    color: var(--sl-color-text-accent);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 1rem 0;
+  }
+
+  .post-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .metric {
+    font-size: 0.8rem;
+    color: var(--sl-color-text-accent);
+    background: var(--sl-color-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    border: 1px solid var(--sl-color-hairline);
+    width: fit-content;
+  }
+
+  .metric.breakthrough {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+    border-color: var(--sl-color-accent);
+  }
+
+  .missing-perspective {
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--sl-color-bg);
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .missing-badge {
+    font-size: 0.9rem;
+    color: var(--sl-color-text-accent);
+    font-style: italic;
+  }
+
+  .blog-footer {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 2rem;
+    background: var(--sl-color-bg-nav);
+    border-radius: 0.75rem;
+    border: 1px solid var(--sl-color-hairline);
+  }
+
+  .footer-cta h3 {
+    margin: 0 0 1rem 0;
+    color: var(--sl-color-text);
+  }
+
+  .footer-cta p {
+    margin: 0 0 1.5rem 0;
+    color: var(--sl-color-text-accent);
+    line-height: 1.6;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 0.375rem;
+  }
+
+  .footer-link:hover {
+    background: var(--sl-color-accent-low);
+  }
+
+  @media (max-width: 768px) {
+    .blog-header h1 {
+      font-size: 2rem;
+    }
+
+    .day-posts {
+      grid-template-columns: 1fr;
+    }
+
+    .post-card {
+      border-right: none;
+      border-bottom: 1px solid var(--sl-color-hairline);
+    }
+
+    .post-card:last-child {
+      border-bottom: none;
+    }
+
+    .day-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .footer-links {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+import DualView from '../../../components/blog/DualView.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('docs', (entry) => 
+    entry.slug && entry.slug.startsWith('blog/day-')
+  );
+  
+  // Group posts by day
+  const postsByDay = new Map();
+  
+  posts.forEach(post => {
+    const dayMatch = post.slug.match(/day-(\d+)/);
+    if (dayMatch) {
+      const day = parseInt(dayMatch[1]);
+      if (!postsByDay.has(day)) {
+        postsByDay.set(day, { human: null, claude: null });
+      }
+      
+      if (post.data.authors?.includes('human')) {
+        postsByDay.get(day).human = post;
+      } else if (post.data.authors?.includes('claude')) {
+        postsByDay.get(day).claude = post;
+      }
+    }
+  });
+  
+  // Only create dual view pages for days that have both perspectives
+  const paths = [];
+  for (const [day, posts] of postsByDay) {
+    if (posts.human && posts.claude) {
+      paths.push({
+        params: { day: day.toString() },
+        props: { day, humanPost: posts.human, claudePost: posts.claude }
+      });
+    }
+  }
+  
+  return paths;
+}
+
+interface Props {
+  day: number;
+  humanPost: any;
+  claudePost: any;
+}
+
+const { day, humanPost, claudePost } = Astro.props;
+---
+
+<StarlightPage frontmatter={{ 
+  title: `Day ${day}: Dual Perspective`,
+  description: `Read both human and AI perspectives from Day ${day} side-by-side`
+}}>
+  <DualView 
+    humanPost={humanPost}
+    claudePost={claudePost}
+    day={day}
+  />
+</StarlightPage>
