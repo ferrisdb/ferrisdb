@@ -16,6 +16,7 @@ This document outlines our strategy for maintaining comprehensive test coverage 
 - **Integration tests**: Full WAL workflows, Ubuntu only
 - **MSRV checks**: Only when storage code changes
 - **Tutorial tests**: Only when Rust code changes
+- **Starlight validation**: Only when docs change
 - **Time**: 5-10 minutes
 
 ### 🐌 **Slow Tests (Selective)**
@@ -23,6 +24,7 @@ This document outlines our strategy for maintaining comprehensive test coverage 
 - **Property tests**: Only on main branch or explicit request
 - **Benchmarks**: Only when explicitly needed
 - **Full cross-platform**: Only on main branch or with label
+- **Security audit**: On dependency changes
 - **Time**: 15-30 minutes
 
 ## Triggering Comprehensive Tests
@@ -51,16 +53,40 @@ cargo test
 
 Property tests use different configurations:
 
-- **CI**: 20 test cases, 50 shrink iterations
-- **Local**: 256 test cases, 1024 shrink iterations
+- **CI**: 20 test cases, 50 shrink iterations, 30s timeout
+- **Local**: 256 test cases, 1024 shrink iterations, 60s timeout
+
+Configuration file (`proptest.toml`):
+
+```toml
+[proptest]
+cases = 20               # CI default
+max_shrink_iters = 50    # CI default
+timeout = 30000          # 30 seconds
+
+[proptest.local]
+cases = 256              # Local development
+max_shrink_iters = 1024  # More thorough shrinking
+timeout = 60000          # 60 seconds
+```
 
 ## Optimization Strategies Applied
 
 ### 1. **Intelligent Test Selection**
 
 ```yaml
-# Only run storage tests when storage code changes
-if: needs.changes.outputs.storage == 'true'
+# Path-based filtering
+- uses: dorny/paths-filter@v2
+  with:
+    filters: |
+      rust:
+        - '**/*.rs'
+        - '**/Cargo.toml'
+      storage:
+        - 'ferrisdb-storage/**'
+      docs:
+        - 'docs/**/*.md'
+        - 'docs/**/*.mdx'
 ```
 
 ### 2. **Reduced Matrix Testing**
@@ -85,6 +111,13 @@ timeout-minutes: 15 # Prevent runaway tests
 - Unit tests run in parallel across platforms
 - Integration tests run separately to avoid conflicts
 - Property tests isolated to prevent resource contention
+- Use `--test-threads=1` for concurrent tests to avoid flakiness
+
+### 6. **Smart Security Auditing**
+
+- Only runs when Cargo.toml or Cargo.lock changes
+- Caches advisory database for faster runs
+- Runs as separate job to not block tests
 
 ## Expected CI Times
 
@@ -187,8 +220,97 @@ cargo test --all --features=slow-tests
 4. **Developer productivity**: Local development remains fast
 5. **Reliability**: Critical paths still get thorough testing
 
+## Label-Based Test Triggers
+
+### How Labels Control CI
+
+Labels on PRs can trigger additional test suites:
+
+```yaml
+# In CI workflow
+run_property_tests: |
+  contains(github.event.pull_request.labels.*.name, 'test:property') ||
+  github.ref == 'refs/heads/main'
+```
+
+### Available Test Labels
+
+- `test:property` - Runs full property test suite
+- `test:benchmarks` - Runs performance benchmarks
+- `test:full` - Runs all tests on all platforms
+- `area:ci` - Triggers extended CI validation
+
+## Recent Optimizations (PR #108)
+
+### 1. **Removed Duplicate Security Audit**
+
+- Was running in both test and separate job
+- Now only runs once when dependencies change
+
+### 2. **Lightweight Docs Validation**
+
+- Created `validate-docs.sh` script
+- Skips full Astro build in CI
+- Still validates markdown and structure
+
+### 3. **PropTest Environment Awareness**
+
+- Tests auto-detect CI environment
+- Reduces data sizes in CI (1MB vs 10MB)
+- Maintains thorough testing locally
+
+## Measuring CI Performance
+
+### Key Metrics
+
+```bash
+# Average CI time by workflow
+gh run list --workflow=ci.yml --json durationMs,conclusion | jq ...
+
+# Success rate
+gh run list --limit 100 --json conclusion | jq ...
+```
+
+### Performance Targets
+
+- PR CI (fast path): < 15 minutes
+- PR CI (with integration): < 20 minutes
+- Main branch CI: < 45 minutes
+- Property tests: < 10 minutes additional
+
+## Troubleshooting Slow CI
+
+### Common Causes
+
+1. **Cache Misses**
+
+   - Check cache keys in workflow
+   - Verify Cargo.lock changes
+
+2. **Test Data Size**
+
+   - Review PropTest strategies
+   - Check for large test fixtures
+
+3. **Flaky Tests**
+   - Look for timing-dependent tests
+   - Add retries for network operations
+
+### Quick Fixes
+
+```yaml
+# Add timeout to prevent hanging
+timeout-minutes: 30
+
+# Cancel outdated runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
 ## Related Documentation
 
 - [Testing Standards](testing.md)
 - [Performance Guidelines](../technical/performance.md)
-- [GitHub Actions Best Practices](.github/workflows/README.md)
+- [GitHub Automation](github-automation.md)
+- [Label System](labels.md)
