@@ -229,6 +229,7 @@ When asked to review a PR, Claude follows this structured approach:
 7. **Acting on Behalf of Human** 🤖
 
    When approving PRs or performing actions at the human's request:
+
    - Always include clear attribution: "🤖 Reviewed by Claude on behalf of the human"
    - For dependabot PRs: "🤖 Approved by Claude on behalf of the human"
    - For any merge actions: Include "🤖" in the merge commit message
