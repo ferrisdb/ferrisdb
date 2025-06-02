@@ -5,6 +5,14 @@ Quick reference for frequently used commands in FerrisDB development.
 **Purpose**: Provide a single reference for all commonly used development and maintenance commands.  
 **Prerequisites**: Basic familiarity with command line, git, and cargo
 
+## 🚨 CRITICAL: NEVER PUSH TO MAIN
+
+> **⚠️ WARNING: These commands assume you're on a feature branch!**
+>
+> - **ALWAYS check your branch first**: `git branch --show-current`
+> - **NEVER run**: `git push origin main`
+> - **ALWAYS use PRs**: See [PR Process](pr-process.md)
+
 ## Development Commands
 
 ### Building
@@ -83,11 +91,18 @@ cargo doc --all --no-deps --document-private-items
 ### Branching
 
 ```bash
-# Create feature branch
+# 🚨 FIRST: Ensure you're on main before creating branch
+git checkout main
+git pull origin main
+
+# Create feature branch (REQUIRED for ALL changes)
 git checkout -b feature/your-feature
 
 # Create from specific commit
 git checkout -b feature/your-feature commit-hash
+
+# Verify you're NOT on main before making changes
+git branch --show-current  # Should NOT show 'main'
 ```
 
 ### Committing
@@ -111,7 +126,10 @@ git commit --amend
 ### Pull Requests
 
 ```bash
-# Push branch and create PR
+# 🚨 CRITICAL: Verify you're pushing to feature branch, NOT main!
+git branch --show-current  # Should show your feature branch
+
+# Push feature branch (NEVER push to main)
 git push -u origin feature/your-feature
 gh pr create
 

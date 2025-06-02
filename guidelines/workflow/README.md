@@ -4,6 +4,18 @@ Guidelines for development processes, collaboration patterns, and maintaining th
 
 **Purpose**: Index of all workflow guidelines for consistent development practices.
 
+## 🚨 CRITICAL RULE: ALL CHANGES REQUIRE PULL REQUESTS
+
+> **⚠️ ABSOLUTE REQUIREMENT - NO EXCEPTIONS**
+>
+> **NEVER push directly to main branch!** Every change, no matter how small, must:
+>
+> 1. Be made on a feature branch
+> 2. Be submitted via Pull Request
+> 3. Pass all CI checks before merging
+>
+> See [Git Workflow](git-workflow.md#critical-never-push-to-main-branch) and [PR Process](pr-process.md) for mandatory procedures.
+
 ## Workflow Categories
 
 ### [Testing Standards](testing.md)
@@ -14,13 +26,13 @@ Comprehensive testing requirements for all FerrisDB code, including unit tests, 
 
 Frequently used commands for development, testing, and maintenance. Includes cached statistics functions and development shortcuts.
 
-### [Git Workflow](git-workflow.md)
+### [Git Workflow](git-workflow.md) 🚨 **CRITICAL**
 
-Version control standards including branch naming, commit messages, and **mandatory** collaboration commentary for human-AI development tracking.
+Version control standards including branch naming, commit messages, and **mandatory** collaboration commentary for human-AI development tracking. **NEVER PUSH TO MAIN BRANCH!**
 
-### [PR Process](pr-process.md)
+### [PR Process](pr-process.md) 🚨 **CRITICAL**
 
-Pull request creation, review, and merge procedures. Includes Claude's specific PR review process with 🤖 emoji signatures.
+Pull request creation, review, and merge procedures. **ALL CHANGES MUST GO THROUGH PR PROCESS - NO EXCEPTIONS!** Includes Claude's specific PR review process with 🤖 emoji signatures.
 
 ### [Website Maintenance - Simplified](website-maintenance-simple.md) ✅ **[PRIMARY]**
 

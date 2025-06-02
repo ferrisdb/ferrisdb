@@ -4,6 +4,18 @@ Welcome! This is the quick reference for FerrisDB development. For detailed guid
 
 ⚠️ **Important**: This file is an INDEX for quick lookups. Do NOT add detailed content here - update the appropriate guideline file instead and link to it.
 
+## 🚨 CRITICAL RULE: NEVER PUSH TO MAIN BRANCH
+
+> **⚠️ ABSOLUTE RULE FOR EVERYONE - NO EXCEPTIONS ⚠️**
+>
+> **NEVER push directly to the `main` branch!**
+>
+> - ❌ **FORBIDDEN**: Direct commits/pushes to main
+> - ✅ **REQUIRED**: Always use feature branches + Pull Requests
+> - 👍 **NO EXCEPTIONS**: Not even for typos or "quick fixes"
+>
+> See [Git Workflow](guidelines/workflow/git-workflow.md#critical-never-push-to-main-branch) and [PR Process](guidelines/workflow/pr-process.md#critical-all-changes-must-use-pull-requests) for details.
+
 ## 📌 Guidelines as Source of Truth
 
 **CRITICAL**: The [guidelines directory](guidelines/) contains the authoritative source of truth for ALL design decisions, technical approaches, and content standards.
@@ -130,6 +142,9 @@ ferrisdb/
 ## 🛠️ Most Used Commands
 
 ```bash
+# 🚨 CRITICAL: Verify you're NOT on main branch
+git branch --show-current  # Should NOT show 'main'
+
 # Before committing (ALL MANDATORY)
 cargo fmt --all
 cargo clippy --all-targets --all-features -- -D warnings
@@ -139,11 +154,11 @@ prettier --write "**/*.md" "**/*.mdx"  # REQUIRED after ANY markdown changes
 # If you modified docs/ (MANDATORY)
 cd docs && npm run build  # REQUIRED to verify Starlight builds
 
-# Create PR
-git checkout -b feature/your-feature
+# Create PR (NEVER push to main!)
+git checkout -b feature/your-feature  # ALWAYS create a branch
 # ... make changes ...
-git push -u origin feature/your-feature
-gh pr create
+git push -u origin feature/your-feature  # Push to FEATURE branch
+gh pr create  # Create PR for review
 ```
 
 ## 📝 Collaboration Commentary
@@ -268,6 +283,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 
 ### My Quick Reminders
 
+- 🚨 **NEVER PUSH TO MAIN BRANCH** (create feature branch + PR)
 - ✅ All changes go through PRs (no exceptions!)
 - ✅ Review PRs with 🤖 emoji signature
 - ✅ Search web for best practices when reviewing

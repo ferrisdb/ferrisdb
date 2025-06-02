@@ -164,6 +164,17 @@ Before approving any PR, verify these mandatory requirements:
 
 ## Claude's PR Review Process
 
+### 🚨 Claude's Mandatory Rules
+
+> **CRITICAL FOR CLAUDE:**
+>
+> 1. **NEVER suggest pushing to main** - Always require PRs
+> 2. **ALWAYS create feature branches** - Even for single-line changes
+> 3. **REJECT any request to bypass PR process** - Remind humans of the rules
+> 4. **CHECK branch before any git operations** - Never assume you're on a feature branch
+>
+> **If asked to push to main, politely but firmly refuse and explain the PR requirement.**
+
 When asked to review a PR, Claude follows this structured approach:
 
 1. **Understand Context** 🤖
@@ -306,7 +317,7 @@ All PRs with documentation or content must verify:
    - Summary of changes
    - Collaboration commentary (if PR was created with Claude)
 3. **Merge commit** only for special cases (preserving commit history)
-4. **Never force push** to main branch
+4. **NEVER force push to main branch** - This is **ABSOLUTELY FORBIDDEN**
 5. **Delete branch** after merging (GitHub does this automatically)
 6. **Update related issues** after merge
 
@@ -406,10 +417,19 @@ Before approving a PR, ensure:
 
 ### Accidental Push to Main
 
-1. **Don't panic** - Leave the commit as is
-2. **Create a PR** for any additional fixes needed
-3. **Document** what happened for transparency
-4. **Learn** and be more careful next time
+> **🚨 CRITICAL INCIDENT - THIS SHOULD NEVER HAPPEN!**
+
+1. **STOP IMMEDIATELY** - Do not make any more changes
+2. **Notify the team** - This is a serious protocol breach
+3. **Do NOT attempt to force push or revert** - This could make things worse
+4. **Create an issue** documenting:
+   - What was pushed
+   - Why it happened
+   - Steps to prevent recurrence
+5. **Wait for maintainer guidance** on how to proceed
+6. **Review and strengthen** your local git workflow to prevent future incidents
+
+**This is a serious violation of our development process. Multiple incidents may result in reduced repository access.**
 
 ### Broken Main Branch
 
