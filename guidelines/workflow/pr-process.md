@@ -433,3 +433,6 @@ Before approving a PR, ensure:
 - [Testing](testing.md) - Test requirements for PRs
 - [Code Style](../development/code-style.md) - Code standards
 - [Commands](commands.md) - PR commands reference
+
+---
+_Last updated: 2025-06-01_

@@ -235,3 +235,6 @@ Run these commands before every commit:
 - [Website Maintenance](website-maintenance-simple.md) - Maintenance workflows
 - [Testing](testing.md) - Test command details
 - [Markdown Standards](../development/markdown-standards.md) - Markdown tools
+
+---
+_Last updated: 2025-06-01_

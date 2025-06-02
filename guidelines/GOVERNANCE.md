@@ -210,5 +210,5 @@ This document itself follows these principles:
 
 ---
 
-_Last updated: 2025-05-30_
+_Last updated: 2025-06-01_
 _Next review: When guidelines structure changes significantly_

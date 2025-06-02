@@ -314,3 +314,6 @@ concurrency:
 - [Performance Guidelines](../technical/performance.md)
 - [GitHub Automation](github-automation.md)
 - [Label System](labels.md)
+
+---
+_Last updated: 2025-06-01_

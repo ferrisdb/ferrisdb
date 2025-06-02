@@ -232,3 +232,6 @@ Good information architecture enables:
 ---
 
 _Last updated: 2025-05-31_
+
+---
+_Last updated: 2025-06-01_

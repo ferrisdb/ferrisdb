@@ -252,3 +252,6 @@ Track issue metrics for project health:
 - Stale issue count
 
 Use these metrics to improve processes and identify bottlenecks.
+
+---
+_Last updated: 2025-06-01_

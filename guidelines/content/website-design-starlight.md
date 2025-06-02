@@ -677,3 +677,6 @@ npm run preview
 - **Maintenance**: [Website Maintenance](../workflow/website-maintenance-simple.md)
 - **Commands**: [Common Commands](../workflow/commands.md#website-maintenance-commands)
 - **Markdown**: [Markdown Standards](../development/markdown-standards.md)
+
+---
+_Last updated: 2025-06-01_

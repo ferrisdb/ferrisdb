@@ -296,3 +296,6 @@ mod tests {
 - **Then**: [Documentation](documentation.md) - How to document your code
 - **Also See**: [Testing](../workflow/testing.md) - Writing tests for your code
 - **Before Committing**: [Git Workflow](../workflow/git-workflow.md) - Collaboration standards
+
+---
+_Last updated: 2025-06-01_

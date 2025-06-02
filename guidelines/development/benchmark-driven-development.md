@@ -273,3 +273,6 @@ See `ferrisdb-storage/benches/bytes_ext_benchmarks.rs`:
 - [Criterion.rs Documentation](https://bheisler.github.io/criterion.rs/book/)
 - [Rust Performance Book](https://nnethercote.github.io/perf-book/)
 - [BytesMutExt Benchmarks](../../ferrisdb-storage/benches/)
+
+---
+_Last updated: 2025-06-01_

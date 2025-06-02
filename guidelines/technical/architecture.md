@@ -34,6 +34,7 @@ FerrisDB is a distributed, transactional key-value database with the following a
      ┌────▼────┐ ┌───▼────┐ ┌───▼────┐
      │MemTable │ │SSTables│ │  WAL   │
      └─────────┘ └────────┘ └────────┘
+     [IMPLEMENTED] [PARTIAL]  [IMPLEMENTED]
 ```
 
 ### Component Boundaries
@@ -596,3 +597,6 @@ See [System Invariants](invariants.md) for critical properties that must be main
 - [RocksDB Architecture](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview)
 - [FoundationDB Design](https://apple.github.io/foundationdb/)
 - [Apache Cassandra Architecture](https://cassandra.apache.org/doc/latest/architecture/)
+
+---
+_Last updated: 2025-06-01_

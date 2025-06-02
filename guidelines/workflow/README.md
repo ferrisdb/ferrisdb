@@ -79,4 +79,4 @@ Technical reference for Astro Starlight framework. Use this when you need MDX co
 
 ---
 
-_Last updated: 2025-05-31_
+_Last updated: 2025-06-01_

@@ -36,3 +36,6 @@ This directory contains all development standards and best practices for FerrisD
 - [Content Creation](../content/) - Writing documentation and articles
 - [Development Workflow](../workflow/) - Development processes
 - [Technical Architecture](../technical/) - System design guidelines
+
+---
+_Last updated: 2025-06-01_

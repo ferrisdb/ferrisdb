@@ -571,3 +571,6 @@ ferrisdb-storage/tests/
 - [RocksDB File Formats](https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format)
 - [Protocol Buffers Encoding](https://developers.google.com/protocol-buffers/docs/encoding)
 - [Apache Parquet Format](https://parquet.apache.org/docs/file-format/)
+
+---
+_Last updated: 2025-06-01_

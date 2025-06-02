@@ -138,3 +138,6 @@ Utility modules require extra care:
 - **Code Style**: [Extension Traits](code-style.md#extension-traits) - Extension trait patterns
 - **Safety**: [Unsafe Code](idiomatic-rust.md#unsafe-code) - Working with unsafe
 - **Performance**: [Performance Guidelines](../technical/performance.md) - Optimization standards
+
+---
+_Last updated: 2025-06-01_

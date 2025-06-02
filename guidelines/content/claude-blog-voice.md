@@ -248,3 +248,6 @@ You're documenting:
 - **The real workflow, not an idealized version**
 
 Make it analytical, honest, accurate, and valuable for understanding collaboration.
+
+---
+_Last updated: 2025-06-01_

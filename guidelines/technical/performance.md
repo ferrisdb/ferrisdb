@@ -294,9 +294,19 @@ Before merging performance changes:
 - [ ] Trade-offs are documented
 - [ ] Edge cases are handled
 
+## Related Guidelines
+
+- **Prerequisites**: [Architecture](architecture.md) - System design patterns
+- **Testing**: [Benchmark-Driven Development](../development/benchmark-driven-development.md) - Performance validation
+- **Implementation**: [Idiomatic Rust](../development/idiomatic-rust.md) - Performance best practices
+- **Utilities**: [Utility Modules](../development/utility-modules.md) - Performance-focused utilities
+
 ## References
 
 - [The Flame Graph](https://www.brendangregg.com/flamegraphs.html)
 - [Rust Performance Book](https://nnethercote.github.io/perf-book/)
 - [Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html)
 - [Database Internals](https://www.databass.dev/)
+
+---
+_Last updated: 2025-06-01_

@@ -93,11 +93,17 @@ Every piece of content should help readers learn and understand database systems
 
 ### Concept Tracking Files
 
-For the "Learn by Building" tutorial series, we maintain strict tracking of what's been taught:
+For the "Learn by Building" tutorial series, we maintain strict tracking of what's been taught. These files work together as a single source of truth:
 
-- **[RUST-CONCEPTS-TAUGHT.md](RUST-CONCEPTS-TAUGHT.md)** - Tracks all Rust concepts introduced/reinforced per tutorial
-- **[DATABASE-CONCEPTS-TAUGHT.md](DATABASE-CONCEPTS-TAUGHT.md)** - Tracks database concepts with real-world examples
-- **[LEARNING-PROGRESS.md](LEARNING-PROGRESS.md)** - Dashboard showing tutorial dependencies and progress
+- **[LEARNING-PROGRESS.md](LEARNING-PROGRESS.md)** - 📊 **Dashboard**: Tutorial dependency graph and progress overview
+- **[RUST-CONCEPTS-TAUGHT.md](RUST-CONCEPTS-TAUGHT.md)** - 🦀 **Rust Tracking**: Detailed per-tutorial Rust concepts with examples
+- **[DATABASE-CONCEPTS-TAUGHT.md](DATABASE-CONCEPTS-TAUGHT.md)** - 🗄️ **Database Tracking**: Database concepts mapped to tutorials
+
+**How they work together**:
+1. Check LEARNING-PROGRESS.md for tutorial dependencies and current status
+2. Use RUST-CONCEPTS-TAUGHT.md to see exactly which Rust features are available
+3. Reference DATABASE-CONCEPTS-TAUGHT.md for database concepts already covered
+4. Never introduce concepts not yet taught in earlier tutorials
 
 These files are the **source of truth** for ensuring we never assume untaught knowledge.
 
@@ -131,3 +137,6 @@ All content templates have been migrated to Starlight format and are located in 
 - [Development Standards](../development/) - Code and documentation standards
 - [Development Workflow](../workflow/) - Publishing processes
 - [Website Maintenance](../workflow/website-maintenance-simple.md) - Keeping content updated
+
+---
+_Last updated: 2025-06-01_

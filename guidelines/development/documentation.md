@@ -430,3 +430,6 @@ pub struct SSTableHeader {
 - [Visualization](visualization.md) - Creating diagrams for documentation
 - [Markdown Standards](markdown-standards.md) - Markdown formatting
 - [Website Design](../content/website-design-starlight.md) - Public documentation
+
+---
+_Last updated: 2025-06-01_

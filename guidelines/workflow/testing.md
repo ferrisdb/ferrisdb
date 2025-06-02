@@ -751,3 +751,6 @@ Tests must pass before merging any PR.
 - Benchmarks compare against base branch
 - Security audit runs on dependency changes
 - See [CI Optimization](ci-optimization.md) for details
+
+---
+_Last updated: 2025-06-01_
