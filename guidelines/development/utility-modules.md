@@ -140,4 +140,5 @@ Utility modules require extra care:
 - **Performance**: [Performance Guidelines](../technical/performance.md) - Optimization standards
 
 ---
+
 _Last updated: 2025-06-01_

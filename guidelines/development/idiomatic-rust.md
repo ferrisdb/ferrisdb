@@ -380,4 +380,5 @@ for item in items {
 - **Reference**: [Performance](../technical/performance.md) - Performance best practices
 
 ---
+
 _Last updated: 2025-06-01_

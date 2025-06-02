@@ -298,4 +298,5 @@ mod tests {
 - **Before Committing**: [Git Workflow](../workflow/git-workflow.md) - Collaboration standards
 
 ---
+
 _Last updated: 2025-06-01_

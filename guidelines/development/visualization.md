@@ -367,4 +367,5 @@ When reviewing documentation with visualizations:
 - [Architecture](../technical/architecture.md) - System diagrams
 
 ---
+
 _Last updated: 2025-06-01_

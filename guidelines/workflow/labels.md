@@ -152,4 +152,5 @@ GitHub Actions can use labels for:
 5. **Document Changes**: Update this guide when adding new labels
 
 ---
+
 _Last updated: 2025-06-01_

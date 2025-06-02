@@ -435,4 +435,5 @@ Before approving a PR, ensure:
 - [Commands](commands.md) - PR commands reference
 
 ---
+
 _Last updated: 2025-06-01_

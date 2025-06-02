@@ -679,4 +679,5 @@ npm run preview
 - **Markdown**: [Markdown Standards](../development/markdown-standards.md)
 
 ---
+
 _Last updated: 2025-06-01_

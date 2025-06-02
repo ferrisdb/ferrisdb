@@ -251,4 +251,5 @@ Example calculation:
 - [Website Design](website-design-starlight.md) - Article layout and styling
 
 ---
+
 _Last updated: 2025-06-01_

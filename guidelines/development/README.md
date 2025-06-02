@@ -38,4 +38,5 @@ This directory contains all development standards and best practices for FerrisD
 - [Technical Architecture](../technical/) - System design guidelines
 
 ---
+
 _Last updated: 2025-06-01_

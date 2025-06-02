@@ -599,4 +599,5 @@ See [System Invariants](invariants.md) for critical properties that must be main
 - [Apache Cassandra Architecture](https://cassandra.apache.org/doc/latest/architecture/)
 
 ---
+
 _Last updated: 2025-06-01_

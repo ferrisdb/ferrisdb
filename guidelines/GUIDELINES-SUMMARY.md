@@ -163,4 +163,5 @@ Start Here (Story, Status, Vision)
 _Guidelines updated collaboratively by Human and Claude to better reflect our educational mission and maintain information architecture integrity_
 
 ---
+
 _Last updated: 2025-06-01_

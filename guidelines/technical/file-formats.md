@@ -573,4 +573,5 @@ ferrisdb-storage/tests/
 - [Apache Parquet Format](https://parquet.apache.org/docs/file-format/)
 
 ---
+
 _Last updated: 2025-06-01_

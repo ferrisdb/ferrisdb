@@ -30,7 +30,7 @@ Critical invariants that must be maintained throughout FerrisDB's implementation
    - Point-in-time consistency for all reads
    - No partial updates visible
    - Snapshot isolation for read transactions
-   
+
    **Current Status:** MVCC timestamps implemented, full snapshot isolation planned
 
 5. **WAL entries must be written before MemTable updates** [ENFORCED]
@@ -281,4 +281,5 @@ struct Node<K, V> {
 These invariants form the foundation of FerrisDB's correctness. Every code change must preserve these properties. When in doubt, err on the side of safety and add more checks rather than fewer.
 
 ---
+
 _Last updated: 2025-06-01_

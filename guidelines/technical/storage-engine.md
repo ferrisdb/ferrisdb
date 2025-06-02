@@ -34,6 +34,7 @@ pub trait MemTable: Send + Sync {
 Immutable on-disk files with sorted key-value pairs.
 
 **Current Status:**
+
 - Basic reader/writer [IMPLEMENTED]
 - Data blocks and index blocks [IMPLEMENTED]
 - Bloom filters [PLANNED]
@@ -247,4 +248,5 @@ impl StorageEngine {
 - [The Log-Structured Merge-Tree](https://www.cs.umb.edu/~poneil/lsmtree.pdf)
 
 ---
+
 _Last updated: 2025-06-01_

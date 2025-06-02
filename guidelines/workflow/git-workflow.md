@@ -530,4 +530,5 @@ git log --grep="🤖" --pretty=full
 - **For Blog Posts**: [Blogging](../content/blogging.md) - Using commits for blog content
 
 ---
+
 _Last updated: 2025-06-01_

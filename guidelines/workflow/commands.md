@@ -237,4 +237,5 @@ Run these commands before every commit:
 - [Markdown Standards](../development/markdown-standards.md) - Markdown tools
 
 ---
+
 _Last updated: 2025-06-01_

@@ -82,4 +82,5 @@ Standardized patterns for persistent file formats:
 - [Tutorial Implementation](../content/tutorials.md) - Educational component building
 
 ---
+
 _Last updated: 2025-06-01_
