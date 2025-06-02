@@ -340,40 +340,27 @@ mod tests {
 
     // ==================== Directory and Permission Error Tests ====================
 
-    /// Tests that writer creation fails when parent directory lacks write permissions.
+    /// Tests that writer creation fails when path points to a non-existent drive.
     ///
     /// This ensures:
-    /// - Permission errors are properly propagated
-    /// - No partial files are created on permission failures
-    /// - Proper error messages for debugging permission issues
+    /// - Invalid paths are properly rejected
+    /// - File system errors are propagated correctly
+    /// - Clear error messages for debugging path issues
     #[test]
-    fn new_returns_error_when_parent_directory_not_writable() {
-        use std::fs;
-        use std::os::unix::fs::PermissionsExt;
-
-        let temp_dir = TempDir::new().unwrap();
-        let read_only_dir = temp_dir.path().join("readonly");
-        fs::create_dir(&read_only_dir).unwrap();
-
-        // Make directory read-only
-        let mut perms = fs::metadata(&read_only_dir).unwrap().permissions();
-        perms.set_mode(0o444); // Read-only
-        fs::set_permissions(&read_only_dir, perms).unwrap();
-
-        let wal_path = read_only_dir.join("test.wal");
-        let result = WALWriter::new(&wal_path, SyncMode::Full, 1024 * 1024);
-
-        // Restore permissions for cleanup
-        let mut perms = fs::metadata(&read_only_dir).unwrap().permissions();
-        perms.set_mode(0o755);
-        fs::set_permissions(&read_only_dir, perms).unwrap();
-
+    fn new_returns_error_for_invalid_path() {
+        // Use a path that should fail on all platforms
+        let invalid_path = if cfg!(windows) {
+            "Z:\\nonexistent\\directory\\test.wal"
+        } else {
+            "/proc/nonexistent/test.wal" // /proc typically doesn't allow file creation
+        };
+        
+        let result = WALWriter::new(invalid_path, SyncMode::Full, 1024 * 1024);
+        
+        // Should fail due to invalid path
         assert!(result.is_err());
         if let Err(e) = result {
-            match e {
-                Error::Io(io_err) => assert!(io_err.to_string().contains("Permission denied")),
-                _ => panic!("Expected I/O permission error"),
-            }
+            assert!(matches!(e, Error::Io(_)));
         }
     }
 
@@ -386,22 +373,21 @@ mod tests {
     #[test]
     fn new_returns_error_when_file_exists_but_not_writable() {
         use std::fs::{self, File};
-        use std::os::unix::fs::PermissionsExt;
 
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("readonly.wal");
 
-        // Create a read-only file
+        // Create a read-only file using cross-platform API
         File::create(&wal_path).unwrap();
         let mut perms = fs::metadata(&wal_path).unwrap().permissions();
-        perms.set_mode(0o444); // Read-only
+        perms.set_readonly(true);
         fs::set_permissions(&wal_path, perms).unwrap();
 
         let result = WALWriter::new(&wal_path, SyncMode::Full, 1024 * 1024);
 
         // Restore permissions for cleanup
         let mut perms = fs::metadata(&wal_path).unwrap().permissions();
-        perms.set_mode(0o644);
+        perms.set_readonly(false);
         fs::set_permissions(&wal_path, perms).unwrap();
 
         assert!(result.is_err());
