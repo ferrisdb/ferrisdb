@@ -7,6 +7,17 @@
 //! This utility is designed for high-performance I/O operations where avoiding
 //! unnecessary memory initialization can provide measurable benefits, particularly
 //! when reading large amounts of data sequentially.
+//!
+//! # Implementation Notes
+//!
+//! This implementation uses raw pointers rather than `MaybeUninit<[u8]>` for several reasons:
+//! 1. **API Compatibility**: BytesMut's internal buffer management doesn't expose MaybeUninit APIs
+//! 2. **Simplicity**: Direct pointer manipulation is clearer for this specific use case
+//! 3. **Performance**: Avoids additional abstraction overhead
+//! 4. **Safety**: The safety invariants are well-understood and thoroughly tested
+//!
+//! TODO: Revisit this implementation when Rust provides stable APIs for reading into
+//! uninitialized buffers (e.g., BorrowedBuf/BorrowedCursor or similar abstractions).
 
 use bytes::BytesMut;
 use std::io::{self, Read};
@@ -22,6 +33,18 @@ pub trait BytesMutExt {
     /// 1. Reserving capacity without initialization
     /// 2. Reading directly into uninitialized memory
     /// 3. Only updating the length after successful read
+    ///
+    /// # Safety Trade-offs
+    ///
+    /// This method uses unsafe code to avoid zero-initialization overhead.
+    /// While thoroughly tested, users should be aware that this trades
+    /// a small amount of safety verification for performance. The implementation:
+    /// - Uses raw pointer manipulation to write to uninitialized memory
+    /// - Relies on careful length management to maintain safety invariants
+    /// - Has been extensively tested including concurrent usage scenarios
+    ///
+    /// For use cases where maximum safety is paramount over performance,
+    /// consider using the standard approach of pre-initializing buffers.
     ///
     /// # Error Handling
     ///
