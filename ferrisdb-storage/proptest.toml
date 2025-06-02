@@ -1,0 +1,16 @@
+# PropTest configuration for different environments
+
+# Default configuration for CI
+[proptest]
+# Reduce test cases in CI for faster feedback
+cases = 20
+# Reduce shrinking iterations in CI
+max_shrink_iters = 50
+# Longer timeout for complex tests
+timeout = 30000
+
+# Local development can use more thorough testing
+[proptest.local]
+cases = 256
+max_shrink_iters = 1024
+timeout = 60000

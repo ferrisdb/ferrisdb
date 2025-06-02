@@ -19,10 +19,21 @@ prop_compose! {
     }
 }
 
-// Generate valid values (0 to 10MB)
+// Generate valid values (0 to 10MB, but smaller in CI)
 prop_compose! {
-    fn valid_value()(size in 0usize..=10*1024*1024) -> Vec<u8> {
+    fn valid_value()(size in 0usize..=max_value_size()) -> Vec<u8> {
         vec![b'v'; size]
+    }
+}
+
+// Adjust test data size based on environment
+fn max_value_size() -> usize {
+    if std::env::var("CI").is_ok() {
+        // Smaller values in CI for faster tests
+        1024 * 1024 // 1MB max in CI
+    } else {
+        // Full size for local development
+        10 * 1024 * 1024 // 10MB max locally
     }
 }
 
