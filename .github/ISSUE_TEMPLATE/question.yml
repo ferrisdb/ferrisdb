@@ -1,0 +1,79 @@
+name: ❓ Question
+description: Ask a question about FerrisDB
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in FerrisDB! Before asking a question:
+        - Check our [documentation](https://ferrisdb.org)
+        - Search existing issues
+        - Consider using [GitHub Discussions](https://github.com/ferrisdb/ferrisdb/discussions) for open-ended questions
+        
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What is your question about?
+      options:
+        - How to use FerrisDB
+        - Understanding internals
+        - Architecture/design decisions
+        - Performance characteristics
+        - Contributing/development
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: Ask your question with as much context as possible
+      placeholder: I'm trying to understand how...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any additional context that might help us answer your question
+      placeholder: |
+        - What you've already tried
+        - Related documentation you've read
+        - Your use case
+        
+  - type: dropdown
+    id: experience
+    attributes:
+      label: Experience Level
+      description: How familiar are you with database internals?
+      options:
+        - Beginner (new to databases)
+        - Intermediate (familiar with basic concepts)
+        - Advanced (deep understanding)
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search Confirmation
+      description: Please confirm you've searched for existing answers
+      options:
+        - label: I've searched existing issues
+          required: true
+        - label: I've checked the documentation
+          required: true
+        - label: I've looked at GitHub Discussions
+          
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

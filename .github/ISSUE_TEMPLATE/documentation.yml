@@ -1,0 +1,87 @@
+name: 📖 Documentation
+description: Suggest improvements to documentation
+title: "[Docs]: "
+labels: ["area:docs", "type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation! Clear docs are essential for FerrisDB's educational mission.
+        
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs improvement?
+      options:
+        - API Documentation
+        - Code Comments
+        - README Files
+        - Website Content
+        - Tutorial Content
+        - Architecture Docs
+        - Contributing Guidelines
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: current
+    attributes:
+      label: Current State
+      description: What's wrong or missing in the current documentation?
+      placeholder: The current docs don't explain...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: improvement
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: The docs should include...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where in the codebase/website is this documentation?
+      placeholder: |
+        - File: src/storage/wal.rs
+        - URL: https://ferrisdb.org/docs/...
+        - Section: Configuration section
+      
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Target Audience
+      description: Who is the primary audience for this documentation?
+      options:
+        - Beginners (new to databases)
+        - Intermediate developers
+        - Advanced users
+        - Contributors
+        - All audiences
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you like to help improve this documentation?
+      options:
+        - label: I'm willing to write/update this documentation
+        - label: I can provide technical review
+        - label: I can help with examples/diagrams
+        
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
