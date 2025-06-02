@@ -141,7 +141,7 @@ impl SkipList {
             head: Atomic::new(head),
             height: AtomicUsize::new(1),
             size: AtomicUsize::new(0),
-            rng: Mutex::new(rand::rngs::StdRng::from_entropy()),
+            rng: Mutex::new(rand::rngs::StdRng::from_os_rng()),
         }
     }
 
@@ -153,7 +153,7 @@ impl SkipList {
         let mut height = 1;
         let mut rng = self.rng.lock();
 
-        while height < MAX_HEIGHT && rng.gen_ratio(1, BRANCHING_FACTOR) {
+        while height < MAX_HEIGHT && rng.random_ratio(1, BRANCHING_FACTOR) {
             height += 1;
         }
 
