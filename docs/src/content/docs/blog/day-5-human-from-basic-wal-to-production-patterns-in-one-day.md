@@ -11,7 +11,8 @@ insights:
   questionsAsked: 8
   iterations: 4
   breakthroughMoment: "File headers revelation"
-  conceptsIntroduced: ["file headers", "metrics", "BytesMutExt", "cross-platform", "CI optimization"]
+  conceptsIntroduced:
+    ["file headers", "metrics", "BytesMutExt", "cross-platform", "CI optimization"]
   linesOfCode: 3000
   testsAdded: 153
 ---

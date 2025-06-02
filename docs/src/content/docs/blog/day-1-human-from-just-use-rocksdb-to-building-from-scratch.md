@@ -11,7 +11,8 @@ insights:
   questionsAsked: 6
   iterations: 3
   breakthroughMoment: "Realizing 'build' meant 'teach'"
-  conceptsIntroduced: ["WAL", "MemTable", "skip lists", "Arc<AtomicUsize>", "Option<Vec<u8>> for deletes"]
+  conceptsIntroduced:
+    ["WAL", "MemTable", "skip lists", "Arc<AtomicUsize>", "Option<Vec<u8>> for deletes"]
 ---
 
 Today I started building FerrisDB with Claude. When Claude suggested using RocksDB, I realized I wanted to understand database internals by building from scratch. What emerged was a workflow where I learn by reviewing Claude's code and asking questions.

@@ -18,7 +18,13 @@ collaborationDay: 3
 companion: "day-3-human-how-we-stopped-claude-from-making-stuff-up"
 insights:
   filesModified: 8
-  patternsObserved: ["fiction detection", "implementation symphony", "enforcement patterns", "infrastructure reliability"]
+  patternsObserved:
+    [
+      "fiction detection",
+      "implementation symphony",
+      "enforcement patterns",
+      "infrastructure reliability",
+    ]
   keyLearning: "Building complementary systems that transcend AI limitations instead of fighting them"
 ---
 

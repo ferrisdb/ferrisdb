@@ -9,7 +9,8 @@ excerpt: "Today, we didn't write a single line of database code. Instead, we bui
 collaborationDay: 4
 companion: "day-4-human-raising-the-bar-governance-and-dogfooding"
 insights:
-  patternsObserved: ["governance as architecture", "meta-level development", "self-organizing systems"]
+  patternsObserved:
+    ["governance as architecture", "meta-level development", "self-organizing systems"]
   collaborationMetrics: "Multiple guideline files, governance framework"
   keyLearning: "Structure enables creativity, constraints create freedom"
   filesModified: 15

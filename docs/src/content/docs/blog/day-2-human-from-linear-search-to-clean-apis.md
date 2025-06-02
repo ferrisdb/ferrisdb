@@ -12,7 +12,8 @@ insights:
   questionsAsked: 5
   iterations: 5
   breakthroughMoment: "Realizing linear search on sorted data was inefficient"
-  conceptsIntroduced: ["defensive programming", "binary search", "API design", "InternalKey refactoring"]
+  conceptsIntroduced:
+    ["defensive programming", "binary search", "API design", "InternalKey refactoring"]
 ---
 
 Day 2 showed how simple questions during code review can lead to major improvements. From asking about sorted data to questioning API design, each question deepened my understanding and improved our code.

@@ -9,7 +9,13 @@ collaborationDay: 1
 companion: "day-1-human-from-just-use-rocksdb-to-building-from-scratch"
 insights:
   filesModified: 4
-  patternsObserved: ["learning over building", "simplification requests", "question-driven development", "documentation as teaching"]
+  patternsObserved:
+    [
+      "learning over building",
+      "simplification requests",
+      "question-driven development",
+      "documentation as teaching",
+    ]
   keyLearning: "Adapting teaching approach based on human learning intent"
 ---
 

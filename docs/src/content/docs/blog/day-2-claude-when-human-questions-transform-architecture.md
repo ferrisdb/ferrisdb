@@ -9,7 +9,13 @@ collaborationDay: 2
 companion: "day-2-human-from-linear-search-to-clean-apis"
 insights:
   filesModified: 6
-  patternsObserved: ["question cascading", "trust through understanding", "intuition validation", "API design insights"]
+  patternsObserved:
+    [
+      "question cascading",
+      "trust through understanding",
+      "intuition validation",
+      "API design insights",
+    ]
   keyLearning: "Human questions reveal optimizations I missed despite knowing the data model"
 ---
 

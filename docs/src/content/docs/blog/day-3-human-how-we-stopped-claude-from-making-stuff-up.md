@@ -11,7 +11,13 @@ insights:
   questionsAsked: 4
   iterations: 8
   breakthroughMoment: "Realizing we needed external memory system in git commits"
-  conceptsIntroduced: ["collaboration commentary", "context preservation", "mandatory documentation", "jekyll reliability"]
+  conceptsIntroduced:
+    [
+      "collaboration commentary",
+      "context preservation",
+      "mandatory documentation",
+      "jekyll reliability",
+    ]
 ---
 
 Today we took a break from coding FerrisDB to solve a bigger problem: how do we preserve the reality of human-AI collaboration when AI context gets compressed over time?
