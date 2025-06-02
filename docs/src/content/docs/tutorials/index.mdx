@@ -1,0 +1,121 @@
+---
+title: Learn by Building
+description: Hands-on tutorials to build database components from scratch
+sidebar:
+  order: 0
+---
+
+import { Card, CardGrid, Badge, Aside, LinkCard } from "@astrojs/starlight/components";
+
+<Aside type="tip" title="Learning Philosophy">
+  These tutorials follow a "learn by building" approach. You'll implement real database components
+  from scratch, understanding not just what they do, but why they work that way.
+</Aside>
+
+## Tutorial Series
+
+Our tutorials progressively build up database knowledge, starting from simple concepts and advancing to distributed systems.
+
+### Available Tutorials
+
+<LinkCard
+  title="Tutorial 01: Building a Key-Value Store"
+  description="Start your journey by building a simple in-memory key-value store with HashMap. Learn about basic storage operations, error handling, and the builder pattern."
+  href="/tutorials/01-key-value-store/"
+/>
+
+### Coming Soon
+
+<CardGrid>
+  <Card title="Tutorial 02: Write-Ahead Logging" icon="document">
+    <Badge text="PLANNED" variant="caution" />
+    
+    Learn durability by implementing a WAL:
+    - Binary file formats
+    - Checksums for integrity
+    - Crash recovery
+    - fsync trade-offs
+  </Card>
+
+<Card title="Tutorial 03: Building a Skip List" icon="list">
+  <Badge text="PLANNED" variant="caution" />
+  Implement a concurrent data structure: - Probabilistic balancing - Lock-free reads - Memory
+  ordering - Performance analysis
+</Card>
+
+<Card title="Tutorial 04: SSTable Implementation" icon="document">
+  <Badge text="PLANNED" variant="caution" />
+  Build persistent sorted storage: - Binary search in files - Block-based format - Compression
+  basics - Index structures
+</Card>
+
+  <Card title="Tutorial 05: LSM-Tree Storage Engine" icon="seti:db">
+    <Badge text="PLANNED" variant="caution" />
+    
+    Combine components into an engine:
+    - Write path flow
+    - Read path merging
+    - Compaction strategies
+    - Performance tuning
+  </Card>
+</CardGrid>
+
+## Tutorial Philosophy
+
+### What Makes Our Tutorials Different
+
+1. **Real Implementation**: You build actual working code, not toy examples
+2. **Progressive Complexity**: Each tutorial builds on previous knowledge
+3. **Deep Understanding**: Learn the "why" behind design decisions
+4. **Practical Skills**: Write production-quality Rust code
+5. **Test-Driven**: Every implementation includes comprehensive tests
+
+### What You'll Learn
+
+<CardGrid>
+  <Card title="Database Internals" icon="puzzle">
+    - Storage engines
+    - Durability mechanisms
+    - Concurrency control
+    - Query processing
+  </Card>
+
+<Card title="Rust Mastery" icon="rocket">
+  - Systems programming - Safe concurrency - Performance optimization - Error handling
+</Card>
+
+  <Card title="Engineering Practices" icon="setting">
+    - Test-driven development
+    - Benchmarking
+    - API design
+    - Documentation
+  </Card>
+</CardGrid>
+
+## Prerequisites
+
+Before starting the tutorials:
+
+- **Rust Knowledge**: Comfortable with ownership, borrowing, and basic syntax
+- **Command Line**: Familiar with terminal/shell commands
+- **Git**: Basic version control understanding
+- **Curiosity**: Eager to understand how databases work!
+
+Don't worry if you're not an expert - the tutorials explain concepts as needed.
+
+## Getting Started
+
+Ready to begin? Start with [Tutorial 01: Building a Key-Value Store](/tutorials/01-key-value-store/) and work your way through the series.
+
+Each tutorial includes:
+
+- Step-by-step implementation
+- Exercises to test understanding
+- Complete solutions
+- Performance benchmarks
+- Real-world context
+
+<Aside type="note">
+  Join our journey! These tutorials are being developed alongside FerrisDB itself. Follow our
+  [blog](/blog/) to see how we're building both the database and the educational content.
+</Aside>

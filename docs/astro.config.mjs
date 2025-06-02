@@ -50,8 +50,9 @@ export default defineConfig({
 					label: 'Learn by Building',
 					badge: { text: 'TUTORIALS', variant: 'success' },
 					items: [
+						{ label: 'Tutorial Overview', slug: 'tutorials' },
 						{ label: 'Tutorial 1: Key-Value Store', slug: 'tutorials/01-key-value-store' },
-											],
+					],
 				},
 				{
 					label: 'The Journey',
@@ -66,6 +67,7 @@ export default defineConfig({
 					label: 'Deep Dives',
 					collapsed: true,
 					items: [
+						{ label: 'Architecture Overview', slug: 'reference/architecture-overview' },
 						{ label: 'Current Implementation', slug: 'reference/current-implementation' },
 						{ label: 'Future Architecture', slug: 'reference/future-architecture' },
 						{

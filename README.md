@@ -72,21 +72,31 @@ cargo doc --all --open
 
 ## Architecture
 
-FerrisDB follows FoundationDB's layered architecture:
+FerrisDB follows a layered architecture inspired by FoundationDB:
 
 ```
-┌─────────────────────────────────────┐
-│         Client Library              │
-├─────────────────────────────────────┤
-│     Transaction Coordinator         │  ← In Development
-├─────────────────────────────────────┤
-│      Storage Servers                │  ← Working on this!
-├─────────────────────────────────────┤
-│    Cluster Controller & Consensus   │  ← Planned
-└─────────────────────────────────────┘
+       ┌─────────────────┐
+       │ Client Library  │  [PLANNED]
+       └────────┬────────┘
+                │
+       ┌────────▼────────┐
+       │  Server (gRPC)  │  [PLANNED]
+       └────────┬────────┘
+                │
+       ┌────────▼────────┐
+       │ Storage Engine  │  [IN PROGRESS]
+       │   (LSM-tree)    │
+       └────────┬────────┘
+                │
+     ┌──────────┼──────────┐
+     │          │          │
+┌────▼────┐ ┌───▼────┐ ┌───▼────┐
+│MemTable │ │SSTables│ │  WAL   │
+└─────────┘ └────────┘ └────────┘
+[COMPLETE]  [COMPLETE]  [COMPLETE]
 ```
 
-Currently implementing the Storage Server layer with an LSM-tree engine.
+Currently integrating the storage components into a working engine.
 
 ## The Human-AI Collaboration Experiment
 
@@ -101,7 +111,8 @@ Read our [development blog](https://ferrisdb.org/blog/) to see this collaboratio
 
 - **[Website](https://ferrisdb.org)** - Full documentation, tutorials, and blog
 - **[Current Status](https://ferrisdb.org/status/)** - What's actually built today
-- **[Architecture Overview](https://ferrisdb.org/reference/future-architecture/)** - System design
+- **[Architecture Overview](https://ferrisdb.org/reference/architecture-overview/)** - Current system design
+- **[Future Architecture](https://ferrisdb.org/reference/future-architecture/)** - Where we're heading
 
 ### Learning Resources
 
@@ -114,7 +125,7 @@ Read our [development blog](https://ferrisdb.org/blog/) to see this collaboratio
 We offer hands-on tutorials where you build database components from scratch:
 
 - **[Tutorial 01: Key-Value Store](https://ferrisdb.org/tutorials/01-key-value-store/)** - Build a simple in-memory store with HashMap (✅ Published)
-- More tutorials coming soon! Check our [tutorial roadmap](https://ferrisdb.org/tutorials/)
+- More tutorials coming soon! Check our [tutorials page](https://ferrisdb.org/tutorials/)
 
 ## Contributing
 
@@ -173,19 +184,20 @@ FerrisDB is **not** trying to be the next production database. It's:
 
 ## Project Statistics
 
-- **Lines of Code**: ~2,400 (implementation) + ~3,500 (tests)
-- **Test Coverage**: 85%+ for core components
-- **Blog Posts**: 8 (4 human, 4 Claude)
+- **Lines of Code**: ~11,306 (implementation + tests)
+- **Tests**: 217 passing tests
+- **Blog Posts**: 10 (5 human, 5 Claude)
 - **Tutorials**: 1 published, 9 planned
-- **Contributors**: Growing community of humans and AI
+- **Contributors**: 1 human, 1 AI (Claude) - Join us!
 
 ## Recent Highlights
 
-- ✅ Implemented WAL with comprehensive testing
+- ✅ Enhanced WAL with file headers and metrics (Day 5)
+- ✅ Achieved 23-33% performance improvement with zero-copy reads
 - ✅ Published Tutorial 01: Building a Key-Value Store
 - ✅ Established governance and contribution guidelines
-- ✅ 8 blog posts documenting our journey
-- ✅ Growing community with organized issue tracking
+- ✅ 10 blog posts documenting 5 days of development
+- ✅ Comprehensive test suite with 217 tests
 
 ## License
 

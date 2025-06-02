@@ -1,0 +1,154 @@
+---
+title: Architecture Overview
+description: Current architecture and design of FerrisDB
+sidebar:
+  badge:
+    text: CURRENT
+    variant: note
+---
+
+import { Aside, Card, CardGrid, Badge } from "@astrojs/starlight/components";
+
+<Aside type="tip">
+  This document describes our CURRENT architecture. For our future vision and planned features, see
+  [Future Architecture](/reference/future-architecture/).
+</Aside>
+
+## System Architecture
+
+FerrisDB is being built as a distributed, transactional key-value database. Currently, we're focused on the storage engine layer.
+
+### Current Architecture
+
+```
+┌─────────────────┐
+│ Client Library  │  [PLANNED]
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│  Server (gRPC)  │  [PLANNED]
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│ Storage Engine  │  [IN PROGRESS]
+│   (LSM-tree)    │
+└────────┬────────┘
+         │
+┌────────┼────────┐
+│        │        │
+┌────▼────┐ ┌───▼────┐ ┌───▼────┐
+│MemTable │ │SSTables│ │  WAL   │
+└─────────┘ └────────┘ └────────┘
+[COMPLETE]  [COMPLETE]  [COMPLETE]
+```
+
+## Component Status
+
+### ✅ Completed Components
+
+<CardGrid>
+  <Card title="Write-Ahead Log (WAL)" icon="document">
+    - 64-byte file headers with versioning
+    - CRC32 checksums for integrity
+    - Zero-copy reads with BytesMutExt
+    - Comprehensive metrics collection
+    - 153 tests ensuring reliability
+  </Card>
+
+<Card title="MemTable (Skip List)" icon="list">
+  - Lock-free concurrent reads - Fine-grained write locking - MVCC timestamp support - Efficient
+  O(log n) operations
+</Card>
+
+  <Card title="SSTable Format" icon="document">
+    - Binary format with blocks
+    - Index for efficient lookups
+    - Footer with metadata
+    - Reader with binary search
+    - Writer for persistence
+  </Card>
+</CardGrid>
+
+### 🚧 In Progress
+
+- **Storage Engine Integration**: Connecting WAL, MemTable, and SSTables into a cohesive system
+- **Compaction**: Background process to merge SSTables
+
+### 📋 Planned Components
+
+- **Server Layer**: gRPC-based network protocol
+- **Client Library**: Rust client for applications
+- **Transaction Coordinator**: ACID transaction support
+- **Distribution Layer**: Sharding and replication
+
+## Design Principles
+
+### 1. Educational First
+
+Every component is designed to teach database concepts:
+
+- Clear, understandable code
+- Extensive documentation
+- Real-world patterns without unnecessary complexity
+
+### 2. Modular Architecture
+
+Each component has:
+
+- Single responsibility
+- Well-defined interfaces
+- Clear boundaries
+- Minimal dependencies
+
+### 3. Safety and Correctness
+
+- Safe Rust practices (minimal unsafe)
+- Comprehensive testing
+- Property-based tests where applicable
+- Metrics for observability
+
+## Component Details
+
+### Storage Engine (LSM-Tree)
+
+We chose LSM-tree architecture because:
+
+- **Write optimized**: Append-only writes are fast
+- **Educational value**: Demonstrates compaction, bloom filters, levels
+- **Real-world relevance**: Used by RocksDB, Cassandra, many others
+
+Current implementation:
+
+- Sequential writes to WAL for durability
+- In-memory writes to MemTable for speed
+- Periodic flush to immutable SSTables
+- Background compaction (coming soon)
+
+### Concurrency Model
+
+- **MemTable**: Lock-free reads, fine-grained write locks
+- **WAL**: Single writer, thread-safe
+- **SSTable**: Immutable after creation
+- **Future**: Multi-version concurrency control (MVCC)
+
+### File Formats
+
+All binary formats follow consistent patterns:
+
+- Magic numbers: `FDB_XXX\0` pattern
+- 64-byte headers for cache alignment
+- CRC32 checksums for integrity
+- Little-endian encoding
+- Version fields for compatibility
+
+## Development Status
+
+This is an educational project in active development:
+
+- Components work individually
+- Integration in progress
+- Not suitable for production use
+- Focus on learning and clarity
+
+For implementation details, see [Current Implementation](/reference/current-implementation/).
+For our vision of the complete system, see [Future Architecture](/reference/future-architecture/).
