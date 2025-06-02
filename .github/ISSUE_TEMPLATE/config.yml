@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/ferrisdb/ferrisdb/discussions
+    about: For open-ended questions and community discussions
+  - name: 📖 Documentation
+    url: https://ferrisdb.org
+    about: Check our comprehensive documentation first
+  - name: 🤝 Contributing Guidelines
+    url: https://github.com/ferrisdb/ferrisdb/blob/main/CONTRIBUTING.md
+    about: Learn how to contribute to FerrisDB
+  - name: 📚 Tutorials
+    url: https://ferrisdb.org/tutorials
+    about: Learn by building with our step-by-step tutorials
+  - name: 🔒 Security Issues
+    url: https://github.com/ferrisdb/ferrisdb/blob/main/SECURITY.md
+    about: For security vulnerabilities, please see our security policy
