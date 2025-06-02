@@ -45,10 +45,10 @@ impl BytesMutExt for BytesMut {
         }
 
         let start_len = self.len();
-        
+
         // Reserve capacity for the new data
         self.reserve(count);
-        
+
         // SAFETY: We're about to read exactly `count` bytes into uninitialized memory.
         // This is safe because:
         // 1. We've reserved at least `count` bytes of capacity
@@ -57,10 +57,10 @@ impl BytesMutExt for BytesMut {
         unsafe {
             // Get a pointer to where new data should go
             let dst = self.as_mut_ptr().add(start_len);
-            
+
             // Create a mutable slice from the uninitialized memory
             let uninit_slice = std::slice::from_raw_parts_mut(dst, count);
-            
+
             // Attempt to read directly into uninitialized memory
             match reader.read_exact(uninit_slice) {
                 Ok(()) => {
@@ -98,16 +98,16 @@ mod tests {
         let data = b"hello world";
         let mut reader = Cursor::new(data);
         let mut buf = BytesMut::new();
-        
+
         // Read 5 bytes
         buf.read_exact_from(&mut reader, 5).unwrap();
         assert_eq!(&buf[..], b"hello");
-        
+
         // Read 6 more bytes
         buf.read_exact_from(&mut reader, 6).unwrap();
         assert_eq!(&buf[..], b"hello world");
     }
-    
+
     /// Tests that read_exact_from handles zero-byte reads correctly.
     ///
     /// This test verifies that:
@@ -120,13 +120,13 @@ mod tests {
         let data = b"hello";
         let mut reader = Cursor::new(data);
         let mut buf = BytesMut::new();
-        
+
         // Reading zero bytes should succeed without side effects
         buf.read_exact_from(&mut reader, 0).unwrap();
         assert_eq!(buf.len(), 0);
         assert_eq!(reader.position(), 0);
     }
-    
+
     /// Tests that read_exact_from returns EOF error when insufficient data is available.
     ///
     /// This test verifies that:
@@ -139,16 +139,16 @@ mod tests {
         let data = b"hello";
         let mut reader = Cursor::new(data);
         let mut buf = BytesMut::new();
-        
+
         // Try to read more than available
         let result = buf.read_exact_from(&mut reader, 10);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().kind(), io::ErrorKind::UnexpectedEof);
-        
+
         // Buffer should remain unchanged
         assert_eq!(buf.len(), 0);
     }
-    
+
     /// Tests that read_exact_from preserves existing buffer data on read failure.
     ///
     /// This test verifies that:
@@ -162,19 +162,19 @@ mod tests {
         let mut reader = Cursor::new(data);
         let mut buf = BytesMut::with_capacity(10);
         buf.extend_from_slice(b"existing");
-        
+
         let original_len = buf.len();
         let original_data = buf.to_vec();
-        
+
         // Try to read more than available
         let result = buf.read_exact_from(&mut reader, 10);
         assert!(result.is_err());
-        
+
         // Buffer should remain unchanged
         assert_eq!(&buf[..], &original_data[..]);
         assert_eq!(buf.len(), original_len);
     }
-    
+
     /// Tests that read_exact_from efficiently handles large buffers without zero-initialization.
     ///
     /// This test verifies that:
@@ -188,17 +188,17 @@ mod tests {
         let data = vec![42u8; LARGE_BUFFER_SIZE];
         let mut reader = Cursor::new(&data);
         let mut buf = BytesMut::new();
-        
+
         buf.read_exact_from(&mut reader, LARGE_BUFFER_SIZE).unwrap();
         assert_eq!(buf.len(), LARGE_BUFFER_SIZE);
         assert_eq!(&buf[0], &42);
         assert_eq!(&buf[LARGE_BUFFER_SIZE - 1], &42);
-        
+
         // Verify a few random positions to ensure no corruption
         assert_eq!(&buf[LARGE_BUFFER_SIZE / 2], &42);
         assert_eq!(&buf[LARGE_BUFFER_SIZE / 4], &42);
     }
-    
+
     /// Tests that read_exact_from automatically grows buffer capacity when needed.
     ///
     /// This test verifies that:
@@ -211,12 +211,12 @@ mod tests {
         let data = b"hello world";
         let mut reader = Cursor::new(data);
         let mut buf = BytesMut::with_capacity(5);
-        
+
         let initial_capacity = buf.capacity();
-        
+
         // Read more than initial capacity
         buf.read_exact_from(&mut reader, SMALL_DATA_SIZE).unwrap();
-        
+
         assert_eq!(&buf[..], b"hello world");
         assert!(buf.capacity() >= SMALL_DATA_SIZE);
         assert!(buf.capacity() > initial_capacity);
@@ -234,13 +234,13 @@ mod tests {
         struct FailingReader {
             fail_after: usize,
         }
-        
+
         impl Read for FailingReader {
             fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
                 if self.fail_after == 0 {
                     return Err(io::Error::new(
-                        io::ErrorKind::PermissionDenied, 
-                        "test error"
+                        io::ErrorKind::PermissionDenied,
+                        "test error",
                     ));
                 }
                 let to_read = self.fail_after.min(buf.len());
@@ -251,15 +251,15 @@ mod tests {
                 Ok(to_read)
             }
         }
-        
+
         let mut reader = FailingReader { fail_after: 5 };
         let mut buf = BytesMut::new();
-        
+
         // Should fail with PermissionDenied after reading 5 bytes
         let result = buf.read_exact_from(&mut reader, 10);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().kind(), io::ErrorKind::PermissionDenied);
-        
+
         // Buffer should remain empty (no partial data)
         assert_eq!(buf.len(), 0);
     }
@@ -276,19 +276,19 @@ mod tests {
         let data = vec![0u8; 1024];
         let mut reader = Cursor::new(&data);
         let mut buf = BytesMut::new();
-        
+
         // Try to read far more than available (will fail with EOF, not allocation)
         let very_large_size = 1_000_000_000; // 1GB - large but not so large it causes immediate abort
         let result = buf.read_exact_from(&mut reader, very_large_size);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().kind(), io::ErrorKind::UnexpectedEof);
-        
+
         // Buffer should remain empty and valid
         assert_eq!(buf.len(), 0);
-        
+
         // Reset reader position for next test
         reader.set_position(0);
-        
+
         // Should still be able to do normal reads
         buf.read_exact_from(&mut reader, 10).unwrap();
         assert_eq!(buf.len(), 10);
@@ -309,30 +309,33 @@ mod tests {
             fail_at_position: usize,
             attempts: usize,
         }
-        
+
         impl Read for FailingMidReadReader {
             fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
                 // read_exact may call read multiple times, we track attempts
                 self.attempts += 1;
-                
+
                 // Fail on the first attempt when we've read some data
-                if self.position > 0 && self.position >= self.fail_at_position && self.fail_at_position != usize::MAX {
+                if self.position > 0
+                    && self.position >= self.fail_at_position
+                    && self.fail_at_position != usize::MAX
+                {
                     return Err(io::Error::new(io::ErrorKind::Other, "read failed"));
                 }
-                
+
                 let available = self.data.len() - self.position;
                 let to_read = available.min(buf.len()).min(5); // Read max 5 bytes at a time
-                
+
                 if to_read == 0 {
                     return Ok(0);
                 }
-                
+
                 buf[..to_read].copy_from_slice(&self.data[self.position..self.position + to_read]);
                 self.position += to_read;
                 Ok(to_read)
             }
         }
-        
+
         let mut reader = FailingMidReadReader {
             data: b"hello world test".to_vec(),
             position: 0,
@@ -340,18 +343,18 @@ mod tests {
             attempts: 0,
         };
         let mut buf = BytesMut::new();
-        
+
         // Try to read 10 bytes, should fail after reading 5
         let result = buf.read_exact_from(&mut reader, 10);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().kind(), io::ErrorKind::Other);
         assert_eq!(buf.len(), 0); // Buffer unchanged on error
-        
+
         // Reset reader for successful read
         reader.position = 0;
         reader.fail_at_position = usize::MAX; // Don't fail
         reader.attempts = 0;
-        
+
         // Should be able to read successfully now
         buf.read_exact_from(&mut reader, 11).unwrap();
         assert_eq!(&buf[..], b"hello world");
@@ -371,25 +374,26 @@ mod tests {
             fail_after: usize,
             bytes_read: usize,
         }
-        
+
         impl Read for PartialReader {
             fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
                 if self.bytes_read >= self.fail_after {
                     return Err(io::Error::new(io::ErrorKind::Other, "forced error"));
                 }
-                
+
                 let remaining = self.fail_after - self.bytes_read;
-                let to_read = remaining.min(buf.len()).min(self.data.len() - self.bytes_read);
-                
-                buf[..to_read].copy_from_slice(
-                    &self.data[self.bytes_read..self.bytes_read + to_read]
-                );
+                let to_read = remaining
+                    .min(buf.len())
+                    .min(self.data.len() - self.bytes_read);
+
+                buf[..to_read]
+                    .copy_from_slice(&self.data[self.bytes_read..self.bytes_read + to_read]);
                 self.bytes_read += to_read;
-                
+
                 Ok(to_read)
             }
         }
-        
+
         let mut reader = PartialReader {
             data: vec![42u8; 100],
             fail_after: 50,
@@ -397,19 +401,19 @@ mod tests {
         };
         let mut buf = BytesMut::with_capacity(200);
         buf.extend_from_slice(b"existing");
-        
+
         let original_len = buf.len();
-        
+
         // Try to read 100 bytes, but fail after 50
         let result = buf.read_exact_from(&mut reader, 100);
         assert!(result.is_err());
-        
+
         // Buffer length must not have changed
         assert_eq!(buf.len(), original_len);
-        
+
         // Original data must be intact
         assert_eq!(&buf[..original_len], b"existing");
-        
+
         // Capacity may have grown, but that's safe
         assert!(buf.capacity() >= 100);
     }
@@ -424,15 +428,15 @@ mod tests {
     fn read_exact_from_handles_buffer_near_capacity_limit() {
         let data = vec![42u8; 1024];
         let mut reader = Cursor::new(&data);
-        
+
         // Start with a buffer that has some data
         let mut buf = BytesMut::with_capacity(1024);
         buf.extend_from_slice(&[1; 512]);
-        
+
         // Read more data
         buf.read_exact_from(&mut reader, 512).unwrap();
         assert_eq!(buf.len(), 1024);
-        
+
         // Verify both parts
         assert!(buf[..512].iter().all(|&b| b == 1));
         assert!(buf[512..].iter().all(|&b| b == 42));
@@ -444,7 +448,7 @@ mod proptests {
     use super::*;
     use proptest::prelude::*;
     use std::io::Cursor;
-    
+
     proptest! {
         /// Property test that verifies data integrity is preserved across all operations.
         ///
@@ -462,10 +466,10 @@ mod proptests {
             let mut reader = Cursor::new(&data);
             let mut buf = BytesMut::new();
             buf.extend_from_slice(&initial);
-            
+
             let initial_len = buf.len();
             let expected_success = read_size <= data.len();
-            
+
             match buf.read_exact_from(&mut reader, read_size) {
                 Ok(()) => {
                     // Should only succeed if we had enough data
@@ -482,7 +486,7 @@ mod proptests {
                 }
             }
         }
-        
+
         /// Property test that verifies multiple sequential reads concatenate correctly.
         ///
         /// This test uses arbitrary chunk sequences to verify that:
@@ -497,7 +501,7 @@ mod proptests {
             let all_data: Vec<u8> = chunks.iter().flatten().copied().collect();
             let mut reader = Cursor::new(&all_data);
             let mut buf = BytesMut::new();
-            
+
             let mut expected = Vec::new();
             for chunk in &chunks {
                 if buf.read_exact_from(&mut reader, chunk.len()).is_ok() {
@@ -506,7 +510,7 @@ mod proptests {
                     break;
                 }
             }
-            
+
             prop_assert_eq!(&buf[..], &expected[..]);
         }
     }
@@ -530,7 +534,7 @@ mod concurrent_tests {
     fn concurrent_reads_into_separate_buffers_are_independent() {
         const NUM_THREADS: usize = 10;
         const DATA_PER_THREAD: usize = 1000;
-        
+
         let mut handles = vec![];
 
         for thread_id in 0..NUM_THREADS {
@@ -539,9 +543,9 @@ mod concurrent_tests {
                 let data = vec![thread_id as u8; DATA_PER_THREAD];
                 let mut reader = Cursor::new(data);
                 let mut buf = BytesMut::new();
-                
+
                 buf.read_exact_from(&mut reader, DATA_PER_THREAD).unwrap();
-                
+
                 // Verify the data is correct
                 assert_eq!(buf.len(), DATA_PER_THREAD);
                 assert!(buf.iter().all(|&b| b == thread_id as u8));
@@ -564,7 +568,7 @@ mod concurrent_tests {
     fn concurrent_reads_with_shared_buffer_are_serialized() {
         const NUM_THREADS: usize = 10;
         const BYTES_PER_THREAD: usize = 100;
-        
+
         let buffer = Arc::new(Mutex::new(BytesMut::new()));
         let mut handles = vec![];
 
@@ -573,7 +577,7 @@ mod concurrent_tests {
             handles.push(thread::spawn(move || {
                 let data = vec![thread_id as u8; BYTES_PER_THREAD];
                 let mut reader = Cursor::new(data);
-                
+
                 // Lock the buffer and perform read
                 let mut buf = buffer.lock().unwrap();
                 buf.read_exact_from(&mut reader, BYTES_PER_THREAD).unwrap();
@@ -600,11 +604,11 @@ mod concurrent_tests {
     fn trait_impl_is_send_and_sync() {
         fn assert_send<T: Send>() {}
         fn assert_sync<T: Sync>() {}
-        
+
         // BytesMut itself is Send + Sync
         assert_send::<BytesMut>();
         assert_sync::<BytesMut>();
-        
+
         // Our trait doesn't break these properties
         let buf = BytesMut::new();
         assert_send::<BytesMut>();
