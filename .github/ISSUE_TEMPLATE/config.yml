@@ -12,6 +12,3 @@ contact_links:
   - name: 📚 Tutorials
     url: https://ferrisdb.org/tutorials
     about: Learn by building with our step-by-step tutorials
-  - name: 🔒 Security Issues
-    url: https://github.com/ferrisdb/ferrisdb/blob/main/SECURITY.md
-    about: For security vulnerabilities, please see our security policy
