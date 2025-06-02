@@ -1,5 +1,6 @@
 ---
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import Pagination from '@astrojs/starlight/components/Pagination.astro';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -85,21 +86,24 @@ const hasNextDay = availableDays.includes(day + 1);
     and {claudePost.data.insights?.patternsObserved?.length || 0} collaboration patterns.
   </Aside>
   
-  <hr />
-  <nav>
-    <p>
-      {hasPreviousDay && (
-        <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
-      )}
-      {hasPreviousDay && ' • '}
-      <a href="/blog/">All Posts</a>
-      {hasNextDay && (
-        <span> • <a href={`/blog/day-${day + 1}/both/`}>Day {day + 1} →</a></span>
-      )}
-      {!hasNextDay && (
-        <span> • To be continued...</span>
-      )}
-    </p>
-  </nav>
+  <Pagination 
+    labels={{
+      'page.previousLink': 'Previous',
+      'page.nextLink': hasNextDay ? 'Next' : 'To be continued...'
+    }}
+    pagination={{
+      prev: hasPreviousDay ? {
+        href: `/blog/day-${day - 1}/both/`,
+        label: `Day ${day - 1}`
+      } : undefined,
+      next: hasNextDay ? {
+        href: `/blog/day-${day + 1}/both/`,
+        label: `Day ${day + 1}`
+      } : {
+        href: '/blog/',
+        label: 'Back to all posts'
+      }
+    }}
+  />
 </div>
 

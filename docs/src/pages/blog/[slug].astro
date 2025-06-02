@@ -1,6 +1,7 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import Pagination from '@astrojs/starlight/components/Pagination.astro';
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -143,16 +144,23 @@ if (day) {
   )}
   
   <!-- Navigation -->
-  <hr />
-  <nav>
-    <p>
-      {day && day > 1 && (
-        <a href={`/blog/day-${day - 1}/both/`}>← Day {day - 1}</a>
-      )}
-      {day && day > 1 && ' • '}
-      <a href="/blog/">All Posts</a>
-      {' • '}
-      <span>To be continued...</span>
-    </p>
-  </nav>
+  <Pagination 
+    labels={{
+      'page.previousLink': 'Previous',
+      'page.nextLink': day && day < 5 ? 'Next' : 'To be continued...'
+    }}
+    pagination={{
+      prev: day && day > 1 ? {
+        href: `/blog/day-${day - 1}/both/`,
+        label: `Day ${day - 1}`
+      } : undefined,
+      next: day && day < 5 ? {
+        href: `/blog/day-${day + 1}/both/`,
+        label: `Day ${day + 1}`
+      } : {
+        href: '/blog/',
+        label: 'Back to all posts'
+      }
+    }}
+  />
 </StarlightPage>
