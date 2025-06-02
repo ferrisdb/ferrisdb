@@ -24,10 +24,13 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
 
 <CardGrid>
   <Card title="Write-Ahead Log (WAL)" icon="document">
-    - Binary format with CRC32 checksums
-    - Configurable sync modes
-    - Proper error handling
-    - ~500 lines of tested code
+    - Binary format with 64-byte file headers
+    - CRC32 checksums for data integrity
+    - FileFormat/FileHeader trait system
+    - Comprehensive metrics collection
+    - Zero-copy reads with BytesMutExt
+    - 153 tests covering all edge cases
+    - ~2,500 lines of tested code
   </Card>
 
 <Card title="MemTable (Skip List)" icon="list-format">
@@ -48,12 +51,25 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
   </Card>
 </CardGrid>
 
-### ✅ Recently Completed
+### 🎉 Day 5 Achievements
 
-<Card title="SSTable Reader" icon="open-book">
-  <Badge text="COMPLETED" variant="success" />
-  Fully implemented with binary search, block caching, and efficient lookups.
+<CardGrid>
+  <Card title="WAL File Headers" icon="document">
+    <Badge text="NEW" variant="success" />
+    Implemented 64-byte headers with magic numbers, versioning, and metadata for forward
+    compatibility.
+  </Card>
+
+<Card title="Performance Optimization" icon="rocket">
+  <Badge text="NEW" variant="success" />
+  BytesMutExt zero-copy reads achieve 23-33% performance improvement.
 </Card>
+
+  <Card title="Metrics System" icon="graph">
+    <Badge text="NEW" variant="success" />
+    Comprehensive metrics tracking for operations, success rates, and performance monitoring.
+  </Card>
+</CardGrid>
 
 ### 🚧 In Progress
 
@@ -89,20 +105,33 @@ FerrisDB is an **educational project** where a CRUD developer (human) and an AI 
 ## Code Statistics
 
 ```bash
-# Actual implementation (not counting tests)
-ferrisdb-storage/src/: ~2,200 lines
+# Current statistics (as of Day 5)
+Total Rust code: 11,306 lines
+Total tests: 217
+Blog posts: 10 (5 human, 5 Claude)
+Development days: 4
+
+# Component breakdown
+ferrisdb-storage/src/: ~8,500 lines (including WAL, MemTable, SSTable)
 ferrisdb-core/src/: ~200 lines
+ferrisdb-tutorials/: ~2,000 lines
 ferrisdb-client/src/: ~10 lines (stub)
 ferrisdb-server/src/: ~5 lines (stub)
 ```
 
 ## Test Coverage
 
-- WAL: 90%+ coverage
+- WAL: 95%+ coverage (153 tests total)
+  - Unit tests: 108
+  - Concurrent tests: 5
+  - Format tests: 22
+  - Integration tests: 6
+  - Property tests: 12
 - MemTable: 85%+ coverage
 - SSTable Writer: 80%+ coverage
 - SSTable Reader: 85%+ coverage
-- Integration: None (components not integrated)
+- Benchmarks: Performance validation for all components
+- Integration: Basic component integration tests
 
 ## What's Next?
 
@@ -147,4 +176,4 @@ We're at the beginning of a long journey. FerrisDB today is:
 
 ---
 
-_Last updated: January 31, 2025_
+_Last updated: June 1, 2025_
