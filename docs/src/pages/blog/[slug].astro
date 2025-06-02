@@ -1,16 +1,14 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
-import PerspectiveSwitcher from '../../components/blog/PerspectiveSwitcher.astro';
-import CollaborationMetrics from '../../components/blog/CollaborationMetrics.astro';
+import { getCollection, type CollectionEntry, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('docs', (entry) => 
-    entry.slug && entry.slug.startsWith('blog/day-')
+    entry.id && entry.id.startsWith('blog/day-')
   );
   
   return posts.map((post) => ({
-    params: { slug: post.slug.replace('blog/', '') },
+    params: { slug: post.id.replace('blog/', '') },
     props: { post },
   }));
 }
@@ -20,10 +18,20 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+
+// Try to render the content
+let Content;
+try {
+  const result = await render(post);
+  Content = result.Content;
+} catch (error) {
+  console.error('Error rendering post:', error);
+  // Fallback if render doesn't work
+  Content = () => null;
+}
 
 // Extract collaboration data
-const dayMatch = post.slug.match(/day-(\d+)/);
+const dayMatch = post.id.match(/day-(\d+)/);
 const day = dayMatch ? parseInt(dayMatch[1]) : null;
 const perspective = post.data.authors?.includes('human') ? 'human' : 'claude';
 
@@ -31,31 +39,22 @@ const perspective = post.data.authors?.includes('human') ? 'human' : 'claude';
 let companionPost = null;
 if (post.data.companion) {
   const allPosts = await getCollection('docs', (entry) => 
-    entry.slug && entry.slug.startsWith('blog/day-')
+    entry.id && entry.id.startsWith('blog/day-')
   );
   companionPost = allPosts.find(p => 
-    p.slug && p.slug.includes(post.data.companion)
+    p.id && p.id.includes(post.data.companion)
   );
 }
-
-// Get slugs for perspective switcher
-const humanSlug = perspective === 'human' ? 
-  post.slug.replace('blog/', '') : 
-  (companionPost?.slug.replace('blog/', '') || null);
-
-const claudeSlug = perspective === 'claude' ? 
-  post.slug.replace('blog/', '') : 
-  (companionPost?.slug.replace('blog/', '') || null);
 
 // Get related posts (same day)
 const relatedPosts = [];
 if (day) {
   const allPosts = await getCollection('docs', (entry) => 
-    entry.slug && entry.slug.startsWith('blog/day-') && entry.slug !== post.slug
+    entry.id && entry.id.startsWith('blog/day-') && entry.id !== post.id
   );
   
   relatedPosts.push(...allPosts.filter(p => {
-    const match = p.slug.match(/day-(\d+)/);
+    const match = p.id.match(/day-(\d+)/);
     return match && parseInt(match[1]) === day;
   }));
 }
@@ -66,14 +65,6 @@ if (day) {
   description: post.data.description 
 }}>
   <article class="blog-post">
-    <!-- Perspective Switcher -->
-    <PerspectiveSwitcher 
-      currentPerspective={perspective}
-      humanSlug={humanSlug}
-      claudeSlug={claudeSlug}
-      day={day}
-    />
-    
     <!-- Post Header -->
     <header class="post-header">
       <div class="post-meta">
@@ -82,11 +73,11 @@ if (day) {
             {perspective === 'human' ? '👨‍💻 Human Perspective' : '🤖 Claude Perspective'}
           </span>
           <time class="post-date">
-            {new Date(post.data.date).toLocaleDateString('en-US', { 
+            {post.data.date ? new Date(post.data.date).toLocaleDateString('en-US', { 
               year: 'numeric', 
               month: 'long', 
               day: 'numeric' 
-            })}
+            }) : ''}
           </time>
         </div>
         
@@ -94,7 +85,7 @@ if (day) {
           <div class="collaboration-day">
             <span class="day-badge">Day {day}</span>
             {companionPost && (
-              <a href={`/${companionPost.slug}/`} class="companion-link">
+              <a href={`/${companionPost.id}/`} class="companion-link">
                 {perspective === 'human' ? '🤖 See Claude\'s perspective' : '👨‍💻 See Human\'s perspective'} →
               </a>
             )}
@@ -117,11 +108,6 @@ if (day) {
       )}
     </header>
     
-    <!-- Collaboration Metrics -->
-    {post.data.insights && (
-      <CollaborationMetrics insights={post.data.insights} perspective={perspective} />
-    )}
-    
     <!-- Post Content -->
     <div class="post-content">
       <Content />
@@ -142,7 +128,7 @@ if (day) {
                   </span>
                 </div>
                 <h4>
-                  <a href={`/${relatedPost.slug}/`}>
+                  <a href={`/${relatedPost.id}/`}>
                     {relatedPost.data.title}
                   </a>
                 </h4>
@@ -283,44 +269,6 @@ if (day) {
   .post-content {
     line-height: 1.7;
     margin-bottom: 3rem;
-  }
-
-  .post-content :global(h2) {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: var(--sl-color-text);
-  }
-
-  .post-content :global(h3) {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--sl-color-text);
-  }
-
-  .post-content :global(p) {
-    margin-bottom: 1rem;
-    color: var(--sl-color-text);
-  }
-
-  .post-content :global(strong) {
-    font-weight: 600;
-    color: var(--sl-color-text-accent);
-  }
-
-  .post-content :global(code) {
-    background: var(--sl-color-bg-nav);
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-size: 0.9em;
-  }
-
-  .post-content :global(pre) {
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1.5rem 0;
-    overflow-x: auto;
   }
 
   .related-posts {

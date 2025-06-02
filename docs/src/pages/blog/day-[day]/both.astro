@@ -5,14 +5,14 @@ import DualView from '../../../components/blog/DualView.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('docs', (entry) => 
-    entry.slug && entry.slug.startsWith('blog/day-')
+    entry.id && entry.id.startsWith('blog/day-')
   );
   
   // Group posts by day
   const postsByDay = new Map();
   
   posts.forEach(post => {
-    const dayMatch = post.slug.match(/day-(\d+)/);
+    const dayMatch = post.id.match(/day-(\d+)/);
     if (dayMatch) {
       const day = parseInt(dayMatch[1]);
       if (!postsByDay.has(day)) {

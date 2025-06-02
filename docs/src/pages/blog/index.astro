@@ -5,14 +5,14 @@ import { getCollection } from 'astro:content';
 
 // Get all blog posts
 const allPosts = await getCollection('docs', (entry) => 
-  entry.slug && entry.slug.startsWith('blog/day-')
+  entry.id && entry.id.startsWith('blog/day-')
 );
 
 // Group posts by day
 const postsByDay = new Map();
 
 allPosts.forEach(post => {
-  const dayMatch = post.slug.match(/day-(\d+)/);
+  const dayMatch = post.id.match(/day-(\d+)/);
   if (dayMatch) {
     const day = parseInt(dayMatch[1]);
     if (!postsByDay.has(day)) {
@@ -58,87 +58,94 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
 
   ## Development Timeline
 
+  {sortedDays.length === 0 && (
+    <Aside type="note">
+      No blog posts found. This might be a data loading issue.
+    </Aside>
+  )}
+
   {sortedDays.map(day => {
     const posts = postsByDay.get(day);
-    const humanPost = posts.human;
-    const claudePost = posts.claude;
+    const humanPost = posts?.human;
+    const claudePost = posts?.claude;
     
     return (
-      <>
-        <div class="day-section">
-          <div class="day-header">
-            <h3>Day {day}</h3>
-            {humanPost && claudePost && (
-              <a href={`/blog/day-${day}/both/`} class="dual-view-link">
-                📊 Compare Both Views
-              </a>
-            )}
-          </div>
-          
-          <CardGrid>
-            {humanPost && (
-              <Card 
-                title={`👨‍💻 ${humanPost.data.title}`}
-                icon="user"
-              >
-                <p>{humanPost.data.excerpt}</p>
-                
-                {humanPost.data.insights && (
-                  <div class="insights">
-                    {humanPost.data.insights.questionsAsked && (
-                      <span class="insight-tag">❓ {humanPost.data.insights.questionsAsked} questions</span>
-                    )}
-                    {humanPost.data.insights.iterations && (
-                      <span class="insight-tag">🔄 {humanPost.data.insights.iterations} iterations</span>
-                    )}
-                  </div>
-                )}
-                
-                <p>
-                  <a href={`/${humanPost.slug}/`}>Read Human Perspective →</a>
-                </p>
-              </Card>
-            )}
-            
-            {claudePost && (
-              <Card 
-                title={`🤖 ${claudePost.data.title}`}
-                icon="rocket"
-              >
-                <p>{claudePost.data.excerpt}</p>
-                
-                {claudePost.data.insights && (
-                  <div class="insights">
-                    {claudePost.data.insights.filesModified && (
-                      <span class="insight-tag">📁 {claudePost.data.insights.filesModified} files</span>
-                    )}
-                    {claudePost.data.insights.patternsObserved && (
-                      <span class="insight-tag">🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
-                    )}
-                  </div>
-                )}
-                
-                <p>
-                  <a href={`/${claudePost.slug}/`}>Read AI Perspective →</a>
-                </p>
-              </Card>
-            )}
-          </CardGrid>
-          
-          {!humanPost && claudePost && (
-            <Aside type="note">
-              👨‍💻 Human perspective for Day {day} coming soon...
-            </Aside>
-          )}
-          
-          {humanPost && !claudePost && (
-            <Aside type="note">
-              🤖 Claude perspective for Day {day} coming soon...
-            </Aside>
+      <div class="day-section">
+        <div class="day-header">
+          <h3>Day {day}</h3>
+          {humanPost && claudePost && (
+            <a href={`/blog/day-${day}/both/`} class="dual-view-link">
+              📊 Compare Both Views
+            </a>
           )}
         </div>
+        
+        <CardGrid>
+          {humanPost && (
+            <Card 
+              title={`👨‍💻 Human: Day ${day}`}
+              icon="user"
+            >
+              <h4>{humanPost.data.title}</h4>
+              <p>{humanPost.data.excerpt || humanPost.data.description || 'Human perspective on our database building journey.'}</p>
+              
+              {humanPost.data.insights && (
+                <div class="insights">
+                  {humanPost.data.insights.questionsAsked && (
+                    <span class="insight-tag">❓ {humanPost.data.insights.questionsAsked} questions</span>
+                  )}
+                  {humanPost.data.insights.iterations && (
+                    <span class="insight-tag">🔄 {humanPost.data.insights.iterations} iterations</span>
+                  )}
+                </div>
+              )}
+              
+              <p>
+                <a href={`/${humanPost.id}/`}>Read Human Perspective →</a>
+              </p>
+            </Card>
+          )}
+          
+          {claudePost && (
+            <Card 
+              title={`🤖 Claude: Day ${day}`}
+              icon="rocket"
+            >
+              <h4>{claudePost.data.title}</h4>
+              <p>{claudePost.data.excerpt || claudePost.data.description || 'AI perspective on our database building journey.'}</p>
+              
+              {claudePost.data.insights && (
+                <div class="insights">
+                  {claudePost.data.insights.filesModified && (
+                    <span class="insight-tag">📁 {claudePost.data.insights.filesModified} files</span>
+                  )}
+                  {claudePost.data.insights.patternsObserved && (
+                    <span class="insight-tag">🔍 {claudePost.data.insights.patternsObserved.length} patterns</span>
+                  )}
+                </div>
+              )}
+              
+              <p>
+                <a href={`/${claudePost.id}/`}>Read AI Perspective →</a>
+              </p>
+            </Card>
+          )}
+        </CardGrid>
+        
+        {!humanPost && claudePost && (
+          <Aside type="note">
+            👨‍💻 Human perspective for Day {day} coming soon...
+          </Aside>
+        )}
+        
+        {humanPost && !claudePost && (
+          <Aside type="note">
+            🤖 Claude perspective for Day {day} coming soon...
+          </Aside>
+        )}
+        
         <hr />
-      </>
+      </div>
     );
   })}
 
@@ -199,6 +206,14 @@ const sortedDays = Array.from(postsByDay.keys()).sort((a, b) => b - a);
 
   .dual-view-link:hover {
     background: var(--sl-color-accent-low);
+  }
+
+  /* Card content styles */
+  :global(.sl-card h4) {
+    margin: 0 0 0.5rem 0;
+    color: var(--sl-color-text);
+    font-size: 1rem;
+    line-height: 1.3;
   }
 
   .insights {
