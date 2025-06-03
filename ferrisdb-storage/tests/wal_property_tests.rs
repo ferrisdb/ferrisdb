@@ -325,6 +325,7 @@ proptest! {
     /// - Partial recovery is possible and safe
     /// - No valid data is lost due to later corruption
     #[test]
+    #[allow(clippy::explicit_counter_loop)] // Need to track written_count separately
     fn handles_mixed_valid_and_invalid_entries(
         valid_entries in prop::collection::vec(
             (valid_key(), valid_value(), any::<u64>()),
