@@ -1,6 +1,6 @@
 #!/bin/bash
 # FerrisDB Development Tools Setup Script
-# Installs build and formatting dependencies used by Codex and developers
+# Installs build and formatting dependencies used by <AgentName> and developers
 
 set -e
 
