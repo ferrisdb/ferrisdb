@@ -109,15 +109,15 @@ impl MemTable {
     pub fn put(&self, key: Key, value: Value, timestamp: Timestamp) -> Result<()> {
         let size_estimate = key.len() + value.len() + 64; // 64 bytes overhead estimate
 
-        self.skiplist.insert(key, value, timestamp, Operation::Put);
-
-        let new_usage = self
-            .memory_usage
-            .fetch_add(size_estimate, Ordering::Relaxed);
-
-        if new_usage + size_estimate > self.max_size {
+        let current_usage = self.memory_usage.load(Ordering::Relaxed);
+        if current_usage + size_estimate > self.max_size {
             return Err(Error::MemTableFull);
         }
+
+        self.skiplist.insert(key, value, timestamp, Operation::Put);
+
+        self.memory_usage
+            .fetch_add(size_estimate, Ordering::Relaxed);
 
         Ok(())
     }
@@ -134,16 +134,16 @@ impl MemTable {
     pub fn delete(&self, key: Key, timestamp: Timestamp) -> Result<()> {
         let size_estimate = key.len() + 64; // 64 bytes overhead estimate
 
+        let current_usage = self.memory_usage.load(Ordering::Relaxed);
+        if current_usage + size_estimate > self.max_size {
+            return Err(Error::MemTableFull);
+        }
+
         self.skiplist
             .insert(key, Vec::new(), timestamp, Operation::Delete);
 
-        let new_usage = self
-            .memory_usage
+        self.memory_usage
             .fetch_add(size_estimate, Ordering::Relaxed);
-
-        if new_usage + size_estimate > self.max_size {
-            return Err(Error::MemTableFull);
-        }
 
         Ok(())
     }
@@ -283,7 +283,11 @@ mod tests {
 
             match memtable.put(key, value, insert_count as u64) {
                 Ok(_) => insert_count += 1,
-                Err(Error::MemTableFull) => break,
+                Err(Error::MemTableFull) => {
+                    // Failed insert should not increase entry count
+                    assert_eq!(memtable.entry_count(), insert_count);
+                    break;
+                }
                 Err(e) => panic!("Unexpected error: {:?}", e),
             }
 
@@ -291,7 +295,5 @@ mod tests {
                 panic!("Never hit size limit");
             }
         }
-
-        assert!(memtable.is_full());
     }
 }
