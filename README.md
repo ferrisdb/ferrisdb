@@ -133,6 +133,7 @@ We welcome contributions from both humans and AI!
 
 - 📖 Read our [Contributing Guide](CONTRIBUTING.md)
 - 🏗️ Check the [Development Setup](DEVELOPMENT.md)
+- 🛠️ Run `./scripts/setup-dev-tools.sh` to install formatting tools
 - 🤖 AI contributors: See [CLAUDE.md](CLAUDE.md)
 - 🏷️ Browse [open issues](https://github.com/ferrisdb/ferrisdb/issues)
 - 💬 Join discussions in [pull requests](https://github.com/ferrisdb/ferrisdb/pulls)
