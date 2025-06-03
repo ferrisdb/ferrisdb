@@ -105,8 +105,8 @@ fn metrics_remain_consistent_during_concurrent_operations() {
                 if i % 50 == 0 {
                     // Create max-size entries to fill up the file faster
                     let large_entry = WALEntry::new_put(
-                        vec![b'k'; 10 * 1024],    // 10KB key (at limit)
-                        vec![b'x'; 100 * 1024],   // 100KB value (at limit)
+                        vec![b'k'; 10 * 1024],  // 10KB key (at limit)
+                        vec![b'x'; 100 * 1024], // 100KB value (at limit)
                         i as u64,
                     )
                     .unwrap();
@@ -125,13 +125,24 @@ fn metrics_remain_consistent_during_concurrent_operations() {
 
     // We expect around 1000 writes (5 threads * 200), plus some large entries
     // With a 10MB file limit and ~110KB large entries, we should see some failures
-    assert!(total_writes >= 800, "Too few writes succeeded: {}", total_writes);
-    assert!(total_writes <= 1020, "Too many writes succeeded: {}", total_writes);
-    
+    assert!(
+        total_writes >= 800,
+        "Too few writes succeeded: {}",
+        total_writes
+    );
+    assert!(
+        total_writes <= 1020,
+        "Too many writes succeeded: {}",
+        total_writes
+    );
+
     // With a 10MB limit, we expect some failures but most writes should succeed
     let success_rate = metrics.write_success_rate();
-    assert!(success_rate > 70.0 && success_rate <= 100.0, 
-            "Success rate {} is outside expected range", success_rate);
+    assert!(
+        success_rate > 70.0 && success_rate <= 100.0,
+        "Success rate {} is outside expected range",
+        success_rate
+    );
 }
 
 /// Tests that readers get consistent data while writes are happening.
