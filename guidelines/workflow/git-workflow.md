@@ -164,9 +164,9 @@ Use your agent's name in place of `<AgentName>` throughout this section.
 - What improved through human-AI iteration
 - Any process insights for future sessions
 
-🤖 Generated with [Claude Code](https://claude.ai/code)
+🤖 Generated with Codex
 
-Co-Authored-By: <AgentName> <noreply@anthropic.com>
+Co-Authored-By: <AgentName> <noreply@openai.com>
 ```
 
 #### Acting on Behalf Signatures
