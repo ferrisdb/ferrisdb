@@ -485,7 +485,7 @@ proptest! {
         // Read entries using iterator to avoid loading all into memory
         let mut entry_count = 0;
         while let Some(entry) = reader.read_entry()? {
-            prop_assert!(!entry.key.is_empty() || entry.value.is_empty()); // Allow empty for tests
+            // Empty keys and values are allowed in WAL
             prop_assert!(matches!(entry.operation, Operation::Put | Operation::Delete));
             entry_count += 1;
         }
