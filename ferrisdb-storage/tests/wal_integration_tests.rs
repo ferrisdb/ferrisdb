@@ -101,10 +101,10 @@ fn append_and_read_handle_entries_up_to_size_limits() {
 
     // Test with various sizes
     let test_sizes = vec![
-        (100, 1000),       // Small
-        (1024, 10240),     // Medium
-        (10240, 102400),   // Large
-        (102400, 1024000), // Very large (100KB key, 1MB value)
+        (100, 1000),     // Small
+        (1024, 10240),   // Medium
+        (10240, 102400), // Large
+        (8192, 81920),   // Large (8KB key, 80KB value)
     ];
 
     let writer = WALWriter::new(&wal_path, SyncMode::Normal, 100 * 1024 * 1024).unwrap();

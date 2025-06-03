@@ -12,8 +12,8 @@ const HEADER_SIZE: usize = 8; // length + checksum
 const MIN_ENTRY_SIZE: usize = HEADER_SIZE + 8 + 1 + 4 + 4; // header + timestamp + op + key_len + val_len
 
 // Size limits for DoS protection
-const MAX_KEY_SIZE: usize = 1024 * 1024; // 1MB
-const MAX_VALUE_SIZE: usize = 10 * 1024 * 1024; // 10MB
+const MAX_KEY_SIZE: usize = 10 * 1024; // 10KB
+const MAX_VALUE_SIZE: usize = 100 * 1024; // 100KB
 pub const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE;
 
 /// An entry in the Write-Ahead Log
@@ -39,9 +39,9 @@ pub const MAX_ENTRY_SIZE: usize = MAX_KEY_SIZE + MAX_VALUE_SIZE + MIN_ENTRY_SIZE
 ///
 /// ## Size Limits
 ///
-/// - Maximum key size: 1 MB
-/// - Maximum value size: 10 MB
-/// - Maximum entry size: ~11 MB
+/// - Maximum key size: 10 KB
+/// - Maximum value size: 100 KB
+/// - Maximum entry size: ~110 KB
 ///
 /// These limits prevent memory exhaustion and ensure reasonable performance.
 ///
@@ -491,7 +491,7 @@ mod tests {
     }
 
     // Edge cases and error conditions
-    /// Tests that Put entries enforce the 1MB key size limit.
+    /// Tests that Put entries enforce the 10KB key size limit.
     ///
     /// Verifies:
     /// - Keys larger than MAX_KEY_SIZE rejected
@@ -506,7 +506,7 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(_)));
     }
 
-    /// Tests that Put entries enforce the 10MB value size limit.
+    /// Tests that Put entries enforce the 100KB value size limit.
     ///
     /// Ensures:
     /// - Values larger than MAX_VALUE_SIZE rejected
@@ -521,7 +521,7 @@ mod tests {
         assert!(matches!(result.unwrap_err(), Error::Corruption(_)));
     }
 
-    /// Tests that Delete entries enforce the 1MB key size limit.
+    /// Tests that Delete entries enforce the 10KB key size limit.
     ///
     /// Verifies:
     /// - Delete operations have same key limits
