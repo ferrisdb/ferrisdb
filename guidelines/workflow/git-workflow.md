@@ -164,7 +164,7 @@ Use your agent's name in place of `<AgentName>` throughout this section.
 - What improved through human-AI iteration
 - Any process insights for future sessions
 
-🤖 Generated with Codex
+🤖 Generated with <AgentName>
 
 Co-Authored-By: <AgentName> <noreply@openai.com>
 ```

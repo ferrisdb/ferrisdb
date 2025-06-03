@@ -1,4 +1,4 @@
-name: Codex
+name: Claude Code
 
 on:
   issue_comment:
@@ -58,7 +58,7 @@ jobs:
           else
             echo "❌ User '$USERNAME' is not a maintainer"
             echo "is_maintainer=false" >> $GITHUB_OUTPUT
-            echo "::error::Only maintainers can trigger Codex. User '$USERNAME' is not authorized."
+            echo "::error::Only maintainers can trigger Claude. User '$USERNAME' is not authorized."
             exit 1
           fi
 
@@ -67,7 +67,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Run Codex
+      - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@beta
         with:

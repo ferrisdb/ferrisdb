@@ -116,8 +116,8 @@ git commit -m "type: Short description
 
 Longer description if needed
 
-🤖 Generated with Codex
-Co-Authored-By: Codex <noreply@openai.com>"
+🤖 Generated with <AgentName>
+Co-Authored-By: <AgentName> <noreply@openai.com>"
 
 # Amend last commit
 git commit --amend
