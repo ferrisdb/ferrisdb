@@ -325,7 +325,6 @@ proptest! {
     /// - Partial recovery is possible and safe
     /// - No valid data is lost due to later corruption
     #[test]
-    #[allow(clippy::explicit_counter_loop)] // Need to track written_count separately
     fn handles_mixed_valid_and_invalid_entries(
         valid_entries in prop::collection::vec(
             (valid_key(), valid_value(), any::<u64>()),
@@ -339,12 +338,11 @@ proptest! {
         // Write valid entries
         let writer = WALWriter::new(&wal_path, SyncMode::Full, 100 * 1024 * 1024)?;
 
-        let mut written_count = 0;
         for (i, (key, value, timestamp)) in valid_entries.iter().enumerate() {
             // Check if we should inject corruption instead of writing this entry
             if corrupt_positions.contains(&i) {
                 // Ensure any previous data is flushed before corruption
-                if written_count > 0 {
+                if i > 0 {
                     writer.sync()?;
                 }
                 drop(writer);
@@ -361,7 +359,6 @@ proptest! {
 
             let entry = WALEntry::new_put(key.clone(), value.clone(), *timestamp)?;
             writer.append(&entry)?;
-            written_count += 1;
         }
 
         // Reader should recover what it can
