@@ -373,6 +373,14 @@ mod tests {
     #[test]
     fn new_returns_error_when_file_exists_but_not_writable() {
         use std::fs::{self, File};
+        // Skip when running as root because permissions checks won't fail
+        #[cfg(unix)]
+        {
+            if unsafe { libc::geteuid() } == 0 {
+                eprintln!("Skipping test as root user");
+                return;
+            }
+        }
 
         let temp_dir = TempDir::new().unwrap();
         let wal_path = temp_dir.path().join("readonly.wal");
