@@ -363,9 +363,9 @@ Use your agent's name in place of `<AgentName>` in the following template.
 - How human feedback improved the solution
 - Process insights for future sessions
 
-🤖 Generated with [Claude Code](https://claude.ai/code)
+🤖 Generated with <AgentName>
 
-Co-Authored-By: <AgentName> <noreply@anthropic.com>
+Co-Authored-By: <AgentName> <noreply@openai.com>
 ```
 
 #### Example Squash Commit Message

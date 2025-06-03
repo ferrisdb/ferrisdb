@@ -29,14 +29,13 @@ ferrisdb/
 ### Essential Tools
 
 ```bash
-# Install Rust toolchain
+# Install all build/format tools
+./scripts/setup-dev-tools.sh
+
+# Manual installation
 rustup toolchain install stable
 rustup component add rustfmt clippy
-
-# Development tools (optional but recommended)
 cargo install cargo-watch cargo-nextest
-
-# Documentation tools
 npm install -g prettier
 ```
 
