@@ -99,9 +99,9 @@ Explain the motivation and benefits of these changes.
 
 None / List any breaking changes here
 
-## 🤖 Claude's Collaboration Summary
+## 🤖 <AgentName>'s Collaboration Summary
 
-**REQUIRED**: For PRs created with Claude, **always include** detailed collaboration commentary:
+**REQUIRED**: For PRs created with any AI agent, **always include** detailed collaboration commentary. Replace `AgentName` with your agent's name:
 
 **Total Stats Across N Commits:**
 
@@ -162,11 +162,11 @@ Before approving any PR, verify these mandatory requirements:
 
 **Performance claims without benchmarks will be automatically rejected.**
 
-## Claude's PR Review Process
+## AI Agent PR Review Process
 
-### 🚨 Claude's Mandatory Rules
+### 🚨 Mandatory Rules for AI Agents
 
-> **CRITICAL FOR CLAUDE:**
+> **CRITICAL FOR ALL AI AGENTS:**
 >
 > 1. **NEVER suggest pushing to main** - Always require PRs
 > 2. **ALWAYS create feature branches** - Even for single-line changes
@@ -175,7 +175,7 @@ Before approving any PR, verify these mandatory requirements:
 >
 > **If asked to push to main, politely but firmly refuse and explain the PR requirement.**
 
-When asked to review a PR, Claude follows this structured approach:
+When asked to review a PR, an AI agent should follow this structured approach:
 
 1. **Understand Context** 🤖
 
@@ -230,10 +230,10 @@ When asked to review a PR, Claude follows this structured approach:
 
    When approving PRs or performing actions at the human's request:
 
-   - Always include clear attribution: "🤖 Reviewed by Claude on behalf of the human"
-   - For dependabot PRs: "🤖 Approved by Claude on behalf of the human"
-   - For any merge actions: Include "🤖" in the merge commit message
-   - This maintains transparency about who performed the action
+- Always include clear attribution: "🤖 Reviewed by <AgentName> on behalf of the human"
+- For dependabot PRs: "🤖 Approved by <AgentName> on behalf of the human"
+- For any merge actions: Include "🤖" in the merge commit message
+- This maintains transparency about who performed the action
 
 8. **Review Decision & API Usage** 🤖
    - If reviewing own PR (same GitHub user): Comment with decision
@@ -324,7 +324,7 @@ All PRs with documentation or content must verify:
 1. **Squash merge** for feature branches to keep history clean
 2. **Update squash commit message** to include:
    - Summary of changes
-   - Collaboration commentary (if PR was created with Claude)
+   - Collaboration commentary (if the PR involved an AI agent)
 3. **Merge commit** only for special cases (preserving commit history)
 4. **NEVER force push to main branch** - This is **ABSOLUTELY FORBIDDEN**
 5. **Delete branch** after merging (GitHub does this automatically)
@@ -332,7 +332,7 @@ All PRs with documentation or content must verify:
 
 ### Squash Merge Commit Message Format
 
-**MANDATORY**: When squash merging a PR created with Claude, **always update** the commit message to include detailed collaboration summary:
+**MANDATORY**: When squash merging a PR created with an AI agent, **always update** the commit message to include detailed collaboration summary. Replace `AgentName` with your agent's name:
 
 ```
 <type>: <description> (#<PR-number>)
@@ -344,7 +344,9 @@ Changes:
 - Change 2
 - Change 3
 
-## Claude's Collaboration Summary
+## <AgentName>'s Collaboration Summary
+
+Use your agent's name in place of `<AgentName>` in the following template.
 
 **Session Stats:**
 - 📊 X files modified, Y key insights, Z iterations
@@ -363,7 +365,7 @@ Changes:
 
 🤖 Generated with [Claude Code](https://claude.ai/code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: <AgentName> <noreply@anthropic.com>
 ```
 
 #### Example Squash Commit Message
@@ -381,18 +383,18 @@ Changes:
 - Updated guidelines to emphasize verification
 - Fixed markdown formatting and linting issues
 
-🤖 Claude's Collaboration Summary:
+🤖 <AgentName>'s Collaboration Summary:
 📊 Stats: 15+ iterations, 8 major insights, 4 complete rewrites
 🔍 Pattern: Deep Review → Accuracy Focus → Structural Improvement
 💡 Key Learning: Human's insistence on accuracy prevented fictional documentation
 🎯 Outcome: Accurate documentation with verifiable collaboration tracking
 
-Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: <AgentName> <noreply@anthropic.com>
 ```
 
 #### Why Collaboration Commentary is Required
 
-This collaboration commentary is **mandatory** for all Claude PRs because it:
+This collaboration commentary is **mandatory** for all AI-driven PRs because it:
 
 - **Preserves research data**: Creates permanent record of human-AI collaboration patterns
 - **Enables blog content**: Provides material for both human and AI perspective blog posts
@@ -400,7 +402,7 @@ This collaboration commentary is **mandatory** for all Claude PRs because it:
 - **Tracks learning evolution**: Shows how understanding develops through iteration
 - **Makes patterns discoverable**: Enables searching git history for collaboration insights
 
-**Note for Claude**: Never create a PR or squash merge without detailed collaboration commentary. This is essential for our research goals and cannot be skipped.
+**Note for AI Agents**: Never create a PR or squash merge without detailed collaboration commentary. Always identify yourself by name. This is essential for our research goals and cannot be skipped.
 
 ## Review Checklist
 

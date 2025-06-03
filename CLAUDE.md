@@ -287,7 +287,7 @@ This tracks collaboration patterns for blog posts and research. **Never skip thi
 - 🚨 **NEVER PUSH TO MAIN BRANCH** (create feature branch + PR)
 - ✅ All changes go through PRs (no exceptions!)
 - ✅ Review PRs with 🤖 emoji signature
-- ✅ Acting on behalf: Add "🤖 Approved by Claude on behalf of the human" signatures
+- ✅ Acting on behalf: Use your agent name in messages, e.g. "🤖 Approved by <AgentName> on behalf of the human"
 - ✅ Search web for best practices when reviewing
 - ✅ Maintain my blog voice when writing posts
 - ✅ Keep guidelines up to date

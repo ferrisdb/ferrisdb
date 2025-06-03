@@ -121,13 +121,13 @@ Fixes #123"
 6. **50/72 rule**: Subject line max 50 chars, body wrapped at 72
 7. **Why not what**: Body should explain why, not what (code shows what)
 
-### Claude's Collaboration Commentary
+### AI Agent Collaboration Commentary
 
-**REQUIRED**: When working with Claude, **always include** collaboration commentary in commit messages to track the human-AI interaction process. This is essential for research and documentation purposes:
+**REQUIRED**: All AI agents must include collaboration commentary in commit messages to track the human-AI interaction process. Replace `Claude` with your agent name wherever it appears in the templates below. This is essential for research and documentation purposes:
 
-#### 🚨 Claude's Critical Reminder
+#### 🚨 Critical Reminder for AI Agents
 
-> **ATTENTION CLAUDE: You MUST follow these rules:**
+> **ATTENTION ALL AGENTS: You MUST follow these rules:**
 >
 > 1. **NEVER push to main branch** - Always create a feature branch
 > 2. **ALWAYS create a PR** - Even for tiny documentation fixes
@@ -145,7 +145,9 @@ Fixes #123"
 
 [optional body]
 
-## Claude's Collaboration Commentary
+## <AgentName>'s Collaboration Commentary
+
+Use your agent's name in place of `<AgentName>` throughout this section.
 
 **Session Stats:**
 - 📊 X files modified, Y key insights, Z iterations
@@ -164,23 +166,23 @@ Fixes #123"
 
 🤖 Generated with [Claude Code](https://claude.ai/code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: <AgentName> <noreply@anthropic.com>
 ```
 
 #### Acting on Behalf Signatures
 
-When performing actions at the human's request, always include clear attribution:
+When performing actions at the human's request, always include clear attribution with your agent name:
 
-- **PR Approvals**: "🤖 Approved by Claude on behalf of the human"
-- **PR Reviews**: "🤖 Reviewed by Claude on behalf of the human"
-- **Merge Commits**: Include "🤖 Merged by Claude on behalf of the human"
-- **Dependabot PRs**: "LGTM! [details] 🤖 Approved by Claude on behalf of the human"
+- **PR Approvals**: "🤖 Approved by <AgentName> on behalf of the human"
+- **PR Reviews**: "🤖 Reviewed by <AgentName> on behalf of the human"
+- **Merge Commits**: Include "🤖 Merged by <AgentName> on behalf of the human"
+- **Dependabot PRs**: "LGTM! [details] 🤖 Approved by <AgentName> on behalf of the human"
 
 This maintains transparency in the git history about who performed each action.
 
 #### Commentary Emojis
 
-- 🤖 **Main identifier**: Claude's Commentary header
+- 🤖 **Main identifier**: `<AgentName>`'s Commentary header
 - 📊 **Stats**: Iterations, changes, insights count
 - 🔄 **Process**: Workflow summary
 - 💡 **Key Learning**: Main insight that drove improvement
@@ -205,7 +207,7 @@ Changes:
 - Rewrote blog posts to reflect actual events
 - Simplified templates for flexibility
 
-🤖 Claude's Commentary:
+🤖 <AgentName>'s Commentary:
 📊 Stats: 8 iterations, 4 major insights, 2 complete rewrites
 🔄 Process: Human noticed inaccuracies → fact-checking revealed gaps → rewrote with verification → improved URL structure
 💡 Key Learning: Human's insistence on accuracy against git history prevented fictional documentation
