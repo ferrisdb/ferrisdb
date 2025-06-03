@@ -14,7 +14,7 @@ use std::io::{Seek, SeekFrom, Write};
 
 // ==================== Error Condition Tests ====================
 
-/// Tests that Put entries enforce the 1MB key size limit.
+/// Tests that Put entries enforce the 10KB key size limit.
 ///
 /// This prevents:
 /// - Memory exhaustion from oversized keys
@@ -22,7 +22,7 @@ use std::io::{Seek, SeekFrom, Write};
 /// - Ensures predictable memory usage
 #[test]
 fn entry_new_put_returns_error_when_key_exceeds_max_size() {
-    let oversized_key = vec![b'k'; 1024 * 1024 + 1]; // 1MB + 1
+    let oversized_key = vec![b'k'; 10 * 1024 + 1]; // 10KB + 1
     let result = WALEntry::new_put(oversized_key, b"value".to_vec(), 1);
 
     assert!(result.is_err());
@@ -30,7 +30,7 @@ fn entry_new_put_returns_error_when_key_exceeds_max_size() {
     assert!(matches!(err, Error::Corruption(msg) if msg.contains("exceeds maximum")));
 }
 
-/// Tests that Put entries enforce the 10MB value size limit.
+/// Tests that Put entries enforce the 100KB value size limit.
 ///
 /// This prevents:
 /// - Memory exhaustion from oversized values
@@ -38,7 +38,7 @@ fn entry_new_put_returns_error_when_key_exceeds_max_size() {
 /// - Ensures reasonable entry sizes
 #[test]
 fn entry_new_put_returns_error_when_value_exceeds_max_size() {
-    let oversized_value = vec![b'v'; 10 * 1024 * 1024 + 1]; // 10MB + 1
+    let oversized_value = vec![b'v'; 100 * 1024 + 1]; // 100KB + 1
     let result = WALEntry::new_put(b"key".to_vec(), oversized_value, 1);
 
     assert!(result.is_err());
@@ -55,7 +55,7 @@ fn entry_new_put_returns_error_when_value_exceeds_max_size() {
 /// - Protection against memory exhaustion
 #[test]
 fn entry_new_delete_returns_error_when_key_exceeds_max_size() {
-    let oversized_key = vec![b'k'; 1024 * 1024 + 1]; // 1MB + 1
+    let oversized_key = vec![b'k'; 10 * 1024 + 1]; // 10KB + 1
     let result = WALEntry::new_delete(oversized_key, 1);
 
     assert!(result.is_err());
@@ -76,7 +76,7 @@ fn decode_returns_error_when_entry_exceeds_max_size() {
     let mut data = vec![0u8; 25];
 
     // Set length to max + 1
-    let huge_len = (10 * 1024 * 1024 + 1024 + 1) as u32;
+    let huge_len = (100 * 1024 + 10 * 1024 + 1) as u32;
     data[0..4].copy_from_slice(&huge_len.to_le_bytes());
 
     let result = WALEntry::decode(&data);
@@ -91,8 +91,8 @@ fn decode_returns_error_when_entry_exceeds_max_size() {
 /// Tests that entries at exactly the maximum allowed size work correctly.
 ///
 /// Verifies:
-/// - 1MB keys are accepted (boundary test)
-/// - 10MB values are accepted (boundary test)
+/// - 10KB keys are accepted (boundary test)
+/// - 100KB values are accepted (boundary test)
 /// - No off-by-one errors in size validation
 /// - Maximum sizes are usable in practice
 #[test]
@@ -102,9 +102,9 @@ fn append_succeeds_with_maximum_allowed_entry_size() {
 
     let writer = WALWriter::new(&wal_path, SyncMode::None, 100 * 1024 * 1024).unwrap();
 
-    // Create entry at exactly max size (1MB key + 10MB value = ~11MB total)
-    let max_key = vec![b'k'; 1024 * 1024]; // 1MB
-    let max_value = vec![b'v'; 10 * 1024 * 1024]; // 10MB
+    // Create entry at exactly max size (10KB key + 100KB value = ~110KB total)
+    let max_key = vec![b'k'; 10 * 1024]; // 10KB
+    let max_value = vec![b'v'; 100 * 1024]; // 100KB
 
     let entry = WALEntry::new_put(max_key, max_value, 1).unwrap();
     let result = writer.append(&entry);

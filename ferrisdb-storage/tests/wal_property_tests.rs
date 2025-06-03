@@ -12,28 +12,17 @@ use tempfile::TempDir;
 
 // ==================== Strategies ====================
 
-// Generate valid keys (0 to 1MB)
+// Generate valid keys (0 to 10KB)
 prop_compose! {
-    fn valid_key()(size in 0usize..=1024*1024) -> Vec<u8> {
+    fn valid_key()(size in 0usize..=10*1024) -> Vec<u8> {
         vec![b'k'; size]
     }
 }
 
-// Generate valid values (0 to 10MB, but smaller in CI)
+// Generate valid values (0 to 100KB)
 prop_compose! {
-    fn valid_value()(size in 0usize..=max_value_size()) -> Vec<u8> {
+    fn valid_value()(size in 0usize..=100*1024) -> Vec<u8> {
         vec![b'v'; size]
-    }
-}
-
-// Adjust test data size based on environment
-fn max_value_size() -> usize {
-    if std::env::var("CI").is_ok() {
-        // Smaller values in CI for faster tests
-        1024 * 1024 // 1MB max in CI
-    } else {
-        // Full size for local development
-        10 * 1024 * 1024 // 10MB max locally
     }
 }
 
@@ -41,8 +30,8 @@ fn max_value_size() -> usize {
 prop_compose! {
     fn arbitrary_bytes()(size in 0usize..10000) -> Vec<u8> {
         let mut bytes = vec![0u8; size];
-        for i in 0..size {
-            bytes[i] = (i % 256) as u8;
+        for (i, byte) in bytes.iter_mut().enumerate().take(size) {
+            *byte = (i % 256) as u8;
         }
         bytes
     }
@@ -54,8 +43,8 @@ proptest! {
     /// Tests that Put entries preserve all data through encode/decode cycle.
     ///
     /// This property test verifies that:
-    /// - Arbitrary keys (0-1MB) are preserved exactly
-    /// - Arbitrary values (0-10MB) are preserved exactly
+    /// - Arbitrary keys (0-10KB) are preserved exactly
+    /// - Arbitrary values (0-100KB) are preserved exactly
     /// - Timestamps are preserved without modification
     /// - No data corruption occurs during serialization
     #[test]
@@ -142,16 +131,16 @@ proptest! {
         let _ = WALHeader::decode(&data);
     }
 
-    /// Tests that keys exceeding 1MB limit are always rejected.
+    /// Tests that keys exceeding 10KB limit are always rejected.
     ///
     /// Verifies:
-    /// - Enforcement of 1MB key size limit
+    /// - Enforcement of 10KB key size limit
     /// - Proper error type (Corruption) returned
     /// - Clear error messages about size limits
     /// - Protection against memory exhaustion
     #[test]
     fn oversized_keys_always_rejected(
-        size in (1024usize*1024 + 1)..=(2usize*1024*1024),
+        size in (10*1024usize + 1)..=(20*1024usize),
         value in valid_value(),
         timestamp in any::<u64>()
     ) {
@@ -166,17 +155,17 @@ proptest! {
         }
     }
 
-    /// Tests that values exceeding 10MB limit are always rejected.
+    /// Tests that values exceeding 100KB limit are always rejected.
     ///
     /// Ensures:
-    /// - Enforcement of 10MB value size limit
+    /// - Enforcement of 100KB value size limit
     /// - Consistent error handling across all oversized values
     /// - Protection against resource exhaustion
     /// - Clear error messages for debugging
     #[test]
     fn oversized_values_always_rejected(
         key in valid_key(),
-        size in (10usize*1024*1024 + 1)..=(20usize*1024*1024),
+        size in (100*1024usize + 1)..=(200*1024usize),
         timestamp in any::<u64>()
     ) {
         let oversized_value = vec![b'v'; size];
@@ -349,12 +338,11 @@ proptest! {
         // Write valid entries
         let writer = WALWriter::new(&wal_path, SyncMode::Full, 100 * 1024 * 1024)?;
 
-        let mut written_count = 0;
         for (i, (key, value, timestamp)) in valid_entries.iter().enumerate() {
             // Check if we should inject corruption instead of writing this entry
             if corrupt_positions.contains(&i) {
                 // Ensure any previous data is flushed before corruption
-                if written_count > 0 {
+                if i > 0 {
                     writer.sync()?;
                 }
                 drop(writer);
@@ -371,7 +359,6 @@ proptest! {
 
             let entry = WALEntry::new_put(key.clone(), value.clone(), *timestamp)?;
             writer.append(&entry)?;
-            written_count += 1;
         }
 
         // Reader should recover what it can
@@ -498,7 +485,7 @@ proptest! {
         // Read entries using iterator to avoid loading all into memory
         let mut entry_count = 0;
         while let Some(entry) = reader.read_entry()? {
-            prop_assert!(!entry.key.is_empty() || entry.value.is_empty()); // Allow empty for tests
+            // Empty keys and values are allowed in WAL
             prop_assert!(matches!(entry.operation, Operation::Put | Operation::Delete));
             entry_count += 1;
         }
