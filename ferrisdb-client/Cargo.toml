@@ -8,5 +8,5 @@ ferrisdb-core = { path = "../ferrisdb-core" }
 tokio = { version = "1.40", features = ["full"] }
 async-trait = "0.1"
 tonic = "0.13"
-prost = "0.13"
+prost = "0.14"
 log = "0.4"
